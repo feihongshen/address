@@ -345,6 +345,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			} else {
 				result.setResult(AddressMappingResultEnum.multipleResult);
 			}
+			result.setRelatedAddressList(addressList);
 
 			// 找到地址对应的站点规则/站点
 			List<DeliveryStationRule> deliveryStationRuleList = deliverStationRuleService.search(addressList, orderVo);
