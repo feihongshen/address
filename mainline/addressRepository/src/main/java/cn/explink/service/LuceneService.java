@@ -431,6 +431,9 @@ public class LuceneService {
 					if ((alias != null) && (alias.getCustomerId() != null) && (customerId.longValue() != alias.getCustomerId().longValue())) {
 						continue;
 					}
+					if (alias == null) {
+						continue;
+					}
 					Long addressId = Long.parseLong(addressIdField.stringValue());
 					if (!addressAliasMap.containsKey(addressId)) {
 						List<Alias> aliasList = new ArrayList<Alias>();
