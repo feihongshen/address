@@ -33,8 +33,6 @@ public class LuceneEnvironment {
 
 	private IndexSearcher indexSearch;
 
-	private QueryParser queryParser;
-
 	private LuceneEnvironment() {
 		this.dictDirectory = new File(ResourceBundleUtil.LUCENE_DICT_PATH);
 	}

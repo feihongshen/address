@@ -28,8 +28,7 @@
 			`TRY_COUNT` int (10)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-			-- create index
-			IDX_TASKS_STATUS_FIRE_TIME
+			-- create index IDX_TASKS_STATUS_FIRE_TIME
 			CREATE INDEX `IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
 			(
 			`STATUS`,
@@ -46,8 +45,7 @@
 			`FIRE_TIME`
 			);
 
-			-- create
-			index IDX_TASKS_REFERENCE_ID
+			-- create index IDX_TASKS_REFERENCE_ID
 			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON
 			`SCHEDULED_TASKS`
 			(
@@ -141,12 +139,5 @@
 	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
 		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-
-	<!-- 在ADDRESS_PERMISSIONS中加入地址是否绑定字段. -->
-	<changeSet id="zhaoshb2014-12-23" author="zhaoshb">
-		<sql>
-			UPDATE `SYSTEM_CONFIG` SET VALUE = '1000' where id = 1;
-		</sql>
-	</changeSet>
-
+	
 </databaseChangeLog>
