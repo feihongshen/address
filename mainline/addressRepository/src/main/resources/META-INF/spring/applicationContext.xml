@@ -32,4 +32,5 @@
 	
 	<!-- web service -->
 	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl" address="/AddressSyncService" />
+	<jaxws:endpoint id="addressMappingService" implementor="cn.explink.ws.service.AddressMappingServiceImpl" address="/AddressMappingService" />
 </beans>

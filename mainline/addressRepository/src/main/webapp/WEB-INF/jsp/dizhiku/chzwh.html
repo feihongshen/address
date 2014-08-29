@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>拆合站维护</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+<p><a href="javascript:void(0)" class="easyui-linkbutton" onclick="chaihe()">拆合站</a>&nbsp;&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton">导出地址</a>&nbsp;&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton">导入地址</a></p>
+<p>&nbsp; </p>
+
+<div id="chaihe" class="easyui-dialog" style="width:700px;height:405px;padding:10px"  
+            closed="true" buttons="#dlg-buttons">   
+        <form method="post" >  
+          <table width="100%" border="0" cellspacing="1" cellpadding="5" style="background:#CCC">
+  <tr>
+    <td width="45%" bgcolor="#FFFFFF">原站点：
+      <select class="easyui-combobox" name="state" style="width:120px;">
+        <option value="1">1</option>
+        <option value="2">23</option>
+        <option value="3">123</option>
+      </select></td>
+    <td width="50" rowspan="3" align="center" bgcolor="#FFFFFF"><p><a href="javascript:void(0)" class="easyui-linkbutton">&gt;</a></p>
+      <p><a href="javascript:void(0)" class="easyui-linkbutton">&gt;&gt;</a></p>
+      <p><a href="javascript:void(0)" class="easyui-linkbutton">&lt;</a></p>
+      <p><a href="javascript:void(0)" class="easyui-linkbutton">&lt;&lt;</a></p></td>
+    <td width="45%" bgcolor="#FFFFFF">原站点：
+      <select class="easyui-combobox" name="state" style="width:120px;">
+        <option value="1">1</option>
+        <option value="2">23</option>
+        <option value="3">123</option>
+      </select></td>
+    </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><select class="easyui-combobox" name="state2" style="width:120px;">
+      <option value="1">模糊搜索</option>
+      <option value="2">23</option>
+      <option value="3">123</option>
+      </select>
+      <input name="textfield5" type="text" id="textfield5" size="15" /></td>
+    <td bgcolor="#FFFFFF"><select class="easyui-combobox" name="state2" style="width:120px;">
+      <option value="1">模糊搜索</option>
+      <option value="2">23</option>
+      <option value="3">123</option>
+      </select>
+      <input name="textfield5" type="text" id="textfield5" size="15" /></td>
+    </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><ul class="easyui-tree">
+              <li><a href="javascript:void(0)" onclick="addTab('地址库匹配','dizhiku/dzkpp.html')">地址库匹配</a></li>
+              <li> <span>数据维护</span>
+                <ul>
+                  <li><a href="javascript:void(0)" onclick="addTab('关键词导入','dizhiku/gjcdr.html')">关键词导入</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('地址库维护','dizhiku/dzkwh.html')">地址库维护</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('站点管理','dizhiku/zdgl.html')">站点管理</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('配送员管理','dizhiku/psygl.html')">配送员管理</a></li>
+                </ul>
+              </li>
+              <li> <span>关联设置</span>
+                <ul>
+                  <li><a href="javascript:void(0)" onclick="addTab('拆合站维护','dizhiku/chzwh.html')">拆合站维护</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('配送站点关联维护','dizhiku/pszdglwh.html')">配送站点关联维护</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('配送员关联维护','dizhiku/psyglwh.html')">配送员关联维护</a></li>
+                </ul>
+              </li>
+              <li> <span>数据统计</span>
+                <ul>
+                  <li><a href="javascript:void(0)" onclick="addTab('站点匹配查询','dizhiku/zdppcx.html')">站点匹配查询</a></li>
+                  <li><a href="javascript:void(0)" onclick="addTab('站点匹配率查询','dizhiku/zdpplcx.html')">站点匹配率查询</a></li>
+                </ul>
+              </li>
+              <li> <span>系统设置</span>
+                <ul>
+                  <li><a href="javascript:void(0)" onclick="addTab('库户账号管理','dizhiku/khzhgl.html')">库户账号管理</a></li>
+                </ul>
+              </li>
+            </ul></td>
+    <td bgcolor="#FFFFFF"><ul class="easyui-tree">
+      <li><a href="javascript:void(0)" onclick="addTab('地址库匹配','dizhiku/dzkpp.html')">地址库匹配</a></li>
+      <li> <span>数据维护</span>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="addTab('关键词导入','dizhiku/gjcdr.html')">关键词导入</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('地址库维护','dizhiku/dzkwh.html')">地址库维护</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('站点管理','dizhiku/zdgl.html')">站点管理</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('配送员管理','dizhiku/psygl.html')">配送员管理</a></li>
+          </ul>
+        </li>
+      <li> <span>关联设置</span>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="addTab('拆合站维护','dizhiku/chzwh.html')">拆合站维护</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('配送站点关联维护','dizhiku/pszdglwh.html')">配送站点关联维护</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('配送员关联维护','dizhiku/psyglwh.html')">配送员关联维护</a></li>
+          </ul>
+        </li>
+      <li> <span>数据统计</span>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="addTab('站点匹配查询','dizhiku/zdppcx.html')">站点匹配查询</a></li>
+          <li><a href="javascript:void(0)" onclick="addTab('站点匹配率查询','dizhiku/zdpplcx.html')">站点匹配率查询</a></li>
+          </ul>
+        </li>
+      <li> <span>系统设置</span>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="addTab('库户账号管理','dizhiku/khzhgl.html')">库户账号管理</a></li>
+          </ul>
+        </li>
+    </ul></td>
+    </tr>
+</table>
+
+        </form>  
+</div>
+<table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
+    <thead>
+      <tr>
+        <th align="center" bgcolor="#f1f1f1">省</th>
+        <th align="center" bgcolor="#f1f1f1">市</th>
+        <th align="center" bgcolor="#f1f1f1">区县</th>
+        <th align="center" bgcolor="#f1f1f1">关键字</th>
+        <th align="center" bgcolor="#f1f1f1">站点</th>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">海淀区</td>
+        <td align="center" bgcolor="#FFFFFF">开拓路</td>
+        <td align="center" bgcolor="#FFFFFF">汇苑开拓大厦1号</td>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">海淀区</td>
+        <td align="center" bgcolor="#FFFFFF">开拓路</td>
+        <td align="center" bgcolor="#FFFFFF">汇苑开拓大厦2号</td>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">海淀区</td>
+        <td align="center" bgcolor="#FFFFFF">开拓路</td>
+        <td align="center" bgcolor="#FFFFFF">汇苑开拓大厦3号</td>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">北京市</td>
+        <td align="center" bgcolor="#FFFFFF">海淀区</td>
+        <td align="center" bgcolor="#FFFFFF">开拓路</td>
+        <td align="center" bgcolor="#FFFFFF">汇苑开拓大厦4号</td>
+      </tr>
+  </thead>
+</table>
+<script type="text/javascript">
+        function chaihe(){
+            $('#chaihe').dialog('open').dialog('setTitle','拆合站');
+            $('#fm').form('clear');
+            var init ={
+            	status:1,
+            	lev:1
+            };
+            $('#fm').form('load',init);            
+        }  
+        function editAdmin(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+	            if (row.uid == "root") {
+	            	alert("超级管理员不能修改！");
+	            	return false;
+	            }
+            	$('#fm').form('clear');
+                $('#dlg').dialog('open').dialog('setTitle','编辑管理员');
+                $('#fm').form('load',row);
+             } else {
+            	$.messager.show({  
+                    title: 'Warnning',  
+                    msg: "请先选择管理员进行编辑",
+                    style:{ 
+                        right:'', 
+                        top:200+document.body.scrollTop+document.documentElement.scrollTop, 
+                        bottom:'' 
+                    }
+                });
+            }
+        }
+        function removeAdmin(){
+            var row = $('#dg').datagrid('getSelected');
+            if (!row) {
+            	alert("请先选择管理员进行删除操作！");
+            	return false;
+            }
+            if (row.uid == "root") {
+            	alert("超级管理员不能删除！");
+            	return false;
+            }
+            if (!confirm("你确认要删除该管理员？\n如果该管理员已有角色则不能删除！")) {
+            	return false;
+            }
+            var surl = "/user/remove.htm";
+        	var paras = {
+        			keyword:$("#keyword").val(),
+        			id:row.id
+        	};
+        	dealAjaxOpration(surl, $.param(paras), "setData", false);
+        }
+        function saveAdmin(){
+        	if ($('#aId').val() == "" && $('#password').val() == "") {
+        		alert("新增管理员[登录密码]必须填写，且不能小于5位!");
+        		return false;
+        	}
+        	if ($('#password').val() != "" && $('#password').val() != $('#cfmpass').val()) {
+        		alert("[登录密码]和[确认密码]不相同，请重新输入！");
+        		return false;
+        	}
+        	if ($('#password').val() != "" && $('#password').val().length < 5) {
+        		alert("[登录密码]不能小于5位，请重新填写!");
+        		return false;
+        	}
+            $('#fm').form('submit',{
+                url: "/user/save.htm",
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorMsg){  
+                        alert(result.errorMsg);
+                    } else {  
+                        $('#dlg').dialog('close');      // close the dialog
+                        searchAdmin();    // reload the user data
+                    }  
+                }  
+            });  
+        }
+        $(function(){
+        	searchAdmin();
+        });
+        function setData(json){
+        	$("#dg").datagrid('loadData',JSON.parse(json));
+        }        
+        function searchAdmin() {
+        	var surl = "/user/search.htm";
+        	var paras = {
+        			keyword:$("#keyword").val()
+        	};
+        	dealAjaxOpration(surl, $.param(paras), "setData", false);
+        }
+        function chngPass() {
+        	if ($('#password').val() != "" && $('#password').val() != $('#cfmpass').val()) {
+        		alert("[登录密码]和[确认密码]不相同，请重新输入！");
+        		return false;
+        	}
+        	if ($('#password').val() != "" && $('#password').val().length < 5) {
+        		alert("[登录密码]不能小于5位，请重新填写!");
+        		return false;
+        	}
+            $('#fmChng').form('submit',{
+                url: "/user/chngpass.htm",
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorMsg){  
+                    	alert(result.errorMsg);  
+                    } else {
+                        $('#dlgChng').dialog('close'); 
+                    }
+                }  
+            });  
+        }
+        function changePass() {
+        	$('#dlgChng').dialog('open').dialog('setTitle','修改密码');
+        }
+		function addTab(title, url){
+			if ($('#adminTabs').tabs('exists', title)){
+				$('#adminTabs').tabs('select', title);
+			} else {
+				var content = '<iframe scrolling="auto" frameborder="0" src="/loginstatus.jsp?url='+url+'" style="width:100%;height:100%;"></iframe>';
+				$('#adminTabs').tabs('add',{
+					title:title,
+					content:content,
+					closable:true
+				});
+			}
+		}
+        $('#adminTabs').width($(window).width()-165);
+        $('#adminTabs').height($(window).height()-62);
+    </script>
+</body>
+</html>

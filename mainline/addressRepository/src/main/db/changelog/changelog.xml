@@ -3,7 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 	<changeSet id="xushiju-2014-07-21-01" author="xushiju">
-		<sqlFile path="address_init.sql" encoding="UTF-8"
+		<sqlFile path="address_init_table.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
+	
+	<changeSet id="xushiju-2014-07-21-01" author="xushiju">
+		<sqlFile path="address_init_data.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
 
