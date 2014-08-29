@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
-import cn.explink.dao.DeliveryStationDao;
-import cn.explink.dao.DeliveryStationRuleDao;
+import cn.explink.dao.DelivererDao;
+import cn.explink.dao.DelivererRuleDao;
 import cn.explink.domain.Address;
-import cn.explink.domain.DeliveryStation;
-import cn.explink.domain.DeliveryStationRule;
-import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
+import cn.explink.domain.DelivererRule;
+import cn.explink.domain.Deliverer;
+import cn.explink.domain.DelivererRule;
+import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.util.JsonUtil;
@@ -29,25 +30,24 @@ public class DelivererRuleService extends RuleService {
 	private AddressDao addressDao;
 
 	@Autowired
-	private DeliveryStationDao deliveryStationDao;
+	private DelivererDao delivererDao;
 
 	@Autowired
 	private AddressPermissionDao addressPermissionDao;
 
 	@Autowired
-	private DeliveryStationRuleDao deliveryStationRuleDao;
+	private DelivererRuleDao delivererRuleDao;
 
-	public DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId, String rule) {
+	public DelivererRule createDelivererRule(Long addressId, Long delivererId, Long customerId, String rule) {
 		// 解析规则
 		RuleExpression ruleExpression = parseRule(rule);
-
 		Address address = addressDao.get(addressId);
-		DeliveryStation deliveryStation = deliveryStationDao.get(deliveryStationId);
+		Deliverer deliverer = delivererDao.get(delivererId);
 		// 判断是否与已有规则冲突
-		DeliveryStationRule confilctingRule = findConflictingRule(ruleExpression, address.getDeliveryStationRules());
+		DelivererRule confilctingRule = findConflictingRule(ruleExpression, address.getDelivererRules());
 		if (confilctingRule != null) {
 			String message = null;
-			if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
+			if (DelivererRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
 				message = "已有默认规则";
 			} else {
 				message = "与已有规则冲突, " + confilctingRule.getRule();
@@ -55,33 +55,33 @@ public class DelivererRuleService extends RuleService {
 			throw new ExplinkRuntimeException(message);
 		}
 
-		DeliveryStationRule deliveryStationRule = new DeliveryStationRule();
-		deliveryStationRule.setAddress(address);
-		deliveryStationRule.setDeliveryStation(deliveryStation);
-		deliveryStationRule.setCreationTime(new Date());
+		DelivererRule delivererRule = new DelivererRule();
+		delivererRule.setAddress(address);
+		delivererRule.setDeliverer(deliverer);
+		delivererRule.setCreationTime(new Date());
 		if (StringUtil.isEmpty(rule)) {
-			deliveryStationRule.setRuleType(DeliveryStationRuleTypeEnum.fallback.getValue());
+			delivererRule.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
 		} else {
-			deliveryStationRule.setRuleType(DeliveryStationRuleTypeEnum.customization.getValue());
-			deliveryStationRule.setRule(rule);
-			deliveryStationRule.setRuleExpression(JsonUtil.translateToJson(ruleExpression));
+			delivererRule.setRuleType(DelivererRuleTypeEnum.customization.getValue());
+			delivererRule.setRule(rule);
+			delivererRule.setRuleExpression(JsonUtil.translateToJson(ruleExpression));
 		}
-		deliveryStationRuleDao.save(deliveryStationRule);
-		return deliveryStationRule;
+		delivererRuleDao.save(delivererRule);
+		return delivererRule;
 	}
 
 	/**
 	 * 查找冲突的规则
 	 * 
 	 * @param ruleExpression
-	 * @param deliveryStationRules
+	 * @param delivererRules
 	 * @return
 	 */
-	private DeliveryStationRule findConflictingRule(RuleExpression ruleExpression, Set<DeliveryStationRule> deliveryStationRules) {
-		if (deliveryStationRules == null) {
+	private DelivererRule findConflictingRule(RuleExpression ruleExpression, Set<DelivererRule> delivererRules) {
+		if (delivererRules == null) {
 			return null;
 		}
-		for (DeliveryStationRule existingRule : deliveryStationRules) {
+		for (DelivererRule existingRule : delivererRules) {
 			if (isConflict(ruleExpression, existingRule)) {
 				return existingRule;
 			}
@@ -96,8 +96,8 @@ public class DelivererRuleService extends RuleService {
 	 * @param existingRule
 	 * @return
 	 */
-	private boolean isConflict(RuleExpression ruleExpression, DeliveryStationRule existingRule) {
-		if (DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+	private boolean isConflict(RuleExpression ruleExpression, DelivererRule existingRule) {
+		if (DelivererRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
 			return true;
 		}
 		RuleExpression existingRuleExpression = JsonUtil.readValue(existingRule.getRuleExpression(), RuleExpression.class);
@@ -111,21 +111,21 @@ public class DelivererRuleService extends RuleService {
 	 * @param orderVo
 	 * @return
 	 */
-	public List<DeliveryStationRule> search(List<Address> addressList, OrderVo orderVo) {
+	public List<DelivererRule> search(List<Address> addressList, OrderVo orderVo) {
 		if (addressList == null) {
 			return null;
 		}
-		List<DeliveryStationRule> ruleList = new ArrayList<DeliveryStationRule>();
+		List<DelivererRule> ruleList = new ArrayList<DelivererRule>();
 		for (Address address : addressList) {
 			// 默认规则
-			DeliveryStationRule defaultRule = null;
-			DeliveryStationRule mappingRule = null;
+			DelivererRule defaultRule = null;
+			DelivererRule mappingRule = null;
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
 			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
 			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
 
-			for (DeliveryStationRule rule : address.getDeliveryStationRules()) {
-				if (DeliveryStationRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
+			for (DelivererRule rule : address.getDelivererRules()) {
+				if (DelivererRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
 					defaultRule = rule;
 				} else {
 					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);

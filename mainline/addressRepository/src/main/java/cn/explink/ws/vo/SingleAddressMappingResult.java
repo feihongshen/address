@@ -14,9 +14,20 @@ public class SingleAddressMappingResult {
 
 	private List<Address> relatedAddressList;
 
+	/**
+	 * 站点list
+	 */
 	private List<DeliveryStation> deliveryStationList;
 
+	/**
+	 * 配送员list
+	 */
 	private List<Deliverer> delivererList;
+
+	/**
+	 * 时效/时限
+	 */
+	private Integer timeLimit;
 
 	public AddressMappingResultEnum getResult() {
 		return result;
@@ -58,6 +69,14 @@ public class SingleAddressMappingResult {
 		this.delivererList = delivererList;
 	}
 
+	public Integer getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -71,7 +90,9 @@ public class SingleAddressMappingResult {
 		if (deliveryStationList != null)
 			builder.append("deliveryStationList=").append(deliveryStationList).append(", ");
 		if (delivererList != null)
-			builder.append("delivererList=").append(delivererList);
+			builder.append("delivererList=").append(delivererList).append(", ");
+		if (timeLimit != null)
+			builder.append("timeLimit=").append(timeLimit);
 		builder.append("]");
 		return builder.toString();
 	}

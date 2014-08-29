@@ -17,6 +17,10 @@ import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Alias;
+import cn.explink.domain.Deliverer;
+import cn.explink.domain.DelivererRule;
+import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Order;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.schedule.Constants;
@@ -50,7 +54,9 @@ public class AddressService {
 	@Autowired
 	private DeliveryStationRuleService deliverStationRuleService;
 
-
+	@Autowired
+	private DelivererRuleService delivererRuleService;
+	
 	public void listAddress() {
 		List<Address> addressList = addressDao.getAllAddresses();
 		System.out.println(addressList);
@@ -82,6 +88,10 @@ public class AddressService {
 		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(address.getId()));
 	}
 
+	/**
+	 * 创建别名
+	 * @param alias
+	 */
 	public void createAlias(Alias alias) {
 		Address address = addressDao.get(alias.getAddressId());
 		if (address == null) {
@@ -146,24 +156,72 @@ public class AddressService {
 	}
 
 	private SingleAddressMappingResult search(OrderVo orderVo) {
+		// 查询订单记录
+		Order order = new Order();
+		BeanUtils.copyProperties(orderVo, order);
+		order.setExternalOrderId(orderVo.getOrderId());
+		order.setCreationDate(new Date());
+		StringBuilder sb = null;
+		
+		// 查询结果
 		SingleAddressMappingResult result = new SingleAddressMappingResult();
-
+		// 匹配的站点list
+		List<DeliveryStation> deliveryStationList = new ArrayList<DeliveryStation>();
+		// 匹配的配送员list
+		List<Deliverer> delivererList = new ArrayList<Deliverer>();
 		try {
+			// 找到地址
 			List<Address> addressList = luceneService.search(orderVo.getAddressLine(), orderVo.getCustomerId());
-			deliverStationRuleService.search(addressList, orderVo);
+			if (addressList == null || addressList.size() == 0) {
+				result.setResult(AddressMappingResultEnum.zeroResult);
+			} else if (addressList.size() == 1) {
+				result.setResult(AddressMappingResultEnum.singleResult);
+			} else {
+				result.setResult(AddressMappingResultEnum.multipleResult);
+			}
 			
+			// 找到地址对应的站点规则/站点
+			List<DeliveryStationRule> deliveryStationRuleList = deliverStationRuleService.search(addressList, orderVo);
+			sb = new StringBuilder();
+			int count = 0;
+			for (DeliveryStationRule rule : deliveryStationRuleList) {
+				DeliveryStation deliveryStation = rule.getDeliveryStation();
+				deliveryStationList.add(deliveryStation);
+				if (count > 0) {
+					sb.append(",");
+				}
+				sb.append(deliveryStation.getId());
+				count++;
+			}
+			result.setDeliveryStationList(deliveryStationList);
+			order.setDeliveryStationIds(sb.toString());
+			
+			// 找到地址对应的配送员规则/配送员
+			List<DelivererRule> delivererRuleList = delivererRuleService.search(addressList, orderVo);
+			sb = new StringBuilder();
+			count = 0;
+			for (DelivererRule rule : delivererRuleList) {
+				Deliverer deliverer = rule.getDeliverer();
+				delivererList.add(deliverer);
+				
+				if (count > 0) {
+					sb.append(",");
+				}
+				sb.append(deliverer.getId());
+				count++;
+			}
+			result.setDelivererList(delivererList);
+			order.setDelivererIds(sb.toString());
+			
+			// TODO 找到地址对应的供货商时效
+			result.setTimeLimit(null);
 		} catch (Exception e) {
 			logger.error("search address failed due to {}", e.getMessage(), e);
 			result.setResult(AddressMappingResultEnum.exceptionResult);
 			result.setMessage(e.getMessage());
 		}
 
-		Order order = new Order();
-		BeanUtils.copyProperties(orderVo, order);
-		order.setExternalOrderId(orderVo.getOrderId());
-		order.setCreationDate(new Date());
-//		order.setDelivererIds(delivererIds);
 		orderDao.save(order);
-		return null;
+		return result;
 	}
 }

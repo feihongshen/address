@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import cn.explink.domain.ClientApplication;
 import cn.explink.service.AddressService;
-import cn.explink.service.LuceneService;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.ws.vo.AddressMappingResult;
 import cn.explink.ws.vo.ApplicationVo;

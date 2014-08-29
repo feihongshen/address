@@ -87,6 +87,17 @@ public class AddressController extends BaseController {
 		addressService.getChildAddressTree(parentId, customerId);
 		return "/address/getAddress";
 	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param parentId
+	 * @return
+	 */
+	@RequestMapping("/addressImportPage")
+	public String addressImportPage(Model model) {
+		return "/address/import";
+	}
 
 	@RequestMapping("/downloadAddressTemplate")
 	public String downloadAddressTemplate(Model model, HttpServletRequest request, HttpServletResponse response) {
