@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	<!-- HTTP security configurations auto-config="true" -->
+	<http use-expressions="true" auto-config="false" entry-point-ref="http403EntryPoint">
+		<logout logout-url="/resources/j_spring_security_logout" />
+		<!-- Configure these elements to secure URIs in your application -->
+		<intercept-url pattern="/resources/**" access="permitAll" />
+		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/css/**" access="permitAll" />
+		<intercept-url pattern="/js/**" access="permitAll" />
+		<intercept-url pattern="/login" access="permitAll" />
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="loginFilter" />
+		<session-management
+			session-authentication-strategy-ref="sas" />
+	</http>
+
+	<beans:bean id="sas"
+		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<beans:constructor-arg name="sessionRegistry"
+			ref="sessionRegistry" />
+		<beans:property name="maximumSessions" value="1" />
+		<!-- 防止session攻击 -->
+		<beans:property name="alwaysCreateSession" value="true" />
+		<beans:property name="migrateSessionAttributes" value="false" />
+		<!-- 同一个帐号 同时只能一个人登录 -->
+		<beans:property name="exceptionIfMaximumExceeded"
+			value="false" />
+	</beans:bean>
+
+	<beans:bean id="sessionRegistry"
+		class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+	<!-- Configure Authentication mechanism -->
+	<authentication-manager alias="authenticationManager">
+		<!-- SHA-256 values can be produced using 'echo -n your_desired_password 
+			| sha256sum' (using normal *nix environments) -->
+		<authentication-provider user-service-ref="userService">
+			<password-encoder hash="plaintext" />
+		</authentication-provider>
+	</authentication-manager>
+
+	<beans:bean name="md5PasswordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
+	</beans:bean>
+
+	<beans:bean id="userService" class="cn.explink.service.UserService" />
+
+	<beans:bean
+		class="org.springframework.security.core.context.SecurityContextHolder"
+		factory-method="getContextHolderStrategy" />
+
+	<beans:bean id="loginFilter" class="cn.explink.web.filter.AddressLoginFilter">
+		<beans:property name="postOnly" value="false"></beans:property>
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationFailureHandler"
+			ref="failureHandler" />
+		<beans:property name="filterProcessesUrl"
+			value="/resources/j_spring_security_check" />
+		<beans:property name="sessionAuthenticationStrategy"
+			ref="sas" />
+	</beans:bean>
+	<beans:bean id="failureHandler"
+		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl" value="/login?login_error=t" />
+	</beans:bean>
+
+	<beans:bean id="http403EntryPoint"
+		class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+	</beans:bean>
+
+</beans:beans>

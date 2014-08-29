@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans   
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
+            http://www.springframework.org/schema/context  
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd  
+            http://www.springframework.org/schema/aop  
+            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd  
+            http://www.springframework.org/schema/tx  
+            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<bean id="scheduledTaskService" class="cn.explink.service.ScheduledTaskService">
+		<property name="cachedWorkers">
+			<map>
+				<entry key="updateIndexTask" value-ref="updateIndexWorker" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="schedulerFactory" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="updateIndexTimer" />
+			</list>
+		</property>
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.scheduler.instanceName">TMS_INF_SCHEDULER</prop>
+				<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+				<prop key="org.quartz.jobStore.misfireThreshold">300000</prop>
+				<prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+				<prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</prop>
+				<prop key="org.quartz.jobStore.tablePrefix">qtz_</prop>
+				<prop key="org.quartz.jobStore.maxMisfiresToHandleAtATime">20</prop>
+				<prop key="org.quartz.jobStore.isClustered">true</prop>
+				<prop key="org.quartz.threadPool.threadCount">30</prop>
+				<prop key="org.quartz.plugin.triggHistory.class">org.quartz.plugins.history.LoggingJobHistoryPlugin
+				</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="updateIndexTimer" class="org.springframework.scheduling.quartz.CronTriggerBean" dependency-check="default">
+		<property name="jobDetail">
+			<ref bean="updateIndexTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */10 * * * ?</value>
+		</property>
+	</bean>
+	
+	<bean id="updateIndexTask" class="cn.explink.util.BeanInvokingJobDetailFactoryBean" dependency-check="default">
+		<property name="targetBean" value="scheduledTaskService" />
+		<property name="targetMethod" value="processUpdateIndexTasks" />
+	</bean>
+</beans>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+	<changeSet id="xushiju-2014-07-21-01" author="xushiju">
+		<sqlFile path="address_init.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
+
+	<changeSet id="xushiju-2014-07-21-02" author="xushiju">
+		<sqlFile path="quartz_init.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
+
+	<changeSet id="xushiju-2014-07-21-03" author="xushiju">
+		<sql>
+			create table `SCHEDULED_TASKS` (
+				`ID` int(22) primary key not null auto_increment comment 'id',
+				`TASK_TYPE` varchar(50) not null,
+				`STATUS` int(2) not null,
+				`REFERENCE_TYPE` varchar(50),
+				`REFERENCE_ID` varchar(32),
+				`FIRE_TIME` DATETIME,
+				`COMPLETED_TIME` DATETIME,
+				`CREATED_AT` DATETIME,
+				`TRY_COUNT` int (10)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+			-- create index IDX_TASKS_STATUS_FIRE_TIME
+			CREATE INDEX `IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
+			(
+				`STATUS`,
+				`FIRE_TIME`
+			);
+
+			-- create index IDX_TASKS_STATUS_FIRE_TIME
+			CREATE INDEX `IDX_TASKS_STATUS_TYPE_FIRE_TIME` ON `SCHEDULED_TASKS`
+			(
+				`STATUS`,
+				`TASK_TYPE`,
+				`FIRE_TIME`
+			);
+
+			-- create index IDX_TASKS_REFERENCE_ID
+			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON `SCHEDULED_TASKS`
+			(
+				`REFERENCE_ID`
+			);
+		</sql>
+	</changeSet>
+
+</databaseChangeLog>
