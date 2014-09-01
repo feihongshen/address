@@ -7,17 +7,17 @@
 			relativeToChangelogFile="true" />
 	</changeSet>
 	
-	<changeSet id="xushiju-2014-07-21-01" author="xushiju">
+	<changeSet id="xushiju-2014-07-21-02" author="xushiju">
 		<sqlFile path="address_init_data.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
 
-	<changeSet id="xushiju-2014-07-21-02" author="xushiju">
+	<changeSet id="xushiju-2014-07-21-03" author="xushiju">
 		<sqlFile path="quartz_init.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
 
-	<changeSet id="xushiju-2014-07-21-03" author="xushiju">
+	<changeSet id="xushiju-2014-07-21-04" author="xushiju">
 		<sql>
 			create table `SCHEDULED_TASKS` (
 				`ID` int(22) primary key not null auto_increment comment 'id',

@@ -156,12 +156,10 @@ mainline/addressRepository/src/main/java/org/wltea/analyzer/query/SWMCQueryBuild
 mainline/addressRepository/src/main/java/org/wltea/analyzer/sample/IKAnalzyerDemo.java -text
 mainline/addressRepository/src/main/java/org/wltea/analyzer/sample/LuceneIndexAndSearchDemo.java -text
 mainline/addressRepository/src/main/resources/IKAnalyzer.cfg.xml -text
-mainline/addressRepository/src/main/resources/META-INF/spring/address-core.properties -text
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext-db.xml -text
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext-job.xml -text
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext-security.xml -text
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext.xml -text
-mainline/addressRepository/src/main/resources/META-INF/spring/db.properties -text
 mainline/addressRepository/src/main/resources/address.dic -text
 mainline/addressRepository/src/main/resources/logback.xml -text
 mainline/addressRepository/src/main/resources/stopword.dic -text
