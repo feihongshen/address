@@ -212,10 +212,11 @@ public class LuceneService {
 	 * @throws IOException
 	 */
 	private void refreshDictChange(DictChange dictChange, File dictDirectory) throws IOException {
-		Set<String> removeSet = dictChange.getRemoveSet();
+//		Set<String> removeSet = dictChange.getRemoveSet();
 		Set<String> addSet = dictChange.getAddSet();
 		Dictionary dictinonary = Dictionary.getSingleton();
-		dictinonary.disableWords(removeSet);
+//		TODO 删除词典可能导致同名地址无法正常拆分
+//		dictinonary.disableWords(removeSet);
 		dictinonary.addWords(addSet);
 
 		File dict = new File(dictDirectory, dictChange.getDictName());
@@ -224,9 +225,10 @@ public class LuceneService {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dict)));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				if (!removeSet.contains(line)) {
+//				TODO 删除词典可能导致同名地址无法正常拆分
+//				if (!removeSet.contains(line)) {
 					existingSet.add(line);
-				}
+//				}
 			}
 			br.close();
 		}

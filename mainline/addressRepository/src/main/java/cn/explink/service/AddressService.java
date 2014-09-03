@@ -105,11 +105,11 @@ public class AddressService {
 		return aliasDao.getAliasByIdList(aliasIdList);
 	}
 
-	public List<Address> getChildAddressTree(Long parentId, Long customerId) {
+	public List<Address> getChildAddressTree(Long customerId, Long parentId) {
 		if (parentId == null) {
 			parentId = cn.explink.Constants.ADDRESS_ID_CHINA;
 		}
-		List<Address> addressList = addressDao.getChildAddress(parentId, customerId);
+		List<Address> addressList = addressDao.getChildAddress(customerId, parentId);
 		return addressList;
 	}
 

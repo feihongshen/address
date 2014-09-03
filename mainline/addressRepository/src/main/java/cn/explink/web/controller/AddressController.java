@@ -84,7 +84,7 @@ public class AddressController extends BaseController {
 	@RequestMapping("/getAddressTree")
 	public String getAddressTree(Model model, @RequestParam(value = "parentId", required = false) Long parentId) {
 		Long customerId = getCustomerId();
-		addressService.getChildAddressTree(parentId, customerId);
+		addressService.getChildAddressTree(customerId, parentId);
 		return "/address/getAddress";
 	}
 	

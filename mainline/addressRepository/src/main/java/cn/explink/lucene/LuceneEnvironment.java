@@ -30,7 +30,7 @@ public class LuceneEnvironment {
 
 	private IndexWriter indexWriter;
 
-	private Analyzer analyzer = new IKAnalyzer(true);
+	private Analyzer analyzer = new IKAnalyzer(false);
 
 	private IndexSearcher indexSearch;
 

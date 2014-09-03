@@ -44,7 +44,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		return query.list();
 	}
 
-	public List<Address> getChildAddress(Long parentId, Long customerId) {
+	public List<Address> getChildAddress(Long customerId, Long parentId) {
 		StringBuilder hql = new StringBuilder("select a.* from Address a, AddressPermission p");
 		hql.append(" where a.parentId = :parentId");
 		hql.append(" and a.addressId = p.addressId");
