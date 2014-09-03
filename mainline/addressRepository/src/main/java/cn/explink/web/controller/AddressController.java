@@ -19,15 +19,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.explink.domain.Address;
+import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Alias;
+import cn.explink.modle.DataGrid;
+import cn.explink.modle.DataGridReturn;
+import cn.explink.qbc.CriteriaQuery;
+import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
 import cn.explink.service.LuceneService;
 import cn.explink.util.DateTimeUtil;
+import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
 
 @RequestMapping("/address")
@@ -44,6 +51,8 @@ public class AddressController extends BaseController {
 
 	@Autowired
 	private AddressImportService addressImportService;
+	@Autowired
+	private AddressImportResultService addressImportResultService;
 
 	@RequestMapping("/index")
 	public String index(Model model) {
@@ -96,7 +105,11 @@ public class AddressController extends BaseController {
 	 */
 	@RequestMapping("/addressImportPage")
 	public String addressImportPage(Model model) {
-		return "/address/import";
+//		List<AddressImportDetail> detailList= addressImportService.getAll();
+//		List<AddressImportResult> resultList= addressImportResultService.getAll();
+//		model.addAttribute("detailList", detailList);
+//		model.addAttribute("resultList", resultList);
+		return "address/importDatagrid";
 	}
 
 	@RequestMapping("/downloadAddressTemplate")
@@ -165,5 +178,21 @@ public class AddressController extends BaseController {
 			,@RequestParam(value ="id",required = false) Long id) {
 		addressImportService.deleteImportAddressResult(id, getCustomerId());
 		return null;
+	}
+	
+	@RequestMapping("/datagrid")
+	public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);
+		HqlGenerateUtil.installHql(cq, addressImportDetail, request.getParameterMap());
+		return this.addressImportService.getDataGridReturn(cq, true);
+		
+	}
+	
+	@RequestMapping("/subdatagrid")
+	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
+		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
+		return addressImportResultService.getDataGridReturn(cq, true);
+		
 	}
 }

@@ -1,0 +1,45 @@
+@charset "utf-8";
+/* CSS Document */
+html, body, div, span, applet, object, iframe, caption, tbody, tfoot, thead, th, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,     
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code,     
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend {    
+ vertical-align: baseline;    
+ font-family: inherit;    
+ font-weight: inherit;    
+ font-style: inherit;    
+ outline: 0;    
+ padding: 0;    
+ margin: 0;    
+ border: 0;
+ word-break:break-all;
+ word-wrap:break-word;
+ }    
+
+  
+
+ol, ul,li {    
+ list-style: none;    
+ }
+
+.clear{content: "."; display: block; height: 0px; line-height:0px; visibility:hidden; clear:both}
+ /*CSS-REST*/
+#main_body { background:#eef9ff }
+body{ font-size:12px; height:100%; overflow-x:hidden; width:100%}
+textarea{font-size:12px; padding:0; margin:0}
+strong { font-weight:bold }
+a { text-decoration:none; color:#333 }
+a:hover { color:#F30; text-decoration:underline }
+.table_2 { background:#82b8ef; font-size:12px}
+.table_2 tr { background:#fff }
+.table_2 td { line-height:22px; height:22px; overflow:hidden}
+.table_2 strong { font-size:14px; color:#F60; font-weight:bold; font-family:Arial, Helvetica, sans-serif; line-height:120% }
+.table_2 em{font-size:14px; font-weight:bold; color:#fff; font-family:Arial, Helvetica, sans-serif; line-height:120% }
+.table_2 h2 { font-size:36px; font-weight:bold; color:#06C; display:inline }
+.table_2 h3 { font-size:24px; font-weight:bold; color:#06C; display:inline }
+.table_2 a { color:#03F }
+.table_2 { text-align:center }
+ .table_2 h1 { font-size:12px; font-weight:bold; color:#FFF; display:inline }
+.right_set1 td{font-size:14px; line-height:24px; border-bottom:1px solid #ccc; border-right:1px solid #ccc; padding:2px; background:#E1FBE6}
+.table_5 {font-size:12px; border:1px solid #82b8ef}
+	.table_5 td { line-height:26px; border-right:1px solid #ccc; border-bottom:1px solid #ccc }
+	.table_5 strong { font-size:14px; font-weight:bold; color:#F30; font-family:Arial, Helvetica, sans-serif; line-height:120% }

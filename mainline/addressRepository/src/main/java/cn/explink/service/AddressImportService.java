@@ -11,17 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import cn.explink.dao.AddressDao;
+import cn.explink.dao.AddressImportDetailDao;
 import cn.explink.dao.AddressImportResultDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressImportDetail;
@@ -30,12 +33,17 @@ import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.exception.ExplinkRuntimeException;
+import cn.explink.modle.DataGridReturn;
 import cn.explink.tree.AddressImportEntry;
 import cn.explink.tree.TreeNode;
 import cn.explink.util.StringUtil;
 
 @Service
-public class AddressImportService {
+public class AddressImportService extends CommonServiceImpl<AddressImportDetail,Long> {
+
+	public AddressImportService() {
+		super(AddressImportDetail.class);
+	}
 
 	private static Logger logger = LoggerFactory.getLogger(AddressImportService.class);
 
@@ -47,6 +55,8 @@ public class AddressImportService {
 
 	@Autowired
 	private AddressService addressService;
+	@Autowired
+	private AddressImportDetailDao addressImportDetailDao;
 
 	/**
 	 * 创建导入模板
@@ -137,6 +147,7 @@ public class AddressImportService {
 			}
 		} catch (IOException e) {
 			logger.error("importAddress failed due to {}", e);
+			return null;
 		}
 
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
@@ -321,4 +332,11 @@ public class AddressImportService {
 		addressService.batchUnbindAddress(addressIdList, customerId);
 		addressImportResultDao.delete(addressImportResult);
 	}
+
+
+	public List<AddressImportDetail> getAllDetail() {
+		return addressImportDetailDao.loadAll(AddressImportDetail.class);
+		
+	}
+
 }

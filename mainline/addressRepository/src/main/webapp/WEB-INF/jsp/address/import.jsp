@@ -1,4 +1,5 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
+<%@page import="cn.explink.domain.*"%>
 <%@page import="java.util.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -6,6 +7,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<%
+List<AddressImportDetail> detailList = (List<AddressImportDetail>)request.getAttribute("detailList");
+List<AddressImportResult> resultList=(List<AddressImportResult> )request.getAttribute("resultList");
+
+%>
 <title>地址匹配</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
@@ -42,66 +48,19 @@
             <th align="center" bgcolor="#f1f1f1">结果</th>
             <th align="center" bgcolor="#f1f1f1">信息</th>
           </tr>
+          <%if(detailList != null && detailList.size()>0){ %>
+				<%for(AddressImportDetail detail : detailList){ %>
           <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getProvince() %></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getCity() %></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getDistrict() %></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getAddress1() %></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getDeliveryStationName()%></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getDelivererName()%></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getStatus()%></td>
+            <td align="center" bgcolor="#FFFFFF"><%=detail.getMessage()%></td>
           </tr>
-          <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#FFFFFF">云南</td>
-            <td align="center" bgcolor="#FFFFFF">曲靖市</td>
-            <td align="center" bgcolor="#FFFFFF">麒麟区</td>
-            <td align="center" bgcolor="#FFFFFF">南宁廖廓西山白石口建宁街道以外南宁西路政府一号院<</td>
-            <td align="center" bgcolor="#FFFFFF">云南分站</td>
-            <td align="center" bgcolor="#FFFFFF">张小三</td>
-            <td align="center" bgcolor="#FFFFFF">成功</td>
-            <td align="center" bgcolor="#FFFFFF">重复</td>
-          </tr>
+          <%} }%>
         </thead>
       </table>
     </div>

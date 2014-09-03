@@ -1,6 +1,8 @@
 package cn.explink.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,16 @@ public class UserDao extends BasicHibernateDaoSupport<User, Long> {
 		Query query = getSession().createQuery(hql);
 		query.setString("name", name);
 		return query.list();
+	}
+
+	public Map<Long, String> getview() {
+		Map<Long, String> view=new HashMap<Long, String>();
+		List<User> ulist=loadAll(User.class);
+		
+		for (User user : ulist) {
+			view.put(user.getId(), user.getName());
+		}
+		return view;
 	}
 
 }

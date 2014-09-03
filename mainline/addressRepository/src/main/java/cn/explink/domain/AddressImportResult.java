@@ -13,27 +13,49 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import cn.explink.annocation.Excel;
 
 @Entity
 @Table(name = "ADDRESS_IMPORT_RESULTS")
+@JsonIgnoreProperties(value = { "addressImportDetails" })  
 public class AddressImportResult {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Excel(exportName="用户")
 	@Column(name = "USER_ID")
 	private Long userId;
+	
+	private String userName;
+	@Transient
+	public String getUserName() {
+		return userName;
+	}
 
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	@Excel(exportName="导入关键词数量")
 	@Column(name = "SUCCESS_COUNT")
 	private Integer successCount;
 
 	@Column(name = "FAILURE_COUNT")
 	private Integer failureCount;
-
+	@Excel(exportName="导入日期")
 	@Column(name = "IMPORT_DATE")
 	private Date importDate;
+	
 
+
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "addressImportResult")
 	private Set<AddressImportDetail> addressImportDetails = new HashSet<AddressImportDetail>();
 

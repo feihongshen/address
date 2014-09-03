@@ -10,8 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import cn.explink.annocation.Excel;
+
 @Entity
 @Table(name = "ADDRESS_IMPORT_DETAILS")
+
 public class AddressImportDetail {
 
 	@Id
@@ -21,21 +26,18 @@ public class AddressImportDetail {
 	@Column(name = "ADDRESS_ID")
 	private Long addressId;
 
-	@Column(name = "STATUS")
-	private Integer status;
-
-	@Column(name = "MESSAGE")
-	private String message;
-
+	
+	
+	@Excel(exportName="省")
 	@Column(name = "PROVINCE")
 	private String province;
-
+	@Excel(exportName="市")
 	@Column(name = "CITY")
 	private String city;
-
+	@Excel(exportName="区/县")
 	@Column(name = "DISTRICT")
 	private String district;
-
+	@Excel(exportName="关键字")
 	@Column(name = "ADDRESS1")
 	private String address1;
 
@@ -47,15 +49,21 @@ public class AddressImportDetail {
 
 	@Column(name = "DELIVERY_STATION_ID")
 	private Long deliveryStationId;
-
+	@Excel(exportName="站点")
 	@Column(name = "DELIVERY_STATION_NAME")
 	private String deliveryStationName;
 
 	@Column(name = "DELIVERER_ID")
 	private Long delivererId;
-
+	@Excel(exportName="配送员")
 	@Column(name = "DELIVERER_NAME")
 	private String delivererName;
+	@Excel(exportName="结果")
+	@Column(name = "STATUS")
+	private Integer status;
+	@Excel(exportName="信息")
+	@Column(name = "MESSAGE")
+	private String message;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RESULT_ID")
