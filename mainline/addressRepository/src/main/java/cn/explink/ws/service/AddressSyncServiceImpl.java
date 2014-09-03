@@ -1,18 +1,21 @@
 package cn.explink.ws.service;
 
+import java.util.List;
+
 import javax.jws.WebService;
 
 import cn.explink.domain.ClientApplication;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
-import cn.explink.service.ApplicationService;
+import cn.explink.service.DelivererRuleService;
 import cn.explink.service.DelivererService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.service.VendorService;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.ws.vo.AddressSyncServiceResult;
 import cn.explink.ws.vo.ApplicationVo;
+import cn.explink.ws.vo.DelivererRuleVo;
 import cn.explink.ws.vo.DelivererVo;
 import cn.explink.ws.vo.DeliveryStationVo;
 import cn.explink.ws.vo.ResultCodeEnum;
@@ -33,7 +36,7 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 			return result;
 		}
 		deliveryStationVo.setCustomerId(clientApplication.getCustomerId());
-		
+
 		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliverySationtService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
@@ -251,6 +254,29 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 			result.setMessage(e.getMessage());
 		}
 
+		return result;
+	}
+
+	@Override
+	public AddressSyncServiceResult createDelivererRule(ApplicationVo applicationVo, List<DelivererRuleVo> delivererRuleVoList) {
+		AddressSyncServiceResult result = new AddressSyncServiceResult();
+		ClientApplication clientApplication = null;
+		try {
+			clientApplication = validateApplication(applicationVo);
+		} catch (Exception e) {
+			result.setResultCode(ResultCodeEnum.failure);
+			result.setMessage(e.getMessage());
+			return result;
+		}
+
+		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
+		try {
+			delivererRuleService.createDelivererRule(clientApplication.getCustomerId(), delivererRuleVoList);
+			result.setResultCode(ResultCodeEnum.success);
+		} catch (Exception e) {
+			result.setResultCode(ResultCodeEnum.failure);
+			result.setMessage(e.getMessage());
+		}
 		return result;
 	}
 }

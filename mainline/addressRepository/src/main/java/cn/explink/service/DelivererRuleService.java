@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,6 @@ import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.DelivererDao;
 import cn.explink.dao.DelivererRuleDao;
 import cn.explink.domain.Address;
-import cn.explink.domain.DelivererRule;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
@@ -21,11 +22,13 @@ import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.ws.vo.DelivererRuleVo;
 import cn.explink.ws.vo.OrderVo;
 
 @Service
 public class DelivererRuleService extends RuleService {
 
+	private static Logger logger = LoggerFactory.getLogger(DelivererRuleService.class);
 	@Autowired
 	private AddressDao addressDao;
 
@@ -38,7 +41,29 @@ public class DelivererRuleService extends RuleService {
 	@Autowired
 	private DelivererRuleDao delivererRuleDao;
 
-	public DelivererRule createDelivererRule(Long addressId, Long delivererId, Long customerId, String rule) {
+	/**
+	 * 批量创建配送员规则
+	 * @param customerId
+	 * @param delivererRuleVoList
+	 */
+	public void createDelivererRule(Long customerId, List<DelivererRuleVo> delivererRuleVoList) {
+		for (DelivererRuleVo ruleVo : delivererRuleVoList) {
+			createDelivererRule(customerId, ruleVo.getAddressId(), ruleVo.getDelivererId(), ruleVo.getRule());
+		}
+	}
+	
+	/**
+	 * 创建配送员规则
+	 * @param addressId
+	 * @param delivererId
+	 * @param customerId
+	 * @param rule
+	 * @return
+	 */
+	public DelivererRule createDelivererRule(Long customerId, Long addressId, Long delivererId, String rule) {
+		logger.info("createDelivererRule for customer: {}, addressId: {}, delivererId: {}, rule: {}", new Object[]{
+				customerId, addressId, delivererId, rule
+		});
 		// 解析规则
 		RuleExpression ruleExpression = parseRule(rule);
 		Address address = addressDao.get(addressId);
@@ -68,6 +93,10 @@ public class DelivererRuleService extends RuleService {
 		}
 		delivererRuleDao.save(delivererRule);
 		return delivererRule;
+	}
+	
+	public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {
+		return delivererRuleDao.getDelivererRuleList(customerId, addressId);
 	}
 
 	/**
@@ -144,6 +173,5 @@ public class DelivererRuleService extends RuleService {
 		}
 		return ruleList;
 	}
-
 
 }

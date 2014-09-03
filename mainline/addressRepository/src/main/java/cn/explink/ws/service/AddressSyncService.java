@@ -1,9 +1,12 @@
 package cn.explink.ws.service;
 
+import java.util.List;
+
 import javax.jws.WebService;
 
 import cn.explink.ws.vo.ApplicationVo;
 import cn.explink.ws.vo.AddressSyncServiceResult;
+import cn.explink.ws.vo.DelivererRuleVo;
 import cn.explink.ws.vo.DelivererVo;
 import cn.explink.ws.vo.DeliveryStationVo;
 import cn.explink.ws.vo.VendorVo;
@@ -29,4 +32,11 @@ public interface AddressSyncService {
 	
 	AddressSyncServiceResult deleteDeliverer(ApplicationVo applicationVo, DelivererVo deliverer);
 	
+	/**
+	 * 创建配送员规则
+	 * @param applicationVo
+	 * @param delivererRuleVoList
+	 * @return
+	 */
+	AddressSyncServiceResult createDelivererRule(ApplicationVo applicationVo, List<DelivererRuleVo> delivererRuleVoList);
 }

@@ -1,5 +1,7 @@
 package cn.explink.ws.vo;
 
+import java.util.List;
+
 public class AddressVo {
 
 	private Long id;

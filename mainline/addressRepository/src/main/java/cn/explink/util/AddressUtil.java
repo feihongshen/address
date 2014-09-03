@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 
 import cn.explink.domain.Address;
+import cn.explink.domain.DelivererRule;
 import cn.explink.ws.vo.AddressVo;
+import cn.explink.ws.vo.DelivererRuleVo;
 
 public class AddressUtil {
 
@@ -47,6 +49,27 @@ public class AddressUtil {
 		AddressVo addressVo = new AddressVo();
 		BeanUtils.copyProperties(address, addressVo);
 		return addressVo;
+	}
+
+	public static List<DelivererRuleVo> cloneToDelivererRuleList(List<DelivererRule> delivererRuleList) {
+		if (delivererRuleList == null) {
+			return null;
+		}
+		List<DelivererRuleVo> delivererRuleVoList = new ArrayList<DelivererRuleVo>(delivererRuleList.size());
+		for (DelivererRule delivererRule : delivererRuleList) {
+			DelivererRuleVo delivererRuleVo = cloneToDelivererRuleVo(delivererRule);
+			delivererRuleVoList.add(delivererRuleVo);
+		}
+		return delivererRuleVoList;
+	}
+
+	public static DelivererRuleVo cloneToDelivererRuleVo(DelivererRule delivererRule) {
+		if (delivererRule == null) {
+			return null;
+		}
+		DelivererRuleVo delivererRuleVo = new DelivererRuleVo();
+		BeanUtils.copyProperties(delivererRule, delivererRuleVo);
+		return delivererRuleVo;
 	}
 
 }

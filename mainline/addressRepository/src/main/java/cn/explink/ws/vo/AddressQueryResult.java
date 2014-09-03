@@ -8,6 +8,8 @@ public class AddressQueryResult {
 
 	private String message;
 
+	private List<DelivererRuleVo> delivererRuleVoList;
+
 	private List<AddressVo> addressVoList;
 
 	public ResultCodeEnum getResultCode() {
@@ -32,6 +34,14 @@ public class AddressQueryResult {
 
 	public void setAddressVoList(List<AddressVo> addressVoList) {
 		this.addressVoList = addressVoList;
+	}
+
+	public List<DelivererRuleVo> getDelivererRuleVoList() {
+		return delivererRuleVoList;
+	}
+
+	public void setDelivererRuleVoList(List<DelivererRuleVo> delivererRuleVoList) {
+		this.delivererRuleVoList = delivererRuleVoList;
 	}
 
 }
