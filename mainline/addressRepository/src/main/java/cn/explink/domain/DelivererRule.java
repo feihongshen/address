@@ -29,9 +29,6 @@ public class DelivererRule {
 	@Column(name = "RULE_TYPE", nullable = false)
 	private Integer ruleType;
 
-	@Column(name = "STATUS", nullable = false)
-	private Integer status;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ADDRESS_ID")
 	private Address address;
@@ -57,14 +54,6 @@ public class DelivererRule {
 
 	public void setRule(String rule) {
 		this.rule = rule;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
 	}
 
 	public Address getAddress() {
