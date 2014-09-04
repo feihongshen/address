@@ -1,3 +1,13 @@
+-- 新建客户
+INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (1, '易普联科', 0, '');
+
+-- 新建客户应用
+INSERT INTO CLIENT_APPLICATIONS (id, NAME, PASSWORD, customer_id, STATUS) VALUES (1, 'explink', '123', 0, 1);
+
+-- 新建管理员用户
+INSERT INTO users (id, NAME, PASSWORD, STATUS, customer_id) VALUES (1, 'admin', 'admin', 0, 1);
+
+-- 新建客户地址权限
 INSERT INTO address_permissions (address_id, customer_id) VALUES (1, 1);
 INSERT INTO address_permissions (address_id, customer_id) VALUES (2, 1);
 INSERT INTO address_permissions (address_id, customer_id) VALUES (3, 1);

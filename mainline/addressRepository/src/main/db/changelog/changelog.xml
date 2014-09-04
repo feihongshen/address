@@ -53,5 +53,11 @@
 			);
 		</sql>
 	</changeSet>
+	
+	<!-- 创建易普联科客户 -->
+	<changeSet id="xushiju-2014-09-04-01" author="xushiju">
+		<sqlFile path="customer_init_explink.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>

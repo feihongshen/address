@@ -1,12 +1,3 @@
--- 客户
-INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (0, '易普联科', 0, '');
-
--- 客户应用
-INSERT INTO CLIENT_APPLICATIONS (id, NAME, PASSWORD, customer_id, STATUS) VALUES (1, 'explink', '123', 0, 1);
-
--- 用户
-INSERT INTO users (id, NAME, PASSWORD, STATUS, customer_id) VALUES (1, 'admin', 'admin', 0, 1);
-
 -- 初始化地址库省市区信息
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (568, '黑山县', 1, 3, 563, '1-501-563', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (835, '海林市', 1, 3, 826, '1-708-826', now());
