@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
@@ -71,10 +72,10 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 	public List<Address> getAddressByIdListAndCustomerId(List<Long> addressIdList, Long customerId) {
-		StringBuilder hql = new StringBuilder("select a from Address a left join AddressPermission p");
-		hql.append(" on a.id = p.addressId");
-		hql.append(" where a.id in :addressIdList");
-		hql.append(" and (p.customerId = :customerId or a.level <= 3)");
+		StringBuilder hql = new StringBuilder("select a from Address a, AddressPermission p");
+		hql.append(" where a.id = p.addressId");
+		hql.append(" and a.id in :addressIdList");
+		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString());
 		query.setParameterList("addressIdList", addressIdList);
 		query.setLong("customerId", customerId);
