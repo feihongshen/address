@@ -149,13 +149,29 @@ public class AddressService {
 		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
-			SingleAddressMappingResult singleResult = search(orderVo);
+			SingleAddressMappingResult singleResult = search(orderVo,true);
+			result.add(singleResult);
+		}
+		return result;
+	}
+	/**
+	 * 匹配接口不做存储
+	 * 
+	 * @param customerId
+	 * @param orderList
+	 * @return
+	 */
+	public List<SingleAddressMappingResult> match(Long customerId, List<OrderVo> orderList) {
+		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
+		for (OrderVo orderVo : orderList) {
+			orderVo.setCustomerId(customerId);
+			SingleAddressMappingResult singleResult = search(orderVo,false);
 			result.add(singleResult);
 		}
 		return result;
 	}
 
-	private SingleAddressMappingResult search(OrderVo orderVo) {
+	private SingleAddressMappingResult search(OrderVo orderVo,boolean saveable) {
 		// 查询订单记录
 		Order order = new Order();
 		BeanUtils.copyProperties(orderVo, order);
@@ -220,8 +236,9 @@ public class AddressService {
 			result.setResult(AddressMappingResultEnum.exceptionResult);
 			result.setMessage(e.getMessage());
 		}
-
-		orderDao.save(order);
+		if(saveable){
+			orderDao.save(order);
+		}
 		return result;
 	}
 
