@@ -175,6 +175,11 @@ jQuery.extend({
     uploadHttpData: function( r, type ) {
         var data = !type;
         data = type == "xml" || data ? r.responseXML : r.responseText;
+        if(data.match("white-space")){
+        	var begin=data.indexOf("{");
+			var end=data.indexOf("}");
+			data=data.substring(begin,end+1);
+        }
         // If the type is "script", eval it in global context
         if ( type == "script" )
             jQuery.globalEval( data );
