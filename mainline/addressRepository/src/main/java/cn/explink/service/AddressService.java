@@ -2,7 +2,9 @@ package cn.explink.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import cn.explink.domain.Order;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.schedule.Constants;
 import cn.explink.ws.vo.AddressMappingResultEnum;
+import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.OrderVo;
 import cn.explink.ws.vo.SingleAddressMappingResult;
 
@@ -161,14 +164,50 @@ public class AddressService {
 	 * @param orderList
 	 * @return
 	 */
-	public List<SingleAddressMappingResult> match(Long customerId, List<OrderVo> orderList) {
+	public Map<String, Object> match(Long customerId, List<OrderVo> orderList) {
+		Map<String, Object> attributes=new HashMap<String, Object>();
+		List<BeanVo> suList=new ArrayList<BeanVo>();
+		List<BeanVo> unList=new ArrayList<BeanVo>();
+		List<BeanVo> dList=new ArrayList<BeanVo>();
 		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = search(orderVo,false);
+			BeanVo b=new BeanVo();
+			b.setKey(orderVo.getAddressLine());
+			switch (singleResult.getResult()) {
+			case  zeroResult:
+				b.setVal("未匹配");
+				unList.add(b);
+				break;
+			case  singleResult:
+				b.setVal(singleResult.getDeliveryStationList().get(0).getName());
+				suList.add(b);
+				break;
+			case  multipleResult:
+				List<DeliveryStation> dlist=singleResult.getDeliveryStationList();
+				StringBuffer names=new StringBuffer();
+				for (DeliveryStation deliveryStation : dlist) {
+					names.append(deliveryStation.getName()+",");
+				}
+				b.setVal(names.toString());
+				dList.add(b);
+				break;
+			default:
+				unList.add(b);
+				break;
+			}
 			result.add(singleResult);
 		}
-		return result;
+		int pper=(suList.size()+dList.size())/orderList.size()*100;
+		attributes.put("susum", suList.size());
+		attributes.put("unsum", unList.size());
+		attributes.put("dsum", dList.size());
+		attributes.put("pper", pper);
+		attributes.put("dList", dList);
+		attributes.put("unList", unList);
+		attributes.put("suList", suList);
+		return attributes;
 	}
 
 	private SingleAddressMappingResult search(OrderVo orderVo,boolean saveable) {

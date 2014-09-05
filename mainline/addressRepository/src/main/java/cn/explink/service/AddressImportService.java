@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -121,6 +123,8 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				detail.setAddress3(address3);
 				detail.setDeliveryStationName(deliveryStationName);
 				detail.setDelivererName(delivererName);
+				//TODO CascadeType.ALL
+				detail.setAddressImportResult(result);
 				details.add(detail);
 			}
 			
@@ -142,6 +146,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 			AddressImportEntry root = new AddressImportEntry();
 			root.setAddress(rootAddress);
 			tree.setSelf(root);
+			//TODO REMOVE?
 			for (AddressImportDetail detail : details) {
 				TreeNode<AddressImportEntry> treeNode = getTreeNode(tree, addressMap, detail, 1, customerId);
 			}

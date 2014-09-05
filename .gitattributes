@@ -148,6 +148,7 @@ mainline/addressRepository/src/main/java/cn/explink/ws/vo/AddressQueryResult.jav
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/AddressSyncServiceResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/AddressVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/ApplicationVo.java -text
+mainline/addressRepository/src/main/java/cn/explink/ws/vo/BeanVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/CustomerVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/DelivererRuleVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/DelivererVo.java -text

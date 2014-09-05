@@ -69,7 +69,7 @@
 </div>
 <div data-options="region:'west',split:true,title:'功能菜单'" style="width:180px;padding:10px;">
   <ul class="easyui-tree">
-    <li><a href="#" onclick="addTab('地址库匹配','dizhiku/dzkpp.html')">地址库匹配</a></li>
+    <li><a href="#" onclick="addTab('地址库匹配','address/addressMapping')">地址库匹配</a></li>
     <li> <span>数据维护</span>
       <ul>
         <li><a href="#" onclick="addTab('关键词导入','address/addressImportPage')">关键词导入</a></li>

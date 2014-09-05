@@ -1,8 +1,5 @@
 package cn.explink.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +24,8 @@ public class AddressImportResultService extends CommonServiceImpl<AddressImportR
 	@Autowired
 	private UserDao userDao;
 
-	public void setRlation(List<AddressImportResult> list) {
-		Map<Long,String> userView=userDao.getview();
-		
-		for (AddressImportResult addressImportResult : list) {
-			addressImportResult.setUserName(userView.get(addressImportResult.getUserId()));
-		}
-		
-	}
+
+	
 	
 
 
