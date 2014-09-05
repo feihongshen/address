@@ -7,7 +7,7 @@ var resultRow=
 		fit : true,
 		height : 400,
 		loadMsg : '数据加载中...',
-		pageSize : 10,
+		pageSize : 100000,
 		pagination : true,
 		pageList : [ 10, 20, 30 ],
 		sortOrder : 'asc',
@@ -55,8 +55,7 @@ var resultRow=
 					width : 50,
 					sortable : true,
 					formatter : function(value, rec, index) {
-						return new Date(value);
-						//.format('yyyy-MM-dd',value);
+						return new Date(value).Format('yyyy-MM-dd');
 					}
 				}
 

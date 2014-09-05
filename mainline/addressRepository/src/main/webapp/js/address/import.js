@@ -5,12 +5,16 @@ function ajaxFileUpload() {
 		url : 'importAddress',
 		secureuri : false,
 		fileElementId : 'file',
-		dataType : 'json',
-		data : {},
-		success : function(AjaxJson, status) {
-			if (AjaxJson.success) {
-				alert(AjaxJson.msg);
-				$('#importAddressList').datagrid('reload');
+		dataType: 'json',
+		success : function(data, status) {
+			alert(1);
+			if (data.success) {
+				$("#tools").val('上传成功');
+				$('#importAddressList').datagrid(
+						{
+							url : 'datagrid?addressImportResult='+data.info,
+							pageNumber : 1
+						});
 				$("#startImport").attr('disabled', false);
 			} else {
 				alert(AjaxJson.msg);

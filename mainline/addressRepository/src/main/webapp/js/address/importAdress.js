@@ -7,7 +7,7 @@ var detailRow={
 		fit : true,
 		height : 400,
 		loadMsg : '数据加载中...',
-		pageSize : 10,
+		pageSize : 100000,
 		pagination : true,
 		pageList : [ 10, 20, 30 ],
 		sortOrder : 'asc',
