@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ import cn.explink.domain.Address;
 import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Alias;
+import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.qbc.CriteriaQuery;
@@ -36,6 +39,9 @@ import cn.explink.service.LuceneService;
 import cn.explink.util.DateTimeUtil;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.ws.vo.BeanVo;
+import cn.explink.ws.vo.OrderVo;
+import cn.explink.ws.vo.SingleAddressMappingResult;
 
 @RequestMapping("/address")
 @Controller
@@ -111,6 +117,14 @@ public class AddressController extends BaseController {
 //		model.addAttribute("resultList", resultList);
 		return "address/importDatagrid";
 	}
+	@RequestMapping("/addressMapping")
+	public String addressMapping(Model model) {
+//		List<AddressImportDetail> detailList= addressImportService.getAll();
+//		List<AddressImportResult> resultList= addressImportResultService.getAll();
+//		model.addAttribute("detailList", detailList);
+//		model.addAttribute("resultList", resultList);
+		return "address/addressMapping";
+	}
 
 	@RequestMapping("/downloadAddressTemplate")
 	public String downloadAddressTemplate(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -139,17 +153,20 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/importAddress")
-	public String importAddress(Model model, HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
+			 MultipartFile file) {
 		InputStream in = null;
+		AjaxJson aj=new AjaxJson();
 		try {
 			in = file.getInputStream();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser());
-		model.addAttribute("addressImportResult", addressImportResult);
-		return null;
+		aj.setSuccess(true);
+		aj.setInfo(addressImportResult.getId().toString());
+		return aj;
 	}
 
 	/**
@@ -192,7 +209,41 @@ public class AddressController extends BaseController {
 	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
 		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
-		return addressImportResultService.getDataGridReturn(cq, true);
+		
+		return this.addressImportService.getDataGridReturn(cq, true);
 		
 	}
+	
+	@RequestMapping("/parseAdress")
+	public @ResponseBody AjaxJson parseAdress(String needMatched,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		//TODO GET CUSTOMER FROM USER
+		Long customerId=getCustomerId();
+		List<OrderVo> list=new ArrayList<OrderVo>();
+		for(String addressLine : needMatched.split("\n")){
+			if(addressLine.trim().length()==0){
+				continue;
+			}
+			OrderVo order=new OrderVo();
+			order.setCustomerId(customerId);
+			order.setAddressLine(addressLine);
+			list.add(order);
+		}
+		try {
+			Map<String, Object> attributes = addressService.match(customerId, list);
+			attributes.put("insum", list.size());
+			aj.setAttributes(attributes);
+			
+		} catch (Exception e) {
+			aj.setSuccess(false);
+			aj.setMsg("匹配异常"+e.getMessage());
+		} 
+		aj.setSuccess(true);
+		aj.setMsg("完成匹配");
+		return aj;
+		
+	}
+	
+	
+	
 }
