@@ -13,17 +13,29 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/import.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importAdress.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
 <script type="text/javascript">
+var hasIniUI=false;
 	$(function() {
 		$("#tabs").tabs({ 
 			width:$("#tabs").parent().width(), 
-		   height:$("#tabs").parent().height() 
-		}); 
+		    height:$("#tabs").parent().height() ,
+		    border:false, 
+			onSelect:function(title){ 
+				if(title=='历史导入记录'&&!hasIniUI){
+					alert(hasIniUI)
+					hasIniUI=true
+					$('#addressImportResult').datagrid(resultRow);
+				}else{
+					$('#importAddressList').datagrid(detailRow);
+				}; 
+			}
+		});
+		
 		$("#search").click(function(){
 			var queryParams = $('#addressImportResult').datagrid('options').queryParams;
 			queryParams['begin_importDate']=$("input[name='begin_date']").val();
@@ -39,9 +51,9 @@
 			ajaxFileUpload();
 		})
 		
-		$('#importAddressList').datagrid(detailRow);
 		
-		$('#addressImportResult').datagrid(resultRow);
+		
+		
 		
 	});
 	
