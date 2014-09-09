@@ -15,7 +15,7 @@ import cn.explink.domain.enums.DeliveryStationStausEnmu;
 import cn.explink.ws.vo.DeliveryStationVo;
 import cn.explink.ws.vo.OrderVo;
 
-@Service
+@Service ("deliverySationtService")
 public class DeliveryStationService {
 	
 	@Autowired
