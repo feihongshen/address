@@ -37,7 +37,7 @@ public class ApplicationVo {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ApplicationVo [");
 		if (id != null)
-			builder.append("id=").append(id).append(", ");
+			builder.append("id=").append(id).append(", ").append("customerId=").append(customerId).append(",");
 		if (password != null)
 			builder.append("password=").append(password);
 		builder.append("]");
