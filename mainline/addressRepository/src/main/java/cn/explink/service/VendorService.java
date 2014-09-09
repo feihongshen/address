@@ -36,6 +36,7 @@ public class VendorService {
 		BeanUtils.copyProperties(vendorVo, vendor);
 		vendor.setStatus(VendorStausEnmu.valid.getValue());
 		vendor.setCreationTime(new Date());
+		vendor.setCustomer(customer);
 		vendorDao.save(vendor);
 		return vendor;
 	}
