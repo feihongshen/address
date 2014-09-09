@@ -14,10 +14,10 @@ public class VendorDao extends BasicHibernateDaoSupport<Vendor, Long> {
 		super(Vendor.class);
 	}
 
-	public Vendor getVendor(Long externalVendorId, Long customerId) {
-		String hql = "from Vendor where externalVendorId = :externalVendorId and customer.id = :customerId";
+	public Vendor getVendor(Long externalId, Long customerId) {
+		String hql = "from Vendor where externalId = :externalId and customer.id = :customerId";
 		Query query = getSession().createQuery(hql);
-		query.setLong("externalVendorId", externalVendorId);
+		query.setLong("externalId", externalId);
 		query.setLong("customerId", customerId);
 		return (Vendor) query.uniqueResult();
 	}
