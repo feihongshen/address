@@ -8,6 +8,6 @@ import cn.explink.ws.vo.ApplicationVo;
 @WebService
 public interface AddressQueryService {
 
-	AddressQueryResult getAddressByParent(ApplicationVo applicationVo, Long addressId);
+	AddressQueryResult getAddress(ApplicationVo applicationVo, Long addressId, Long deliveryStationId);
 
 }

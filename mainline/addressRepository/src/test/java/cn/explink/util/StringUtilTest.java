@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Test;
 
-public class LuceneServiceTest extends TestCase {
+public class StringUtilTest extends TestCase {
 
 	private static final String patten = ".*[0-9]+号.*";
 	

@@ -946,7 +946,7 @@ mainline/addressRepository/src/test/java/cn/explink/service/DeliveryStationServi
 mainline/addressRepository/src/test/java/cn/explink/service/LuceneServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/addressImportTest.xlsx -text
 mainline/addressRepository/src/test/java/cn/explink/test/support/BaseTestCase.java -text
-mainline/addressRepository/src/test/java/cn/explink/util/LuceneServiceTest.java -text
+mainline/addressRepository/src/test/java/cn/explink/util/StringUtilTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/ws/AddressSyncServiceClient.java -text
 mainline/addressRepository/src/test/java/tmp/AddressReader.java -text
 mainline/addressRepository/src/test/java/tmp/AddressSearchTest.java -text

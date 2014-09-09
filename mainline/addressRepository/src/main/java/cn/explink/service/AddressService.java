@@ -25,7 +25,9 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Order;
 import cn.explink.domain.enums.AddressStatusEnum;
+import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.schedule.Constants;
+import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.AddressMappingResultEnum;
 import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.OrderVo;
@@ -33,6 +35,8 @@ import cn.explink.ws.vo.SingleAddressMappingResult;
 
 @Service
 public class AddressService {
+
+	private static final int MIN_ADDRESS_LENGTH = 2;
 
 	private static Logger logger = LoggerFactory.getLogger(AddressService.class);
 
@@ -78,6 +82,9 @@ public class AddressService {
 		if (parentAddress == null) {
 			parentAddress = addressDao.get(address.getParentId());
 		}
+		if (StringUtil.length(address.getName()) <= MIN_ADDRESS_LENGTH) {
+			throw new ExplinkRuntimeException("关键字长度不能小于2");
+		}
 		address.setAddressLevel(parentAddress.getAddressLevel() + 1);
 		address.setPath(parentAddress.getPath() + "-" + parentAddress.getId());
 		address.setIndexed(false);
@@ -98,8 +105,13 @@ public class AddressService {
 	public void createAlias(Alias alias) {
 		Address address = addressDao.get(alias.getAddressId());
 		if (address == null) {
-			throw new RuntimeException("can't create alias for an unexist address " + alias.getAddressId());
+			throw new ExplinkRuntimeException("can't create alias for an unexist address " + alias.getAddressId());
 		}
+		
+		if (StringUtil.length(alias.getName()) <= MIN_ADDRESS_LENGTH) {
+			throw new ExplinkRuntimeException("关键字长度不能小于2");
+		}
+		
 		aliasDao.save(alias);
 		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()));
 	}
@@ -129,6 +141,12 @@ public class AddressService {
 		addressPermissionDao.batchUnbindAddress(addressIdList, customerId);
 	}
 
+	/**
+	 * 绑定地址到给定的客户
+	 * @param address
+	 * @param customerId
+	 * @return true：已绑定，false：新绑定
+	 */
 	public boolean bindAddress(Address address, Long customerId) {
 		AddressPermission permission = addressPermissionDao.getPermissionByAddressAndCustomer(address.getId(), customerId);
 		if (permission == null) {

@@ -1803,4 +1803,8 @@ public class StringUtil {
 		}
 		return isBaseClass;
 	}
+
+	public static int length(String str) {
+		return str == null ? 0 : str.length();
+	}
 }

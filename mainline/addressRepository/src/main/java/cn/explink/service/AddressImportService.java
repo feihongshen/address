@@ -239,6 +239,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				// 如果是当前已是最后一级地址，创建新地址
 				childAddress = createAddress(parentAddress, detail, name, customerId);
 				childEntry.setAddress(childAddress);
+				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
 			} else {
 				// 失败，父节点不存在
 				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
@@ -248,8 +249,12 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 			if (isLast) {
 				// 最后一级地址已存在
 				boolean bindResult = addressService.bindAddress(childAddress, customerId);
-				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
-				detail.setMessage("地址重复:" + name);
+				if (bindResult) {
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					detail.setMessage("地址重复:" + name);
+				} else {
+					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+				}
 			} else {
 				// 不是最后一级，继续查找子节点
 				return getTreeNode(childNode, addressMap, detail, level + 1, customerId);

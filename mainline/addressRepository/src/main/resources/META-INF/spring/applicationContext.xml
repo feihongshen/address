@@ -25,7 +25,7 @@
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-	 
+	
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton" init-method="initLucene" />
@@ -33,4 +33,5 @@
 	<!-- web service -->
 	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl" address="/AddressSyncService" />
 	<jaxws:endpoint id="addressMappingService" implementor="cn.explink.ws.service.AddressMappingServiceImpl" address="/AddressMappingService" />
+	<jaxws:endpoint id="addressQueryService" implementor="cn.explink.ws.service.AddressQueryServiceImpl" address="/AddressQueryService" />
 </beans>

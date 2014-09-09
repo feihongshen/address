@@ -26,7 +26,7 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 	private static Logger logger = LoggerFactory.getLogger(AddressQueryServiceImpl.class);
 	
 	@Override
-	public AddressQueryResult getAddressByParent(ApplicationVo applicationVo, Long addressId) {
+	public AddressQueryResult getAddress(ApplicationVo applicationVo, Long addressId, Long deliveryStationId) {
 		logger.info("getAddressByParent for parentAddressId : {}", addressId);
 		AddressQueryResult result = new AddressQueryResult();
 		ClientApplication clientApplication = null;
