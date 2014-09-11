@@ -14,7 +14,9 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script>
+<script type="text/javascript"
+	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/import.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importAdress.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
@@ -27,10 +29,9 @@ var hasIniUI=false;
 		    border:false, 
 			onSelect:function(title){ 
 				if(title=='历史导入记录'&&!hasIniUI){
-					alert(hasIniUI)
-					hasIniUI=true
+					hasIniUI=true;
 					$('#addressImportResult').datagrid(resultRow);
-				}else{
+				}else if(!hasIniUI){
 					$('#importAddressList').datagrid(detailRow);
 				}; 
 			}
@@ -56,7 +57,12 @@ var hasIniUI=false;
 		
 		
 	});
-	
+	function reloadTable() {
+		try {
+			$('#addressImportResult').datagrid('reload');
+		} catch (ex) {
+		}
+	}
 	
 </script>
 </head>
@@ -74,9 +80,8 @@ var hasIniUI=false;
           <td></td>
         </tr>
       </table>
-      <div width="100%"  border="0" style="height:200px;" cellpadding="8" id="importAddressList" cellspacing="1" bgcolor="#CCCCCC">
-        
-      </div>
+      <table width="100%"  border="0" style="height:200px;" cellpadding="8" id="importAddressList" cellspacing="1" bgcolor="#CCCCCC">
+      </table>
     </div>
     <div title="历史导入记录" style="padding:10px;height: 500px">
     <table id="commissionBalanceListtb" width="100%" border="0" cellspacing="5" cellpadding="0">

@@ -78,12 +78,12 @@ $(function(){
       <table width="100%" border="0" cellpadding="5" cellspacing="0">
         <tr>
           <td><a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a></td>
-          <td>本次匹配地址共<span class="insum">6条</span>,未匹配<span class="unsum">6</span>,成功匹配<span class="sunsum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0%</span></td>
+          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span class="unsum">0</span>,成功匹配<span class="sunsum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0%</span></td>
         </tr>
       </table>
     </div>
     <div title="未匹配" style="padding:10px">
-      <h2 align="right">未匹配共<span class="unsum">2</span>条</h2>
+      <h2 align="right">未匹配共<span class="unsum">0</span>条</h2>
       <table id="untable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
@@ -97,7 +97,7 @@ $(function(){
       </table>
     </div>
     <div title="匹配成功" style="padding:10px">
-      <h2 align="right">匹配成功共<span class="susum">2条</span></h2>
+      <h2 align="right">匹配成功共<span class="susum">0条</span></h2>
       <table id="sutable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
@@ -110,7 +110,7 @@ $(function(){
       </table>
     </div>
     <div title="匹配多站" style="padding:10px">
-      <h2 align="right">匹配多站共<span class="dsum">2条</span></h2>
+      <h2 align="right">匹配多站共<span class="dsum">0条</span></h2>
       <table  id="dtable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
@@ -123,7 +123,7 @@ $(function(){
       </table>
     </div>
     <div title="命中关键字未匹配站点" style="padding:10px">
-      <h2 align="right">关键字未匹配站点共<span class="unsum">2条</span></h2>
+      <h2 align="right">关键字未匹配站点共<span class="unsum">0条</span></h2>
       <table id="keytable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
