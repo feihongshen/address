@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +38,7 @@ import cn.explink.service.LuceneService;
 import cn.explink.util.DateTimeUtil;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
-import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.OrderVo;
-import cn.explink.ws.vo.SingleAddressMappingResult;
 
 @RequestMapping("/address")
 @Controller
@@ -166,6 +163,9 @@ public class AddressController extends BaseController {
 		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser());
 		aj.setSuccess(true);
 		aj.setInfo(addressImportResult.getId().toString());
+//		Map<String, Object> attributes=new HashMap<String, Object>();
+//		attributes.put("importTable", addressImportResult.getAddressImportDetails());
+//		aj.setAttributes(attributes);
 		return aj;
 	}
 
@@ -191,10 +191,12 @@ public class AddressController extends BaseController {
 	}
 	
 	@RequestMapping("/deleteImportAddressResult")
-	public String deleteImportAddressResult(Model model
+	public @ResponseBody AjaxJson  deleteImportAddressResult(Model model
 			,@RequestParam(value ="id",required = false) Long id) {
+		AjaxJson aj=new AjaxJson();
 		addressImportService.deleteImportAddressResult(id, getCustomerId());
-		return null;
+		aj.setSuccess(true);
+		return aj;
 	}
 	
 	@RequestMapping("/datagrid")
@@ -210,7 +212,16 @@ public class AddressController extends BaseController {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
 		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
 		
-		return this.addressImportService.getDataGridReturn(cq, true);
+		return this.addressImportResultService.getDataGridReturn(cq, true);
+		
+	}
+	
+	@RequestMapping("/del")
+	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		AjaxJson aj=new AjaxJson();
+		addressImportResultService.delete(addressImportResult.getId());
+		aj.setSuccess(true);
+		return aj;
 		
 	}
 	

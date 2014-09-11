@@ -131,6 +131,7 @@ mainline/addressRepository/src/main/java/cn/explink/web/controller/AddressContro
 mainline/addressRepository/src/main/java/cn/explink/web/controller/BaseController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/CommonController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/DateConvertEditor.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/controller/DeliveryStationRuleController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/LoginController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/ScheduledTaskController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/AddressLoginFilter.java -text
