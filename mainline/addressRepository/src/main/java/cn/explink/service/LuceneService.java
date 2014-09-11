@@ -47,7 +47,7 @@ import cn.explink.lucene.ExplinkIKConfig;
 import cn.explink.lucene.LuceneEnvironment;
 import cn.explink.lucene.ScoreFilter;
 import cn.explink.ws.vo.OrderVo;
-import cn.explink.ws.vo.SingleAddressMappingResult;
+import cn.explink.ws.vo.OrderAddressMappingResult;
 
 @Service
 public class LuceneService {

@@ -136,6 +136,7 @@ mainline/addressRepository/src/main/java/cn/explink/web/controller/LoginControll
 mainline/addressRepository/src/main/java/cn/explink/web/controller/ScheduledTaskController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/AddressLoginFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/ExplinkFilter.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/vo/SingleAddressMappingResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingService.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingServiceImpl.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressQueryService.java -text
@@ -154,9 +155,9 @@ mainline/addressRepository/src/main/java/cn/explink/ws/vo/CustomerVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/DelivererRuleVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/DelivererVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/DeliveryStationVo.java -text
+mainline/addressRepository/src/main/java/cn/explink/ws/vo/OrderAddressMappingResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/OrderVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/ResultCodeEnum.java -text
-mainline/addressRepository/src/main/java/cn/explink/ws/vo/SingleAddressMappingResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/vo/VendorVo.java -text
 mainline/addressRepository/src/main/java/org/springframework/http/converter/StringHttpMessageConverter.java -text
 mainline/addressRepository/src/main/java/org/springframework/security/web/authentication/Http403ForbiddenEntryPoint.java -text

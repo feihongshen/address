@@ -29,9 +29,13 @@ import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.schedule.Constants;
 import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.AddressMappingResultEnum;
+import cn.explink.ws.vo.AddressVo;
 import cn.explink.ws.vo.BeanVo;
+import cn.explink.ws.vo.DelivererVo;
+import cn.explink.ws.vo.DeliveryStationVo;
+import cn.explink.ws.vo.OrderAddressMappingResult;
 import cn.explink.ws.vo.OrderVo;
-import cn.explink.ws.vo.SingleAddressMappingResult;
+import cn.explink.web.vo.SingleAddressMappingResult;
 
 @Service
 public class AddressService {
@@ -166,12 +170,39 @@ public class AddressService {
 	 * @param orderList
 	 * @return
 	 */
-	public List<SingleAddressMappingResult> search(Long customerId, List<OrderVo> orderList) {
-		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
+	public Map<String, OrderAddressMappingResult> search(Long customerId, List<OrderVo> orderList) {
+		Map<String, OrderAddressMappingResult> result = new HashMap<String, OrderAddressMappingResult>();
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = search(orderVo,true);
-			result.add(singleResult);
+			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
+			
+			List<AddressVo> addressList = new ArrayList<AddressVo>();
+			orderResult.setAddressList(addressList);
+			for (Address address : singleResult.getRelatedAddressList() ) {
+				AddressVo addressVo = new AddressVo();
+				BeanUtils.copyProperties(address, addressVo);
+				addressList.add(addressVo);
+			}
+			
+			List<DeliveryStationVo> deliveryStationList = new ArrayList<DeliveryStationVo>();
+			orderResult.setDeliveryStationList(deliveryStationList);
+			for (DeliveryStation ds : singleResult.getDeliveryStationList()) {
+				DeliveryStationVo dsVo = new DeliveryStationVo();
+				BeanUtils.copyProperties(ds, dsVo);
+				deliveryStationList.add(dsVo);
+			}
+			
+			List<DelivererVo> delivererList = new ArrayList<DelivererVo>();
+			orderResult.setDelivererList(delivererList);
+			for (Deliverer deliverer : singleResult.getDelivererList()) {
+				DelivererVo delivererVo = new DelivererVo();
+				BeanUtils.copyProperties(deliverer, delivererVo);
+				delivererList.add(delivererVo);
+			}
+			
+			orderResult.setTimeLimitList(singleResult.getTimeLimitList());
+			result.put(orderVo.getOrderId(), orderResult);
 		}
 		return result;
 	}
@@ -228,14 +259,14 @@ public class AddressService {
 		return attributes;
 	}
 
-	private SingleAddressMappingResult search(OrderVo orderVo,boolean saveable) {
+	private SingleAddressMappingResult search(OrderVo orderVo, boolean saveable) {
 		// 查询订单记录
 		Order order = new Order();
 		BeanUtils.copyProperties(orderVo, order);
 		order.setExternalOrderId(orderVo.getOrderId());
 		order.setCreationDate(new Date());
 		StringBuilder sb = null;
-		
+
 		// 查询结果
 		SingleAddressMappingResult result = new SingleAddressMappingResult();
 		// 匹配的站点list
@@ -252,7 +283,7 @@ public class AddressService {
 			} else {
 				result.setResult(AddressMappingResultEnum.multipleResult);
 			}
-			
+
 			// 找到地址对应的站点规则/站点
 			List<DeliveryStationRule> deliveryStationRuleList = deliverStationRuleService.search(addressList, orderVo);
 			sb = new StringBuilder();
@@ -268,7 +299,7 @@ public class AddressService {
 			}
 			result.setDeliveryStationList(deliveryStationList);
 			order.setDeliveryStationIds(sb.toString());
-			
+
 			// 找到地址对应的配送员规则/配送员
 			List<DelivererRule> delivererRuleList = delivererRuleService.search(addressList, orderVo);
 			sb = new StringBuilder();
@@ -276,7 +307,7 @@ public class AddressService {
 			for (DelivererRule rule : delivererRuleList) {
 				Deliverer deliverer = rule.getDeliverer();
 				delivererList.add(deliverer);
-				
+
 				if (count > 0) {
 					sb.append(",");
 				}
@@ -285,15 +316,15 @@ public class AddressService {
 			}
 			result.setDelivererList(delivererList);
 			order.setDelivererIds(sb.toString());
-			
+
 			// TODO 找到地址对应的供货商时效
-			result.setTimeLimit(null);
+			result.setTimeLimitList(null);
 		} catch (Exception e) {
 			logger.error("search address failed due to {}", e.getMessage(), e);
 			result.setResult(AddressMappingResultEnum.exceptionResult);
 			result.setMessage(e.getMessage());
 		}
-		if(saveable){
+		if (saveable) {
 			orderDao.save(order);
 		}
 		return result;

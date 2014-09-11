@@ -1,6 +1,7 @@
 package cn.explink.ws.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.jws.WebService;
 
@@ -14,7 +15,7 @@ import cn.explink.ws.vo.AddressMappingResult;
 import cn.explink.ws.vo.ApplicationVo;
 import cn.explink.ws.vo.OrderVo;
 import cn.explink.ws.vo.ResultCodeEnum;
-import cn.explink.ws.vo.SingleAddressMappingResult;
+import cn.explink.ws.vo.OrderAddressMappingResult;
 
 @WebService(endpointInterface = "cn.explink.ws.service.AddressMappingService")
 public class AddressMappingServiceImpl extends BaseWebserviceImpl implements AddressMappingService {
@@ -34,8 +35,8 @@ public class AddressMappingServiceImpl extends BaseWebserviceImpl implements Add
 		}
 		AddressService addressService = ApplicationContextUtil.getBean("addressService");
 		try {
-			List<SingleAddressMappingResult> singleResultList = addressService.search(clientApplication.getCustomerId(), orderList);
-			result.setSingleResultList(singleResultList);
+			Map<String, OrderAddressMappingResult> resultMap = addressService.search(clientApplication.getCustomerId(), orderList);
+			result.setResultMap(resultMap);
 			result.setResultCode(ResultCodeEnum.success);
 		} catch (Exception e) {
 			logger.error("mappingAddress failed for customerId = {}", clientApplication.getCustomerId(), e);

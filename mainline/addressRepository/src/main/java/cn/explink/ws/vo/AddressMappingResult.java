@@ -1,6 +1,6 @@
 package cn.explink.ws.vo;
 
-import java.util.List;
+import java.util.Map;
 
 public class AddressMappingResult {
 
@@ -8,7 +8,7 @@ public class AddressMappingResult {
 
 	private String message;
 
-	private List<SingleAddressMappingResult> singleResultList;
+	private Map<String, OrderAddressMappingResult> resultMap;
 
 	public ResultCodeEnum getResultCode() {
 		return resultCode;
@@ -26,12 +26,12 @@ public class AddressMappingResult {
 		this.message = message;
 	}
 
-	public List<SingleAddressMappingResult> getSingleResultList() {
-		return singleResultList;
+	public Map<String, OrderAddressMappingResult> getResultMap() {
+		return resultMap;
 	}
 
-	public void setSingleResultList(List<SingleAddressMappingResult> singleResultList) {
-		this.singleResultList = singleResultList;
+	public void setResultMap(Map<String, OrderAddressMappingResult> resultMap) {
+		this.resultMap = resultMap;
 	}
 
 }

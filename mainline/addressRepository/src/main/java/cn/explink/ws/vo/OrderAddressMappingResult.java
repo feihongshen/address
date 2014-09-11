@@ -6,28 +6,28 @@ import cn.explink.domain.Address;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 
-public class SingleAddressMappingResult {
+public class OrderAddressMappingResult {
 
 	private AddressMappingResultEnum result;
 
 	private String message;
 
-	private List<Address> relatedAddressList;
+	private List<AddressVo> addressList;
 
 	/**
 	 * 站点list
 	 */
-	private List<DeliveryStation> deliveryStationList;
+	private List<DeliveryStationVo> deliveryStationList;
 
 	/**
 	 * 配送员list
 	 */
-	private List<Deliverer> delivererList;
+	private List<DelivererVo> delivererList;
 
 	/**
 	 * 时效/时限
 	 */
-	private Integer timeLimit;
+	private List<Integer> timeLimitList;
 
 	public AddressMappingResultEnum getResult() {
 		return result;
@@ -45,54 +45,54 @@ public class SingleAddressMappingResult {
 		this.message = message;
 	}
 
-	public List<Address> getRelatedAddressList() {
-		return relatedAddressList;
+	public List<AddressVo> getAddressList() {
+		return addressList;
 	}
 
-	public void setRelatedAddressList(List<Address> relatedAddressList) {
-		this.relatedAddressList = relatedAddressList;
+	public void setAddressList(List<AddressVo> addressList) {
+		this.addressList = addressList;
 	}
 
-	public List<DeliveryStation> getDeliveryStationList() {
+	public List<DeliveryStationVo> getDeliveryStationList() {
 		return deliveryStationList;
 	}
 
-	public void setDeliveryStationList(List<DeliveryStation> deliveryStationList) {
+	public void setDeliveryStationList(List<DeliveryStationVo> deliveryStationList) {
 		this.deliveryStationList = deliveryStationList;
 	}
 
-	public List<Deliverer> getDelivererList() {
+	public List<DelivererVo> getDelivererList() {
 		return delivererList;
 	}
 
-	public void setDelivererList(List<Deliverer> delivererList) {
+	public void setDelivererList(List<DelivererVo> delivererList) {
 		this.delivererList = delivererList;
 	}
 
-	public Integer getTimeLimit() {
-		return timeLimit;
+	public List<Integer> getTimeLimitList() {
+		return timeLimitList;
 	}
 
-	public void setTimeLimit(Integer timeLimit) {
-		this.timeLimit = timeLimit;
+	public void setTimeLimitList(List<Integer> timeLimit) {
+		this.timeLimitList = timeLimit;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SingleAddressMappingResult [");
+		builder.append("OrderAddressMappingResult [");
 		if (result != null)
 			builder.append("result=").append(result).append(", ");
 		if (message != null)
 			builder.append("message=").append(message).append(", ");
-		if (relatedAddressList != null)
-			builder.append("relatedAddressList=").append(relatedAddressList).append(", ");
+		if (addressList != null)
+			builder.append("addressList=").append(addressList).append(", ");
 		if (deliveryStationList != null)
 			builder.append("deliveryStationList=").append(deliveryStationList).append(", ");
 		if (delivererList != null)
 			builder.append("delivererList=").append(delivererList).append(", ");
-		if (timeLimit != null)
-			builder.append("timeLimit=").append(timeLimit);
+		if (timeLimitList != null)
+			builder.append("timeLimitList=").append(timeLimitList);
 		builder.append("]");
 		return builder.toString();
 	}
