@@ -35,9 +35,6 @@ public class ExplinkIKConfig implements Configuration {
 	// 配置属性——扩展停止词典
 	private static final String EXT_STOP = "ext_stopwords";
 	
-	// 配置属性——词典路径
-	private static final String DICT_DIRECTORY = "dict_directory";
-
 	private Properties props;
 
 	/*
@@ -150,10 +147,6 @@ public class ExplinkIKConfig implements Configuration {
 			}
 		}
 		return extStopWordDictFiles;
-	}
-
-	public String getDictionayDirectory() {
-		return props.getProperty(DICT_DIRECTORY);
 	}
 
 }

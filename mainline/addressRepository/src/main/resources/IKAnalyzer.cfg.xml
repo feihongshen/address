@@ -7,7 +7,4 @@
 	
 	<!--用户可以在这里配置自己的扩展停止词字典-->
 	<entry key="ext_stopwords">stopword.dic;</entry> 
-	
-	<!--自定义配置，可以在这里配置地址库的词典路径-->
-	<entry key="dict_directory">E:/address/lucene/dict</entry> 
 </properties>

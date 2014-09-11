@@ -124,6 +124,7 @@ mainline/addressRepository/src/main/java/cn/explink/util/DateTimeUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/HqlGenerateUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/JsonUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ReflectionUtil.java -text
+mainline/addressRepository/src/main/java/cn/explink/util/ResourceBundleUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ResourceUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/StringUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/ExplinkUserDetail.java -text
@@ -191,6 +192,7 @@ mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext-security.xml -text
 mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext.xml -text
 mainline/addressRepository/src/main/resources/address.dic -text
+mainline/addressRepository/src/main/resources/address.properties -text
 mainline/addressRepository/src/main/resources/logback.xml -text
 mainline/addressRepository/src/main/resources/stopword.dic -text
 mainline/addressRepository/src/main/webapp/META-INF/MANIFEST.MF -text

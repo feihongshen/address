@@ -13,16 +13,13 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import cn.explink.util.ResourceBundleUtil;
+
 public class LuceneEnvironment {
 
 	private static LuceneEnvironment instance = new LuceneEnvironment();
 
-	// TODO move to config file
-	public static final String indexPath = "e:/address/lucene/index";
-
 	public static final int DEFAULT_MAX_RESULT_COUNT = 1000;
-
-	private ExplinkIKConfig ikConfig;
 
 	private File dictDirectory;
 
@@ -37,9 +34,7 @@ public class LuceneEnvironment {
 	private QueryParser queryParser;
 
 	private LuceneEnvironment() {
-		ikConfig = ExplinkIKConfig.getInstance();
-		String dictDirectoryString = ikConfig.getDictionayDirectory();
-		dictDirectory = new File(dictDirectoryString);
+		dictDirectory = new File(ResourceBundleUtil.LUCENE_DICT_PATH);
 	}
 
 	public static LuceneEnvironment getInstance() {
@@ -52,7 +47,7 @@ public class LuceneEnvironment {
 
 	public FSDirectory getIndexDirectory() throws IOException {
 		if (indexDirectory == null) {
-			indexDirectory = FSDirectory.open(new File(indexPath));
+			indexDirectory = FSDirectory.open(new File(ResourceBundleUtil.LUCENE_INDEX_PATH));
 		}
 		return indexDirectory;
 	}
