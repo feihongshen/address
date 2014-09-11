@@ -1,4 +1,4 @@
-
+var resultId=0;
 
 var detailRow={
 		idField : 'id',
@@ -9,7 +9,7 @@ var detailRow={
 		loadMsg : '数据加载中...',
 		pageSize : 100000,
 		pagination : true,
-		pageList : [ 10, 20, 30 ],
+		pageList : [ 1000, 2000, 3000 ],
 		sortOrder : 'asc',
 		rownumbers : true,
 		singleSelect : true,

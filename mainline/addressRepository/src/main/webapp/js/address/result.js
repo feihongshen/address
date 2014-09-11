@@ -9,7 +9,7 @@ var resultRow=
 		loadMsg : '数据加载中...',
 		pageSize : 100000,
 		pagination : true,
-		pageList : [ 10, 20, 30 ],
+		pageList : [ 100, 200, 300 ],
 		sortOrder : 'asc',
 		rownumbers : true,
 		singleSelect : true,
@@ -32,8 +32,8 @@ var resultRow=
 							return '';
 						}
 						var href = '';
-						href += "[<a href='#' onclick=delObj('del?id="
-								+ rec.id + "','importAddressList')>";
+						href += "[<a href='#' onclick=delObj('deleteImportAddressResult?id="
+								+ rec.id + "','address')>";
 						href += "删除</a>]";
 						return href;
 					}
