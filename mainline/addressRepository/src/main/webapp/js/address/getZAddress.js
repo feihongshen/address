@@ -54,23 +54,37 @@ function expandNode(e) {
 }
 
 
-function searchAdmin(){
+function searchTree(){
 	var treeObj = $.fn.zTree.getZTreeObj("tree");
 	var nodes = treeObj.getNodes();
 	var cloneNodes = [];
+	var removeNodes=[];
 	$.each(nodes, function(index, node) {
 		cloneNodes.push(node);
 	});
+	var filterString = $("#searchA").val();
 	$.each(cloneNodes, function(index, node) {
+		var childrens=node.children;
+		if (node.name.indexOf(filterString) != -1) {
+			return;
+		}else{
+			var count=0;
+			$.each(childrens,function(ci,cn){
+				if(!cn)return;
+				if(cn.name.indexOf(filterString)==-1){
+					removeNodes.push(cn);
+					
+					count++;
+				}
+			});
+			if(count==childrens.length){
+				removeNodes.push(node);
+			}
+		}
+		
+		
+	});
+	$.each(removeNodes,function(j,node){
 		treeObj.removeNode(node);
 	});
-	var filterString = $("#searchA").val();
-	var filterNodes = [];
-	$.each(cloneNodes, function(index, node) {
-		if (node.title.indexOf(filterString) != -1) {
-			filterNodes.push(node);
-		}
-	});
-	treeObj.addNodes(null, filterNodes);
-	
 }
