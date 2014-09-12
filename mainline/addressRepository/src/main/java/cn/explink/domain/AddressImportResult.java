@@ -33,15 +33,6 @@ public class AddressImportResult {
 	@Column(name = "USER_ID")
 	private Long userId;
 	
-	private String userName;
-	@Transient
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	@Excel(exportName="导入关键词数量")
 	@Column(name = "SUCCESS_COUNT")

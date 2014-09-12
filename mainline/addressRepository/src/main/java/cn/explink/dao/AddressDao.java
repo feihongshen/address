@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.Address;
+import cn.explink.tree.ZTreeNode;
 
 
 @Repository
@@ -52,6 +53,30 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString());
 		query.setLong("parentId", parentId);
+		query.setLong("customerId", customerId);
+		return query.list();
+	}
+	
+	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ) from Address a, AddressPermission p");
+		hql.append(" where a.id = :parentId");
+		hql.append(" and a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("parentId", parentId);
+		query.setLong("customerId", customerId);
+		return query.list();
+	}
+	
+	public List<ZTreeNode> getZTree(Long customerId,String name,StringBuffer sb) {
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId )from Address a, AddressPermission p ");
+		if(null!=sb){
+			String ids=sb.substring(0, sb.length()-1);
+			hql.append(" where a.id not in("+ids+")");
+		}
+		hql.append(" where a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString());
 		query.setLong("customerId", customerId);
 		return query.list();
 	}

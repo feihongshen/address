@@ -6,15 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
+import org.parboiled.matchervisitors.GetStarterCharVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.AliasDao;
+import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
@@ -27,6 +31,7 @@ import cn.explink.domain.Order;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.schedule.Constants;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.AddressMappingResultEnum;
 import cn.explink.ws.vo.AddressVo;
@@ -38,7 +43,11 @@ import cn.explink.ws.vo.OrderVo;
 import cn.explink.web.vo.SingleAddressMappingResult;
 
 @Service
-public class AddressService {
+public class AddressService extends CommonServiceImpl<Address, Long> {
+
+	public AddressService() {
+		super(Address.class);
+	}
 
 	private static final int MIN_ADDRESS_LENGTH = 2;
 
@@ -67,6 +76,8 @@ public class AddressService {
 
 	@Autowired
 	private DelivererRuleService delivererRuleService;
+	@Autowired
+	private DeliveryStationRuleDao deliveryStationRuleDao;
 	
 	public void listAddress() {
 		List<Address> addressList = addressDao.getAllAddresses();
@@ -328,6 +339,26 @@ public class AddressService {
 			orderDao.save(order);
 		}
 		return result;
+	}
+
+	public List<ZTreeNode> getZAddress(Long customerId,String name,boolean isBind) {
+		String sql="select dsr.ADDRESS_ID from delivery_station_rules dsr left join delivery_stations ds on dsr.DELIVERY_STATION_ID=ds.id  where ds.CUSTOMER_ID="+customerId;
+		Query query =getSession().createSQLQuery(sql);
+		List<Integer> list=query.list();
+		StringBuffer sb=null;
+		if(null!=list&&list.size()>0){
+			sb=new StringBuffer();
+			
+			for (Integer aid : list) {
+				sb.append(aid+",");
+			}
+		}
+		
+		return addressDao.getZTree(customerId,name,sb);
+	}
+
+	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
+		return addressDao.getAsyncAddress(customerId,parentId);
 	}
 
 }

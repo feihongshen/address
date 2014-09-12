@@ -6,6 +6,39 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/zTree/css/zTreeStyle/zTreeStyle.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
+<script type="text/javascript">
+
+
+		 $(document).ready(function(){
+			 getAll();
+			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+	        $("#refreshAllBtn").click(function(){
+	        	getAll();
+	        })
+	        $("#unbindAllBtn").clcik(function(){
+	        	
+	        })
+			
+
+    });
+	function getAll(){
+		 $.ajax({
+			 type: "POST",
+				url:"<%=request.getContextPath()%>/address/getZTree",
+				success:function(optionData){
+			        var t = $("#tree");
+			        t = $.fn.zTree.init(t, setting, optionData);
+					
+				}
+			});
+	}
+		 
+		
+</script>
 </head>
 <body>
 <div class="easyui-layout" style="height:600px;">
@@ -14,41 +47,15 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td><input style="width:150px">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false" onclick="searchAdmin()">查询</a></td>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false" id="searchA" onclick="searchAdmin()">查询</a></td>
         </tr>
         <tr>
-          <td><a href="javascript:void(0)" class="easyui-linkbutton">全部折叠</a>&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton">刷新节点</a>&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton">未绑定</a></td>
+          <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
+          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a>&nbsp;
+          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">未绑定</a></td>
         </tr>
         <tr>
-          <td><ul class="easyui-tree">
-              <li><a href="javascript:void(0)" onclick="addTab('地址库匹配','dizhiku/dzkpp.html')">地址库匹配</a></li>
-              <li> <span>数据维护</span>
-                <ul>
-                  <li><a href="javascript:void(0)" onclick="addTab('关键词导入','dizhiku/gjcdr.html')">关键词导入</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('地址库维护','dizhiku/dzkwh.html')">地址库维护</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('站点管理','dizhiku/zdgl.html')">站点管理</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('配送员管理','dizhiku/psygl.html')">配送员管理</a></li>
-                </ul>
-              </li>
-              <li> <span>关联设置</span>
-                <ul>
-                  <li><a href="javascript:void(0)" onclick="addTab('拆合站维护','dizhiku/chzwh.html')">拆合站维护</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('配送站点关联维护','dizhiku/pszdglwh.html')">配送站点关联维护</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('配送员关联维护','dizhiku/psyglwh.html')">配送员关联维护</a></li>
-                </ul>
-              </li>
-              <li> <span>数据统计</span>
-                <ul>
-                  <li><a href="javascript:void(0)" onclick="addTab('站点匹配查询','dizhiku/zdppcx.html')">站点匹配查询</a></li>
-                  <li><a href="javascript:void(0)" onclick="addTab('站点匹配率查询','dizhiku/zdpplcx.html')">站点匹配率查询</a></li>
-                </ul>
-              </li>
-              <li> <span>系统设置</span>
-                <ul>
-                  <li><a href="javascript:void(0)" onclick="addTab('库户账号管理','dizhiku/khzhgl.html')">库户账号管理</a></li>
-                </ul>
-              </li>
-            </ul></td>
+          <td><ul id="tree" class="ztree" style="width:160px; overflow:auto;"></ul></td>
         </tr>
       </table>
     </form>

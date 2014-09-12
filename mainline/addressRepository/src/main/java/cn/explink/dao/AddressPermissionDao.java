@@ -24,7 +24,7 @@ public class AddressPermissionDao extends BasicHibernateDaoSupport<AddressPermis
 	}
 
 	public int batchUnbindAddress(List<Long> addressIdList, Long customerId) {
-		String hql = "from AddressPermission where addressId in :addressIdList and customerId = :customerId";
+		String hql = " delete from AddressPermission where addressId in :addressIdList and customerId = :customerId";
 		Query query = getSession().createQuery(hql);
 		query.setParameterList("addressIdList", addressIdList);
 		query.setLong("customerId", customerId);

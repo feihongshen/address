@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projection;
@@ -17,8 +18,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
-import cn.explink.domain.AddressImportResult;
 import cn.explink.modle.ComboBox;
+import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.qbc.CriteriaQuery;
 import cn.explink.qbc.PagerUtil;
@@ -60,6 +61,7 @@ BasicHibernateDaoSupport  {
         }  
 		return list;
 	}
+	
 
 	public DataGridReturn getDataGridReturn(final CriteriaQuery cq,
 			final boolean isOffset) {
@@ -109,6 +111,18 @@ BasicHibernateDaoSupport  {
 	public  List<T> getAll() {
 		// TODO Auto-generated method stub
 		return loadAll(persistentClass);
+	}
+	
+	public DataGridReturn getDataGridReturnBySql(DataGrid dataGrid,String sql) {
+		Integer allCounts=getCount(tableName).intValue();
+		List<T> list = findListbySql(sql);
+		dataGrid.setResults(list);
+		dataGrid.setTotal(allCounts);
+		return new DataGridReturn(allCounts, list);
+	}
+	public void delete(ID id) {
+		T entity=(T) getSession().load(persistentClass, id);
+		getSession().delete(entity);
 	}
 
 

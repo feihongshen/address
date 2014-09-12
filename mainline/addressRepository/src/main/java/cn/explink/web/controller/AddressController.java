@@ -35,6 +35,7 @@ import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
 import cn.explink.service.LuceneService;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.DateTimeUtil;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
@@ -94,11 +95,21 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getAddressTree")
-	public String getAddressTree(Model model, @RequestParam(value = "parentId", required = false) Long parentId) {
+	public @ResponseBody List<ZTreeNode>  getAddressTree( @RequestParam(value = "id", required = false) Long parentId) {
 		Long customerId = getCustomerId();
-		addressService.getChildAddress(customerId, parentId);
-		return "/address/getAddress";
+		if(null==parentId){
+			parentId=1L;
+		}
+		return addressService.getAsyncAddress(customerId,parentId);
 	}
+	
+	@RequestMapping("/getZTree")
+	public @ResponseBody List<ZTreeNode> getZTree(String name,boolean isBind) {
+		Long customerId = getCustomerId();
+		return addressService.getZAddress(customerId,name,isBind);
+	}
+	
+	
 	
 	/**
 	 * 

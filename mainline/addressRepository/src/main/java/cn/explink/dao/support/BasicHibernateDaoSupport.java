@@ -1,6 +1,7 @@
 package cn.explink.dao.support;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,13 +13,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
-import org.hibernate.internal.CriteriaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cn.explink.domain.AddressImportDetail;
 
 /**
  * The default DAO implements use Hibernate.</p>
@@ -145,10 +141,10 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 		return sessionFactory.getCurrentSession();
 	}
 	
-	public Integer getCount(String tableName) {
+	public BigInteger getCount(String tableName) {
 		Session session = getSession();
-		Query query =session.createSQLQuery("select select count(1) from "+tableName);
-		return (Integer) query.uniqueResult();
+		Query query =session.createSQLQuery("select count(1) from "+tableName);
+		return (BigInteger) query.uniqueResult();
 	}
 	public List<Entity> findListbySql(final String sql) {
 		Query querys = getSession().createSQLQuery(sql);

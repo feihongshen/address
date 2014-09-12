@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import cn.explink.annocation.Excel;
@@ -64,7 +65,7 @@ public class AddressImportDetail {
 	@Excel(exportName="信息")
 	@Column(name = "MESSAGE")
 	private String message;
-
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RESULT_ID")
 	private AddressImportResult addressImportResult;
