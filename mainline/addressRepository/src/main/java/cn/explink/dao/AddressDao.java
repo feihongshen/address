@@ -70,11 +70,12 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	
 	public List<ZTreeNode> getZTree(Long customerId,String name,StringBuffer sb) {
 		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId )from Address a, AddressPermission p ");
+		hql.append(" where 1 = 1");
 		if(null!=sb){
 			String ids=sb.substring(0, sb.length()-1);
-			hql.append(" where a.id not in("+ids+")");
+			hql.append(" and a.id not in("+ids+")");
 		}
-		hql.append(" where a.id = p.addressId");
+		hql.append(" and a.id = p.addressId");
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString());
 		query.setLong("customerId", customerId);
