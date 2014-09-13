@@ -60,18 +60,21 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 	
 	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
-		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ) from Address a, AddressPermission p");
-		hql.append(" where a.id = :parentId");
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ,a.addressLevel) from Address a, AddressPermission p");
+		if(1==parentId){
+			hql.append(" where a.addressLevel < 2");
+		}else{
+			hql.append(" where a.parentId = "+parentId);
+		}
 		hql.append(" and a.id = p.addressId");
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString());
-		query.setLong("parentId", parentId);
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
 	
 	public List<ZTreeNode> getZTree(Long customerId,String name,StringBuffer sb) {
-		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId )from Address a, AddressPermission p ");
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId,a.addressLevel )from Address a, AddressPermission p ");
 		hql.append(" where 1 = 1");
 		if(null!=sb){
 			String ids=sb.substring(0, sb.length()-1);

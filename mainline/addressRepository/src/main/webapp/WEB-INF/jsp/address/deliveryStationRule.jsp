@@ -12,6 +12,7 @@ var cxt='<%=request.getContextPath()%>';
 <%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/zTree/demo.css"/> --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/zTree/zTreeStyle/zTreeStyle.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
 <script type="text/javascript">
 var backNode;

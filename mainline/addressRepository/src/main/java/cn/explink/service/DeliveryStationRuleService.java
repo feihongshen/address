@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
+import cn.explink.modle.DataGrid;
+import cn.explink.modle.DataGridReturn;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.OrderVo;
@@ -151,6 +154,14 @@ public class DeliveryStationRuleService extends RuleService {
 			ruleList.add(mappingRule);
 		}
 		return ruleList;
+	}
+
+	public DataGridReturn getDataGridReturnView(String addressId) {
+		
+		Query query = getSession().createQuery("select dsr from DeliveryStationRule where dsr.address.id = : addressId");
+		query.setLong("addressId", Long.parseLong(addressId));
+		List<DeliveryStationRule> list=query.list();
+		return new DataGridReturn(list.size(), list);
 	}
 
 

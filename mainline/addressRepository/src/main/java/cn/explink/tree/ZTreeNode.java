@@ -7,7 +7,14 @@ public class ZTreeNode{
 	 * 当前节点名字
 	 */
 	private String name;
+	private String level;
 	
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
 	public String getName() {
 		return name;
 	}
@@ -39,15 +46,29 @@ public class ZTreeNode{
 		this.open = open;
 	}
 	private String id;
-	public ZTreeNode(String name, Long id, Long pId) {
-		super();
+	public ZTreeNode(String name, Long id, Long pId,Integer addressLevel) {
 		this.name = name;
 		this.id = String.valueOf(id);
 		this.pId = String.valueOf(pId);
+		this.level=String.valueOf(addressLevel);
+		if(null!=pId){
+			this.isParent=true;
+			this.open=true;
+		}
 	}
+	
 	private String  pId;
 	private String t;
 	private boolean open=true;
+	
+	private boolean isParent=false;
+
+	public boolean isIsParent() {
+		return isParent;
+	}
+	public void setIsParent(boolean isParent) {
+		this.isParent = isParent;
+	}
 
 
 }

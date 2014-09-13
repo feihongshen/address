@@ -186,7 +186,7 @@ function initOption(){
 function getAll(){
 $.ajax({
 	 type: "POST",
-		url:cxt+"/address/getZTree",
+		url:cxt+"/address/getAddressTree",
 		data:{isBind:true},
 		success:function(optionData){
 	        var t = $("#tree");

@@ -346,7 +346,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Query query =getSession().createSQLQuery(sql);
 		List<Integer> list=query.list();
 		StringBuffer sb=null;
-		if(null!=list&&list.size()>0){
+		if(null!=list&&list.size()>0&&!isBind){
 			sb=new StringBuffer();
 			
 			for (Integer aid : list) {

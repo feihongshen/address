@@ -3,13 +3,20 @@ package cn.explink.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.fields.NumberExpression;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.util.StringUtil;
 
 
-public class RuleService {
+public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
+
+	public RuleService() {
+		super(DeliveryStationRule.class);
+	}
 
 	protected boolean isConflict(RuleExpression ruleExpression, RuleExpression existingRuleExpression) {
 		if (!existingRuleExpression.getUnit().equals(ruleExpression.getUnit())) {
@@ -41,7 +48,7 @@ public class RuleService {
 	}
 	
 	protected RuleExpression parseRule(String rule) {
-		if (rule == null) {
+		if (StringUtils.isBlank(rule)) {
 			return null;
 		}
 		String[] array1 = rule.split("\\|");

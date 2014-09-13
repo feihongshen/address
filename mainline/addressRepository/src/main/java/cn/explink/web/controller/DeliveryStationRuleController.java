@@ -19,13 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.explink.domain.Address;
+import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.ComboBox;
+import cn.explink.modle.DataGrid;
+import cn.explink.modle.DataGridReturn;
+import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationRuleService;
 import cn.explink.service.DeliveryStationService;
+import cn.explink.util.HqlGenerateUtil;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/deliveryStationRule")
@@ -110,6 +115,13 @@ public class DeliveryStationRuleController extends BaseController {
 	public List<ComboBox> station4combobox() {
 		Long customerId=getCustomerId();
 		return deliverySationtService.getAllSationt(customerId);
+	}
+	
+	@RequestMapping("/datagrid")
+	public @ResponseBody DataGridReturn datagrid(DeliveryStationRule deliveryStation,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		String addressId=request.getParameter("addressId");
+		return this.deliveryStationRuleService.getDataGridReturnView(addressId);
+		
 	}
 	
 	

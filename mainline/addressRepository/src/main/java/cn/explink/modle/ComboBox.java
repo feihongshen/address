@@ -10,6 +10,14 @@ package cn.explink.modle;
 public class ComboBox {
 
 	private String id;
+	public ComboBox(Long id, String text) {
+		this.id = String.valueOf(id);
+		this.text = text;
+	}
+
+	public ComboBox() {
+	}
+
 	private String text;
 	private boolean selected;
 	public String getId() {
