@@ -28,8 +28,7 @@ var hasIniUI=false;
 		    height:$("#tabs").parent().height() ,
 		    border:false, 
 			onSelect:function(title){ 
-				if(title=='历史导入记录'&&!hasIniUI){
-					hasIniUI=true;
+				if(title=='历史导入记录'){
 					$('#addressImportResult').datagrid(resultRow);
 				}else if(!hasIniUI){
 					$('#importAddressList').datagrid(detailRow);
@@ -39,8 +38,8 @@ var hasIniUI=false;
 		
 		$("#search").click(function(){
 			var queryParams = $('#addressImportResult').datagrid('options').queryParams;
-			queryParams['begin_importDate']=$("input[name='begin_date']").val();
-			queryParams['end_importDate']=$("input[name='end_date']").val();
+			queryParams['importDate_begin']=$("input[name='begin_date']").val();
+			queryParams['importDate_end']=$("input[name='end_date']").val();
 			$('#addressImportResult').datagrid({
 				url : 'subdatagrid?',
 				pageNumber : 1
@@ -87,7 +86,8 @@ var hasIniUI=false;
     <table id="commissionBalanceListtb" width="100%" border="0" cellspacing="5" cellpadding="0">
         <tr>
           <td>导入日期：
-            <input name="begin_date" id="begin_date" class="easyui-datebox"></input> 至 <input name="end_date" id="end_date" class="easyui-datebox"></input>&nbsp;<a id="search" href="javascript:void(0)" class="easyui-linkbutton" >查询</a></td>
+            <input name="begin_date" id="begin_date" class="easyui-datebox"></input>
+             至 <input name="end_date" id="end_date" class="easyui-datebox"></input>&nbsp;<a id="search" href="javascript:void(0)" class="easyui-linkbutton" >查询</a></td>
         </tr>
         <tr>
           <td></td>

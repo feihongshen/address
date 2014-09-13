@@ -52,7 +52,7 @@ var backNode;
 </head>
 <body>
 <div class="easyui-layout" style="height:600px;">
-  <div data-options="region:'west',split:true" title="条件搜索" style="width:300px;">
+  <div data-options="region:'west',split:true" title="条件搜索" style="width:330px;">
     <form action="" method="get">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
@@ -65,7 +65,7 @@ var backNode;
           <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">未绑定</a></td>
         </tr>
         <tr>
-          <td><ul id="tree" class="ztree treeClass" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td><ul id="tree" class="ztree " style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
     </form>
@@ -113,10 +113,8 @@ var backNode;
         <th align="center" bgcolor="#f1f1f1">时效</th>
       </tr>
       <tr>
-        <td align="center" bgcolor="#FFFFFF"><select class="easyui-combobox" name="state" style="width:200px;">
-          <option value="1">1</option>
-          <option value="2">23</option>
-          <option value="3">123</option>
+        <td align="center" bgcolor="#FFFFFF"><select  name="state" style="width:200px;">
+          
         </select></td>
         <td align="center" bgcolor="#FFFFFF">
           <input type="text" name="textfield" id="textfield" />
