@@ -157,14 +157,14 @@ public class HqlGenerateUtil {
         cq.add();
   	}
   	/*
-  	 * 下面的方法是重载 org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(CriteriaQuery, Object)
+  	 * 下面的方法是重载 HqlGenerateUtil.installHql(CriteriaQuery, Object)
   	 * 其目的是拓展区间查询功能
   	 * 注：
   	 * 	重载此方法后修改了模版 controllerTemplate.ftl#datagrid()
   	 * 	将第二行<br/>
-  	 * 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first});
+  	 * 		HqlGenerateUtil.installHql(cq, ${entityName?uncap_first});
   	 * 	改为<br/>
-  	 * 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
+  	 * 		HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
   	 * 	因模版里不方便注释，故在此处说明
   	 */
   	/**
@@ -191,7 +191,7 @@ public class HqlGenerateUtil {
 			String name = origDescriptors[i].getName();
 			String type = origDescriptors[i].getPropertyType().toString();
 
-			if ("class".equals(name) || "ids".equals(name)
+			if ("class".equals(name) || "ids".equals(name)||name.startsWith("Transient")
 					|| "page".equals(name) || "rows".equals(name)
 					|| "sort".equals(name) || "order".equals(name)) {
 				continue; // No point in trying to set an object's class
