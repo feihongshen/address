@@ -107,7 +107,7 @@ public class DeliveryStationRuleController extends BaseController {
 	
 	@RequestMapping("/station4combobox")
 	@ResponseBody
-	public List<ComboBox> commission4combobox() {
+	public List<ComboBox> station4combobox() {
 		Long customerId=getCustomerId();
 		return deliverySationtService.getAllSationt(customerId);
 	}
