@@ -1,10 +1,13 @@
 package cn.explink.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.DeliveryStation;
+import cn.explink.modle.ComboBox;
 
 @Repository
 public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation, Long> {
@@ -19,6 +22,13 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		query.setLong("customerId", customerId);
 		query.setLong("externalId", externalId);
 		return (DeliveryStation) query.uniqueResult();
+	}
+
+	public List<ComboBox> getComBoxDeliveryStation(Long customerId) {
+		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId ";
+		Query query = getSession().createQuery(hql);
+		query.setLong("customerId", customerId);
+		return query.list();
 	}
 
 }
