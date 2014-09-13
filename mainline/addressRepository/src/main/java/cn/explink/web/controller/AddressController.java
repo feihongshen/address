@@ -11,6 +11,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -172,6 +173,14 @@ public class AddressController extends BaseController {
 			e.printStackTrace();
 		}
 		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser());
+		if(null==addressImportResult){
+			aj.setSuccess(false);
+			aj.setMsg("数据异常");
+//			Map<String, Object> attributes=new HashMap<String, Object>();
+//			attributes.put("importTable", addressImportResult.getAddressImportDetails());
+//			aj.setAttributes(attributes);
+			return aj;
+		}
 		aj.setSuccess(true);
 		aj.setInfo(addressImportResult.getId().toString());
 //		Map<String, Object> attributes=new HashMap<String, Object>();
@@ -214,6 +223,8 @@ public class AddressController extends BaseController {
 	public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);
 		HqlGenerateUtil.installHql(cq, addressImportDetail, request.getParameterMap());
+		
+		cq.eq("addressImportResult", 1);
 		return this.addressImportService.getDataGridReturn(cq, true);
 		
 	}
@@ -222,7 +233,14 @@ public class AddressController extends BaseController {
 	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
 		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
-		
+		String begin=request.getParameter("importDate_begin");
+		String end=request.getParameter("importDate_end");
+		if(StringUtils.isNotBlank(begin)){
+			cq.ge("importDate", begin);
+		}
+		if(StringUtils.isNotBlank(end)){
+			cq.le("importDate", end);
+		}
 		return this.addressImportResultService.getDataGridReturn(cq, true);
 		
 	}

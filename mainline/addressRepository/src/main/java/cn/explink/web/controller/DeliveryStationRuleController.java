@@ -1,12 +1,15 @@
 package cn.explink.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.domain.Address;
+import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.modle.AjaxJson;
+import cn.explink.modle.ComboBox;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationRuleService;
+import cn.explink.service.DeliveryStationService;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/deliveryStationRule")
@@ -31,6 +39,9 @@ public class DeliveryStationRuleController extends BaseController {
 
 	@Autowired
 	private DeliveryStationRuleService deliveryStationRuleService;
+	
+	@Autowired
+	private DeliveryStationService deliverySationtService;
 
 	@RequestMapping("/deliveryStationRule")
 	public String index(Model model) {
@@ -70,6 +81,41 @@ public class DeliveryStationRuleController extends BaseController {
 		return aj;
 		
 	}
+	
+	@RequestMapping("/saveDeliveryStationRule")
+	public @ResponseBody AjaxJson saveDeliveryStationRule(Long addressId,String deliveryStationRule,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		//TODO GET CUSTOMER FROM USER
+		
+		try {
+		Long customerId=getCustomerId();
+		//前台用，拼接参数字段
+		String[] dsrkey=deliveryStationRule.split(",");
+		for (String key : dsrkey) {
+			String[] deliveryStationKey=key.split("#");
+			//TODO 批量创建 规则冲突判断
+			deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
+		}
+			
+		} catch (Exception e) {
+			aj.setSuccess(false);
+		} 
+		aj.setSuccess(true);
+		return aj;
+		
+	}
+	
+	@RequestMapping("/station4combobox")
+	@ResponseBody
+	public List<ComboBox> commission4combobox() {
+		Long customerId=getCustomerId();
+		return deliverySationtService.getAllSationt(customerId);
+	}
+	
+	
+	
+	
+	
 	
 	
 	
