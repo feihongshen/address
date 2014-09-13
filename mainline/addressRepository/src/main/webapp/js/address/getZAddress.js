@@ -10,15 +10,14 @@ var setting = {
 	}
 };
 
-
+var addressId;
 var log, className = "dark";
 function beforeClick(treeId, treeNode, clickFlag) {
 	className = (className === "dark" ? "":"dark");
-	alert("beforeClick");
 	return (treeNode.click != false);
 }
 function onClick(event, treeId, treeNode, clickFlag) {
-	alert("onClick");
+	addressId=treeNode.id;
 }		
 
 
@@ -88,3 +87,66 @@ function searchTree(){
 		treeObj.removeNode(node);
 	});
 }
+
+
+function initOption(){
+	 $.ajax({
+		 type: "POST",
+			url:cxt+"/deliveryStationRule/station4combobox",
+			success:function(optionData){
+				for(var i=0;i<optionData.length;i++){
+					var option=$("  <option value="+optionData[i]['id']+">"+optionData[i]['text']+"</option>");
+					$("#deliveryStationId").append(option);
+					
+				}
+				
+				backNode=$("#deliveryStationRule").clone(true);
+			}
+		});
+}
+function getAll(){
+$.ajax({
+	 type: "POST",
+		url:cxt+"/address/getZTree",
+		data:{isBind:true},
+		success:function(optionData){
+	        var t = $("#tree");
+	        t = $.fn.zTree.init(t, setting, optionData);
+			
+		}
+	});
+}
+
+function saveRule(){
+	deliveryStationRule="";
+   	var len=$(".deliveryStationId").length-1;
+   	//用#拼接参数字段
+		$(".deliveryStationId").each(function(j){
+			var c='.rule:eq('+j+')';
+			var rule=$(c).val()+" ";
+			var val=$(this).val();
+			if(val){
+				deliveryStationRule+=val+"#"+rule;
+			}
+			if(len!=j){
+				deliveryStationRule+=",";
+			}
+		});
+		if(deliveryStationRule){
+			
+		$.ajax({
+			 type: "POST",
+				url:cxt+"/deliveryStationRule/saveDeliveryStationRule",
+				data:{"deliveryStationRule":deliveryStationRule,"addressId":addressId},
+				success:function(optionData){
+					if(optionData.success){
+						alert("成功");
+						
+					}else{
+						alert("失败");
+					}
+				}
+			});
+		}
+}
+
