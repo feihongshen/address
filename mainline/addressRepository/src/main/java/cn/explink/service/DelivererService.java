@@ -51,4 +51,8 @@ public class DelivererService {
 		delivererDao.save(deliverer);
 		return deliverer;
 	}
+	
+	public Deliverer getDeliverer(Long id) {
+		return delivererDao.get(id);
+	}
 }

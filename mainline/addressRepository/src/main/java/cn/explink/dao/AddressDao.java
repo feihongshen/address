@@ -3,6 +3,7 @@ package cn.explink.dao;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
@@ -47,11 +48,12 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 	public List<Address> getChildAddress(Long customerId, Long parentId) {
-		StringBuilder hql = new StringBuilder("select a.* from Address a, AddressPermission p");
+		StringBuilder hql = new StringBuilder("select new cn.explink.domain.Address(a.id, a.name, a.addressLevel, a.parentId, a.path) from Address a, AddressPermission p");
 		hql.append(" where a.parentId = :parentId");
-		hql.append(" and a.addressId = p.addressId");
+		hql.append(" and a.id = p.addressId");
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString());
+//		Criteria criteria = getSession().createCriteria(Address.class);
 		query.setLong("parentId", parentId);
 		query.setLong("customerId", customerId);
 		return query.list();

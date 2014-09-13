@@ -40,6 +40,23 @@ public class DelivererRule {
 	@Column(name = "CREATION_TIME")
 	private Date creationTime;
 
+	public DelivererRule() {
+		super();
+	}
+
+	public DelivererRule(Long id, String rule) {
+		super();
+		this.id = id;
+		this.rule = rule;
+	}
+
+	public DelivererRule(Long id, String rule, Deliverer deliverer) {
+		super();
+		this.id = id;
+		this.rule = rule;
+		this.deliverer = deliverer;
+	}
+
 	public Long getId() {
 		return id;
 	}

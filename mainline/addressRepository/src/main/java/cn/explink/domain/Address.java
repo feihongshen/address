@@ -54,6 +54,21 @@ public class Address {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "address")
 	private Set<DelivererRule> delivererRules = new HashSet<DelivererRule>();
+	
+	public Address() {
+		super();
+	}
+
+	public Address(Long id, String name, Integer addressLevel, Long parentId,
+			String path) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.addressLevel = addressLevel;
+		this.parentId = parentId;
+		this.path = path;
+	}
+
 
 	public Long getId() {
 		return id;

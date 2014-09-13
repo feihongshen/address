@@ -69,6 +69,7 @@ public class AddressUtil {
 		}
 		DelivererRuleVo delivererRuleVo = new DelivererRuleVo();
 		BeanUtils.copyProperties(delivererRule, delivererRuleVo);
+		delivererRuleVo.setDelivererId(delivererRule.getDeliverer().getExternalId());
 		return delivererRuleVo;
 	}
 

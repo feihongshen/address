@@ -36,6 +36,17 @@ public class Deliverer {
 	@Column(name = "CREATION_TIME")
 	private Date creationTime;
 
+	public Deliverer() {
+		super();
+	}
+
+	public Deliverer(Long id, String name, Long externalId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.externalId = externalId;
+	}
+
 	public Long getId() {
 		return id;
 	}

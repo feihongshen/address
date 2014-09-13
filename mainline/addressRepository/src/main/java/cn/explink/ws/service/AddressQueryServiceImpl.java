@@ -12,6 +12,7 @@ import cn.explink.domain.ClientApplication;
 import cn.explink.domain.DelivererRule;
 import cn.explink.service.AddressService;
 import cn.explink.service.DelivererRuleService;
+import cn.explink.service.DelivererService;
 import cn.explink.util.AddressUtil;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.ws.vo.AddressQueryResult;
@@ -39,12 +40,17 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 		}
 		AddressService addressService = ApplicationContextUtil.getBean("addressService");
 		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
+		DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
 		try {
 			List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId);
 			List<AddressVo> addressVoList = AddressUtil.cloneToAddressVoList(addressList);
 			result.setAddressVoList(addressVoList);
 			
 			List<DelivererRule> delivererRuleList = delivererRuleService.getDelivererRuleList(clientApplication.getCustomerId(), addressId);
+
+//			for (DelivererRule rule : delivererRuleList) {
+//				delivererService.getDeliverer(rule.getDeliverer());
+//			}
 			List<DelivererRuleVo> delivererRuleVoList = AddressUtil.cloneToDelivererRuleList(delivererRuleList);
 			result.setDelivererRuleVoList(delivererRuleVoList);
 			result.setResultCode(ResultCodeEnum.success);

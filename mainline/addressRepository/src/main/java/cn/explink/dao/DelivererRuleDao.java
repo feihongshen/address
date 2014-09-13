@@ -16,12 +16,16 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
 	}
 
 	public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {
-		StringBuilder hql = new StringBuilder("select r from DelivererRule r, Deliverer d");
-		hql.append(" where r.deliverer.id = d.id");
-		hql.append(" and d.customer.id = :customerId");
-		hql.append(" r.address.id = :addressId");
+		
+		StringBuilder hql = new StringBuilder("from DelivererRule where address.id = :addressId");
+//		StringBuilder hql = new StringBuilder("select new cn.explink.domain.DelivererRule(r.id, r.rule, new cn.explink.domain.Deliverer(d.id, d.name, d.externalId))");
+//		StringBuilder hql = new StringBuilder("select new cn.explink.domain.DelivererRule(r.id, r.rule)");
+//		hql.append(" from DelivererRule r, Deliverer d");
+//		hql.append(" where r.deliverer.id = d.id");
+//		hql.append(" and d.customer.id = :customerId");
+//		hql.append(" and r.address.id = :addressId");
 		Query query = getSession().createQuery(hql.toString());
-		query.setLong("customerId", customerId);
+//		query.setLong("customerId", customerId);
 		query.setLong("addressId", addressId);
 		return query.list();
 	}
