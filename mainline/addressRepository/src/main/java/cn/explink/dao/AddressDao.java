@@ -153,7 +153,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString()) ;
 		query.setString("pathlike",  path+"-%");
-		query.setString("path", "%"+path+"%");
+		query.setString("path",  path );
 		query.setLong("customerId", customerId);
 		return query.list(); 
 	}
