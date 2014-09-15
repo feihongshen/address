@@ -198,11 +198,13 @@ mainline/addressRepository/src/main/resources/address.properties -text
 mainline/addressRepository/src/main/resources/logback.xml -text
 mainline/addressRepository/src/main/resources/stopword.dic -text
 mainline/addressRepository/src/main/webapp/META-INF/MANIFEST.MF -text
+mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/addressEditPage.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/addressMapping.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/deliveryStationRule.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/getAddress.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/import.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importDatagrid.jsp -text
+mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importStationAddress.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/index.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/global.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/include-base-styles.jsp -text
