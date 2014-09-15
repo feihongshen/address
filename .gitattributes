@@ -640,6 +640,7 @@ mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/upload.
 mainline/addressRepository/src/main/webapp/js/address/getZAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/import.js -text
 mainline/addressRepository/src/main/webapp/js/address/importAdress.js -text
+mainline/addressRepository/src/main/webapp/js/address/importStationAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/result.js -text
 mainline/addressRepository/src/main/webapp/js/ajaxfileupload.js -text
 mainline/addressRepository/src/main/webapp/js/comm.js -text
