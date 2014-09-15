@@ -148,9 +148,21 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		List<Address> addressList = addressDao.getChildAddress(customerId, addressId);
 		return addressList;
 	}
-
-	public void deleteAddress(Long addressId) {
-
+	public List<Address> getChildAllAddress(Long customerId,String path) {
+		return addressDao.getChildAllAddress(customerId, path);
+	}
+	
+	public void deleteAddress(Long addressId, Long customerId) {
+       Address a = this.addressDao.get(addressId);
+       List<Address> list = addressDao.getChildAllAddress(customerId,a.getPath()+"-"+a.getId());
+       List<Long> ids = new ArrayList<Long>();
+       ids.add(a.getId());
+       if(list!=null&&!list.isEmpty()){
+    	  for(Address ad :list){
+    		  ids.add(ad.getId());
+    	  }
+       }
+       batchUnbindAddress(ids,customerId);
 	}
 
 	/**
@@ -196,7 +208,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			dsr.setDeliveryStation(ds);
 			dsr.setCreationTime(new Date());
 			dsr.setRule("");
-			dsr.setRuleType(DeliveryStationRuleTypeEnum.customization.getValue());
+			dsr.setRuleType(DeliveryStationRuleTypeEnum.fallback.getValue());
 			dsr.setRuleExpression("");
 			deliveryStationRuleDao.save(dsr);
 			return true;
@@ -371,12 +383,12 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return result;
 	}
 
-	public List<ZTreeNode> getZAddress(Long customerId,String name,boolean isBind) {
+	public List<ZTreeNode> getZAddress(Long customerId,String name,Integer isBind) {
 		String sql="select dsr.ADDRESS_ID from delivery_station_rules dsr left join delivery_stations ds on dsr.DELIVERY_STATION_ID=ds.id  where ds.CUSTOMER_ID="+customerId;
 		Query query =getSession().createSQLQuery(sql);
 		List<Integer> list=query.list();
 		StringBuffer sb=null;
-		if(null!=list&&list.size()>0&&!isBind){
+		if(null!=list&&list.size()>0&&isBind==1){
 			sb=new StringBuffer();
 			
 			for (Integer aid : list) {
@@ -441,8 +453,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			a.setName(alias);
 			a.setOldName(address.getName());
 			aliasDao.save(a);
-			//TODO 确定添加别名任务
-			scheduledTaskService.createScheduledTask(Constants.REFERENCE_TYPE_ALIAS_ID, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(address.getId()));
+			scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getId()));
 		}else{
 			aj.setSuccess(false);
 			aj.setMsg("已存在别名："+alias);
