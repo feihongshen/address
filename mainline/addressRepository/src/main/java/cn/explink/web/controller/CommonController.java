@@ -11,14 +11,11 @@ import cn.explink.domain.User;
 @RequestMapping("/common")
 @Controller
 public class CommonController extends BaseController {
-
 	private static Logger logger = LoggerFactory.getLogger(CommonController.class);
-
 	@RequestMapping("/index")
 	public String hello(Model model) {
 		User user = getLogginedUser();
 		logger.info("user = " + user.toString());
 		return "/common/index";
 	}
-
 }

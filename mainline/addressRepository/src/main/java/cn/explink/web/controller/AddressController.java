@@ -283,7 +283,73 @@ public class AddressController extends BaseController {
 		return aj;
 		
 	}
+	/**
+	 * 地址库维护
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/addressEditPage")
+	public String addressEditPage(Model model) {
+		return "address/addressEditPage";
+	}
 	
-	
-	
+	/**
+	 * 站点关键词导入
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/importStationAddress")
+	public String importStationAddress(Model model) {
+		return "address/importStationAddress";
+	}
+	@RequestMapping("/add")
+	public @ResponseBody AjaxJson  add( @RequestParam(value = "stationId" ) Long stationId, @RequestParam(value = "parentId", required = false) Long parentId, @RequestParam(value = "addresses", required = false) String addresses) {
+		AjaxJson aj = new AjaxJson();
+		aj.setSuccess(true);
+		Long customerId = getCustomerId();
+		if(stationId!=null){
+			 addressService.addAddressWithStation(parentId,addresses,stationId,customerId); 
+		}else{
+			 addressService.addAddress(parentId,addresses,customerId); 
+		}
+		return aj;
+	}
+	/**
+	 * 添加别名
+	 * @param addressId
+	 * @param alias
+	 * @return
+	 */
+	@RequestMapping("/addAlias")
+	public @ResponseBody AjaxJson  addAlias( @RequestParam(value = "addressId" ) Long addressId,   @RequestParam(value = "alias", required = false) String alias) {
+		AjaxJson aj = null;
+		Long customerId = this.getCustomerId();
+		if(alias!=null&&addressId!=null){
+			aj =  addressService.addAlias(addressId,alias,customerId);
+		}
+		return aj;
+	}
+	/**
+	 * 获取别名
+	 * @param addressId
+	 * @param alias
+	 * @return
+	 */
+	@RequestMapping("/getAlias")
+	public @ResponseBody List<Alias>  getAlias( @RequestParam(value = "addressId" ) Long addressId ) {
+			Long customerId = this.getCustomerId();
+	      return addressService.getAliasByAddressId(addressId,customerId);
+	}
+	/**
+	 * 删除别名
+	 * @param addressId
+	 * @return
+	 */
+	@RequestMapping("/delAlias")
+	public @ResponseBody AjaxJson  delAlias( @RequestParam(value = "id" ) Long id ) {
+		AjaxJson aj = new AjaxJson();
+		aj.setSuccess(true);
+		addressService.deleteAlias(id);
+		return aj;
+	}
 }
