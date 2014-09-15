@@ -107,9 +107,9 @@ public class AddressController extends BaseController {
 	
 	
 	@RequestMapping("/getZTree")
-	public @ResponseBody List<ZTreeNode> getZTree(String name,boolean isBind) {
+	public @ResponseBody List<ZTreeNode> getZTree(String name,  Integer band) {
 		Long customerId = getCustomerId();
-		return addressService.getZAddress(customerId,name,isBind);
+		return addressService.getZAddress(customerId,name,band);
 	}
 	
 	
@@ -356,4 +356,17 @@ public class AddressController extends BaseController {
 		addressService.deleteAlias(id);
 		return aj;
 	}
+	/**
+	 * 删除别名
+	 * @param addressId
+	 * @return
+	 */
+	@RequestMapping("/delAddress")
+	public @ResponseBody AjaxJson  Address( Long addressId ) {
+		AjaxJson aj = new AjaxJson();
+		aj.setSuccess(true);
+		addressService.deleteAddress(addressId,this.getCustomerId());
+		return aj;
+	}
+	
 }
