@@ -3,6 +3,7 @@ package cn.explink.dao;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -82,11 +83,21 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 			String ids=sb.substring(0, sb.length()-1);
 			hql.append(" and a.id not in("+ids+")");
 		}
-		hql.append(" and a.id = p.addressId");
-		hql.append(" and p.customerId = :customerId");
-		Query query = getSession().createQuery(hql.toString());
-		query.setLong("customerId", customerId);
-		return query.list();
+		if(StringUtils.isNotEmpty(name)){
+			hql.append(" and a.id = p.addressId");
+			hql.append(" and p.customerId = :customerId");
+			hql.append(" and a.name like :name");
+			Query query = getSession().createQuery(hql.toString());
+			query.setLong("customerId", customerId);
+			query.setString("name", "%"+name+"%");
+			return query.list();
+		}else{
+			hql.append(" and a.id = p.addressId");
+			hql.append(" and p.customerId = :customerId");
+			Query query = getSession().createQuery(hql.toString());
+			query.setLong("customerId", customerId);
+			return query.list();
+		}
 	}
 
 	public List<Address> getAddressByNames(Collection<String> addressNames) {
@@ -133,6 +144,18 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setLong("addressId", addressId);
 		query.setLong("stationId", stationId);
 		return (DeliveryStationRule) query.uniqueResult();
+	}
+
+	public List<Address> getChildAllAddress(Long customerId,String path) {
+		StringBuilder hql = new StringBuilder("select new cn.explink.domain.Address(a.id, a.name, a.addressLevel, a.parentId, a.path) from Address a ,AddressPermission p");
+		hql.append(" where ( a.path like :pathlike or a.path =:path )");
+		hql.append(" and a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString()) ;
+		query.setString("pathlike",  path+"-%");
+		query.setString("path", "%"+path+"%");
+		query.setLong("customerId", customerId);
+		return query.list(); 
 	}
 	
 }
