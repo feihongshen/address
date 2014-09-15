@@ -3,7 +3,7 @@ var resultId=0;
 var detailRow={
 		idField : 'id',
 		title : '关键词数据',
-		url : 'datagrid?',
+		url : 'datagrid?resultId=0',
 		fit : true,
 		height : 400,
 		loadMsg : '数据加载中...',
@@ -29,7 +29,12 @@ var detailRow={
 			field : 'city',
 			title : '市',
 			sortable : false
-		}, {
+		},
+		{
+			field : 'district',
+			title : '区、县',
+			sortable : false
+		},{
 			field : 'address1',
 			title : '关键字',
 			sortable : true

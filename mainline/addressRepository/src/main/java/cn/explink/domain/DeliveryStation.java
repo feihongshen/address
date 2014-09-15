@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "DELIVERY_STATIONS")
 public class DeliveryStation {
@@ -28,7 +30,7 @@ public class DeliveryStation {
 
 	@Column(name = "EXTERNAL_ID", nullable = false)
 	private Long externalId;
-
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CUSTOMER_ID")
 	private Customer customer;

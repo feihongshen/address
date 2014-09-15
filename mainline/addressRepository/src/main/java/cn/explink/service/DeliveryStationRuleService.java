@@ -40,7 +40,7 @@ public class DeliveryStationRuleService extends RuleService {
 	@Autowired
 	private DeliveryStationRuleDao deliveryStationRuleDao;
 
-	public DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId, String rule) {
+	public DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId, String rule)  {
 		// 解析规则
 		RuleExpression ruleExpression = parseRule(rule);
 
@@ -158,10 +158,15 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public DataGridReturn getDataGridReturnView(String addressId) {
 		
-		Query query = getSession().createQuery("select dsr from DeliveryStationRule where dsr.address.id = : addressId");
+		Query query = getSession().createQuery("select dsr.deliveryStation from DeliveryStationRule dsr where dsr.address.id =:addressId");
 		query.setLong("addressId", Long.parseLong(addressId));
-		List<DeliveryStationRule> list=query.list();
+		List<DeliveryStation> list=query.list();
 		return new DataGridReturn(list.size(), list);
+	}
+
+	public List<Long> getAddressIds(Long parentId,Long customerId) {
+		// TODO Auto-generated method stub
+		return deliveryStationRuleDao.getAddressIds(parentId,customerId);
 	}
 
 

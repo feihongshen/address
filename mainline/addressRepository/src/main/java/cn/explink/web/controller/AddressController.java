@@ -104,6 +104,8 @@ public class AddressController extends BaseController {
 		return addressService.getAsyncAddress(customerId,parentId);
 	}
 	
+	
+	
 	@RequestMapping("/getZTree")
 	public @ResponseBody List<ZTreeNode> getZTree(String name,boolean isBind) {
 		Long customerId = getCustomerId();
@@ -222,9 +224,11 @@ public class AddressController extends BaseController {
 	@RequestMapping("/datagrid")
 	public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);
+		AddressImportResult addressImportResult=new AddressImportResult();
+		addressImportResult.setId(Long.parseLong(request.getParameter("resultId")));
+		addressImportDetail.setAddressImportResult(addressImportResult);
 		HqlGenerateUtil.installHql(cq, addressImportDetail, request.getParameterMap());
 		
-		cq.eq("addressImportResult", 1);
 		return this.addressImportService.getDataGridReturn(cq, true);
 		
 	}

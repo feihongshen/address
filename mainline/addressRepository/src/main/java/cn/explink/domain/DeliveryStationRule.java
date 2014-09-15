@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "DELIVERY_STATION_RULES")
 public class DeliveryStationRule {
@@ -28,7 +30,7 @@ public class DeliveryStationRule {
 
 	@Column(name = "RULE_TYPE", nullable = false)
 	private Integer ruleType;
-
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ADDRESS_ID")
 	private Address address;

@@ -11,26 +11,12 @@ function ajaxFileUpload() {
 			//alert(1);
 			if (data.success) {
 				var usedTable=$("#importAddressList");
-				$("#tools").val('上传成功'+data.info);
+				$("#tools").val('上传成功');
 				$('#importAddressList').datagrid(
 						{
-							url : 'datagrid?',
+							url : 'datagrid?resultId='+data.info,
 							pageNumber : 1
 						});
-//				var tableData=data.importTable;
-//				for(var i=0;i<tableData.length;i++){
-//					var tr="<tr class='trpp'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['province']+"</td>"+
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['city']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['district']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['address1']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['deliveryStationName']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['delivererName']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['status']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['message']+"</td> " +
-//							"<td align='center' bgcolor='#FFFFFF'>"+tableData[i]['delivererName']+"</td>  </tr>" 
-//					usedTable.append(tr);
-//				}
 				$("#startImport").attr('disabled', false);
 			} else {
 				alert(AjaxJson.msg);

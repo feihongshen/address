@@ -35,6 +35,7 @@ import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.exception.ExplinkRuntimeException;
+import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.tree.AddressImportEntry;
 import cn.explink.tree.TreeNode;
@@ -240,6 +241,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				childAddress = createAddress(parentAddress, detail, name, customerId);
 				childEntry.setAddress(childAddress);
 				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+				detail.setAddressId(childAddress.getId());
 			} else {
 				// 失败，父节点不存在
 				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
@@ -254,6 +256,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 					detail.setMessage("地址重复:" + name);
 				} else {
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+					detail.setAddressId(childAddress.getId());
 				}
 			} else {
 				// 不是最后一级，继续查找子节点
@@ -335,11 +338,14 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		Set<AddressImportDetail> details = addressImportResult.getAddressImportDetails();
 		List<Long> addressIdList = new ArrayList<Long>();
 		for (AddressImportDetail detail : details) {
-			if (detail.getStatus() == AddressImportDetailStatsEnum.success.getValue()) {
+			Integer i=AddressImportDetailStatsEnum.success.getValue();
+			if (i == detail.getStatus()) {
 				addressIdList.add(detail.getAddressId());
 			}
 		}
-		addressService.batchUnbindAddress(addressIdList, customerId);
+		if (addressIdList.size() > 0) {
+			addressService.batchUnbindAddress(addressIdList, customerId);
+		}
 		addressImportResultDao.delete(addressImportResult);
 	}
 
@@ -348,5 +354,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		return addressImportDetailDao.loadAll(AddressImportDetail.class);
 		
 	}
+
+	
 
 }

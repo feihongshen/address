@@ -1,36 +1,29 @@
 package cn.explink.web.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.explink.domain.Address;
-import cn.explink.domain.AddressImportDetail;
-import cn.explink.domain.DeliveryStation;
-import cn.explink.domain.DeliveryStationRule;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.ComboBox;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
-import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationRuleService;
 import cn.explink.service.DeliveryStationService;
-import cn.explink.util.HqlGenerateUtil;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/deliveryStationRule")
@@ -91,20 +84,29 @@ public class DeliveryStationRuleController extends BaseController {
 	public @ResponseBody AjaxJson saveDeliveryStationRule(Long addressId,String deliveryStationRule,HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj=new AjaxJson();
 		//TODO GET CUSTOMER FROM USER
-		
+		Map map=new HashMap();
 		try {
-		Long customerId=getCustomerId();
-		//前台用，拼接参数字段
-		String[] dsrkey=deliveryStationRule.split(",");
-		for (String key : dsrkey) {
-			String[] deliveryStationKey=key.split("#");
-			//TODO 批量创建 规则冲突判断
-			deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
-		}
-			
+			Long customerId=getCustomerId();
+			//前台用，拼接参数字段
+			String[] dsrkey=deliveryStationRule.split(",");
+			for (String key : dsrkey) {
+				String[] deliveryStationKey=key.split("#");
+				//TODO 批量创建 规则冲突判断
+				try {
+					deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
+				} catch (Exception e) {
+					map.put(deliveryStationKey[1], e.getMessage());
+					aj.setSuccess(false);
+					e.printStackTrace();
+				}
+			}
 		} catch (Exception e) {
 			aj.setSuccess(false);
 		} 
+		if(!aj.isSuccess()){
+			aj.setAttributes(map);
+			return aj;
+		}
 		aj.setSuccess(true);
 		return aj;
 		
@@ -118,10 +120,16 @@ public class DeliveryStationRuleController extends BaseController {
 	}
 	
 	@RequestMapping("/datagrid")
-	public @ResponseBody DataGridReturn datagrid(DeliveryStationRule deliveryStation,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+	public @ResponseBody DataGridReturn datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		String addressId=request.getParameter("addressId");
 		return this.deliveryStationRuleService.getDataGridReturnView(addressId);
 		
+	}
+	
+	@RequestMapping("/getMatchTree")
+	public @ResponseBody List<Long>  getMatchTree( @RequestParam(value = "id", required = false) Long parentId) {
+		Long customerId=getCustomerId();
+		return deliveryStationRuleService.getAddressIds(parentId,customerId);
 	}
 	
 	

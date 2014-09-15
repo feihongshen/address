@@ -18,7 +18,7 @@ var cxt='<%=request.getContextPath()%>';
 var backNode;
 
 		 $(document).ready(function(){
-			 
+			 pureStation=$("#deliveryStationRule").clone(true);
 			 $("#saveRule").click(function(){
 				 if(!addressId){
 					 alert("请选择地址");
@@ -36,12 +36,13 @@ var backNode;
 	           	var node=backNode.clone(true);
 	           	$("#optionRule").before(node);
            });
-	       // $("#unbindAllBtn").clcik(function(){
-	        //	alert(1);
-	        //})
+	        $("#unbindAllBtn").click(function(){
+	       	alert(1);
+	       	unbind();
+	       })
 	        
-	        initOption();
-			
+	        //initOption();
+	        $("#stationList").datagrid(detailRow);
 
     });
 		 
@@ -72,24 +73,17 @@ var backNode;
     </form>
   </div>
   
-  <div data-options="region:'center',title:'添加关键字'">
+  <div data-options="region:'center'">
     <form action="" method="get">
-      <table width="100%" border="0" cellspacing="0" cellpadding="10">
-        <tr>
-          <td><h2>关联站点：
-            </h2>
-            <p>大望路站</p>
-          <p>清河站</p></td>
-        </tr>
-        <tr>
-          <td><div style="padding:10px"><table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
+      <table width="100%" border="0" cellspacing="0" cellpadding="10" id="stationList">
+        </table><div style="padding:10px"><table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
     <thead>
       <tr>
         <th align="center" bgcolor="#f1f1f1">配送站点</th>
         <th align="center" bgcolor="#f1f1f1">规则</th>
       </tr>
       
-      <tr id="deliveryStationRule">
+      <tr id="deliveryStationRule" class="deliveryStationRule">
         <td align="center" bgcolor="#FFFFFF"><select class="deliveryStationId" id="deliveryStationId" name="state" style="width:200px;">
          
         </select></td>
