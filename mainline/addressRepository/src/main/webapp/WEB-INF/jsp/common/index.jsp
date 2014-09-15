@@ -73,8 +73,8 @@
     <li> <span>数据维护</span>
       <ul>
         <li><a href="#" onclick="addTab('关键词导入','address/addressImportPage')">关键词导入</a></li>
-        <li><a href="#" onclick="addTab('地址库维护','dizhiku/dzkwh.html')">地址库维护</a></li>
-        <li><a href="#" onclick="addTab('站点管理','dizhiku/zdgl.html')">站点管理</a></li>
+        <li><a href="#" onclick="addTab('地址库维护','address/addressEditPage')">地址库维护</a></li>
+        <li><a href="#" onclick="addTab('站点管理','address/importStationAddress')">站点管理</a></li>
         <li><a href="#" onclick="addTab('配送员管理','dizhiku/psygl.html')">配送员管理</a></li>
       </ul>
     </li>
