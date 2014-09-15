@@ -13,9 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "DELIVERY_STATIONS")
+@JsonIgnoreProperties(value = { "customer" })  
 public class DeliveryStation {
 
 	@Id
