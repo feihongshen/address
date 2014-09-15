@@ -23,9 +23,31 @@ public class AliasDao extends BasicHibernateDaoSupport<Alias, Long> {
 	}
 
 	public List<Alias> getAliasByIdList(List<Long> idList) {
-		String hql = "from Alias where id in :idList";
+		if(idList!=null&&!idList.isEmpty()){
+			String hql = "from Alias where id in :idList";
+			Query query = getSession().createQuery(hql);
+			query.setParameterList("idList", idList);
+			return query.list();
+		}else{
+			return null;
+		}
+	}
+
+	public Alias getAliasByAddressIdAndAlias(Long addressId, String alias,Long customerId) {
+		String hql = "from Alias where addressId = :addressId and name=:name and customerId=:customerId";
 		Query query = getSession().createQuery(hql);
-		query.setParameterList("idList", idList);
+		query.setLong("addressId", addressId);
+		query.setString("name", alias);
+		query.setLong("customerId", customerId);
+		return (Alias) query.uniqueResult();
+	}
+
+	public List<Alias> getAliasByAddressIdAndCustomerId(Long addressId,
+			Long customerId) {
+		String hql = "from Alias where addressId = :addressId and customerId=:customerId";
+		Query query = getSession().createQuery(hql);
+		query.setLong("addressId", addressId);
+		query.setLong("customerId", customerId);
 		return query.list();
 	}
 

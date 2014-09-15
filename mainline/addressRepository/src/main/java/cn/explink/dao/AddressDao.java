@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.Address;
+import cn.explink.domain.AddressPermission;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.tree.ZTreeNode;
 
 
@@ -111,6 +113,26 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setParameterList("addressIdList", addressIdList);
 		query.setLong("customerId", customerId);
 		return query.list();
+	}
+    /**
+     * 通过地址名称和父ID获取地址（结果唯一）
+     * @param name
+     * @param parentId
+     * @return
+     */
+	public Address getAddressByNameAndPid(String name, Long parentId) {
+		Query query =getSession().createQuery("from Address where name=:name and parentId=:parentId ")
+				.setString("name", name).setLong("parentId", parentId);
+		return (Address) query.uniqueResult();	
+	}
+
+	public DeliveryStationRule getStationRuleByAddressAndStation(Long addressId,
+			Long stationId) {
+		String hql = "from DeliveryStationRule where address.id = :addressId and deliveryStation.id = :stationId";
+		Query query = getSession().createQuery(hql);
+		query.setLong("addressId", addressId);
+		query.setLong("stationId", stationId);
+		return (DeliveryStationRule) query.uniqueResult();
 	}
 	
 }
