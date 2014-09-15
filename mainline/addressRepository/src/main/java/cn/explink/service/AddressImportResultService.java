@@ -25,8 +25,4 @@ public class AddressImportResultService extends CommonServiceImpl<AddressImportR
 	private UserDao userDao;
 
 
-	
-	
-
-
 }

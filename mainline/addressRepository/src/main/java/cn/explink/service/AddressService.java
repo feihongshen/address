@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.AliasDao;
+import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
@@ -29,7 +30,9 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Order;
 import cn.explink.domain.enums.AddressStatusEnum;
+import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
+import cn.explink.modle.AjaxJson;
 import cn.explink.schedule.Constants;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.StringUtil;
@@ -59,6 +62,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	@Autowired
 	private AliasDao aliasDao;
 
+	@Autowired
+	private DeliveryStationDao  deliveryStationDao ;
+	
 	@Autowired
 	private AddressPermissionDao addressPermissionDao;
 
@@ -174,6 +180,30 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return false;
 	}
 
+	/**
+	 * 绑定地址到给定的客户的站点
+	 * @param address
+	 * @param customerId
+	 * @return true：已绑定，false：新绑定
+	 */
+	public boolean bindAddressWithStation(Address address, Long stationId) {
+		DeliveryStationRule dsr = addressDao.getStationRuleByAddressAndStation(address.getId(), stationId);
+		if (dsr == null) {
+			dsr = new DeliveryStationRule();
+			dsr.setAddress(address);
+			DeliveryStation  ds = new DeliveryStation ();
+			ds.setId(stationId);
+			dsr.setDeliveryStation(ds);
+			dsr.setCreationTime(new Date());
+			dsr.setRule("");
+			dsr.setRuleType(DeliveryStationRuleTypeEnum.customization.getValue());
+			dsr.setRuleExpression("");
+			deliveryStationRuleDao.save(dsr);
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * 搜索接口
 	 * 
@@ -359,6 +389,76 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
 		return addressDao.getAsyncAddress(customerId,parentId);
+	}
+
+	public void addAddressWithStation(Long parentId, String addresses, Long stationId,Long customerId) {
+		Address parent = addressDao.get(parentId);
+		for(String addressLine : addresses.split("\n")){
+			if(addressLine.trim().length()==0){
+				continue;
+			}
+			Address a = new Address();
+			a.setParentId(parentId);
+			a.setName(addressLine);
+			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId);
+			if(l!=null ){//已存在则绑定
+				bindAddress(l,  customerId);
+				bindAddressWithStation(l, stationId);
+			}else{
+				createAndBindAddress(a, parent, customerId);
+				bindAddressWithStation(a, stationId);
+			}
+		}
+	}
+
+	public void addAddress(Long parentId, String addresses,Long customerId) {
+		Address parent = addressDao.get(parentId);
+		for(String addressLine : addresses.split("\n")){
+			if(addressLine.trim().length()==0){
+				continue;
+			}
+			Address a = new Address();
+			a.setParentId(parentId);
+			a.setName(addressLine);
+			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId);
+			if(l!=null ){//已存在则绑定
+				bindAddress(l,  customerId);
+			}else{
+				createAndBindAddress(a, parent, customerId);
+			}
+		}
+	}
+
+	public AjaxJson addAlias(Long addressId, String alias,Long customerId) {
+		AjaxJson aj = new AjaxJson();
+		Alias  a = aliasDao.getAliasByAddressIdAndAlias(addressId,alias,customerId);
+		Address address = addressDao.get(addressId);
+		if(a==null){
+			aj.setSuccess(true);
+			a = new Alias();
+			a.setAddressId(addressId);
+			a.setCustomerId(customerId);
+			a.setName(alias);
+			a.setOldName(address.getName());
+			aliasDao.save(a);
+			//TODO 确定添加别名任务
+			scheduledTaskService.createScheduledTask(Constants.REFERENCE_TYPE_ALIAS_ID, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(address.getId()));
+		}else{
+			aj.setSuccess(false);
+			aj.setMsg("已存在别名："+alias);
+		}
+		aj.setObj(a);
+		return aj;
+	}
+
+	public List<Alias> getAliasByAddressId(Long addressId, Long customerId) {
+		return aliasDao.getAliasByAddressIdAndCustomerId(addressId,customerId);
+	}
+
+	public void deleteAlias(Long id) {
+		Alias a = aliasDao.get(id);
+		aliasDao.delete(a);
+		scheduledTaskService.createScheduledTask(Constants.REFERENCE_TYPE_ALIAS_ID, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
 	}
 
 }
