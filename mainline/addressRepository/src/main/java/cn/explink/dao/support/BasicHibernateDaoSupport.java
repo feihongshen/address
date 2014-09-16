@@ -122,16 +122,24 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 			// 设置超时时间为较小的值，如果此资源已经被其他事物加锁，则迅速失败当前查询
 			// http://dev.mysql.com/doc/innodb-plugin/1.0/en/innodb-other-changes-innodb_lock_wait_timeout.html
 			// http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout
-			Query query = session.createSQLQuery("set innodb_lock_wait_timeout = 1");
-			query.executeUpdate();
+			try {
+				Query query = session.createSQLQuery("set innodb_lock_wait_timeout = 1");
+				query.executeUpdate();
+			} catch (Exception e) {
+				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage(), e);
+			}
 
 			entity = (Entity) session.load(persistentClass, id, LockOptions.UPGRADE);
 		} finally {
-			Query query = session.createSQLQuery("show global variables like 'innodb_lock_wait_timeout'");
-			Object[] globalValue = (Object[]) query.list().get(0);
-			// 恢复超时时间为数据库的全局设置
-			query = session.createSQLQuery("set innodb_lock_wait_timeout = " + globalValue[1]);
-			query.executeUpdate();
+			try {
+				Query query = session.createSQLQuery("show global variables like 'innodb_lock_wait_timeout'");
+				Object[] globalValue = (Object[]) query.list().get(0);
+				// 恢复超时时间为数据库的全局设置
+				query = session.createSQLQuery("set innodb_lock_wait_timeout = " + globalValue[1]);
+				query.executeUpdate();
+			} catch (Exception e) {
+				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage(), e);
+			}
 		}
 
 		return entity;
