@@ -63,7 +63,7 @@
 	<!-- 创建更新索引和词典的定时任务 -->
 	<changeSet id="xushiju-2014-09-04-02" author="xushiju">
 		<sql>
-			INSERT INTO scheduled_tasks (task_type, STATUS, fire_time, created_at) VALUES ('updateIndexTask', 0, NOW(), NOW());
+			INSERT INTO SCHEDULED_TASKS (task_type, STATUS, fire_time, created_at) VALUES ('updateIndexTask', 0, NOW(), NOW());
 		</sql>
 	</changeSet>
 </databaseChangeLog>
