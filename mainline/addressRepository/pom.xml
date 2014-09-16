@@ -413,6 +413,10 @@
 				<filtering>true</filtering>
 				<targetPath>../db</targetPath>
 			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<filtering>false</filtering>
+			</resource>
 		</resources>
 		<plugins>
 			<!-- 
