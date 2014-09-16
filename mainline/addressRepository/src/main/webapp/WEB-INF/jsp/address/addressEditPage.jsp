@@ -21,11 +21,22 @@
 	        	getAll();
 	        });
 	        $("#unbindAllBtn").click(function(){
+	        	if($("#unbindAllBtn").attr("isBand")=='0'){
+	        		$("#unbindAllBtn").attr("isBand","1");
+	        		$("#unbindAllBtn").find("span>span").text("已绑定");
+	        	}else{
+	        		$("#unbindAllBtn").attr("isBand","0");
+	        		$("#unbindAllBtn").find("span>span").text("绑定");
+	        	}
+	        	getAll();
 	        });
 	        $('#stationId').combobox('disable');
     	 });
-		 
 		 var mySettings = {
+				 edit: {
+						enable: true,
+						showRenameBtn:false
+					},
 					data: {
 						simpleData: {
 							enable: true
@@ -33,12 +44,38 @@
 					},
 					callback: {
 						beforeClick: myBeforeClick,
-						onClick: myClick
+						onClick: myClick,
+						beforeRemove: zTreeBeforeRemove,
+ 						onRemove: zTreeOnRemove
 					},
 					check: {
 						enable: true
-						}
+					}
 				};
+		 function zTreeBeforeRemove(treeId, treeNode) {
+			 if(confirm( "确认删除该节点以及以下数据？" )){
+				 var flag = true;
+				 $.ajax({
+					 	type: "POST",
+						url:"<%=request.getContextPath()%>/address/delAddress",
+						data:{addressId:treeNode.id},
+						async:false,
+						success : function(resp) {
+							flag = resp.success;
+							if(!flag){
+								alert("地址删除失败，请联系管理员！");
+							}
+							
+						}
+					});
+				 return flag;
+			 }
+			 return  false;
+		 }
+		 function zTreeOnRemove(event, treeId, treeNode) {
+			
+		 } 
+		 
 		 function myBeforeClick(treeId, treeNode, clickFlag) {
 				className = (className === "dark" ? "":"dark");
 				return (treeNode.click != false);
@@ -64,6 +101,7 @@
 				$("#aliasTips").html(treeNode.name);
 				$("#addressId").val(treeNode.id);
 				$("#parentId").val(treeNode.id);
+				$("#level").val(treeNode.level);
 				 $("#aliasUl").html("");
 				 $.ajax({
 					 	type: "POST",
@@ -91,14 +129,27 @@
 				
 			}	
 	function getAll(){
+		var isBand = $("#unbindAllBtn").attr("isBand");
 		 $.ajax({
 			 type: "POST",
 				url:"<%=request.getContextPath()%>/address/getZTree",
+				data:{band:isBand},
 				success : function(optionData) {
 					$.fn.zTree.init($("#tree"), mySettings, optionData);
 				}
 			});
 	}
+	function getTree(isBand){
+		 $.ajax({
+			 type: "POST",
+				url:"<%=request.getContextPath()%>/address/getZTree",
+				data:{band:isBand},
+				success : function(optionData) {
+					$.fn.zTree.init($("#tree"), mySettings, optionData);
+				}
+			});
+	}
+	
 	function clearForm(){
 		$("#ff")[0].reset();
 	}
@@ -106,13 +157,17 @@
 		var addresses = $("#addresses").val();
 		var parentId = $("#parentId").val();
 		var stationId = $("input[name='stationId']").val();
-		 $.ajax({
+		if($("#level").val()>5){
+			alert("最多支持第六级关键字！");
+			return false;
+		}
+		$.ajax({
 			 	type: "POST",
 				url:"<%=request.getContextPath()%>/address/add",
 				data:{stationId:stationId,addresses:addresses,parentId:parentId},
 				async:false,
 				success : function(resp) {
-					if(resp.status){
+					if(resp.success){
 						 clearForm();
 						 getAll();
 					}else{
@@ -130,6 +185,10 @@
 		}
 		if(alias==""){
 			alert("请输入别名！");
+			return false;
+		}
+		if(alias.trim()==$("#aliasTips").text()){
+			alert("别名和原名不能一致！");
 			return false;
 		}
 		 $.ajax({
@@ -165,16 +224,16 @@
  <form action="" method="get">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
-          <td><input style="width:150px">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false" id="searchA" onclick="searchAdmin()">查询</a></td>
+          <td><input style="width:150px" id="searchA" >
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false" id="searchA" onclick="searchTree()">查询</a></td>
         </tr>
         <tr>
           <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
           <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a>&nbsp;
-          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">未绑定</a></td>
+          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton" isBand="0" >未绑定</a></td>
         </tr>
         <tr>
-          <td><ul id="tree" class="ztree" style="width:220px; overflow:auto;"></ul></td>
+          <td><ul id="tree" class="ztree" style="overflow:auto;"></ul></td>
         </tr>
       </table>
     </form>
@@ -187,6 +246,7 @@
 	    			<td width="60px">站点:</td>
 	    			<td>
 	    			<input type="hidden" id="parentId" name="parentId" value=""/>
+	    			<input type="hidden" id="level" name="level" value=""/>
 	    			<input class="easyui-combobox" id="stationId" name="stationId"
 					data-options="url:'<%=request.getContextPath()%>/station/listAll',
 					method:'get',
