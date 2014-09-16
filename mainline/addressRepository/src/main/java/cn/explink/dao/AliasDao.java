@@ -51,4 +51,12 @@ public class AliasDao extends BasicHibernateDaoSupport<Alias, Long> {
 		return query.list();
 	}
 
+	public void deleteAliasByIds(List<Long> addressIdList, Long customerId) {
+		String hql = " delete from  Alias where addressId in :addressIdList and customerId = :customerId";
+		Query query = getSession().createQuery(hql);
+		query.setParameterList("addressIdList", addressIdList);
+		query.setLong("customerId", customerId);
+		query.executeUpdate();
+	}
+
 }

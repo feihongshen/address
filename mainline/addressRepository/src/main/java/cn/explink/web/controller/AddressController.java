@@ -28,6 +28,7 @@ import cn.explink.domain.Address;
 import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Alias;
+import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
@@ -311,10 +312,15 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		Long customerId = getCustomerId();
-		if(stationId!=null){
-			 addressService.addAddressWithStation(parentId,addresses,stationId,customerId); 
-		}else{
-			 addressService.addAddress(parentId,addresses,customerId); 
+		try{
+			if(stationId!=null){
+				 addressService.addAddressWithStation(parentId,addresses,stationId,customerId); 
+			}else{
+				 addressService.addAddress(parentId,addresses,customerId); 
+			}
+		}catch(Exception e){
+			aj.setSuccess(false);
+			aj.setMsg(e.getMessage());
 		}
 		return aj;
 	}
@@ -365,7 +371,12 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson  Address( Long addressId ) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
-		addressService.deleteAddress(addressId,this.getCustomerId());
+		try{
+			addressService.deleteAddress(addressId,this.getCustomerId());
+		}catch(Exception e){
+			e.printStackTrace();
+			aj.setSuccess(false);
+		}
 		return aj;
 	}
 	

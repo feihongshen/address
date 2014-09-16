@@ -103,7 +103,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		if (parentAddress == null) {
 			parentAddress = addressDao.get(address.getParentId());
 		}
-		if (StringUtil.length(address.getName()) <= MIN_ADDRESS_LENGTH) {
+		if (StringUtil.length(address.getName()) < MIN_ADDRESS_LENGTH) {
 			throw new ExplinkRuntimeException("关键字长度不能小于2");
 		}
 		address.setAddressLevel(parentAddress.getAddressLevel() + 1);
@@ -129,7 +129,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			throw new ExplinkRuntimeException("can't create alias for an unexist address " + alias.getAddressId());
 		}
 		
-		if (StringUtil.length(alias.getName()) <= MIN_ADDRESS_LENGTH) {
+		if (StringUtil.length(alias.getName()) <  MIN_ADDRESS_LENGTH) {
 			throw new ExplinkRuntimeException("关键字长度不能小于2");
 		}
 		
@@ -148,13 +148,15 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		List<Address> addressList = addressDao.getChildAddress(customerId, addressId);
 		return addressList;
 	}
-	public List<Address> getChildAllAddress(Long customerId,String path) {
-		return addressDao.getChildAllAddress(customerId, path);
-	}
-	
 	public void deleteAddress(Long addressId, Long customerId) {
        Address a = this.addressDao.get(addressId);
-       List<Address> list = addressDao.getChildAllAddress(customerId,a.getPath()+"-"+a.getId());
+       String pathLike = "";
+       if(StringUtil.isEmpty(a.getPath())){
+    	   pathLike = "%";
+       }else{
+    	   pathLike = a.getPath()+"-"+a.getId()+"-%";
+       }
+       List<Address> list = addressDao.getChildAllAddress(customerId,a.getPath()+"-"+a.getId(),pathLike);
        List<Long> ids = new ArrayList<Long>();
        ids.add(a.getId());
        if(list!=null&&!list.isEmpty()){
@@ -172,6 +174,12 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 */
 	public void batchUnbindAddress(List<Long> addressIdList, Long customerId) {
 		addressPermissionDao.batchUnbindAddress(addressIdList, customerId);
+		//批量删除别名
+		aliasDao.deleteAliasByIds(addressIdList, customerId);
+		//批量删除站点关联关系
+		deliveryStationRuleDao.deleteRuleByIds(addressIdList, customerId);
+		
+		
 	}
 
 	/**
@@ -388,7 +396,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Query query =getSession().createSQLQuery(sql);
 		List<Integer> list=query.list();
 		StringBuffer sb=null;
-		if(null!=list&&list.size()>0&&isBind==1){
+		if(null!=list&&list.size()>0&&Integer.valueOf(1).equals(isBind)){
 			sb=new StringBuffer();
 			
 			for (Integer aid : list) {
@@ -445,18 +453,23 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		AjaxJson aj = new AjaxJson();
 		Alias  a = aliasDao.getAliasByAddressIdAndAlias(addressId,alias,customerId);
 		Address address = addressDao.get(addressId);
-		if(a==null){
-			aj.setSuccess(true);
-			a = new Alias();
-			a.setAddressId(addressId);
-			a.setCustomerId(customerId);
-			a.setName(alias);
-			a.setOldName(address.getName());
-			aliasDao.save(a);
-			scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getId()));
-		}else{
+		try{
+			if(a==null){
+				aj.setSuccess(true);
+				a = new Alias();
+				a.setAddressId(addressId);
+				a.setCustomerId(customerId);
+				a.setName(alias);
+				a.setOldName(address.getName());
+				createAlias(a);
+				scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getId()));
+			}else{
+				aj.setSuccess(false);
+				aj.setMsg("已存在别名："+alias);
+			}
+		}catch(Exception e){
 			aj.setSuccess(false);
-			aj.setMsg("已存在别名："+alias);
+			aj.setMsg(e.getMessage());
 		}
 		aj.setObj(a);
 		return aj;

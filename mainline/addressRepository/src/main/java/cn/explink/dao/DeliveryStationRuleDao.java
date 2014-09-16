@@ -15,6 +15,14 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		super(DeliveryStationRule.class);
 	}
 
+ 
+	public void deleteRuleByIds(List<Long> addressIdList, Long customerId) {
+		String hql = "delete from DeliveryStationRule where address.id in:idList and deliveryStation.customer.id=:customerId" ;
+		getSession().createQuery(hql)
+				.setParameterList("idList", addressIdList)
+				.setLong("customerId", customerId).executeUpdate();
+	}
+ 
 	public List<Long> getAddressIds(Long parentId, Long customerId) {
 		StringBuilder hql = new StringBuilder("select a.id from DeliveryStationRule d, Address a, AddressPermission p");
 		hql.append(" where a.id = p.addressId");
@@ -26,5 +34,5 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		query.setLong("parentId", parentId);
 		return query.list();
 	}
-
+ 
 }

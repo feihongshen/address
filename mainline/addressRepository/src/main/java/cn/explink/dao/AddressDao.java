@@ -146,13 +146,13 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		return (DeliveryStationRule) query.uniqueResult();
 	}
 
-	public List<Address> getChildAllAddress(Long customerId,String path) {
+	public List<Address> getChildAllAddress(Long customerId,String path,String pathLike) {
 		StringBuilder hql = new StringBuilder("select new cn.explink.domain.Address(a.id, a.name, a.addressLevel, a.parentId, a.path) from Address a ,AddressPermission p");
 		hql.append(" where ( a.path like :pathlike or a.path =:path )");
 		hql.append(" and a.id = p.addressId");
 		hql.append(" and p.customerId = :customerId");
 		Query query = getSession().createQuery(hql.toString()) ;
-		query.setString("pathlike",  path+"-%");
+		query.setString("pathlike",  pathLike);
 		query.setString("path",  path );
 		query.setLong("customerId", customerId);
 		return query.list(); 
