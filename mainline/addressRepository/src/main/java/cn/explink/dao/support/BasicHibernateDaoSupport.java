@@ -126,7 +126,7 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 				Query query = session.createSQLQuery("set innodb_lock_wait_timeout = 1");
 				query.executeUpdate();
 			} catch (Exception e) {
-				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage(), e);
+				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage());
 			}
 
 			entity = (Entity) session.load(persistentClass, id, LockOptions.UPGRADE);
@@ -138,7 +138,7 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 				query = session.createSQLQuery("set innodb_lock_wait_timeout = " + globalValue[1]);
 				query.executeUpdate();
 			} catch (Exception e) {
-				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage(), e);
+				// ignore 
 			}
 		}
 
