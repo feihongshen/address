@@ -3,17 +3,17 @@ package cn.explink.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Query;
-import org.parboiled.matchervisitors.GetStarterCharVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
@@ -36,6 +36,7 @@ import cn.explink.modle.AjaxJson;
 import cn.explink.schedule.Constants;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.SingleAddressMappingResult;
 import cn.explink.ws.vo.AddressMappingResultEnum;
 import cn.explink.ws.vo.AddressVo;
 import cn.explink.ws.vo.BeanVo;
@@ -43,7 +44,6 @@ import cn.explink.ws.vo.DelivererVo;
 import cn.explink.ws.vo.DeliveryStationVo;
 import cn.explink.ws.vo.OrderAddressMappingResult;
 import cn.explink.ws.vo.OrderVo;
-import cn.explink.web.vo.SingleAddressMappingResult;
 
 @Service
 public class AddressService extends CommonServiceImpl<Address, Long> {
@@ -483,6 +483,56 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Alias a = aliasDao.get(id);
 		aliasDao.delete(a);
 		scheduledTaskService.createScheduledTask(Constants.REFERENCE_TYPE_ALIAS_ID, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
+	}
+	
+	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {
+		List<ZTreeNode> list=getAsyncAddress(customerId, parentId);
+		StringBuffer ids=new StringBuffer();
+		for (ZTreeNode zTreeNode : list) {
+			ids.append(zTreeNode.getId()+",");
+		}
+		if(ids.length()>1){
+			String inIds=ids.toString().substring(0,ids.length()-1);
+			List<BeanVo> dlist=deliverStationRuleService.getStationAddressTree(customerId,inIds);
+			Map<String,String> view=new HashMap<String,String>();
+			if(null!=dlist&&dlist.size()>0){
+				for (BeanVo b : dlist) {
+					String key=b.getKey();
+					if(view.get(key)!=null){
+						view.put(key, b.getVal()+","+view.get(key));
+					}else{
+						view.put(key,  b.getVal());
+					}
+				}
+			}
+			if(view.size()>0)
+			for (ZTreeNode zTreeNode : list) {
+				if(null!=view.get(zTreeNode.getId())){
+					zTreeNode.setName(zTreeNode.getName()+" -- "+view.get(zTreeNode.getId()));
+				}
+			}
+		}
+		
+		return list;
+	}
+
+	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
+		List<ZTreeNode> address=deliverStationRuleService.getAdressByStation(customerId,stationId);
+		if(null!=address&&address.size()>0){
+			StringBuffer aIds=new StringBuffer();
+			for (ZTreeNode a : address) {
+				aIds.append(a.getT()+"-");
+			}
+			String[] ids=aIds.toString().split("-");
+			Set<Long> set=new HashSet<Long>();
+			for (String id : ids) {
+				set.add(Long.parseLong(id));
+			}
+			List<ZTreeNode> pNodes=addressDao.getZTreeNodeByIdListAndCustomerId(set,customerId);
+			address.addAll(pNodes);
+		}
+		
+		return address;
 	}
 
 }
