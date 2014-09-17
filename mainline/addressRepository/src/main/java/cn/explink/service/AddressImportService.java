@@ -476,8 +476,8 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		Set<AddressImportDetail> details = addressImportResult.getAddressImportDetails();
 		List<Long> addressIdList = new ArrayList<Long>();
 		for (AddressImportDetail detail : details) {
-			Integer i=AddressImportDetailStatsEnum.success.getValue();
-			if (i == detail.getStatus()) {
+			Integer i=AddressImportDetailStatsEnum.failure.getValue();
+			if (i != detail.getStatus()) {
 				addressIdList.add(detail.getAddressId());
 			}
 		}
