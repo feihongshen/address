@@ -189,5 +189,12 @@ public class DeliveryStationRuleService extends RuleService {
 		return query.list();
 	}
 
+	public void removeAddressRule(Long addressId, Long stationId) {
+		Query query = getSession().createSQLQuery("UPDATE DELIVERY_STATION_RULES SET  DELIVERY_STATION_ID = :stationId WHERE ADDRESS_ID=:addressId");
+		query.setLong("addressId", addressId);
+		query.setLong("stationId",  stationId );
+		query.executeUpdate();
+	}
+
 
 }

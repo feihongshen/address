@@ -220,15 +220,15 @@
 </head>
 <body> 
 <div class="easyui-layout" style="height:560px;">
-	 <div data-options="region:'west',split:true" title="条件搜索" style="width:300px;">
+	 <div data-options="region:'west',split:true" title="条件搜索" style="width:350px;">
  <form action="" method="get">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
-          <td><input style="width:150px" id="searchA" >
+          <td align="center"><input style="width:180px" id="searchA" >
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false" id="searchA" onclick="searchTree()">查询</a></td>
         </tr>
         <tr>
-          <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
+          <td  align="center"><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
           <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a>&nbsp;
           <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton" isBand="0" >未绑定</a></td>
         </tr>

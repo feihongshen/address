@@ -182,7 +182,7 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/importAddress")
 	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
-			 MultipartFile file,Integer importType) {
+			 MultipartFile file,Integer importType,Long stationId) {
 		if(importType==null){
 			importType = AddressImportTypeEnum.init.getValue();
 		}
@@ -193,7 +193,7 @@ public class AddressController extends BaseController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser(),importType);
+		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser(),importType,stationId);
 		if(null==addressImportResult){
 			aj.setSuccess(false);
 			aj.setMsg("数据异常");

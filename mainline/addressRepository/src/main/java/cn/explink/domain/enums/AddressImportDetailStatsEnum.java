@@ -2,7 +2,7 @@ package cn.explink.domain.enums;
 
 public enum AddressImportDetailStatsEnum {
 
-	success(0), failure(1);
+	success(0), failure(1),duplicate(2);
 
 	private int value;
 

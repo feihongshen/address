@@ -60,11 +60,11 @@ var resultRow=
 	function importAddress(id){
 		$('#dlg').dialog('open');
 	}
-	function fileSelected() {
-		$("#file").trigger("click");
+	function fileSelected(id) {
+		$("#"+id).trigger("click");
 	}
-	function takefile() {
-		var file = document.getElementById('file').files[0];
+	function takefile(id ) {
+		var file = document.getElementById(id).files[0];
 		var fileName = file.name;
 		var file_typename = fileName.substring(fileName.lastIndexOf('.'),
 				fileName.length);
@@ -111,8 +111,7 @@ var resultRow=
 			error : function(AjaxJson, status, e) {
 				alert("网络异常！");
 			}
-		})
-
+		});
 		return false;
 
 	}

@@ -645,6 +645,7 @@ mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/swfuplo
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/thanks.php -text
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/upload.php -text
 mainline/addressRepository/src/main/webapp/js/address/deliveryStationRule.js -text
+mainline/addressRepository/src/main/webapp/js/address/exportAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/getZAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/import.js -text
 mainline/addressRepository/src/main/webapp/js/address/importAdress.js -text

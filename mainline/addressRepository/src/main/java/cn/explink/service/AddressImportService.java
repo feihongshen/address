@@ -46,6 +46,7 @@ import cn.explink.modle.DataGridReturn;
 import cn.explink.tree.AddressImportEntry;
 import cn.explink.tree.TreeNode;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.AddressImportTypeEnum;
 
 @Service
 public class AddressImportService extends CommonServiceImpl<AddressImportDetail,Long> {
@@ -105,7 +106,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	 * @param in
 	 * @return
 	 */
-	public AddressImportResult importAddress(InputStream in, User user,Integer importType) {
+	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) {
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
@@ -171,7 +172,13 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 			//TODO REMOVE?
 			for (AddressImportDetail detail : details) {
 				TreeNode<AddressImportEntry> treeNode = getTreeNode(tree, addressMap, detail, 1, customerId);
-				bindRule(detail,customerId);
+				if(importType.equals(AddressImportTypeEnum.init.getValue())){//初始化导入
+					bindRule(detail,customerId);
+				}else if(importType.equals(AddressImportTypeEnum.stationImport.getValue())){//按站点导入
+					bindRuleWithStationId(detail,customerId,stationId);
+				}else if(importType.equals(AddressImportTypeEnum.stationMove.getValue())){//拆合站关键字绑定关系迁移
+					removeRule(detail,customerId);
+				}
 			}
 			
 		} catch (IOException e) {
@@ -195,16 +202,82 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		result.setFailureCount(failureCount);
 		result.setImportDate(new Date());
 		result.setUserId(user.getId());
-		addressImportResultDao.save(result);
+		if(importType==AddressImportTypeEnum.init.getValue()){
+			addressImportResultDao.save(result);
+		}
 		return result;
 	}
-
+   /**
+    * 绑定站点、收件人和地址联系
+    * @param detail
+    * @param customerId
+    */
 	private void bindRule(AddressImportDetail detail,Long customerId) {
-		if(detail.getStatus().equals(AddressImportDetailStatsEnum.success.getValue())){
+		if(!detail.getStatus().equals(AddressImportDetailStatsEnum.failure.getValue())){
 			//站点规则绑定
 			if(StringUtils.isNotEmpty(detail.getDeliveryStationName())){
 				DeliveryStation ds = deliveryStationService.getByNameAndCustomerId(detail.getDeliveryStationName(),customerId);
 				if(ds!=null){
+					DeliveryStationRule dsr = new DeliveryStationRule();
+					Address a = new Address();
+					a.setId(detail.getAddressId());
+					dsr.setAddress(a );
+					dsr.setCreationTime(new Date());
+					dsr.setDeliveryStation(ds);
+					dsr.setRule("");
+					dsr.setRuleExpression("");
+					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+					deliveryStationRuleService.addRule(dsr);
+				}
+			}
+			//小件员规则
+			if(StringUtils.isNotEmpty(detail.getDelivererName())){
+				Deliverer d = delivererService.getByNameAndCustomerId(detail.getDelivererName(),customerId);
+				if(d!=null){
+					DelivererRule  dr = new DelivererRule();
+					Address a = new Address();
+					a.setId(detail.getAddressId());
+					dr.setAddress(a );
+					dr.setCreationTime(new Date());
+					dr.setDeliverer(d);
+					dr.setRule("");
+					dr.setRuleExpression("");
+					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+					delivererRuleService.addRule(dr);
+				}
+			}
+		}
+	}
+	
+	 	/**
+	    * 迁移站点和地址联系绑定关系
+	    * @param detail
+	    * @param customerId
+	    */
+		private void removeRule(AddressImportDetail detail,Long customerId) {
+			if(!detail.getStatus().equals(AddressImportDetailStatsEnum.failure.getValue())){
+				//站点规则迁移
+				if(StringUtils.isNotEmpty(detail.getDeliveryStationName())){
+					DeliveryStation ds = deliveryStationService.getByNameAndCustomerId(detail.getDeliveryStationName(),customerId);
+					if(ds!=null){
+						deliveryStationRuleService.removeAddressRule(detail.getAddressId(),ds.getId());
+					}
+				}
+			}
+		}
+	
+   /**
+    * 导入地址，同时判定是否同一个站点
+    * @param detail
+    * @param customerId
+    * @param stationId
+    */
+	private void bindRuleWithStationId(AddressImportDetail detail,Long customerId,Long stationId) {
+		if(!detail.getStatus().equals(AddressImportDetailStatsEnum.failure.getValue())){
+			//站点规则绑定
+			if(StringUtils.isNotEmpty(detail.getDeliveryStationName())){
+				DeliveryStation ds = deliveryStationService.getByNameAndCustomerId(detail.getDeliveryStationName(),customerId);
+				if(ds!=null&&ds.getId().equals(stationId)){
 					DeliveryStationRule dsr = new DeliveryStationRule();
 					Address a = new Address();
 					a.setId(detail.getAddressId());
@@ -238,6 +311,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		}
 	}
 
+	
+	
+	
 	/**
 	 * 
 	 * @param treeNode
@@ -314,7 +390,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				// 最后一级地址已存在
 				boolean bindResult = addressService.bindAddress(childAddress, customerId);
 				if (bindResult) {
-					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					detail.setStatus(AddressImportDetailStatsEnum.duplicate.getValue());
 					detail.setMessage("地址重复:" + name);
 				} else {
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
