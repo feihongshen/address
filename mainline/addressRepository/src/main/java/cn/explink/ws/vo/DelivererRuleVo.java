@@ -7,6 +7,8 @@ public class DelivererRuleVo {
 	private Long delivererId;
 
 	private String rule;
+	
+	private Long ruleId;
 
 	public Long getAddressId() {
 		return addressId;
@@ -30,6 +32,14 @@ public class DelivererRuleVo {
 
 	public void setRule(String rule) {
 		this.rule = rule;
+	}
+
+	public Long getRuleId() {
+		return ruleId;
+	}
+
+	public void setRuleId(Long ruleId) {
+		this.ruleId = ruleId;
 	}
 
 }
