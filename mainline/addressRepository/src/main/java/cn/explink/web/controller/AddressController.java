@@ -105,12 +105,27 @@ public class AddressController extends BaseController {
 		return addressService.getAsyncAddress(customerId,parentId);
 	}
 	
+	@RequestMapping("/getStationAddressTree")
+	public @ResponseBody List<ZTreeNode>  getStationAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "level", required = false) Long level) {
+		Long customerId = getCustomerId();
+		if(null==parentId){
+			parentId=1L;
+		}
+		return addressService.getStationAddressTree(customerId,parentId);
+	}
+	
 	
 	
 	@RequestMapping("/getZTree")
 	public @ResponseBody List<ZTreeNode> getZTree(String name,  Integer band) {
 		Long customerId = getCustomerId();
 		return addressService.getZAddress(customerId,name,band);
+	}
+	
+	@RequestMapping("/getAdressByStation")
+	public @ResponseBody List<ZTreeNode> getAdressByStation(String stationId) {
+		Long customerId = getCustomerId();
+		return addressService.getAdressByStation(customerId,stationId);
 	}
 	
 	

@@ -2,6 +2,8 @@ package cn.explink.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -157,5 +159,20 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setLong("customerId", customerId);
 		return query.list(); 
 	}
+
+	public List<ZTreeNode> getZTreeNodeByIdListAndCustomerId(Set<Long> set,
+			Long customerId) {
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId,a.addressLevel ) from Address a, AddressPermission p");
+		hql.append(" where a.id = p.addressId");
+		hql.append(" and a.id in :addressIdList");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString());
+		query.setParameterList("addressIdList", set);
+		query.setLong("customerId", customerId);
+		return query.list();
+	}
+
+
+
 	
 }

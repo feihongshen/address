@@ -1,21 +1,4 @@
-var setting = {
-		async: {
-			enable: true,
-			url: getUrl
-		},
-	data: {
-		simpleData: {
-			enable: true
-		}
-	},
-	callback: {
-		beforeClick: beforeClick,
-		onClick: onClick,
-		beforeExpand: beforeExpand,
-		onAsyncSuccess: onAsyncSuccess,
-		onAsyncError: onAsyncError
-	}
-};
+
 
 var addressId;
 var addressLevel;
@@ -30,17 +13,21 @@ function beforeClick(treeId, treeNode, clickFlag) {
 }
 function onClick(event, treeId, treeNode, clickFlag) {
 	addressId=treeNode.id;
-	$("#stationList").datagrid({
-		url : cxt+'/deliveryStationRule/datagrid?addressId='+addressId,
-		pageNumber : 1
-	});
 	
+	reloadTable();
 	
 	addressLevel=treeNode.level;
 }	
 
+
+
 function getUrl(treeId, treeNode) {
 	var url=cxt+"/address/getAddressTree?id="+treeNode.id;
+	return url;
+}
+
+function getStationUrl(treeId, treeNode) {
+	var url=cxt+"/address/getStationAddressTree?id="+treeNode.id+"&level="+treeNode.level;
 	return url;
 }
 
@@ -118,21 +105,57 @@ function expandNode(e) {
 	}
 }
 
+function searchVal(valName,treeName){
+		var target = $.fn.zTree.getZTreeObj(treeName);
+		//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
+	    var nodes = target.transformToArray(target.getNodes()[0].children);
+	    var key=$("#"+valName).val();
+	    //空格回车符 不做查询 直接显示全部
+	    if(/^\s*$/.test(key)){
+	     //updateNodes(false); 
+	     target.showNodes(nodes);
+	     return;
+	    }
+	    //首先隐藏
+	    target.hideNodes(nodes);
+	    nodeList=target.getNodesByParamFuzzy("name", key); //模糊匹配
+	  
+	    var filterNodes=[];
+	    for(var i=0;i<nodeList.length;i++){
+	       filterNodes.push(nodeList[i]);
+	    }
+	    target.showNodes(filterNodes);
+	    for(var i=0;i<filterNodes.length;i++){
+	     toggle(filterNodes[i].getParentNode())
+	    }
+	
+}
 
-function searchTree(){
-	var filterString = $("#searchA").val();
-	nodeList = zTree.getNodesByParamFuzzy("name", filterString);
+function toggle(node){
+	target.expandNode(node, true, false, false);
+	target.showNode(node);
+	var parentNode = node.getParentNode();
+	if(parentNode){
+		 toggle(parentNode);
+	}
+}
+
+
+function searchTree(valName,treeName){
+	var filterString = $("#"+valName).val();
+	var target = $.fn.zTree.getZTreeObj(treeName);
+	nodeList = target.getNodesByParamFuzzy("name", filterString);
 	updateNodes(true);
-	var nodes = zTree.getNodes();
+	var nodes = target.getNodes();
 	
 	var cloneNodes = [];
 	var removeNodes=[];
 	$.each(nodes, function(index, node) {
 		cloneNodes.push(node);
 	});
-	zTree.showNodes(cloneNodes);
-	pushRemoveNodes(cloneNodes,removeNodes,filterString);
-	zTree.hideNodes(removeNodes);
+	target.showNodes(cloneNodes);
+	pushRemoveNodes(target,cloneNodes,removeNodes,filterString);
+	target.hideNodes(removeNodes);
 }
 function updateNodes(highlight) {
 	var nodes = zTree.getNodes();
@@ -144,12 +167,12 @@ function updateNodes(highlight) {
 	}
 	zTree.showNodes(nodeList);
 }
-function pushRemoveNodes(cloneNodes,removeNodes,filterString){
+function pushRemoveNodes(target,cloneNodes,removeNodes,filterString){
 	
 	$.each(cloneNodes, function(index, node) {
 		var childrens=node.children;
 		if(!childrens)return;
-		zTree.showNodes(childrens);
+		target.showNodes(childrens);
 		if (node.name.indexOf(filterString) != -1) {
 			return;
 		}else{
@@ -172,98 +195,7 @@ function pushRemoveNodes(cloneNodes,removeNodes,filterString){
 	});
 }
 
-var pureStation;
-function initStations(data){
-	$(".deliveryStationRule").each(function(i){
-		if(i==0){
-			return;
-		}
-		$(this).remove();
-	});
-	$("#deliveryStationId").empty();
-	optionData=data.rows;
-	for(var i=0;i<optionData.length;i++){
-		var option=$("  <option value="+optionData[i]['id']+">"+optionData[i]['name']+"</option>");
-		$("#deliveryStationId").append(option);
-		
-	}
-	backNode=$("#deliveryStationRule").clone(true);
-}
 
-function initOption(){
-	 $.ajax({
-		 type: "POST",
-			url:cxt+"/deliveryStationRule/station4combobox",
-			success:function(optionData){
-				for(var i=0;i<optionData.length;i++){
-					var option=$("  <option value="+optionData[i]['id']+">"+optionData[i]['text']+"</option>");
-					$("#deliveryStationId").append(option);
-					
-				}
-				
-				backNode=$("#deliveryStationRule").clone(true);
-			}
-		});
-}
-
-function getAll(){
-$.ajax({
-	 type: "POST",
-		url:cxt+"/address/getZTree",
-		data:{isBind:true},
-		success:function(optionData){
-	        var t = $("#tree");
-	        zTree = $.fn.zTree.init(t, setting, optionData);
-			
-		}
-	});
-}
-
-function saveRule(){
-	if(addressLevel<3){
-		alert("请选择区县进行绑定！");
-		return;
-	}
-	deliveryStationRule="";
-   	var len=$(".deliveryStationId").length-1;
-   	//用#拼接参数字段
-		$(".deliveryStationId").each(function(j){
-			var c='.rule:eq('+j+')';
-			var rule=$(c).val()+" ";
-			var val=$(this).val();
-			if(val){
-				deliveryStationRule+=val+"#"+rule;
-			}
-			if(len!=j){
-				deliveryStationRule+=",";
-			}
-		});
-		if(deliveryStationRule){
-			
-		$.ajax({
-			 type: "POST",
-				url:cxt+"/deliveryStationRule/saveDeliveryStationRule",
-				data:{"deliveryStationRule":deliveryStationRule,"addressId":addressId},
-				success:function(optionData){
-					if(optionData.success){
-						alert("成功");
-						
-					}else{
-						var msg="保存失败";
-						if(optionData.attributes){
-							$.each(optionData.attributes,function(i,term){
-								if(!i){
-									msg="默认";
-								}
-								msg+=term;
-							})
-						}
-						alert(msg);
-					}
-				}
-			});
-		}
-}
 var unbindList=[];
 function unbind(){
 	$.ajax({
@@ -287,60 +219,7 @@ function unbind(){
 	
 }
 
-var detailRow={
-		idField : 'id',
-		title : '关联站点',
-		url : cxt+'/deliveryStationRule/datagrid?addressId=0',
-		fit : false,
-		height : 300,
-		loadMsg : '数据加载中...',
-		pageSize : 10,
-		pagination : true,
-		pageList : [ 10, 20, 30 ],
-		sortOrder : 'asc',
-		rownumbers : true,
-		singleSelect : true,
-		fitColumns : true,
-		showFooter : true,
-		frozenColumns : [ [] ],
-		columns : [ [
-				{
-					field : 'id',
-					title : '编号',
-					hidden : true,
-					sortable : true
-				},
-				{
-					field : 'opt',
-					title : '操作',
-					width : 10,
-					formatter : function(value, rec, index) {
-						if (!rec.id) {
-							return '';
-						}
-						var href = '';
-						href += "[<a href='#' onclick=delObj('deleteImportAddressResult?id="
-								+ rec.id + "','address')>";
-						href += "删除</a>]";
-						return href;
-					}
-				}, 
 
-				{
-					field : 'name',
-					title : '站点名称',
-					width : 50,
-					sortable : true
-				}
 
-		] ],
-		onLoadSuccess : function(data) {
-			initStations(data);
-			$("#stationList").datagrid("clearSelections");
-		},
-		onClickRow : function(rowIndex, rowData) {
-			rowid = rowData.id;
-			gridname = 'stationList';
-		}
-	};
+
 

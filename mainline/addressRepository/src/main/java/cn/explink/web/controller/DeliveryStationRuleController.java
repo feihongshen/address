@@ -24,6 +24,7 @@ import cn.explink.modle.DataGridReturn;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationRuleService;
 import cn.explink.service.DeliveryStationService;
+import cn.explink.service.VendorService;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/deliveryStationRule")
@@ -40,6 +41,9 @@ public class DeliveryStationRuleController extends BaseController {
 	
 	@Autowired
 	private DeliveryStationService deliverySationtService;
+	
+	@Autowired
+	private VendorService vendorService;
 
 	@RequestMapping("/deliveryStationRule")
 	public String index(Model model) {
@@ -118,6 +122,12 @@ public class DeliveryStationRuleController extends BaseController {
 		Long customerId=getCustomerId();
 		return deliverySationtService.getAllSationt(customerId);
 	}
+	@RequestMapping("/vendors4combobox")
+	@ResponseBody
+	public List<ComboBox> vendors4combobox() {
+		Long customerId=getCustomerId();
+		return vendorService.getAllvendor(customerId);
+	}
 	
 	@RequestMapping("/datagrid")
 	public @ResponseBody DataGridReturn datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
@@ -132,7 +142,14 @@ public class DeliveryStationRuleController extends BaseController {
 		return deliveryStationRuleService.getAddressIds(parentId,customerId);
 	}
 	
-	
+	@RequestMapping("/delete")
+	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		deliveryStationRuleService.delete(deliveryStationRuleId);
+		aj.setSuccess(true);
+		return aj;
+		
+	}
 	
 	
 	

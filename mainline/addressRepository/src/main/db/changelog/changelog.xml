@@ -66,4 +66,17 @@
 			INSERT INTO SCHEDULED_TASKS (task_type, STATUS, fire_time, created_at) VALUES ('updateIndexTask', 0, NOW(), NOW());
 		</sql>
 	</changeSet>
+	
+	<!-- 创建电商时效 -->
+	<changeSet id="xushiju-2014-09-17-01" author="yinyu">
+		<sql>
+			CREATE TABLE VENDORS_AGING (
+			`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+			`CUSTOMER_ID` INT (12) NOT NULL,
+			`ADDRESS_ID` INT (12) NOT NULL,
+			`VENDORS_ID` INT (12) NOT NULL,
+			`AGING` VARCHAR (20)
+		) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
+		</sql>
+	</changeSet>
 </databaseChangeLog>

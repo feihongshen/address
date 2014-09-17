@@ -324,7 +324,6 @@ public class StringUtil {
 	 * @param num
 	 *            - 重复生成次数
 	 * @return 返回已生成的重复字符串
-	 * @version 1.0 (2006.10.10) Wilson Lin
 	 **************************************************************************/
 	public static String repeat(String src, int num) {
 		StringBuffer s = new StringBuffer();

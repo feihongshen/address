@@ -80,9 +80,9 @@
     </li>
     <li> <span>关联设置</span>
       <ul>
-        <li><a href="#" onclick="addTab('拆合站维护','dizhiku/chzwh.html')">拆合站维护</a></li>
+        <li><a href="#" onclick="addTab('拆合站维护','stationAdressRelation/stationAdressRelation')">拆合站维护</a></li>
         <li><a href="#" onclick="addTab('配送站点关联维护','deliveryStationRule/deliveryStationRule')">配送站点关联维护</a></li>
-        <li><a href="#" onclick="addTab('配送员关联维护','dizhiku/psyglwh.html')">配送员关联维护</a></li>
+        <li><a href="#" onclick="addTab('配送员关联维护','stationAdressRelation/stationAdressRelation')">配送员关联维护</a></li>
       </ul>
     </li>
     <li> <span>数据统计</span>

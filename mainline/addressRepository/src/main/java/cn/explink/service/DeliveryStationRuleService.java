@@ -19,10 +19,11 @@ import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
-import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.OrderVo;
 
 @Service
@@ -158,7 +159,7 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public DataGridReturn getDataGridReturnView(String addressId) {
 		
-		Query query = getSession().createQuery("select dsr.deliveryStation from DeliveryStationRule dsr where dsr.address.id =:addressId");
+		Query query = getSession().createQuery("select new cn.explink.web.vo.DeliveryStationRuleVo(dsr.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id =:addressId");
 		query.setLong("addressId", Long.parseLong(addressId));
 		List<DeliveryStation> list=query.list();
 		return new DataGridReturn(list.size(), list);
@@ -167,6 +168,20 @@ public class DeliveryStationRuleService extends RuleService {
 	public List<Long> getAddressIds(Long parentId,Long customerId) {
 		// TODO Auto-generated method stub
 		return deliveryStationRuleDao.getAddressIds(parentId,customerId);
+	}
+
+	public List<BeanVo> getStationAddressTree(Long customerId,
+			String inIds) {
+		Query query = getSession().createQuery("select new cn.explink.ws.vo.BeanVo(dsr.address.id,dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id in("+inIds+") and dsr.deliveryStation.customer.id=:customerId");
+		query.setLong("customerId", customerId);
+		return query.list();
+	}
+
+	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
+		Query query = getSession().createQuery("select new cn.explink.tree.ZTreeNode( dsr.address.name,dsr.address.id,dsr.address.parentId,dsr.address.addressLevel,dsr.address.path ) from DeliveryStationRule dsr where  dsr.deliveryStation.id=:stationId and dsr.deliveryStation.customer.id=:customerId");
+		query.setLong("customerId", customerId);
+		query.setLong("stationId", Long.parseLong(stationId));
+		return query.list();
 	}
 
 

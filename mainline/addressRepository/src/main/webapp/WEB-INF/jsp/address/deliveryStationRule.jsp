@@ -13,13 +13,53 @@ var cxt='<%=request.getContextPath()%>';
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/zTree/zTreeStyle/zTreeStyle.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script>
+<script type="text/javascript"
+	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/deliveryStationRule.js"></script>
 <script type="text/javascript">
+var setting = {
+		async: {
+			enable: true,
+			url: getUrl
+		},
+	data: {
+		simpleData: {
+			enable: true
+		}
+	},
+	callback: {
+		beforeClick: beforeClick,
+		onClick: onClick,
+		beforeExpand: beforeExpand,
+		onAsyncSuccess: onAsyncSuccess,
+		onAsyncError: onAsyncError
+	}
+};
 var backNode;
 
 		 $(document).ready(function(){
 			 pureStation=$("#deliveryStationRule").clone(true);
-			 $("#saveRule").click(function(){
+			
+			 getAll();
+			 //折叠
+			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+			//刷新
+			 $("#refreshAllBtn").click(function(){
+	        	getAll();
+	        });
+			 //未绑定
+		        $("#unbindAllBtn").click(function(){
+		       		unbind();
+		       })
+	        //添加站点
+	        $("#add").click(function(){
+	           	var node=backNode.clone(true);
+	           	$("#optionRule").before(node);
+           });
+			 //保存站点规则
+	        $("#saveRule").click(function(){
 				 if(!addressId){
 					 alert("请选择地址");
 					 return;
@@ -27,21 +67,14 @@ var backNode;
 				 saveRule();
 						
 			});
-			 getAll();
-			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
-	        $("#refreshAllBtn").click(function(){
-	        	getAll();
+	        //添加供货商时效
+	        $("#addvendor").click(function(){
+	        	var node=backvendors.clone(true);
+	           	$("#optionvendor").before(node);
 	        });
-	        $("#add").click(function(){
-	           	var node=backNode.clone(true);
-	           	$("#optionRule").before(node);
-           });
-	        $("#unbindAllBtn").click(function(){
-	       	alert(1);
-	       	unbind();
-	       })
+	       
 	        
-	        //initOption();
+	        initOption();
 	        $("#stationList").datagrid(detailRow);
 
     });
@@ -59,7 +92,7 @@ var backNode;
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td><input style="width:150px" id="searchA">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchTree()">查询</a></td>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('searchA','tree')">查询</a></td>
         </tr>
         <tr>
           <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
@@ -107,16 +140,17 @@ var backNode;
         <th align="center" bgcolor="#f1f1f1">供货商</th>
         <th align="center" bgcolor="#f1f1f1">时效</th>
       </tr>
-      <tr>
-        <td align="center" bgcolor="#FFFFFF"><select  name="state" style="width:200px;">
+      <tr id="vendors4combobox" class="vendors4combobox">
+        <td align="center" bgcolor="#FFFFFF"><select class="vendorsId"  name="vendorsId" id="vendorsId" style="width:200px;">
           
         </select></td>
         <td align="center" bgcolor="#FFFFFF">
           <input type="text" name="textfield" id="textfield" />
         时</td>
       </tr>
-      <tr>
-        <td colspan="2" bgcolor="#FFFFFF"><a href="javascript:void(0)" class="easyui-linkbutton">保存</a>&nbsp;&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton">新增</a></td>
+      <tr id="optionvendor">
+        <td colspan="2" bgcolor="#FFFFFF"><a href="javascript:void(0)" id="savevendor" class="easyui-linkbutton">保存</a>&nbsp;&nbsp;
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="addvendor">新增</a></td>
         </tr>
       </thead>
   </table>

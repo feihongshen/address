@@ -59,6 +59,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/ScheduledTask.java -t
 mainline/addressRepository/src/main/java/cn/explink/domain/SystemConfig.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/User.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Vendor.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/VendorsAging.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/AddressImportDetailStatsEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/AddressStatusEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/CustomerStausEnmu.java -text
@@ -137,8 +138,10 @@ mainline/addressRepository/src/main/java/cn/explink/web/controller/DeliveryStati
 mainline/addressRepository/src/main/java/cn/explink/web/controller/DeliveryStationRuleController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/LoginController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/ScheduledTaskController.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/controller/StationAdressRelationController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/AddressLoginFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/ExplinkFilter.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/vo/DeliveryStationRuleVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/SingleAddressMappingResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingService.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingServiceImpl.java -text
@@ -206,6 +209,7 @@ mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/import.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importDatagrid.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importStationAddress.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/index.jsp -text
+mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/stationAdressRelation.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/global.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/include-base-styles.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/include-custom-styles.jsp -text
@@ -639,6 +643,7 @@ mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/swfuplo
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/swfuploadv2.2.js -text
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/thanks.php -text
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/upload.php -text
+mainline/addressRepository/src/main/webapp/js/address/deliveryStationRule.js -text
 mainline/addressRepository/src/main/webapp/js/address/getZAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/import.js -text
 mainline/addressRepository/src/main/webapp/js/address/importAdress.js -text

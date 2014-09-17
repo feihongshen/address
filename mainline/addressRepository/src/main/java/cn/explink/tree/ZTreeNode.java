@@ -57,6 +57,18 @@ public class ZTreeNode{
 		}
 	}
 	
+	public ZTreeNode(String name, Long id, Long pId,Integer addressLevel,String t) {
+		this.name = name;
+		this.id = String.valueOf(id);
+		this.pId = String.valueOf(pId);
+		this.level=String.valueOf(addressLevel);
+		this.t=t;
+		if(null!=pId){
+			this.isParent=true;
+			this.open=true;
+		}
+	}
+	
 	private String  pId;
 	private String t;
 	private boolean open=true;

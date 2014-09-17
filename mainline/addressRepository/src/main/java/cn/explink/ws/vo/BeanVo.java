@@ -2,6 +2,13 @@ package cn.explink.ws.vo;
 
 public class BeanVo {
 	private String key;
+	public BeanVo(Long key, String val) {
+		super();
+		this.key = String.valueOf(key);
+		this.val = val;
+	}
+	public BeanVo() {
+	}
 	private String val;
 	public String getKey() {
 		return key;
