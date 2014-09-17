@@ -294,8 +294,7 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		}
 		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
 		try {
-			DelivererRule r = 	delivererRuleService.getById(ruleId);
-			delivererRuleService.delete(r);
+			delivererRuleService.delete(ruleId);
 			result.setResultCode(ResultCodeEnum.success);
 		} catch (Exception e) {
 			result.setResultCode(ResultCodeEnum.failure);
