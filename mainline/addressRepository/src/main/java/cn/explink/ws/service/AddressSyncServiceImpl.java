@@ -6,6 +6,7 @@ import javax.jws.WebService;
 
 import cn.explink.domain.ClientApplication;
 import cn.explink.domain.Deliverer;
+import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
 import cn.explink.service.DelivererRuleService;
@@ -293,7 +294,8 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		}
 		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
 		try {
-			delivererRuleService.delete(ruleId);
+			DelivererRule r = 	delivererRuleService.getById(ruleId);
+			delivererRuleService.delete(r);
 			result.setResultCode(ResultCodeEnum.success);
 		} catch (Exception e) {
 			result.setResultCode(ResultCodeEnum.failure);
