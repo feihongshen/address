@@ -67,7 +67,7 @@ public class DelivererRuleService extends RuleService {
 		// 解析规则
 		RuleExpression ruleExpression = parseRule(rule);
 		Address address = addressDao.get(addressId);
-		Deliverer deliverer = delivererDao.get(delivererId);
+		Deliverer deliverer = delivererDao.getDeliverer(customerId,delivererId);
 		// 判断是否与已有规则冲突
 		DelivererRule confilctingRule = findConflictingRule(ruleExpression, address.getDelivererRules());
 		if (confilctingRule != null) {
