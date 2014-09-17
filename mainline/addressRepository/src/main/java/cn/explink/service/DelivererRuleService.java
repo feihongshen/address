@@ -184,4 +184,15 @@ public class DelivererRuleService extends RuleService {
 		return ruleList;
 	}
 
+	public void addRule(DelivererRule dr) {
+		List list = delivererRuleDao.getByAddressAndDeliverer(dr.getAddress().getId(),dr.getDeliverer().getId());
+		if(list==null||list.isEmpty()){
+			delivererRuleDao.save(dr);
+		}
+	}
+
+	public DelivererRule getById(Long ruleId) {
+		return delivererRuleDao.get(ruleId);
+	}
+
 }
