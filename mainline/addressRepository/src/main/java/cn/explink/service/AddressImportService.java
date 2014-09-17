@@ -62,9 +62,6 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	
 
 	@Autowired
-	private DeliveryStationRule deliveryStationRule;
-	
-	@Autowired
 	private AddressImportDetailDao addressImportDetailDao;
 
 	/**
@@ -519,8 +516,8 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		if (childAddress != null) {
 			if (isLast) {
 				// 最后一级地址已存在
-				
-				boolean updateResult = deliveryStationRule.updateAddress(childAddress,detail.getDeliveryStationId(), customerId);
+				boolean updateResult =addressService.bindAddress(childAddress, customerId);
+			//	boolean updateResult = deliveryStationRuleService.updateAddress(childAddress,detail.getDeliveryStationId(), customerId);
 				if (updateResult) {
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
 					detail.setAddressId(childAddress.getId());
