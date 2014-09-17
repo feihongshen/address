@@ -39,4 +39,13 @@ public interface AddressSyncService {
 	 * @return
 	 */
 	AddressSyncServiceResult createDelivererRule(ApplicationVo applicationVo, List<DelivererRuleVo> delivererRuleVoList);
+	
+	/**
+	 * 删除配送员规则
+	 * @param applicationVo
+	 * @param delivererRuleVoList
+	 * @return
+	 */
+	AddressSyncServiceResult deleteDelivererRule(ApplicationVo applicationVo, Long ruleId);
+	
 }

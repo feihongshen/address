@@ -48,9 +48,6 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 			
 			List<DelivererRule> delivererRuleList = delivererRuleService.getDelivererRuleList(clientApplication.getCustomerId(), addressId);
 
-//			for (DelivererRule rule : delivererRuleList) {
-//				delivererService.getDeliverer(rule.getDeliverer());
-//			}
 			List<DelivererRuleVo> delivererRuleVoList = AddressUtil.cloneToDelivererRuleList(delivererRuleList);
 			result.setDelivererRuleVoList(delivererRuleVoList);
 			result.setResultCode(ResultCodeEnum.success);
