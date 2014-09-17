@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.domain.DeliveryStationRule;
+import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.service.CommonServiceImpl;
 
 @Repository
@@ -35,6 +36,18 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		Query query = getSession().createQuery(hql.toString());
 		query.setLong("customerId", customerId);
 		query.setLong("parentId", parentId);
+		return query.list();
+	}
+
+	public List<DeliveryStationRule> getByAddressAndStation(Long addressId, Long stationId) {
+		StringBuilder hql = new StringBuilder("from DeliveryStationRule ");
+		hql.append(" where address.id=:addressId ");
+		hql.append(" and deliveryStation.id=:stationId ");
+		hql.append(" and ruleType = :ruleType");
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("addressId", addressId);
+		query.setLong("stationId", stationId);
+		query.setInteger("ruleType", DelivererRuleTypeEnum.fallback.getValue());
 		return query.list();
 	}
  

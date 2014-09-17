@@ -41,6 +41,7 @@ import cn.explink.tree.ZTreeNode;
 import cn.explink.util.DateTimeUtil;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.AddressImportTypeEnum;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/address")
@@ -181,44 +182,18 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/importAddress")
 	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
-			 MultipartFile file) {
+			 MultipartFile file,Integer importType) {
+		if(importType==null){
+			importType = AddressImportTypeEnum.init.getValue();
+		}
 		InputStream in = null;
 		AjaxJson aj=new AjaxJson();
 		try {
 			in = file.getInputStream();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser());
-		if(null==addressImportResult){
-			aj.setSuccess(false);
-			aj.setMsg("数据异常");
-//			Map<String, Object> attributes=new HashMap<String, Object>();
-//			attributes.put("importTable", addressImportResult.getAddressImportDetails());
-//			aj.setAttributes(attributes);
-			return aj;
-		}
-		aj.setSuccess(true);
-		aj.setInfo(addressImportResult.getId().toString());
-//		Map<String, Object> attributes=new HashMap<String, Object>();
-//		attributes.put("importTable", addressImportResult.getAddressImportDetails());
-//		aj.setAttributes(attributes);
-		return aj;
-	}
-
-	@RequestMapping("/importKwAddress")
-	public @ResponseBody AjaxJson importKwAddress( HttpServletRequest request, HttpServletResponse response,
-			 MultipartFile file) {
-		InputStream in = null;
-		AjaxJson aj=new AjaxJson();
-		try {
-			in = file.getInputStream();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		AddressImportResult addressImportResult = addressImportService.importKwAddress(in, getLogginedUser());
+		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser(),importType);
 		if(null==addressImportResult){
 			aj.setSuccess(false);
 			aj.setMsg("数据异常");

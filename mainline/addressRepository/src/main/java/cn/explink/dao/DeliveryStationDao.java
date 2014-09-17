@@ -62,4 +62,13 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		return query.list();
 	}
 
+	public DeliveryStation getByNameAndCustomerId(String deliveryStationName,
+			Long customerId) {
+		String hql = "from DeliveryStation where customer.id = :customerId and name=:name ";
+		Query query = getSession().createQuery(hql);
+		query.setLong("customerId", customerId);
+		query.setString("name", deliveryStationName);
+		return (DeliveryStation) query.uniqueResult();
+	}
+
 }

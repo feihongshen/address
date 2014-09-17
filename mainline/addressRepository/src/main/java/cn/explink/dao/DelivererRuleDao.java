@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.DelivererRule;
+import cn.explink.domain.enums.DelivererRuleTypeEnum;
 
 @Repository
 public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Long> {
@@ -27,6 +28,18 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
 		Query query = getSession().createQuery(hql.toString());
 //		query.setLong("customerId", customerId);
 		query.setLong("addressId", addressId);
+		return query.list();
+	}
+
+	public List getByAddressAndDeliverer(Long addressId, Long did) {
+		StringBuilder hql = new StringBuilder("from DelivererRule ");
+		hql.append(" where address.id=:addressId ");
+		hql.append(" and deliverer.id=:did ");
+		hql.append(" and ruleType = :ruleType");
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("addressId", addressId);
+		query.setLong("did", did);
+		query.setInteger("ruleType", DelivererRuleTypeEnum.fallback.getValue());
 		return query.list();
 	}
 
