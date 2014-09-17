@@ -192,6 +192,30 @@ public class AddressController extends BaseController {
 		return aj;
 	}
 
+	@RequestMapping("/importKwAddress")
+	public @ResponseBody AjaxJson importKwAddress( HttpServletRequest request, HttpServletResponse response,
+			 MultipartFile file) {
+		InputStream in = null;
+		AjaxJson aj=new AjaxJson();
+		try {
+			in = file.getInputStream();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		AddressImportResult addressImportResult = addressImportService.importKwAddress(in, getLogginedUser());
+		if(null==addressImportResult){
+			aj.setSuccess(false);
+			aj.setMsg("数据异常");
+			return aj;
+		}
+		aj.setSuccess(true);
+		aj.setInfo(addressImportResult.getId().toString());
+		return aj;
+	}
+
+	
+	
 	/**
 	 * 查询地址导入结果
 	 * @param model

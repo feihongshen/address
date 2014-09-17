@@ -100,12 +100,13 @@ public class DelivererRuleService extends RuleService {
 			return null;
 		}
 		List<DelivererRule> ruleList = delivererRuleDao.getDelivererRuleList(customerId, addressId);
+		List<DelivererRule> resultList = new ArrayList<DelivererRule>();
 		for (DelivererRule rule : ruleList) {
-			if (!customerId.equals(rule.getDeliverer().getCustomer().getId())) {
-				ruleList.remove(rule);
+			if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
+				resultList.add(rule);
 			}
 		}
-		return ruleList;
+		return resultList;
 	}
 
 	/**

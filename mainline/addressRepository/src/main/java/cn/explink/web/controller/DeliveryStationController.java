@@ -8,6 +8,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jboss.logging.Param;
 import org.slf4j.Logger;
@@ -77,5 +78,45 @@ public class DeliveryStationController extends BaseController {
 	@RequestMapping("/listAll")
 	public @ResponseBody List<DeliveryStation> listAll(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		return	this.deliveryStationService.listAll(getCustomerId());
+	}
+	/**
+	 * 根据站点IDs导出所有关键词库
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/downloadStationAddresses")
+	public String downloadStationAddresses(@RequestParam(value = "ids", required = false) String ids, HttpServletRequest request, HttpServletResponse response) {
+		List<String> headerNameList = new ArrayList<String>();
+		headerNameList.add("省/直辖市");
+		headerNameList.add("市");
+		headerNameList.add("区");
+		headerNameList.add("地址1");
+		headerNameList.add("地址2");
+		headerNameList.add("地址3");
+		headerNameList.add("站点");
+		List<List<String>>   addressList = new ArrayList();
+		String fileName = "";
+		if(StringUtils.isNotEmpty(ids)){
+			String[]  id= ids.split(",");
+			for(int i=0;i<id.length;i++){
+				Long tid = Long.parseLong(id[i]);
+				DeliveryStation station =  (DeliveryStation) deliveryStationService.getById(tid);
+				addressList.addAll(deliveryStationService.getAddressById(tid,station.getName())) ;
+				fileName+=station.getName()+"-";
+			}
+		}
+		XSSFWorkbook wb = deliveryStationService.createAddressFile(headerNameList,addressList);
+		  fileName = fileName+"关键字.xlsx";
+		setDownloadFileName(response, fileName);
+		try {
+			ServletOutputStream out = response.getOutputStream();
+			wb.write(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

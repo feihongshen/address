@@ -98,4 +98,10 @@ public class DeliveryStationRule {
 		this.ruleExpression = ruleExpression;
 	}
 
+	public boolean updateAddress(Address childAddress, Long deliveryStationId,
+			Long customerId) {
+		String hql = "delete from ";
+		return false;
+	}
+
 }

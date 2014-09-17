@@ -17,10 +17,13 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 
  
 	public void deleteRuleByIds(List<Long> addressIdList, Long customerId) {
-		String hql = "delete from DeliveryStationRule where address.id in:idList and deliveryStation.customer.id=:customerId" ;
-		getSession().createQuery(hql)
-				.setParameterList("idList", addressIdList)
-				.setLong("customerId", customerId).executeUpdate();
+		String sql = "SELECT r.id FROM delivery_station_rules  r ,delivery_stations s  WHERE r.ADDRESS_ID IN :idList AND s.CUSTOMER_ID =:customerId AND s.ID=r.DELIVERY_STATION_ID";
+		List<Integer> list = getSession().createSQLQuery(sql)
+			.setParameterList("idList", addressIdList)
+			.setLong("customerId", customerId).list();
+		for(Integer l:list){
+			this.delete(Long.parseLong(l+""));
+		}
 	}
  
 	public List<Long> getAddressIds(Long parentId, Long customerId) {
