@@ -195,4 +195,10 @@ public class DelivererRuleService extends RuleService {
 		return delivererRuleDao.get(ruleId);
 	}
 
+	@Override
+	public void delete(Long id) {
+		DelivererRule r = (DelivererRule) getSession().load(DelivererRule.class, id);
+		getSession().delete(r);
+	}
+
 }
