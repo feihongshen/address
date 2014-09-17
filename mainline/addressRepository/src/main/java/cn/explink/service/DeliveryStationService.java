@@ -20,6 +20,7 @@ import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Customer;
 import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
 import cn.explink.modle.ComboBox;
 import cn.explink.ws.vo.DeliveryStationVo;
@@ -151,4 +152,10 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation,Lo
 	public List<ComboBox> getAllSationt(Long customerId) {
 		return deliveryStationDao.getComBoxDeliveryStation(customerId);
 	}
+
+	public DeliveryStation getByNameAndCustomerId(String deliveryStationName,
+			Long customerId) {
+		return deliveryStationDao.getByNameAndCustomerId(deliveryStationName,customerId);
+	}
+
 }

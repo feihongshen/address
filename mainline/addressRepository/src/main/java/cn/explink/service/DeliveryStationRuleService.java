@@ -166,10 +166,15 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 
 	public List<Long> getAddressIds(Long parentId,Long customerId) {
-		// TODO Auto-generated method stub
 		return deliveryStationRuleDao.getAddressIds(parentId,customerId);
 	}
 
+	public void addRule(DeliveryStationRule dsr) {
+		List list = deliveryStationRuleDao.getByAddressAndStation(dsr.getAddress().getId(),dsr.getDeliveryStation().getId());
+		if(list==null||list.isEmpty()){
+			deliveryStationRuleDao.save(dsr);
+		}
+	}
 	public List<BeanVo> getStationAddressTree(Long customerId,
 			String inIds) {
 		Query query = getSession().createQuery("select new cn.explink.ws.vo.BeanVo(dsr.address.id,dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id in("+inIds+") and dsr.deliveryStation.customer.id=:customerId");

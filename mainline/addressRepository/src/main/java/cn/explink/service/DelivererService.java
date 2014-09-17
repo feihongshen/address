@@ -1,5 +1,7 @@
 package cn.explink.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,8 @@ import cn.explink.dao.CustomerDao;
 import cn.explink.dao.DelivererDao;
 import cn.explink.domain.Customer;
 import cn.explink.domain.Deliverer;
+import cn.explink.domain.DelivererRule;
+import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.enums.DelivererStausEnmu;
 import cn.explink.ws.vo.DelivererVo;
 
@@ -55,4 +59,10 @@ public class DelivererService {
 	public Deliverer getDeliverer(Long id) {
 		return delivererDao.get(id);
 	}
+
+	public Deliverer getByNameAndCustomerId(String delivererName,
+			Long customerId) {
+		return delivererDao.getByNameAndCustomerId(delivererName,customerId);
+	}
+
 }
