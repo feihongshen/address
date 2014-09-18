@@ -58,6 +58,7 @@ var resultRow=
 	});
 	
 	function importAddress(id){
+		$("#stationDlgId").val(id);
 		$('#dlg').dialog('open');
 	}
 	function fileSelected(id) {
@@ -95,9 +96,11 @@ var resultRow=
 	//文件上传
 	function ajaxFileUpload(id) {
 		$("#startImport").attr('disabled', true);
+		var stationId= $("#stationDlgId").val();
 		$.ajaxFileUpload({
 			url : ctx+'/address/importAddress?id='+id,
 			secureuri : false,
+			data:{importType:2,stationId:stationId},
 			fileElementId : 'file',
 			dataType: 'json',
 			success : function(data, status) {

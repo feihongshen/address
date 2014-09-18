@@ -6,7 +6,7 @@
 		$('#dlgStation').dialog('open');
 		 $.ajax({
 			 	type: "POST",
-				url:ctx+"/station/listAll",
+				url:cxt+"/station/listAll",
 				data:{ },
 				async:false,
 				success : function(list) {
@@ -36,19 +36,21 @@
 		if(ids.length==0){
 			$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点！')");
 		}else{
-			$("#startExport").attr("href", ctx+"/station/downloadStationAddresses?ids="+ids.join(","));
+			$("#startExport").attr("href", cxt+"/station/downloadStationAddresses?ids="+ids.join(","));
 		}
 	});
 	$("#startKwImport").click(function(){
 		$("#startKwImport").attr('disabled', true);
 		$.ajaxFileUpload({
-			url : ctx+'/address/importKwAddress',
+			url : cxt+'/address/importAddress?importType=3',
 			secureuri : false,
 			fileElementId : 'file1',
 			dataType: 'json',
 			success : function(data, status) {
 				if (data.success) {
 					$("#startKwImport").attr('disabled', false);
+					$('#dlgImport').dialog('close');
+					getAll();
 				} else {
 					alert(AjaxJson.msg);
 				}
@@ -61,5 +63,37 @@
 	});
 	
 });
+ function fileSelected(id) {
+		$("#"+id).trigger("click");
+	}
+	function takefile(id ) {
+		var file = document.getElementById(id).files[0];
+		var fileName = file.name;
+		var file_typename = fileName.substring(fileName.lastIndexOf('.'),
+				fileName.length);
+		if (file_typename == '.xls' || file_typename == '.xlsx') {//这里限定上传文件文件类型
+			if (file) {
+
+				var fileSize = 0;
+				if (file.size > 1024 * 1024)
+					fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100)
+							.toString()
+							+ 'MB';
+				else
+					fileSize = (Math.round(file.size * 100 / 1024) / 100)
+							.toString()
+							+ 'KB';
+
+				var temp = '文件名: ' + file.name + '大小: ' + fileSize + '类型: '
+						+ file.type;
+				$("#tools").val(temp);
+
+			}
+
+		} else {
+			var temp = "上传文件应该是.xls后缀而不应该是" + file_typename + ",请重新选择文件";
+			alert(temp);
+		}
+	}
  
  

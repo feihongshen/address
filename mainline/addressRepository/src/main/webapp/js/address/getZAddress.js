@@ -204,7 +204,6 @@ function unbind(){
 			data:{"id":addressId},
 			success:function(optionData){
 				if(optionData.length>0){
-					alertTip("成功");
 					var node = zTree.getNodeByParam('id', addressId);
 	        		for(i in optionData){
 	        			var sonId=optionData[i];
