@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<%@ page language="java" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <title>配送站点关联维护</title>
@@ -14,11 +15,11 @@ var cxt='<%=request.getContextPath()%>';
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/stationAdressRelation.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/exportAddress.js"></script>
 <script type="text/javascript">
 var backNode;
 var inital=false;
@@ -35,7 +36,8 @@ var setting = {
 	callback: {
 		beforeClick: beforeClick,
 		onAsyncSuccess: onAsyncSuccess,
-		onAsyncError: onAsyncError
+		onAsyncError: onAsyncError,
+		onClick: onClick
 	}
 };
 
@@ -101,8 +103,8 @@ var setting = {
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
        <tr>
           <td><a href="javascript:void(0)" id="upup" class="easyui-linkbutton">拆合站</a>&nbsp;
-          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">导出地址</a>&nbsp;
-          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">导入地址</a></td>
+          &nbsp;<a href="javascript:" class="easyui-linkbutton" id="exportAddress">导出关键字</a>
+<a href="javascript:" class="easyui-linkbutton" id="importAddress">导入关键字</a></td>
         </tr>
         <tr>
           <td><input style="width:150px" id="searchA">
@@ -118,6 +120,24 @@ var setting = {
         </tr>
       </table>
     </form>
+    
+    <div id="dlgStation" class="easyui-dialog" title="请选择需要导出关键字的站点" style="width:500px;height:320px;padding:10px;">
+	 <div id="stationShow" style="overflow:auto;height:200px;padding:10px;"></div>
+	 <div style="margin:auto;text-align:center;"><a href="javascript:$.messager.alert('提示', '请选择站点！')"  id="startExport">导出</a></div>
+</div>
+<div id="dlgImport" class="easyui-dialog" title="导入关键字" style="width:500px;height:320px;padding:10px;">
+ <table width="100%"  border="0" cellspacing="5" cellpadding="0">
+        <tr>
+          <td> <input type="file" id="file1" name="file1" onchange="takefile('file1');" >
+              	选择导入文件：
+            <input class="easyui-filebox" onclick="fileSelected('file1');"  id="tools" data-options="prompt:'请选择'" style="width:200px">
+            </td>
+        </tr>
+        <tr>
+          <td><a href="javascript:void(0)" class="easyui-linkbutton" id="startKwImport">开始导入</a>&nbsp;</td>
+        </tr>
+      </table>
+</div>
   </div>
   
   <div data-options="region:'center'">

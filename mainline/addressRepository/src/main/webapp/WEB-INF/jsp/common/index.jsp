@@ -75,25 +75,12 @@
         <li><a href="#" onclick="addTab('关键词导入','address/addressImportPage')">关键词导入</a></li>
         <li><a href="#" onclick="addTab('地址库维护','address/addressEditPage')">地址库维护</a></li>
         <li><a href="#" onclick="addTab('站点管理','address/importStationAddress')">站点管理</a></li>
-        <li><a href="#" onclick="addTab('配送员管理','dizhiku/psygl.html')">配送员管理</a></li>
       </ul>
     </li>
     <li> <span>关联设置</span>
       <ul>
         <li><a href="#" onclick="addTab('拆合站维护','stationAdressRelation/stationAdressRelation')">拆合站维护</a></li>
         <li><a href="#" onclick="addTab('配送站点关联维护','deliveryStationRule/deliveryStationRule')">配送站点关联维护</a></li>
-        <li><a href="#" onclick="addTab('配送员关联维护','stationAdressRelation/stationAdressRelation')">配送员关联维护</a></li>
-      </ul>
-    </li>
-    <li> <span>数据统计</span>
-      <ul>
-        <li><a href="#" onclick="addTab('站点匹配查询','dizhiku/zdppcx.html')">站点匹配查询</a></li>
-        <li><a href="#" onclick="addTab('站点匹配率查询','dizhiku/zdpplcx.html')">站点匹配率查询</a></li>
-      </ul>
-    </li>
-    <li> <span>系统设置</span>
-      <ul>
-        <li><a href="#" onclick="addTab('库户账号管理','dizhiku/khzhgl.html')">库户账号管理</a></li>
       </ul>
     </li>
   </ul>

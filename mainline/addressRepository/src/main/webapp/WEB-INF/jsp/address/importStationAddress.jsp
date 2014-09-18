@@ -15,19 +15,14 @@ var ctx = '${pageContext.request.contextPath}';
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importStationAddress.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/exportAddress.js">
-
-</script>
 </head>
 <body>
 <div class="easyui-layout" style="height:560px;">
 <div data-options="region:'center'" style="border:0px;">
 <br/>
-&nbsp;&nbsp;&nbsp;<a href="javascript:" class="easyui-linkbutton" id="exportAddress">导出关键字</a>
-<a href="javascript:" class="easyui-linkbutton" id="importAddress">导入关键字</a>
-<br/><br/>
 <table width="80%"  border="1"  cellpadding="8" id="stationList" cellspacing="1" bgcolor="#CCCCCC"></table>
  <div id="dlg" class="easyui-dialog" title="导入地址模板" style="width:400px;height:200px;padding:10px;">
+    <input type="hidden" id="stationDlgId" value=""/>
 	 <table width="100%"  border="0" cellspacing="5" cellpadding="0">
         <tr>
           <td> <input type="file" id="file" name="file" onchange="takefile('file');" >
@@ -40,24 +35,6 @@ var ctx = '${pageContext.request.contextPath}';
         </tr>
       </table>
       </div>
-
-<div id="dlgStation" class="easyui-dialog" title="请选择需要导出关键字的站点" style="width:500px;height:320px;padding:10px;">
-	 <div id="stationShow" style="overflow:auto;height:200px;padding:10px;"></div>
-	 <div style="margin:auto;text-align:center;"><a href="javascript:$.messager.alert('提示', '请选择站点！')"  id="startExport">导出</a></div>
-</div>
-<div id="dlgImport" class="easyui-dialog" title="导入关键字" style="width:500px;height:320px;padding:10px;">
- <table width="100%"  border="0" cellspacing="5" cellpadding="0">
-        <tr>
-          <td> <input type="file" id="file1" name="file1" onchange="takefile('file1');" >
-              	选择导入文件：
-            <input class="easyui-filebox" onclick="fileSelected('file1');"   data-options="prompt:'请选择'" style="width:200px">
-            </td>
-        </tr>
-        <tr>
-          <td><a href="javascript:void(0)" class="easyui-linkbutton" id="startKwImport">开始导入</a>&nbsp;</td>
-        </tr>
-      </table>
-</div>
 </div>
 </div>
 </body>
