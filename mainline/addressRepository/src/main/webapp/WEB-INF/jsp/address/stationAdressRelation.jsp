@@ -17,8 +17,11 @@ var cxt='<%=request.getContextPath()%>';
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/stationAdressRelation.js"></script>
 <script type="text/javascript">
 var backNode;
+var inital=false;
 var setting = {
 		async: {
 			enable: true,
@@ -49,6 +52,28 @@ var setting = {
 		        $("#unbindAllBtn").click(function(){
 		       		unbind();
 		       })
+		       
+	        $("#upup").click(function(){
+	        	if(!inital){
+	        		inital=true;
+	        		initStations();
+	        	}
+	         	$('.easyui-layout').layout('collapse','north');	
+	        });
+	        
+	        $("#saveRelation").click(saveRelation);
+	        $("#cancel").click(function(){
+	        	$('.easyui-layout').layout('expand','north');
+	        })
+	        
+	        $("#sourceStation").change(function(){
+	        	initDemoTree('sourceStation');
+	        	
+	        })
+	        $("#targetStation").change(function(){
+	        	initDemoTree('targetStation');
+	        	
+	        })
 
     });
 		 
@@ -74,9 +99,14 @@ var setting = {
   <div data-options="region:'north',split:true" title="条件搜索" style="width:330px;height: 600px;">
     <form action="" method="get">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
+       <tr>
+          <td><a href="javascript:void(0)" id="upup" class="easyui-linkbutton">拆合站</a>&nbsp;
+          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">导出地址</a>&nbsp;
+          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">导入地址</a></td>
+        </tr>
         <tr>
           <td><input style="width:150px" id="searchA">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchTree()">查询</a></td>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('searchA','tree')">查询</a></td>
         </tr>
         <tr>
           <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
@@ -91,8 +121,48 @@ var setting = {
   </div>
   
   <div data-options="region:'center'">
-    sadfasdfa
-    adfaf
+   <form method="post" >  
+          <table width="100%" height="550px;" border="0" cellspacing="1" cellpadding="5" style="background:#CCC">
+  <tr height="20px">
+    <td width="45%"   bgcolor="#FFFFFF">原站点：
+      <select id="sourceStation" name="station4combobox" style="width:120px;">
+      </select></td>
+    <td width="50" rowspan="3" align="center" bgcolor="#FFFFFF">
+      <p><a href="javascript:void(0)" class="easyui-linkbutton" id="toRight">&gt;</a></p>
+      <p><a href="javascript:void(0)" class="easyui-linkbutton" id="toLeft">&lt;</a></p></td>
+    <td width="45%" bgcolor="#FFFFFF">原站点：
+      <select id="targetStation" name="state" style="width:120px;">
+      </select></td>
+    </tr>
+  <tr >
+    <td bgcolor="#FFFFFF"><select class="easyui-combobox" name="state2" style="width:120px;">
+      <option value="1">模糊搜索</option>
+      </select>
+      <input name="textfield5" id="sourceStrVal" type="text" id="textfield5" size="15" />
+       <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('sourceStrVal','sourceStationtree')">查询</a>
+      </td>
+    <td bgcolor="#FFFFFF"><select class="easyui-combobox" name="state2" style="width:120px;">
+      <option value="1">模糊搜索</option>
+      </select>
+      <input name="textfield5" type="text" id="targetStrVal" size="15" />
+       <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('targetStrVal','targetStationtree')">查询</a>
+      </td>
+    </tr>
+  <tr height="90%">
+    <td bgcolor="#FFFFFF"><ul class="ztree" id="sourceStationtree" style="width:auto;height:auto; overflow:auto;">
+              
+            </ul></td>
+    <td bgcolor="#FFFFFF"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
+      
+    </ul></td>
+    </tr>
+    <tr height="20px"><td></td><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		<a href="javascript:void(0)" id="saveRelation" class="easyui-linkbutton">保存</a>&nbsp;
+          <a href="javascript:void(0)" id="cancel" class="easyui-linkbutton">取消</a>&nbsp;
+    </tr>
+</table>
+
+        </form> 
   </div>
 </div>
 </body>

@@ -151,6 +151,25 @@ public class DeliveryStationRuleController extends BaseController {
 		
 	}
 	
+	@RequestMapping("/changeStationRelation")
+	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId,Long targetStationId,
+			String sourceAddressId,String targetAddressId,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		//TODO GET CUSTOMER FROM USER
+		Long customerId=getCustomerId();
+		
+		try {
+			deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
+		} catch (Exception e) {
+			aj.setSuccess(false);
+			aj.setMsg("异常"+e.getMessage());
+		} 
+		aj.setSuccess(true);
+		aj.setMsg("完成匹配");
+		return aj;
+		
+	}
+	
 	
 	
 	

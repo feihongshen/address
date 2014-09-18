@@ -126,17 +126,17 @@ function searchVal(valName,treeName){
 	    }
 	    target.showNodes(filterNodes);
 	    for(var i=0;i<filterNodes.length;i++){
-	     toggle(filterNodes[i].getParentNode())
+	     toggle(target,filterNodes[i].getParentNode())
 	    }
 	
 }
 
-function toggle(node){
+function toggle(target,node){
 	target.expandNode(node, true, false, false);
 	target.showNode(node);
 	var parentNode = node.getParentNode();
 	if(parentNode){
-		 toggle(parentNode);
+		 toggle(target,parentNode);
 	}
 }
 

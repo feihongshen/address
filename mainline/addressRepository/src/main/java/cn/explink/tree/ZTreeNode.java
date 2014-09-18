@@ -51,10 +51,6 @@ public class ZTreeNode{
 		this.id = String.valueOf(id);
 		this.pId = String.valueOf(pId);
 		this.level=String.valueOf(addressLevel);
-		if(null!=pId){
-			this.isParent=true;
-			this.open=true;
-		}
 	}
 	
 	public ZTreeNode(String name, Long id, Long pId,Integer addressLevel,String t) {
@@ -63,17 +59,13 @@ public class ZTreeNode{
 		this.pId = String.valueOf(pId);
 		this.level=String.valueOf(addressLevel);
 		this.t=t;
-		if(null!=pId){
-			this.isParent=true;
-			this.open=true;
-		}
 	}
 	
 	private String  pId;
 	private String t;
 	private boolean open=true;
 	
-	private boolean isParent=false;
+	private boolean isParent=true;
 
 	public boolean isIsParent() {
 		return isParent;

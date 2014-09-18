@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -195,6 +196,28 @@ public class DeliveryStationRuleService extends RuleService {
 		query.setLong("stationId",  stationId );
 		query.executeUpdate();
 	}
-
+	public void changeStationRelation(Long sourceStationId,Long targetStationId,
+			String sourceAddressId,String targetAddressId) {
+			if (StringUtils.isNotBlank(sourceAddressId)) {
+				String sourceSql = "UPDATE `delivery_station_rules` SET `DELIVERY_STATION_ID`="
+						+ sourceStationId
+						+ " WHERE `DELIVERY_STATION_ID`="
+						+ targetStationId
+						+ " and `ADDRESS_ID` in ("
+						+ sourceAddressId + ");";
+				Query sourceQuery = getSession().createSQLQuery(sourceSql);
+				sourceQuery.executeUpdate();
+			}
+			if (StringUtils.isNotBlank(targetAddressId)) {
+				String targetSql = "UPDATE `delivery_station_rules` SET `DELIVERY_STATION_ID`="
+						+ targetStationId
+						+ " WHERE `DELIVERY_STATION_ID`="
+						+ sourceStationId
+						+ " and `ADDRESS_ID` in ("
+						+ targetAddressId + ");";
+				Query targetQuery = getSession().createSQLQuery(targetSql);
+				targetQuery.executeUpdate();
+			}
+		}
 
 }

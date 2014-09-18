@@ -33,7 +33,6 @@ function initOption(){
 					$("#vendorsId").append(option);
 					
 				}
-				
 				backvendors=$("#vendors4combobox").clone(true);
 			}
 		});
