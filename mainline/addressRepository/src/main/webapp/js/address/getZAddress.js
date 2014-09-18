@@ -37,7 +37,7 @@ function beforeExpand(treeId, treeNode) {
 		ajaxGetNodes(treeNode, "refresh");
 		return true;
 	} else {
-		alert("zTree 正在下载数据中，请稍后展开节点。。。");
+		alertTip("zTree 正在下载数据中，请稍后展开节点。。。");
 		return false;
 	}
 }
@@ -62,7 +62,7 @@ function onAsyncSuccess(event, treeId, treeNode, msg) {
 	}
 }
 function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
-	alert("异步获取数据出现异常。");
+	alertTip("异步获取数据出现异常。");
 	treeNode.icon = "";
 	zTree.updateNode(treeNode);
 }
@@ -79,7 +79,7 @@ function expandNode(e) {
 	type = e.data.type,
 	nodes = zTree.getSelectedNodes();
 	if (type.indexOf("All")<0 && nodes.length == 0) {
-		alert("请先选择一个父节点");
+		alertTip("请先选择一个父节点");
 	}
 
 	if (type == "expandAll") {
@@ -204,7 +204,7 @@ function unbind(){
 			data:{"id":addressId},
 			success:function(optionData){
 				if(optionData.length>0){
-					alert("成功");
+					alertTip("成功");
 					var node = zTree.getNodeByParam('id', addressId);
 	        		for(i in optionData){
 	        			var sonId=optionData[i];

@@ -53,7 +53,7 @@ $.ajax({
 
 function saveRule(){
 	if(addressLevel<3){
-		alert("请选择区县进行绑定！");
+		alertTip("请选择区县进行绑定！");
 		return;
 	}
 	deliveryStationRule="";
@@ -78,7 +78,7 @@ function saveRule(){
 				data:{"deliveryStationRule":deliveryStationRule,"addressId":addressId},
 				success:function(optionData){
 					if(optionData.success){
-						alert("成功");
+						alertTip("成功");
 						
 					}else{
 						var msg="保存失败";
@@ -90,7 +90,7 @@ function saveRule(){
 								msg+=term;
 							})
 						}
-						alert(msg);
+						alertTip(msg);
 					}
 				}
 			});
