@@ -66,8 +66,8 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	
 	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
 		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ,a.addressLevel) from Address a, AddressPermission p");
-		if(1==parentId){
-			hql.append(" where a.addressLevel < 2");
+		if(parentId==null){
+			hql.append(" where a.parentId is null");
 		}else{
 			hql.append(" where a.parentId = "+parentId);
 		}

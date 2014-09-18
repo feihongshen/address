@@ -139,6 +139,9 @@ public class DeliveryStationRuleController extends BaseController {
 	@RequestMapping("/getMatchTree")
 	public @ResponseBody List<Long>  getMatchTree( @RequestParam(value = "id", required = false) Long parentId) {
 		Long customerId=getCustomerId();
+		if(parentId==null){
+			parentId=1L;
+		}
 		return deliveryStationRuleService.getAddressIds(parentId,customerId);
 	}
 	

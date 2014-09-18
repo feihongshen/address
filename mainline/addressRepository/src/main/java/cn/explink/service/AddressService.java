@@ -398,7 +398,6 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		StringBuffer sb=null;
 		if(null!=list&&list.size()>0&&Integer.valueOf(1).equals(isBind)){
 			sb=new StringBuffer();
-			
 			for (Integer aid : list) {
 				sb.append(aid+",");
 			}
@@ -499,7 +498,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				for (BeanVo b : dlist) {
 					String key=b.getKey();
 					if(view.get(key)!=null){
-						view.put(key, b.getVal()+","+view.get(key));
+						view.put(key, b.getVal()+" | "+view.get(key));
 					}else{
 						view.put(key,  b.getVal());
 					}

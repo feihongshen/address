@@ -100,18 +100,12 @@ public class AddressController extends BaseController {
 	@RequestMapping("/getAddressTree")
 	public @ResponseBody List<ZTreeNode>  getAddressTree( @RequestParam(value = "id", required = false) Long parentId) {
 		Long customerId = getCustomerId();
-		if(null==parentId){
-			parentId=1L;
-		}
 		return addressService.getAsyncAddress(customerId,parentId);
 	}
 	
 	@RequestMapping("/getStationAddressTree")
 	public @ResponseBody List<ZTreeNode>  getStationAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "level", required = false) Long level) {
 		Long customerId = getCustomerId();
-		if(null==parentId){
-			parentId=1L;
-		}
 		return addressService.getStationAddressTree(customerId,parentId);
 	}
 	
@@ -182,14 +176,14 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/importAddress")
 	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
-			 MultipartFile file,Integer importType,Long stationId) {
+			 MultipartFile file1,Integer importType,Long stationId) {
 		if(importType==null){
 			importType = AddressImportTypeEnum.init.getValue();
 		}
 		InputStream in = null;
 		AjaxJson aj=new AjaxJson();
 		try {
-			in = file.getInputStream();
+			in = file1.getInputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -200,7 +194,7 @@ public class AddressController extends BaseController {
 			return aj;
 		}
 		aj.setSuccess(true);
-		aj.setInfo(addressImportResult.getId().toString());
+		aj.setInfo(addressImportResult.getId()+"");
 		return aj;
 	}
 
