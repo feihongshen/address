@@ -481,7 +481,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public void deleteAlias(Long id) {
 		Alias a = aliasDao.get(id);
 		aliasDao.delete(a);
-		scheduledTaskService.createScheduledTask(Constants.REFERENCE_TYPE_ALIAS_ID, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
+		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
 	}
 	
 	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {

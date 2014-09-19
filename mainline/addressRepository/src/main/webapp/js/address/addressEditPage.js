@@ -9,17 +9,17 @@ var inital=false;
 			showRenameBtn : false
 		},
 		data : {
-			simpleData : {
-				enable : true
-			}
+			 
 		},
 		callback : {
 			beforeClick : myBeforeClick,
 			onClick : myClick,
 			beforeRemove : zTreeBeforeRemove,
-			onRemove : zTreeOnRemove
+			onRemove : zTreeOnRemove,
+			beforeDrag:function(){return false;}
 		}
 	};
+	
 	$(document).ready(function() {
 		 getAll();
 		 //折叠
