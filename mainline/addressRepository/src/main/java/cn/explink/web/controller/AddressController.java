@@ -176,14 +176,14 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/importAddress")
 	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
-			 MultipartFile file1,Integer importType,Long stationId) {
+			 MultipartFile file,Integer importType,Long stationId) {
 		if(importType==null){
 			importType = AddressImportTypeEnum.init.getValue();
 		}
 		InputStream in = null;
 		AjaxJson aj=new AjaxJson();
 		try {
-			in = file1.getInputStream();
+			in = file.getInputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

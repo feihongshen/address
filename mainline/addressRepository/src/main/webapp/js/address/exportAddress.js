@@ -1,7 +1,7 @@
  $(document).ready(function(){
 	$('#dlgStation').dialog('close');
 	$('#dlgImport').dialog('close');
-	$('#file1').hide();
+	$('#file').hide();
 	$("#exportAddress").bind("click",function(){
 		$('#dlgStation').dialog('open');
 		 $.ajax({
@@ -44,7 +44,7 @@
 		$.ajaxFileUpload({
 			url : cxt+'/address/importAddress?importType=3',
 			secureuri : false,
-			fileElementId : 'file1',
+			fileElementId : 'file',
 			dataType: 'json',
 			success : function(data, status) {
 				if (data.success) {
