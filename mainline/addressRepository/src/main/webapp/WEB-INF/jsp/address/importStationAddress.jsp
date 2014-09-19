@@ -5,16 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>站点管理</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<script type="text/javascript">
-var ctx = '${pageContext.request.contextPath}';
-</script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importStationAddress.js"></script>
+<%@include file="/WEB-INF/jsp/common/lib.jsp"%>
+<script type="text/javascript" src="${ctx}/js/address/importStationAddress.js"></script>
 </head>
 <body>
 <div class="easyui-layout" style="height:560px;">
@@ -24,9 +16,9 @@ var ctx = '${pageContext.request.contextPath}';
     <input type="hidden" id="stationDlgId" value=""/>
 	 <table width="100%"  border="0" cellspacing="5" cellpadding="0">
         <tr>
-          <td> <input type="file" id="file" name="file" onchange="takefile('file');" >
+          <td> <input type="file" id="file" name="file" onchange="takefile('file');" />
               	选择导入文件：
-            <input class="easyui-filebox" onclick="fileSelected('file');" name="tools" id="tools" data-options="prompt:'请选择'" style="width:200px">
+            <input class="easyui-filebox" onclick="fileSelected('file');" name="tools" id="tools" data-options="prompt:'请选择'" style="width:200px"/>
             </td>
         </tr>
         <tr>

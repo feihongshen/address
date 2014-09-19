@@ -392,7 +392,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	}
 
 	public List<ZTreeNode> getZAddress(Long customerId,String name,Integer isBind) {
-		String sql="select dsr.ADDRESS_ID from delivery_station_rules dsr left join delivery_stations ds on dsr.DELIVERY_STATION_ID=ds.id  where ds.CUSTOMER_ID="+customerId;
+		String sql="SELECT DSR.ADDRESS_ID FROM DELIVERY_STATION_RULES DSR LEFT JOIN DELIVERY_STATIONS DS ON DSR.DELIVERY_STATION_ID=DS.ID  WHERE DS.CUSTOMER_ID="+customerId;
 		Query query =getSession().createSQLQuery(sql);
 		List<Integer> list=query.list();
 		StringBuffer sb=null;

@@ -13,10 +13,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/import.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importAdress.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
@@ -49,11 +47,7 @@ var hasIniUI=false;
 		$("#file").hide();
 		$("#startImport").click(function(){
 			ajaxFileUpload();
-		})
-		
-		
-		
-		
+		});
 		
 	});
 	function reloadTable() {

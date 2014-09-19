@@ -1,33 +1,27 @@
-
-
 var addressId;
 var addressLevel;
 var log, className = "dark";
 var zTree;
 var lastValue = "", nodeList = [], fontCss = {};
 
-
 function beforeClick(treeId, treeNode, clickFlag) {
 	className = (className === "dark" ? "":"dark");
 	return (treeNode.click != false);
 }
+
 function onClick(event, treeId, treeNode, clickFlag) {
 	addressId=treeNode.id;
-	
 	reloadTable();
-	
 	addressLevel=treeNode.level;
 }	
 
-
-
 function getUrl(treeId, treeNode) {
-	var url=cxt+"/address/getAddressTree?id="+treeNode.id;
+	var url=ctx+"/address/getAddressTree?id="+treeNode.id;
 	return url;
 }
 
 function getStationUrl(treeId, treeNode) {
-	var url=cxt+"/address/getStationAddressTree?id="+treeNode.id+"&level="+treeNode.level;
+	var url=ctx+"/address/getStationAddressTree?id="+treeNode.id+"&level="+treeNode.level;
 	return url;
 }
 
@@ -37,7 +31,7 @@ function beforeExpand(treeId, treeNode) {
 		ajaxGetNodes(treeNode, "refresh");
 		return true;
 	} else {
-		alertTip("zTree 正在下载数据中，请稍后展开节点。。。");
+		$.message.alert("提示","zTree 正在下载数据中，请稍后展开节点。。。");
 		return false;
 	}
 }
@@ -62,7 +56,7 @@ function onAsyncSuccess(event, treeId, treeNode, msg) {
 	}
 }
 function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
-	alertTip("异步获取数据出现异常。");
+	$.message.alert("提示","异步获取数据出现异常。");
 	treeNode.icon = "";
 	zTree.updateNode(treeNode);
 }
@@ -79,7 +73,7 @@ function expandNode(e) {
 	type = e.data.type,
 	nodes = zTree.getSelectedNodes();
 	if (type.indexOf("All")<0 && nodes.length == 0) {
-		alertTip("请先选择一个父节点");
+		$.message.alert("提示","请先选择一个父节点");
 	}
 
 	if (type == "expandAll") {
@@ -126,7 +120,7 @@ function searchVal(valName,treeName){
 	    }
 	    target.showNodes(filterNodes);
 	    for(var i=0;i<filterNodes.length;i++){
-	     toggle(target,filterNodes[i].getParentNode())
+	     toggle(target,filterNodes[i].getParentNode());
 	    }
 	
 }
@@ -200,11 +194,11 @@ var unbindList=[];
 function unbind(){
 	$.ajax({
 		 type: "POST",
-			url:cxt+"/deliveryStationRule/getMatchTree",
+			url:ctx+"/deliveryStationRule/getMatchTree",
 			data:{"id":addressId},
 			success:function(optionData){
 				if(optionData.length>0){
-					var node = zTree.getNodeByParam('id', addressId);
+					//var node = zTree.getNodeByParam('id', addressId);
 	        		for(i in optionData){
 	        			var sonId=optionData[i];
 	        			var temp = zTree.getNodeByParam('id', sonId);

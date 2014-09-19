@@ -56,8 +56,7 @@ function takefile() {
 
 	} else {
 		var temp = "上传文件应该是.xls后缀而不应该是" + file_typename + ",请重新选择文件";
-		alert(temp)
-
+		alert(temp);
 	}
 }
 

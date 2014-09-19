@@ -199,7 +199,7 @@ public class DeliveryStationRuleService extends RuleService {
 	public void changeStationRelation(Long sourceStationId,Long targetStationId,
 			String sourceAddressId,String targetAddressId) {
 			if (StringUtils.isNotBlank(sourceAddressId)) {
-				String sourceSql = "UPDATE `delivery_station_rules` SET `DELIVERY_STATION_ID`="
+				String sourceSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`="
 						+ sourceStationId
 						+ " WHERE `DELIVERY_STATION_ID`="
 						+ targetStationId
@@ -209,7 +209,7 @@ public class DeliveryStationRuleService extends RuleService {
 				sourceQuery.executeUpdate();
 			}
 			if (StringUtils.isNotBlank(targetAddressId)) {
-				String targetSql = "UPDATE `delivery_station_rules` SET `DELIVERY_STATION_ID`="
+				String targetSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`="
 						+ targetStationId
 						+ " WHERE `DELIVERY_STATION_ID`="
 						+ sourceStationId

@@ -3,23 +3,9 @@
 <html>
 <head>
 <title>配送站点关联维护</title>
-<script type="text/javascript">
-var cxt='<%=request.getContextPath()%>';
-</script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
-<%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/zTree/demo.css"/> --%>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/zTree/zTreeStyle/zTreeStyle.css"/>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/stationAdressRelation.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/exportAddress.js"></script>
+<%@include file="/WEB-INF/jsp/common/lib.jsp"%>
+<script type="text/javascript" src="${ctx}/js/address/stationAdressRelation.js"></script>
+<script type="text/javascript" src="${ctx}/js/address/exportAddress.js"></script>
 <script type="text/javascript">
 var backNode;
 var inital=false;
@@ -82,7 +68,7 @@ var setting = {
 		 function getAll(){
 			 $.ajax({
 			 	 type: "POST",
-			 		url:cxt+"/address/getAddressTree",
+			 		url:ctx+"/address/getAddressTree",
 			 		data:{isBind:true},
 			 		success:function(optionData){
 			 	        var t = $("#tree");

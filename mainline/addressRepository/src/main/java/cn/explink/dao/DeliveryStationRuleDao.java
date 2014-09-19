@@ -18,7 +18,7 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 
  
 	public void deleteRuleByIds(List<Long> addressIdList, Long customerId) {
-		String sql = "SELECT r.id FROM delivery_station_rules  r ,delivery_stations s  WHERE r.ADDRESS_ID IN :idList AND s.CUSTOMER_ID =:customerId AND s.ID=r.DELIVERY_STATION_ID";
+		String sql = "SELECT R.ID FROM DELIVERY_STATION_RULES  R ,DELIVERY_STATIONS S  WHERE R.ADDRESS_ID IN :idList AND S.CUSTOMER_ID =:customerId AND S.ID=R.DELIVERY_STATION_ID";
 		List<Integer> list = getSession().createSQLQuery(sql)
 			.setParameterList("idList", addressIdList)
 			.setLong("customerId", customerId).list();

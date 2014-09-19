@@ -2,11 +2,10 @@
 var zNodes ;
 var leftDivStr ="[]";
 var rightDivStr ="[]";
-
 function initStations(){
 	 $.ajax({
 		 type: "POST",
-			url:cxt+"/deliveryStationRule/station4combobox",
+			url:ctx+"/deliveryStationRule/station4combobox",
 			success:function(optionData){
 				for(var i=0;i<optionData.length;i++){
 					var option=$("  <option value="+optionData[i]['id']+">"+optionData[i]['text']+"</option>");
@@ -25,7 +24,7 @@ function initDemoTree(stationName){
 	var stationId=$("#"+stationName).val();
 	$.ajax({
 		 type: "POST",
-			url:cxt+"/address/getAdressByStation",
+			url:ctx+"/address/getAdressByStation",
 			data:{"stationId":stationId},
 			success:function(optionData){
 				zNodes=optionData;
@@ -49,15 +48,11 @@ function initDemoTree(stationName){
 					rightDivStr = rightDivStr.substring(0,rightDivStr.length-1);
 					rightDivStr+="]";
 				}
-				
-				
-				
 			}
 		});
 }
 
 function saveRelation(){
-	
 	var sourceStationId=$("#sourceStation").val();
 	var targetStationId=$("#targetStation").val();
 	var leftDiv="";
@@ -74,7 +69,7 @@ function saveRelation(){
     rightDiv = rightDiv.substring(0,rightDiv.length-1);
     $.ajax({
 		 type: "POST",
-			url:cxt+"/deliveryStationRule/changeStationRelation",
+			url:ctx+"/deliveryStationRule/changeStationRelation",
 			data:{"sourceStationId":sourceStationId,"targetStationId":targetStationId,"sourceAddressId":leftDiv,"targetAddressId":rightDiv},
 			success:function(optionData){
 				if(optionData.success){
@@ -84,9 +79,4 @@ function saveRelation(){
 				}
 			}
 		});
-    
-        
 }
-
-
-

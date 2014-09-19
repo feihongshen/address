@@ -7,14 +7,10 @@
 <html>
 <head>
 <title>地址匹配</title>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css"  href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript">
 	$(function() {
 	});
