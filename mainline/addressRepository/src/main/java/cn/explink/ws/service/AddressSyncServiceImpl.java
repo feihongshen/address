@@ -63,7 +63,7 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		}
 		deliveryStationVo.setCustomerId(clientApplication.getCustomerId());
 
-		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliverySationtService");
+		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.updateDeliveryStation(deliveryStationVo);
 			result.setResultCode(ResultCodeEnum.success);
@@ -89,7 +89,7 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		}
 		deliveryStationVo.setCustomerId(clientApplication.getCustomerId());
 
-		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliverySationtService");
+		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.deleteDeliveryStation(deliveryStationVo);
 			result.setResultCode(ResultCodeEnum.success);
