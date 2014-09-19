@@ -38,7 +38,7 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		}
 		deliveryStationVo.setCustomerId(clientApplication.getCustomerId());
 
-		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliverySationtService");
+		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
 			result.setResultCode(ResultCodeEnum.success);
