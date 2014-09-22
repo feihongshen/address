@@ -26,7 +26,9 @@ var inital=false;
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
 		 $("#refreshAllBtn").click(function(){
-			 getAll();
+			 var treeObj = $.fn.zTree.getZTreeObj("tree");
+ 			 var node =  treeObj.getNodeByParam("id", 1, null);
+			 treeObj.reAsyncChildNodes(node, null,null);
 		 });
 		 //未绑定
 	        $("#unbindAllBtn").bind("click",function(){
