@@ -320,18 +320,33 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		Long customerId = getCustomerId();
+		List<Address> list = null;
+		List<ZTreeNode> zList = null;
 		try{
 			if(stationId!=null){
-				 addressService.addAddressWithStation(parentId,addresses,stationId,customerId); 
+				list =  addressService.addAddressWithStation(parentId,addresses,stationId,customerId); 
 			}else{
-				 addressService.addAddress(parentId,addresses,customerId); 
+				list = 	 addressService.addAddress(parentId,addresses,customerId); 
 			}
+			zList = transAddress(list);
 		}catch(Exception e){
 			aj.setSuccess(false);
 			aj.setMsg(e.getMessage());
 		}
+		aj.setObj(zList);
 		return aj;
 	}
+	private List<ZTreeNode> transAddress(List<Address> list) {
+		 List<ZTreeNode> nlist = new ArrayList<ZTreeNode>();
+		if(list!=null){
+			for(Address a:list){
+				ZTreeNode node = new ZTreeNode(a.getName(), a.getId(), a.getParentId(), a.getAddressLevel());
+				nlist.add(node);
+			}
+		} 
+		return nlist;
+	}
+
 	/**
 	 * 添加别名
 	 * @param addressId

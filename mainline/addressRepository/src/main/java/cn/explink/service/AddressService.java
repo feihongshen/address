@@ -96,7 +96,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @param address
 	 * @param parentAddress
 	 */
-	public void createAndBindAddress(Address address, Address parentAddress, Long customerId) {
+	public Address createAndBindAddress(Address address, Address parentAddress, Long customerId) {
 		if (address.getParentId() == null) {
 			throw new RuntimeException("parentId can't be null.");
 		}
@@ -117,6 +117,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			bindAddress(address, customerId);
 		}
 		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(address.getId()));
+		return address;
 	}
 
 	/**
@@ -414,8 +415,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return addressDao.getAsyncAddress(customerId,parentId);
 	}
 
-	public void addAddressWithStation(Long parentId, String addresses, Long stationId,Long customerId) {
+	public List<Address> addAddressWithStation(Long parentId, String addresses, Long stationId,Long customerId) {
 		Address parent = addressDao.get(parentId);
+		List<Address> list = new ArrayList<Address>();
 		for(String addressLine : addresses.split("\n")){
 			if(addressLine.trim().length()==0){
 				continue;
@@ -425,17 +427,21 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			a.setName(addressLine);
 			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId);
 			if(l!=null ){//已存在则绑定
+				a = l;
 				bindAddress(l,  customerId);
 				bindAddressWithStation(l, stationId);
 			}else{
 				createAndBindAddress(a, parent, customerId);
 				bindAddressWithStation(a, stationId);
 			}
+			list.add(a);
 		}
+		return list;
 	}
 
-	public void addAddress(Long parentId, String addresses,Long customerId) {
+	public List<Address> addAddress(Long parentId, String addresses,Long customerId) {
 		Address parent = addressDao.get(parentId);
+		List<Address> list = new ArrayList<Address>();
 		for(String addressLine : addresses.split("\n")){
 			if(addressLine.trim().length()==0){
 				continue;
@@ -446,10 +452,13 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId);
 			if(l!=null ){//已存在则绑定
 				bindAddress(l,  customerId);
+				a=l;
 			}else{
 				createAndBindAddress(a, parent, customerId);
 			}
+			list.add(a);
 		}
+		return list;
 	}
 
 	public AjaxJson addAlias(Long addressId, String alias,Long customerId) {

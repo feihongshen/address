@@ -119,8 +119,10 @@ var inital=false;
 					$('#stationId').val("");
 					$("input[name='stationId']").val("");
 					$('#stationId').combobox('disable');
+					$('#addresses').attr('disabled',true);
 				}else{
 					$('#stationId').combobox('enable');
+					$('#addresses').attr('disabled',false);
 				}
 				
 			}	
@@ -137,6 +139,7 @@ var inital=false;
 				 }
 	function clearForm(){
 		$("#ff")[0].reset();
+		$("#tips").html("");
 	}
 	function submitForm(){
 		var addresses = $("#addresses").val();
@@ -151,7 +154,7 @@ var inital=false;
 			return false;
 		}
 		if(addresses==""){
-			$.messager.alert("提示","请选择关键词！");
+			$.messager.alert("提示","请输入关键词！");
 			return false;
 		}
 		$.ajax({
@@ -161,8 +164,19 @@ var inital=false;
 				async:false,
 				success : function(resp) {
 					if(resp.success){
+						 $.ajax({
+						 	 type: "POST",
+						 		url:ctx+"/address/getStationAddressTree",
+						 		data:{id:parentId},
+						 		async:false,
+						 		success:function(optionData){
+						 			 var treeObj = $.fn.zTree.getZTreeObj("tree");
+						 			 var node =  treeObj.getNodeByParam("id", parentId, null);
+						 			treeObj.removeChildNodes(node);
+						 			 newNodes = treeObj.addNodes(node, optionData);
+						 		}
+						 	});
 						 clearForm();
-						 getAll();
 					}else{
 						$.messager.alert("提示",resp.msg);
 					}

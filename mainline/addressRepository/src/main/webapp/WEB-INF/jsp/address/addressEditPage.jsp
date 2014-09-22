@@ -15,13 +15,16 @@
 	 <div data-options="region:'west',split:true" title="条件搜索" style="width:450px;">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
-          <td align="left"><input style="width:180px" id="searchA" >
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"   onclick="searchVal('searchA','tree')">查询</a></td>
+          <td align="left">
+          	<input style="width:180px" id="searchA" />
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"   onclick="searchVal('searchA','tree')">查询</a>
+            </td>
         </tr>
         <tr>
-          <td  align="left"><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
-          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a>&nbsp;
-          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">未绑定</a></td>
+          <td  align="left">
+          <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
+          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a>
+          </td>
         </tr>
         <tr>
           <td><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
@@ -42,13 +45,13 @@
 					method:'get',
 					valueField:'id',
 					textField:'name',
-					panelHeight:'auto'">&nbsp;&nbsp;上级关键词：<span id="tips" style="font-weight:bold;"></span>
+					panelHeight:'auto'"/>&nbsp;&nbsp;上级关键词：<span id="tips" style="font-weight:bold;"></span>
 	    			</td>
 	    		</tr>
 	    		<tr>
 	    			<td width="60px">关键词:</td>
 	    			<td>
-	    			   <textarea rows="13" cols="60" id="addresses" name="addresses" class="easyui-validatebox textbox" ></textarea>
+	    			   <textarea rows="13" cols="60" id="addresses" name="addresses" class="easyui-validatebox textbox" disabled="true"></textarea>
 	    			</td>
 	    		</tr>
 	    		<tr><td width="60px"></td><td>	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
