@@ -24,7 +24,7 @@ $(function(){
 				var data=optionData['attributes'];
 				for(var i=0;i<arrsum.length;i++){
 					var temp=arrsum[i];
-					$("."+temp).text(data[temp])
+					$("."+temp).text(data[temp]);
 				}
 				usedData=data;
 				
@@ -77,7 +77,7 @@ $(function(){
       <table width="100%" border="0" cellpadding="5" cellspacing="0">
         <tr>
           <td><a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a></td>
-          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span class="unsum">0</span>,成功匹配<span class="sunsum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0%</span></td>
+          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span class="unsum">0</span>,成功匹配<span class="susum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0%</span></td>
         </tr>
       </table>
     </div>
