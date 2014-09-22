@@ -9,7 +9,7 @@ var resultRow=
 		pagination : true,
 		pageList : [ 100, 200, 300 ],
 		sortOrder : 'asc',
-		rownumbers : true,
+		rownumbers : false,
 		singleSelect : true,
 		fitColumns : true,
 		showFooter : true,

@@ -26,8 +26,8 @@ var inital=false;
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
 		 $("#refreshAllBtn").click(function(){
-       	getAll();
-       });
+			 getAll();
+		 });
 		 //未绑定
 	        $("#unbindAllBtn").bind("click",function(){
 	        	unbind();
