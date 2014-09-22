@@ -6,7 +6,7 @@
 		$('#dlgStation').dialog('open');
 		 $.ajax({
 			 	type: "POST",
-				url:cxt+"/station/listAll",
+				url:ctx+"/station/listAll",
 				data:{ },
 				async:false,
 				success : function(list) {
@@ -36,13 +36,13 @@
 		if(ids.length==0){
 			$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点！')");
 		}else{
-			$("#startExport").attr("href", cxt+"/station/downloadStationAddresses?ids="+ids.join(","));
+			$("#startExport").attr("href", ctx+"/station/downloadStationAddresses?ids="+ids.join(","));
 		}
 	});
 	$("#startKwImport").click(function(){
 		$("#startKwImport").attr('disabled', true);
 		$.ajaxFileUpload({
-			url : cxt+'/address/importAddress?importType=3',
+			url : ctx+'/address/importAddress?importType=3',
 			secureuri : false,
 			fileElementId : 'file',
 			dataType: 'json',
