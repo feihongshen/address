@@ -349,14 +349,16 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			List<DeliveryStationRule> deliveryStationRuleList = deliverStationRuleService.search(addressList, orderVo);
 			sb = new StringBuilder();
 			int count = 0;
-			for (DeliveryStationRule rule : deliveryStationRuleList) {
-				DeliveryStation deliveryStation = rule.getDeliveryStation();
-				deliveryStationList.add(deliveryStation);
-				if (count > 0) {
-					sb.append(",");
+			if(deliveryStationRuleList!=null){
+				for (DeliveryStationRule rule : deliveryStationRuleList) {
+					DeliveryStation deliveryStation = rule.getDeliveryStation();
+					deliveryStationList.add(deliveryStation);
+					if (count > 0) {
+						sb.append(",");
+					}
+					sb.append(deliveryStation.getId());
+					count++;
 				}
-				sb.append(deliveryStation.getId());
-				count++;
 			}
 			result.setDeliveryStationList(deliveryStationList);
 			order.setDeliveryStationIds(sb.toString());
@@ -365,15 +367,17 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			List<DelivererRule> delivererRuleList = delivererRuleService.search(addressList, orderVo);
 			sb = new StringBuilder();
 			count = 0;
-			for (DelivererRule rule : delivererRuleList) {
-				Deliverer deliverer = rule.getDeliverer();
-				delivererList.add(deliverer);
+			if(delivererRuleList!=null){
+				for (DelivererRule rule : delivererRuleList) {
+					Deliverer deliverer = rule.getDeliverer();
+					delivererList.add(deliverer);
 
-				if (count > 0) {
-					sb.append(",");
+					if (count > 0) {
+						sb.append(",");
+					}
+					sb.append(deliverer.getId());
+					count++;
 				}
-				sb.append(deliverer.getId());
-				count++;
 			}
 			result.setDelivererList(delivererList);
 			order.setDelivererIds(sb.toString());

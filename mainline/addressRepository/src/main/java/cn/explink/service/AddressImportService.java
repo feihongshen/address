@@ -172,6 +172,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 			//TODO REMOVE?
 			for (AddressImportDetail detail : details) {
 				TreeNode<AddressImportEntry> treeNode = getTreeNode(tree, addressMap, detail, 1, customerId);
+			    updateImportStatus(detail);
 				if(importType.equals(AddressImportTypeEnum.init.getValue())){//初始化导入
 					bindRule(detail,customerId);
 				}else if(importType.equals(AddressImportTypeEnum.stationImport.getValue())){//按站点导入
@@ -207,6 +208,14 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		}
 		return result;
 	}
+	/**
+	 * 检查导入的数据状态是否有效(路径是否全面)
+	 * @param detail
+	 */
+    private void updateImportStatus(AddressImportDetail detail) {
+		//TODO  getPreName(detail,level);
+	}
+
    /**
     * 绑定站点、收件人和地址联系
     * @param detail
@@ -228,6 +237,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 					dsr.setRuleExpression("");
 					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
 					deliveryStationRuleService.addRule(dsr);
+				}else{
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					detail.setMessage("站点不存在");
 				}
 			}
 			//小件员规则
@@ -244,6 +256,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 					dr.setRuleExpression("");
 					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
 					delivererRuleService.addRule(dr);
+				}else{
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					detail.setMessage("小件员不存在");
 				}
 			}
 		}
@@ -390,11 +405,11 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				// 最后一级地址已存在
 				boolean bindResult = addressService.bindAddress(childAddress, customerId);
 				if (bindResult) {
-					detail.setStatus(AddressImportDetailStatsEnum.duplicate.getValue());
-					detail.setMessage("地址重复:" + name);
-				} else {
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
 					detail.setAddressId(childAddress.getId());
+				} else {
+					detail.setStatus(AddressImportDetailStatsEnum.duplicate.getValue());
+					detail.setMessage("地址重复:" + name);
 				}
 			} else {
 				// 不是最后一级，继续查找子节点

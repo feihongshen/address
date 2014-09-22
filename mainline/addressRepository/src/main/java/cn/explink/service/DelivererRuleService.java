@@ -162,24 +162,27 @@ public class DelivererRuleService extends RuleService {
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
 			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
 			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
-
-			for (DelivererRule rule : address.getDelivererRules()) {
-				if (DelivererRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
-					defaultRule = rule;
-				} else {
-					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
-					boolean isMapping = isMapping(addressLine, ruleExpression);
-					if (isMapping) {
-						mappingRule = rule; 
-					}
-				}
-			}
+            if(address.getDelivererRules()!=null){
+            	for (DelivererRule rule : address.getDelivererRules()) {
+    				if (DelivererRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
+    					defaultRule = rule;
+    				} else {
+    					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
+    					boolean isMapping = isMapping(addressLine, ruleExpression);
+    					if (isMapping) {
+    						mappingRule = rule; 
+    					}
+    				}
+    			}
+            }
 
 			if (mappingRule == null) {
 				// 针对每一个address，没有匹配上任何客户化规则时，则匹配到默认规则
 				mappingRule = defaultRule;
 			}
-			ruleList.add(mappingRule);
+			if(mappingRule!=null){
+				ruleList.add(mappingRule);
+			}
 		}
 		return ruleList;
 	}
