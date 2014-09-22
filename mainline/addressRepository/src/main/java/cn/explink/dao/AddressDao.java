@@ -171,6 +171,15 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
+    /**
+     * 更新地址索引标识
+     * @param id
+     */
+	public void updateAddressIndex(Long id) {
+		String hql = "update Address set indexed = 1 where id =:id";
+		Query query = getSession().createQuery(hql).setLong("id", id);
+		query.executeUpdate();
+	}
 
 
 

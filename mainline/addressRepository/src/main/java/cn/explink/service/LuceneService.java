@@ -251,6 +251,7 @@ public class LuceneService {
 				query = new TermQuery(new Term("addressId", String.valueOf(address.getId())));
 				indexWriter.deleteDocuments(query);
 				indexWriter.addDocument(createDocument(address));
+				addressDao.updateAddressIndex(address.getId());
 			}
 		}
 		if (aliasList != null) {

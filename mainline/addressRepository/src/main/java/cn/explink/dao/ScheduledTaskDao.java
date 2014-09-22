@@ -40,10 +40,11 @@ public class ScheduledTaskDao extends BasicHibernateDaoSupport<ScheduledTask, Lo
 	}
 
 	public int batchUpdateStatus(List<Long> idList, int status) {
-		String sql = "update ScheduledTask set status = :status where id in (:idList)";
+		String sql = "update ScheduledTask set status = :status ,completedTime=:date where id in (:idList)";
 		Query query = getSession().createQuery(sql.toString());
 		query.setParameterList("idList", idList);
 		query.setInteger("status", status);
+		query.setDate("date", new Date());
 		return query.executeUpdate();
 	}
 	
