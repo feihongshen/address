@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.Vendor;
 import cn.explink.modle.ComboBox;
 
 @Repository
@@ -69,6 +70,13 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		query.setLong("customerId", customerId);
 		query.setString("name", deliveryStationName);
 		return (DeliveryStation) query.uniqueResult();
+	}
+
+	public List<Vendor> listAllVendor(Long customerId) {
+		String hql = "from Vendor where customer.id = :customerId and status=1";
+		Query query = getSession().createQuery(hql);
+		query.setLong("customerId", customerId);
+		return   query.list();
 	}
 
 }
