@@ -63,11 +63,11 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
-	
+	//zTree 异步方法不能使用这个方法，这个事用来load data for initalize tree
 	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId) {
 		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ,a.addressLevel) from Address a, AddressPermission p");
 		if(parentId==null){
-			hql.append(" where a.parentId is null");
+			hql.append(" where a.parentId < 2");
 		}else{
 			hql.append(" where a.parentId = "+parentId);
 		}
