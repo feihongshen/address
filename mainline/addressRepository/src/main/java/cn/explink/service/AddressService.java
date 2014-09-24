@@ -53,7 +53,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		super(Address.class);
 	}
 
-	private static final int MIN_ADDRESS_LENGTH = 2;
+	public static final int MIN_ADDRESS_LENGTH = 2;
 
 	private static Logger logger = LoggerFactory.getLogger(AddressService.class);
 
@@ -558,6 +558,16 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		map.put("keys", keys);
 		map.put("binds", binds);
 		return map;
+	}
+
+	public List<cn.explink.domain.Address> getAddressByNames(
+			Set<String> addressNames, Long customerId) {
+		return addressDao.getAddressByNames(addressNames,  customerId);
+	}
+
+	public List<cn.explink.domain.Address> getAdministrationAddress(
+			Set<String> adminNames, Long customerId) {
+		return addressDao.getAdministrationAddress(adminNames,  customerId);
 	}
 
 

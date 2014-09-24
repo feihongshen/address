@@ -29,9 +29,11 @@ import org.springframework.stereotype.Service;
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressImportDetailDao;
 import cn.explink.dao.AddressImportResultDao;
+import cn.explink.dao.AddressPermissionDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
+import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
@@ -81,7 +83,8 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	@Autowired
 	private DelivererRuleService delivererRuleService;
 	
-	
+	@Autowired
+	private AddressPermissionDao addressPermissionDao;
 
 	/**
 	 * 创建导入模板
@@ -110,11 +113,16 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
+		Map<String,Address> map = new HashMap<String,Address>();//省市区地址MAP(Key:省-市-区)
+		Map<String,Address> addressMap = new HashMap<String,Address>();//关键字MAP(Key:父ID-名称)
+		Map<String,DeliveryStation> stationMap = new HashMap<String,DeliveryStation>();	//站点MAP(Key:客户ID-名称)
+		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
+		Set<String> addressNames = new HashSet<String>();
+		Set<String> adminNames = new HashSet<String>();
 		try {
 			XSSFWorkbook wb = new XSSFWorkbook(in);
 			XSSFSheet sheet = wb.getSheetAt(0);
 			int rowNum = 1;
-			Set<String> addressNames = new HashSet<String>();
 			while (true) {
 				XSSFRow row = sheet.getRow(rowNum);
 				if (row == null) {
@@ -130,9 +138,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				String deliveryStationName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
 				String delivererName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
 				
-				addNonNullValue(addressNames, province);
-				addNonNullValue(addressNames, city);
-				addNonNullValue(addressNames, district);
+				addNonNullValue(adminNames, province);
+				addNonNullValue(adminNames, city);
+				addNonNullValue(adminNames, district);
 				addNonNullValue(addressNames, address1);
 				addNonNullValue(addressNames, address2);
 				addNonNullValue(addressNames, address3);
@@ -146,47 +154,63 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				detail.setAddress3(address3);
 				detail.setDeliveryStationName(deliveryStationName);
 				detail.setDelivererName(delivererName);
-				//TODO CascadeType.ALL
 				detail.setAddressImportResult(result);
 				details.add(detail);
-			}
-			
-			List<Address> addressList = addressDao.getAddressByNames(addressNames);
-			// 将现有的地址按名字分入map中，同一节点下的地址不能有重名，但按名字查询的地址可能有重名
-			Map<String, List<Address>> addressMap = new HashMap<String, List<Address>>();
-			for (Address address : addressList) {
-				String name = address.getName();
-				List<Address> tmpAddressList = addressMap.get(name);
-				if (tmpAddressList == null) {
-					tmpAddressList = new ArrayList<Address>();
-					addressMap.put(name, tmpAddressList);
-				}
-				tmpAddressList.add(address);
-			}
-			
-			TreeNode<AddressImportEntry> tree = new TreeNode<AddressImportEntry>();
-			Address rootAddress = addressDao.get(1L);
-			AddressImportEntry root = new AddressImportEntry();
-			root.setAddress(rootAddress);
-			tree.setSelf(root);
-			//TODO REMOVE?
-			for (AddressImportDetail detail : details) {
-				TreeNode<AddressImportEntry> treeNode = getTreeNode(tree, addressMap, detail, 1, customerId);
-			    updateImportStatus(detail);
-				if(importType.equals(AddressImportTypeEnum.init.getValue())){//初始化导入
-					bindRule(detail,customerId);
-				}else if(importType.equals(AddressImportTypeEnum.stationImport.getValue())){//按站点导入
-					bindRuleWithStationId(detail,customerId,stationId);
-				}else if(importType.equals(AddressImportTypeEnum.stationMove.getValue())){//拆合站关键字绑定关系迁移
-					removeRule(detail,customerId);
-				}
 			}
 			
 		} catch (IOException e) {
 			logger.error("importAddress failed due to {}", e);
 			return null;
 		}
-
+			//查找客户已有关键词并构造addressMap
+			List<Address> addressList = addressDao.getAddressByNames(addressNames,customerId);
+			if(addressList!=null&&!addressList.isEmpty()){
+				for(Address a:addressList){
+					addressMap.put(a.getParentId()+"-"+a.getName(), a);
+				}
+			}
+			//查找所有行政关键词并构造map
+			List<Address> list = addressDao.getAdministrationAddress(adminNames,customerId);
+			if(list!=null&&!list.isEmpty()){
+				Map<String,String> m = new HashMap<String,String>();
+				for(Address a:list){
+					m.put(a.getId()+"", a.getName());
+				}
+				for(Address a:list){
+					if(new Integer(3).equals(a.getAddressLevel())){
+						String path = a.getPath();
+						String[] ids = path.split("-");
+						map.put(m.get(ids[1])+"-"+m.get(ids[2])+"-"+a.getName(), a);
+					}
+				}
+			}
+			//构造所有站点Map
+			 List<DeliveryStation> stationList = this.deliveryStationService.listAll(customerId);
+			 if(stationList!=null&&!stationList.isEmpty()){
+				 for(DeliveryStation ds:stationList){
+					 stationMap.put(customerId+"-"+ds.getName(), ds);
+				 }
+			 }
+			 
+			//构造所有小件员Map
+			 List<Deliverer> delivererList = this.delivererService.listAll(customerId);
+			 if(delivererList!=null&&!delivererList.isEmpty()){
+				 for(Deliverer d:delivererList){
+					 delivererMap.put(customerId+"-"+d.getName(), d);
+				 }
+			 }
+			for (AddressImportDetail detail : details) {
+				
+				try{
+					  this.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
+				}catch(Exception e){
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					e.printStackTrace();
+					detail.setMessage(e.getMessage());
+				}
+              
+			}
+			
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
 		detailSet.addAll(details);
 		result.setAddressImportDetails(detailSet);
@@ -208,15 +232,171 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		}
 		return result;
 	}
-	/**
-	 * 检查导入的数据状态是否有效(路径是否全面)
-	 * @param detail
-	 */
-    private void updateImportStatus(AddressImportDetail detail) {
-		//TODO  getPreName(detail,level);
+    /**
+     *   导入单行记录（新事务处理）
+                       地址格式是否正确（  - -大望路）否-->失败 ：上级地址不存在
+    	  三级地址是否存在（北京-市辖区-朝阳区） 否-->失败：上级地址不存在
+    	 四、伍、六级地址是否存在（不存在：创建 [如果是最后一级，]，存在：添加至地址MAP）
+    	 站点非空（绑定判别-抛异常站点不存在）
+    	  配送员非空（绑定判别-为空抛异常配送员不存在） 
+     * @param map 名称-Address
+     * @param detail 但行记录
+     * @param addressMap 已经查出来的Map
+     * @param customerId 
+     */
+    public void txNewImportDetail(Map<String,Address> map,AddressImportDetail detail,Map<String,Address> addressMap,Map<String,DeliveryStation> stationMap,Map<String,Deliverer> delivererMap,Long customerId,Integer importType,Long stationId){
+       if(validateDetail(detail)){
+    	   Address d =  map.get(detail.getProvince()+"-"+detail.getCity()+"-"+detail.getDistrict());
+    	   if(d==null){
+    		   throw new ExplinkRuntimeException("省/市/区地址不存在");
+    	   }else{
+    		   Address bindAddress = null;//需要绑定站点或者配送员的地址（动态变化，取最后一级地址）
+    		   Address a1 = null;
+    		   Address a2 = null;
+    		   Address a3 = null;
+    		   //处理第一关键字
+    		   a1 = addressMap.get(d.getId()+"-"+detail.getAddress1());
+    		   if(a1==null){//为空则创建并绑定
+    			   a1 = createAndBind(d,detail.getAddress1(),customerId);
+    			   addressMap.put(d.getId()+a1.getName(), a1);
+    		   }
+    		   bindAddress=a1;
+
+    		   //处理第二关键字
+    		   if(StringUtils.isNotBlank(detail.getAddress2())){
+    			    a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
+        		   if(a2==null){//为空则创建并绑定
+        			   a2 = createAndBind(a1,detail.getAddress1(),customerId);
+        			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
+        		   }
+        		   bindAddress=a2;
+    		   }
+    		   
+    		   //处理第三个关键字
+    		   if(StringUtils.isNotBlank(detail.getAddress3())){
+    			    a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
+        		   if(a3==null){//为空则创建并绑定
+        			   a3 = createAndBind(a2,detail.getAddress1(),customerId);
+        			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
+        		   }
+        		   bindAddress=a3;
+    		   }
+    		   if(importType==AddressImportTypeEnum.init.getValue()){//初始化导入：绑定站点和小件员
+    			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
+    	    			  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
+    	    			  if(ds==null){
+    	    				  throw new ExplinkRuntimeException("配送站点不存在");
+    	    			  }else{
+    	    				DeliveryStationRule dsr = new DeliveryStationRule();
+    	  					dsr.setAddress(bindAddress );
+    	  					dsr.setCreationTime(new Date());
+    	  					dsr.setDeliveryStation(ds);
+    	  					dsr.setRule("");
+    	  					dsr.setRuleExpression("");
+    	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+    	  					deliveryStationRuleService.addRule(dsr);
+    	    			  }
+    	    		   }
+    	    		   if(StringUtils.isNotBlank(detail.getDelivererName())){//绑定小件员
+    		    			Deliverer dl = delivererMap.get(customerId+"-"+detail.getDelivererName());
+    		   				if(dl!=null){
+    		   					DelivererRule  dr = new DelivererRule();
+    		   					dr.setAddress(bindAddress );
+    		   					dr.setCreationTime(new Date());
+    		   					dr.setDeliverer(dl);
+    		   					dr.setRule("");
+    		   					dr.setRuleExpression("");
+    		   					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+    		   					delivererRuleService.addRule(dr);
+    		   				}else{
+    		   					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+    		   					detail.setMessage("小件员不存在");
+    		   				}
+    	    		   }
+    		   }
+    		   if(importType==AddressImportTypeEnum.stationImport.getValue()){//站点导入：绑定站点
+    			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
+    	    			  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
+    	    			  if(ds==null){
+    	    				  throw new ExplinkRuntimeException("配送站点不存在");
+    	    			  }else{
+		    				  if(ds.getId()!=stationId){
+	    	    				  throw new ExplinkRuntimeException("导入站点不匹配！");
+	    	    			  }
+    	    				DeliveryStationRule dsr = new DeliveryStationRule();
+    	  					dsr.setAddress(bindAddress );
+    	  					dsr.setCreationTime(new Date());
+    	  					dsr.setDeliveryStation(ds);
+    	  					dsr.setRule("");
+    	  					dsr.setRuleExpression("");
+    	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+    	  					deliveryStationRuleService.addRule(dsr);
+    	    			  }
+    	    		   }
+    		   }
+    		   if(importType==AddressImportTypeEnum.stationMove.getValue()){//站点移动
+    			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
+    	    			  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
+    	    			  if(ds==null){
+    	    				  throw new ExplinkRuntimeException("配送站点不存在");
+    	    			  }else{
+    	    				  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),ds.getId());
+    	    			  }
+    	    		   }
+    		   }
+    		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
+    				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+    		   }
+    	   }
+       }else{
+    	   detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+    	   detail.setMessage("导入格式不合规范");
+       }
+    }
+   /**
+    *创建地址并绑定客户ID
+    * @param parent
+    * @param name
+    * @param customerId
+    * @return
+    */
+   private Address createAndBind(Address parent, String name, Long customerId) {
+	   Address a1 = new Address();
+	   a1.setAddressLevel(parent.getAddressLevel()+1);
+	   a1.setParentId(parent.getId());
+	   a1.setCreationTime(new Date());
+	   a1.setIndexed(false);
+	   a1.setName(name);
+	   a1.setPath(parent.getPath()+"-"+parent.getId());
+	   a1.setStatus(AddressStatusEnum.valid.getValue());
+	   if (StringUtil.length(a1.getName()) < AddressService.MIN_ADDRESS_LENGTH) {
+			throw new ExplinkRuntimeException("关键字长度不能小于2");
+			}
+	   a1 = addressDao.save(a1);
+	   AddressPermission permission = new AddressPermission();
+	   permission.setAddressId(a1.getId());
+	   permission.setCustomerId(customerId);
+	   addressPermissionDao.save(permission);
+	   return a1;
 	}
 
-   /**
+private boolean validateDetail(AddressImportDetail detail) {
+		boolean flag = true;
+		if(StringUtils.isBlank(detail.getProvince())||StringUtils.isBlank(detail.getCity())||StringUtils.isBlank(detail.getDistrict())){
+			return false;
+		}else{
+			if(StringUtils.isBlank(detail.getAddress1())){
+				flag = false;
+			}else{
+				if(StringUtils.isBlank(detail.getAddress2())&&StringUtils.isNotBlank(detail.getAddress3())){
+					flag = false;
+				}
+			}
+		}
+		return flag;
+	}
+
+/**
     * 绑定站点、收件人和地址联系
     * @param detail
     * @param customerId
@@ -408,6 +588,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
 					detail.setAddressId(childAddress.getId());
 				} else {
+					detail.setAddressId(childAddress.getId());
 					detail.setStatus(AddressImportDetailStatsEnum.duplicate.getValue());
 					detail.setMessage("地址重复:" + name);
 				}
@@ -424,7 +605,6 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		Address address = new Address();
 		address.setName(name);
 		address.setAddressLevel(parentAddress.getAddressLevel() + 1);
-//		address.setCustomerId(customerId);
 		address.setParentId(parentAddress.getId());
 		address.setPath(parentAddress.getPath() + "-" + parentAddress.getId());
 		address.setStatus(AddressStatusEnum.valid.getValue());
@@ -466,7 +646,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		return name;
 	}
 
-	private void addNonNullValue(Collection<String> collection, String element) {
+	public void addNonNullValue(Collection<String> collection, String element) {
 		if (!StringUtil.isEmpty(element)) {
 			collection.add(element);
 		}

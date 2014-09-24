@@ -23,6 +23,10 @@ public class AddressImportResultService extends CommonServiceImpl<AddressImportR
 	private AddressImportResultDao addressImportResultDao;
 	@Autowired
 	private UserDao userDao;
+	@Override
+	public Object save(Object entity) {
+		return addressImportResultDao.save((AddressImportResult)entity);
+	}
 
-
+    
 }

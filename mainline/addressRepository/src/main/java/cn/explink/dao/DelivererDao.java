@@ -1,5 +1,8 @@
 package cn.explink.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +32,16 @@ public class DelivererDao extends BasicHibernateDaoSupport<Deliverer, Long> {
 		query.setString("name", delivererName);
 		query.setLong("customerId", customerId);
 		return (Deliverer) query.uniqueResult();
+	}
+
+	public List<Deliverer> listAll(Long customerId) {
+		if(customerId==null){
+			return new ArrayList<Deliverer>();
+		}
+		String hql = "from Deliverer where customer.id=:customerId and status=1";
+		Query query = getSession().createQuery(hql);
+		query.setLong("customerId", customerId);
+		return query.list();
 	}
 
 }

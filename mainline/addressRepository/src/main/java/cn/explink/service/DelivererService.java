@@ -65,4 +65,8 @@ public class DelivererService {
 		return delivererDao.getByNameAndCustomerId(delivererName,customerId);
 	}
 
+	public List<Deliverer> listAll(Long customerId) {
+		return this.delivererDao.listAll(customerId);
+	}
+
 }

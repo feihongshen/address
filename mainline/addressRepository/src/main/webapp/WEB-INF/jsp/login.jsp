@@ -48,7 +48,7 @@
 					<input name="j_password" type="password" id="password" />
 				</div>
 				<div class="btn">
-					<a href="#" onclick="login()">登录</a><a href="#">清空</a></div>
+					<a href="#" onclick="login()">登录</a><a href="#" onclick="$('#loginForm')[0].reset()">清空</a></div>
 				</div>
 				<div class="center_right"></div>
 			</form>

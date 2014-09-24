@@ -110,6 +110,22 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		return query.list();
 	}
 
+	public List<Address> getAddressByNames(Collection<String> addressNames,Long customerId) {
+		if(addressNames!=null&&!addressNames.isEmpty()){
+			StringBuilder hql = new StringBuilder("select a from Address  a, AddressPermission p ");
+			hql.append(" where a.name in :addressNames");
+			hql.append(" and a.id = p.addressId");
+			hql.append(" and p.customerId = :customerId");
+			Query query = getSession().createQuery(hql.toString());
+			query.setLong("customerId", customerId);
+			query.setParameterList("addressNames", addressNames);
+			return query.list();
+		}else{
+			return null;
+		}
+		
+	}
+	
 	public Address getAddressByName(String name) {
 		StringBuilder hql = new StringBuilder("from Address where name = :name");
 		Query query = getSession().createQuery(hql.toString());
@@ -179,6 +195,17 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		String hql = "update Address set indexed = 1 where id =:id";
 		Query query = getSession().createQuery(hql).setLong("id", id);
 		query.executeUpdate();
+	}
+
+	public List<Address> getAdministrationAddress(Set<String> addressNames,
+			Long customerId) {
+		StringBuilder hql = new StringBuilder("select a from Address  a, AddressPermission p ");
+		hql.append(" where a.addressLevel in (1,2,3)");
+		hql.append(" and a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("customerId", customerId);
+		return query.list();
 	}
 
 

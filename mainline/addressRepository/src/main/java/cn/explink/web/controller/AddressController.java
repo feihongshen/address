@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +33,10 @@ import cn.explink.domain.Address;
 import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Alias;
+import cn.explink.domain.Deliverer;
+import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.User;
+import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
@@ -36,6 +45,8 @@ import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
+import cn.explink.service.DelivererService;
+import cn.explink.service.DeliveryStationService;
 import cn.explink.service.LuceneService;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.DateTimeUtil;
@@ -60,7 +71,13 @@ public class AddressController extends BaseController {
 	private AddressImportService addressImportService;
 	@Autowired
 	private AddressImportResultService addressImportResultService;
-
+	
+	@Autowired
+	private DeliveryStationService deliveryStationService;
+	
+	@Autowired
+	private DelivererService delivererService;
+	
 	@RequestMapping("/index")
 	public String index(Model model) {
 		return "/address/index";
@@ -187,7 +204,7 @@ public class AddressController extends BaseController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AddressImportResult addressImportResult = addressImportService.importAddress(in, getLogginedUser(),importType,stationId);
+		AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
 		if(null==addressImportResult){
 			aj.setSuccess(false);
 			aj.setMsg("数据异常");
@@ -412,6 +429,184 @@ public class AddressController extends BaseController {
 			aj.setSuccess(false);
 		}
 		return aj;
+	}
+	/**
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) {
+		Long customerId = user.getCustomer().getId();
+		AddressImportResult result = new AddressImportResult();
+		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
+		Map<String,Address> map = new HashMap<String,Address>();//省市区地址MAP(Key:省-市-区)
+		Map<String,Address> addressMap = new HashMap<String,Address>();//关键字MAP(Key:父ID-名称)
+		Map<String,DeliveryStation> stationMap = new HashMap<String,DeliveryStation>();	//站点MAP(Key:客户ID-名称)
+		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
+		Set<String> addressNames = new HashSet<String>();
+		Set<String> adminNames = new HashSet<String>();
+		try {
+			XSSFWorkbook wb = new XSSFWorkbook(in);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			int rowNum = 1;
+			while (true) {
+				XSSFRow row = sheet.getRow(rowNum);
+				if (row == null) {
+					break;
+				}
+				rowNum++;
+				String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
+				String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
+				String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
+				String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
+				String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
+				String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
+				String deliveryStationName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
+				String delivererName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
+				
+				addressImportService.addNonNullValue(adminNames, province);
+				addressImportService.addNonNullValue(adminNames, city);
+				addressImportService.addNonNullValue(adminNames, district);
+				addressImportService.addNonNullValue(addressNames, address1);
+				addressImportService.addNonNullValue(addressNames, address2);
+				addressImportService.addNonNullValue(addressNames, address3);
+				
+				AddressImportDetail detail = new AddressImportDetail();
+				detail.setProvince(province);
+				detail.setCity(city);
+				detail.setDistrict(district);
+				detail.setAddress1(address1);
+				detail.setAddress2(address2);
+				detail.setAddress3(address3);
+				detail.setDeliveryStationName(deliveryStationName);
+				detail.setDelivererName(delivererName);
+				detail.setAddressImportResult(result);
+				details.add(detail);
+			}
+			
+		} catch (IOException e) {
+			logger.error("importAddress failed due to {}", e);
+			return null;
+		}
+			//查找客户已有关键词并构造addressMap
+			List<Address> addressList = addressService.getAddressByNames(addressNames,customerId);
+			if(addressList!=null&&!addressList.isEmpty()){
+				for(Address a:addressList){
+					addressMap.put(a.getParentId()+"-"+a.getName(), a);
+				}
+			}
+			//查找所有行政关键词并构造map
+			List<Address> list = addressService.getAdministrationAddress(adminNames,customerId);
+			if(list!=null&&!list.isEmpty()){
+				Map<String,String> m = new HashMap<String,String>();
+				for(Address a:list){
+					m.put(a.getId()+"", a.getName());
+				}
+				for(Address a:list){
+					if(new Integer(3).equals(a.getAddressLevel())){
+						String path = a.getPath();
+						String[] ids = path.split("-");
+						map.put(m.get(ids[1])+"-"+m.get(ids[2])+"-"+a.getName(), a);
+					}
+				}
+			}
+			//构造所有站点Map
+			 List<DeliveryStation> stationList =  deliveryStationService.listAll(customerId);
+			 if(stationList!=null&&!stationList.isEmpty()){
+				 for(DeliveryStation ds:stationList){
+					 stationMap.put(customerId+"-"+ds.getName(), ds);
+				 }
+			 }
+			 
+			//构造所有小件员Map
+			 List<Deliverer> delivererList =  delivererService.listAll(customerId);
+			 if(delivererList!=null&&!delivererList.isEmpty()){
+				 for(Deliverer d:delivererList){
+					 delivererMap.put(customerId+"-"+d.getName(), d);
+				 }
+			 }
+			for (AddressImportDetail detail : details) {
+				
+				try{
+					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
+				}catch(Exception e){
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					e.printStackTrace();
+					detail.setMessage(e.getMessage());
+				}
+              
+			}
+			
+		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
+		detailSet.addAll(details);
+		result.setAddressImportDetails(detailSet);
+		int successCount = 0;
+		int failureCount = 0;
+		for (AddressImportDetail detail : details) {
+			if (detail.getStatus() != null && detail.getStatus().intValue() == AddressImportDetailStatsEnum.success.getValue()) {
+				successCount++;
+			} else {
+				failureCount++;
+			}
+		}
+		result.setSuccessCount(successCount);
+		result.setFailureCount(failureCount);
+		result.setImportDate(new Date());
+		result.setUserId(user.getId());
+		if(importType==AddressImportTypeEnum.init.getValue()){
+			addressImportResultService.save(result);
+		}
+		return result;
+	}
+
+	public LuceneService getLuceneService() {
+		return luceneService;
+	}
+
+	public void setLuceneService(LuceneService luceneService) {
+		this.luceneService = luceneService;
+	}
+
+	public AddressService getAddressService() {
+		return addressService;
+	}
+
+	public void setAddressService(AddressService addressService) {
+		this.addressService = addressService;
+	}
+
+	public AddressImportService getAddressImportService() {
+		return addressImportService;
+	}
+
+	public void setAddressImportService(AddressImportService addressImportService) {
+		this.addressImportService = addressImportService;
+	}
+
+	public AddressImportResultService getAddressImportResultService() {
+		return addressImportResultService;
+	}
+
+	public void setAddressImportResultService(
+			AddressImportResultService addressImportResultService) {
+		this.addressImportResultService = addressImportResultService;
+	}
+
+	public DeliveryStationService getDeliveryStationService() {
+		return deliveryStationService;
+	}
+
+	public void setDeliveryStationService(
+			DeliveryStationService deliveryStationService) {
+		this.deliveryStationService = deliveryStationService;
+	}
+
+	public DelivererService getDelivererService() {
+		return delivererService;
+	}
+
+	public void setDelivererService(DelivererService delivererService) {
+		this.delivererService = delivererService;
 	}
 	
 }
