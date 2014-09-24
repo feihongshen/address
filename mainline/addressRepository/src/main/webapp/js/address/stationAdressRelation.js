@@ -18,8 +18,11 @@ function initStations(){
 				//initDemoTree('sourceStation');
 				$("#targetStation").append("<option value='0'></option>");
 				$("#targetStation").val(0);
+				
 				$("#sourceStation").append("<option value='0'></option>");
 				$("#sourceStation").val(0);
+				
+				
 			}
 		});
 }

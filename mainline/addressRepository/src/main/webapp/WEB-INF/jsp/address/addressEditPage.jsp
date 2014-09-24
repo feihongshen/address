@@ -16,8 +16,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td align="left">
-          	<input style="width:180px" id="searchA" />
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"   onclick="searchVal('searchA','tree')">查询</a>
+          	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree');"/>
             </td>
         </tr>
         <tr>
@@ -27,7 +26,7 @@
           </td>
         </tr>
         <tr>
-          <td><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
       </div>

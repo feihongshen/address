@@ -137,6 +137,9 @@
            
             $(function() {
                 $("#toRight").click(function() {
+                	if(checked()){
+                		return;
+                	}
                 	var nodes=zTreeObj1.getCheckedNodes(true);
                 	for(var i=0;i<nodes.length;i++){
                 		var treeNode=nodes[i];
@@ -146,6 +149,9 @@
                 	}
                 });
                 $("#toLeft").click(function(){
+                	if(checked()){
+                		return;
+                	}
                 	var nodes=zTreeObj2.getCheckedNodes(true);
                 	for(var i=0;i<nodes.length;i++){
                 		var treeNode=nodes[i];
@@ -158,3 +164,17 @@
                 });    
             });
         });
+        
+        
+        
+        function checked(){
+        	var sval=$("#sourceStation").val();
+        	var tval=$("#targetStation").val();
+        	if(sval==0||tval==0||sval==tval){
+        		alert("请选择合适的站点！");
+        		return true;
+        	}else{
+        		return false;
+        	}
+        	
+        }

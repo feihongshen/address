@@ -49,9 +49,6 @@ var setting = {
 			//刷新
 			 $("#refreshAllBtn").click(function(){
 				 getAll();
-				 var treeObj = $.fn.zTree.getZTreeObj("tree");
-	 			 var node =  treeObj.getNodeByParam("id", 1, null);
-				 treeObj.reAsyncChildNodes(node, null,null);
 	        });
 		       
 	        $("#upup").click(function(){
@@ -91,22 +88,7 @@ var setting = {
 			 	});
 			 }
 		 
-		 function getPromtInfo(){
-			 $.ajax({
-			 	 type: "POST",
-			 		url:ctx+"/address/getPromtInfo",
-			 		data:{isBind:true},
-			 		success:function(ajson){
-			 			var temp=ajson.attributes;
-			 			var keys=temp['keys'];
-			 			var binds=temp['binds'];
-			 			var unbids=keys*1-binds*1;
-			 			var info="关键词共有"+keys+"个，已经绑定站点"+binds+"个，未绑定"+unbids+"个";
-			 			$("#promtInfo").text(info);
-			 			
-			 		}
-			 	});
-		 }
+		 
 		 
 		
 </script>
@@ -129,7 +111,7 @@ var setting = {
           <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a></td>
         </tr>
         <tr>
-          <td><div id="promtInfo"></div>
+          <td><div id="promtInfo" ></div>
           <ul id="tree" class="ztree " style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
