@@ -26,6 +26,7 @@ import cn.explink.domain.User;
 import cn.explink.domain.Vendor;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
+import cn.explink.modle.SortDirection;
 import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.AddressImportResultService;
 import cn.explink.service.DeliveryStationService;
@@ -41,6 +42,7 @@ public class DeliveryStationController extends BaseController {
 	@RequestMapping("/list")
 	public @ResponseBody DataGridReturn list(DeliveryStation deliveryStation,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(DeliveryStation.class, dataGrid);
+		cq.addOrder("name", SortDirection.asc);
 		HqlGenerateUtil.installHql(cq, deliveryStation, request.getParameterMap());
 		return this.deliveryStationService.getDataGridReturn(cq, true);
 	}

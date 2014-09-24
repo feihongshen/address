@@ -301,7 +301,7 @@ public class LuceneService {
 	 */
 	public List<Address> search(String addressLine, Long customerId) throws IOException, ParseException {
 		logger.info("search for {}", addressLine);
-		List<Address> addressList = null;
+		List<Address> addressList = new ArrayList<Address>();
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();
@@ -318,11 +318,12 @@ public class LuceneService {
 			}
 			
 			// 相关的地址
-			List<Address> relatedAddressList = addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
-			logger.info("relatedAddressList = " + relatedAddressList);
-			
-			// 得分评估，过滤掉不符合条件的地址
-			addressList = ScoreFilter.filter(relatedAddressList);
+			if(addressIdList!=null&&!addressIdList.isEmpty()){
+				List<Address> relatedAddressList = addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
+				logger.info("relatedAddressList = " + relatedAddressList);
+				// 得分评估，过滤掉不符合条件的地址
+				addressList = ScoreFilter.filter(relatedAddressList);
+			}
 		}
 
 		return addressList;
