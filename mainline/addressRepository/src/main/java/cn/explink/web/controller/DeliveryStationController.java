@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
+import cn.explink.domain.Vendor;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.qbc.CriteriaQuery;
@@ -78,6 +79,11 @@ public class DeliveryStationController extends BaseController {
 	@RequestMapping("/listAll")
 	public @ResponseBody List<DeliveryStation> listAll(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		return	this.deliveryStationService.listAll(getCustomerId());
+	}
+	
+	@RequestMapping("/listAllVendor")
+	public @ResponseBody List<Vendor> listAllVendor(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		return	this.deliveryStationService.listAllVendor(getCustomerId());
 	}
 	/**
 	 * 根据站点IDs导出所有关键词库

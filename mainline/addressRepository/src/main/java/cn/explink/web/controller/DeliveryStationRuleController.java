@@ -8,6 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.domain.VendorsAging;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.ComboBox;
 import cn.explink.modle.DataGrid;
@@ -25,6 +29,8 @@ import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationRuleService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.service.VendorService;
+import cn.explink.web.vo.DeliveryStationRuleVo;
+import cn.explink.web.vo.VendorsAgingVo;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/deliveryStationRule")
@@ -47,7 +53,7 @@ public class DeliveryStationRuleController extends BaseController {
 
 	@RequestMapping("/deliveryStationRule")
 	public String index(Model model) {
-		return "/address/deliveryStationRule";
+		return "/address/deliveryStationPage";
 	}
 
 	
@@ -115,6 +121,51 @@ public class DeliveryStationRuleController extends BaseController {
 		return aj;
 		
 	}
+	@RequestMapping("/saveDeliveryStationRuleJson")
+	public @ResponseBody AjaxJson saveDeliveryStationRuleJson(String jsonStr,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		//TODO GET CUSTOMER FROM USER
+		String msg = "";
+		try {
+			JSONArray array =  JSONArray.fromObject(jsonStr);
+			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig());;
+			Long customerId=getCustomerId();
+			if(list!=null){
+				for(DeliveryStationRuleVo r:list){
+					try {
+						deliveryStationRuleService.createDeliveryStationRule(r.getAddressId(), r.getStationId(), customerId, r.getRuleExpression());
+					} catch (Exception e) {
+						msg+=r.getStationId()+":"+e.getMessage();
+						aj.setSuccess(false);
+						aj.setMsg(msg);
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (Exception e) {
+			aj.setSuccess(false);
+			aj.setMsg(e.getMessage());
+		} 
+		return aj;
+	}
+	
+	@RequestMapping("/saveVendorAge")
+	public @ResponseBody AjaxJson saveVendorAge(String jsonStr,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		aj.setSuccess(true);
+		try {
+			JSONArray array =  JSONArray.fromObject(jsonStr);
+			List<VendorsAgingVo> list = JSONArray.toList(array, new VendorsAgingVo(), new JsonConfig());;
+			Long customerId=getCustomerId();
+			if(list!=null){
+				deliveryStationRuleService.saveVendorAge(list,customerId);
+			}
+		} catch (Exception e) {
+			aj.setSuccess(false);
+			aj.setMsg(e.getMessage());
+		} 
+		return aj;
+	}
 	
 	@RequestMapping("/station4combobox")
 	@ResponseBody
@@ -135,6 +186,19 @@ public class DeliveryStationRuleController extends BaseController {
 		return this.deliveryStationRuleService.getDataGridReturnView(addressId);
 		
 	}
+	@RequestMapping("/getAllStationRule")
+	public @ResponseBody List<DeliveryStationRuleVo> getAllStationRule(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		String addressId=request.getParameter("addressId");
+		Long custmerId = this.getCustomerId();
+		return this.deliveryStationRuleService.getAllStationRule(addressId,custmerId);
+		
+	}
+	@RequestMapping("/getAges")
+	public @ResponseBody List<VendorsAging> getAges(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		String addressId=request.getParameter("addressId");
+		Long custmerId = this.getCustomerId();
+		return this.deliveryStationRuleService.getAllVendorAging(addressId,custmerId);
+	}
 	
 	@RequestMapping("/getMatchTree")
 	public @ResponseBody List<Long>  getMatchTree( @RequestParam(value = "id", required = false) Long parentId) {
@@ -153,7 +217,14 @@ public class DeliveryStationRuleController extends BaseController {
 		return aj;
 		
 	}
-	
+	@RequestMapping("/deleteVendorAge")
+	public @ResponseBody AjaxJson deleteVendorAge(Long id,HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		deliveryStationRuleService.deleteVendorAge(id);
+		aj.setSuccess(true);
+		return aj;
+		
+	}
 	@RequestMapping("/changeStationRelation")
 	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId,Long targetStationId,
 			String sourceAddressId,String targetAddressId,HttpServletRequest request, HttpServletResponse response) {
