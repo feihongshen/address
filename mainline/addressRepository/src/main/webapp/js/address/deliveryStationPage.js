@@ -17,13 +17,12 @@ var mySettings = {
 };
 	$(document).ready(function() {
 		 getAll();
+		 getPromtInfo();
 		 //折叠
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
 		 $("#refreshAllBtn").click(function(){
-			 var treeObj = $.fn.zTree.getZTreeObj("tree");
- 			 var node =  treeObj.getNodeByParam("id", 1, null);
-			 treeObj.reAsyncChildNodes(node, null,null);
+			 getAll();
 		 });
 		 $.ajax({
 			 	type: "POST",

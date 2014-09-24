@@ -37,12 +37,7 @@ var resultRow=
 						href += "删除</a>]";
 						return href;
 					}
-				}, {
-					field : 'userId',
-					title : '用户',
-					width : 50,
-					sortable : false
-				}, {
+				},  {
 					field : 'successCount',
 					title : '导入关键词数量',
 					width : 50,

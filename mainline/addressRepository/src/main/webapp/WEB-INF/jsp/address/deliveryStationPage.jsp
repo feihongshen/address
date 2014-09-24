@@ -49,7 +49,7 @@
           </td>
         </tr>
         <tr>
-          <td><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
       </div>
