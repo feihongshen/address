@@ -125,14 +125,10 @@ var mySettings = {
 				 getAddressStation(treeNode.id);
 				 getAddressAges(treeNode.id);
 				 addressId=treeNode.id;
-				if(treeNode.level<3){
-					$('#stationId').val("");
-					$("input[name='stationId']").val("");
-					$('#stationId').combobox('disable');
-					$('#addresses').attr('disabled',true);
+				if(treeNode.level<4){
+					$('#addRule').attr('disabled',true);
 				}else{
-					$('#stationId').combobox('enable');
-					$('#addresses').attr('disabled',false);
+					$('#addRule').attr('disabled',false);
 				}
 				
 			}	
@@ -147,49 +143,6 @@ var mySettings = {
 				 		}
 				 	});
 				 }
-	function submitForm(){
-		var addresses = $("#addresses").val();
-		var parentId = $("#parentId").val();
-		var stationId = $("input[name='stationId']").val();
-		if($("#level").val()>5){
-			$.messager.alert("提示","最多支持第六级关键字！");
-			return false;
-		}
-		if(parentId==""){
-			$.messager.alert("提示","请选择上级地址！");
-			return false;
-		}
-		if(addresses==""){
-			$.messager.alert("提示","请输入关键词！");
-			return false;
-		}
-		$.ajax({
-			 	type: "POST",
-				url:ctx+"/address/add",
-				data:{stationId:stationId,addresses:addresses,parentId:parentId},
-				async:false,
-				success : function(resp) {
-					if(resp.success){
-						 $.ajax({
-						 	 type: "POST",
-						 		url:ctx+"/address/getStationAddressTree",
-						 		data:{id:parentId},
-						 		async:false,
-						 		success:function(optionData){
-						 			 var treeObj = $.fn.zTree.getZTreeObj("tree");
-						 			 var node =  treeObj.getNodeByParam("id", parentId, null);
-						 			treeObj.removeChildNodes(node);
-						 			 newNodes = treeObj.addNodes(node, optionData);
-						 		}
-						 	});
-						 clearForm();
-					}else{
-						$.messager.alert("提示",resp.msg);
-					}
-				}
-			});
-	}
-	
 	function addRule(){
 		$("<tr status='add'><td><select style='width:80%' name='stationId'><option value=''></option>"+generateSelector(stationList)+"</select></td>" +
 				"<td><input type='text' name='rules' size='30'/></td>" +
@@ -265,16 +218,25 @@ var mySettings = {
     		$.messager.alert("提示",'请选择关键字！');
     		return ;
     	}
+    	var flag = true;
+    	var msg = "";
     	$("#stationRule>tbody>tr[status='add']").each(function(){
     		var obj = $(this);
     		var rule = new Object();
     		rule.stationId=obj.find("select").val();
-    		rule.ruleExpression=obj.find("input").val();
+    		rule.rule=obj.find("input").val();
     		rule.addressId = addressId;
     		if(rule.stationId!=""){
         		rlist.push(rule);
+    		}else{
+    			flag = false;
+    			msg = "请选择配送站点！";
     		}
     	});
+    	if(!flag){
+    		$.messager.alert("提示",msg);
+    		return false;
+    	}
     	var str = JSON.stringify(rlist) ;
     	$.ajax({
 		 	type: "POST",
@@ -297,6 +259,8 @@ var mySettings = {
     		$.messager.alert("提示",'请选择关键字！');
     		return ;
     	}
+    	var flag = true;
+    	var msg = "";
     	$("#vendorAge>tbody>tr[status='add']").each(function(){
     		var obj = $(this);
     		var age = new Object();
@@ -305,8 +269,19 @@ var mySettings = {
     		age.addressId = addressId;
     		if(age.vendorId!=""){
         		rlist.push(age);
+    		}else{
+    			flag = false;
+    			msg = "请选择供应商！";
+    		}
+    		if(!checkNumber(age.aging)){
+    			flag = false;
+    			msg = "请输入正确的时效";
     		}
     	});
+    	if(!flag){
+    		$.messager.alert("提示",msg);
+    		return false;
+    	}
     	var str = JSON.stringify(rlist) ;
     	$.ajax({
 		 	type: "POST",
@@ -321,4 +296,14 @@ var mySettings = {
 				}
 			}
 		});
+    }
+    
+    function checkNumber(ss){
+    	 var   type="^[0-9]*[1-9][0-9]*$"; 
+    	  var   re   =   new   RegExp(type); 
+    	 if(ss.match(re)==null){ 
+    	    return false;
+    	 }else{
+    		 return true;
+    	 }
     }
