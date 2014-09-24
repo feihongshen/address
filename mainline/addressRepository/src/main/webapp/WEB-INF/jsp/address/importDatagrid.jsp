@@ -17,6 +17,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/import.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/importAdress.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
 <script type="text/javascript">
 var hasIniUI=false;
