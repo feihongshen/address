@@ -54,7 +54,7 @@
 	    			   <textarea rows="13" cols="60" id="addresses" name="addresses" class="easyui-validatebox textbox" disabled="true"></textarea>
 	    			</td>
 	    		</tr>
-	    		<tr><td width="60px"></td><td>	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    		<tr ><td width="60px"></td><td >	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
 	    	      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a></td></tr>
 	    	</table>
 	    </form>
