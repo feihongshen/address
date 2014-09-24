@@ -7,6 +7,9 @@
                 showRemoveBtn: false,
                 showRenameBtn: false
             },
+            check: {
+				enable: true
+			},
             data: {
                 simpleData: {
                     enable: true
@@ -134,10 +137,23 @@
            
             $(function() {
                 $("#toRight").click(function() {
-                    moveNodes(zTreeObj1,zTreeObj1.getSelectedNodes()[0],zTreeObj2,leftDivStr,rightDivStr);
+                	var nodes=zTreeObj1.getCheckedNodes(true);
+                	for(var i=0;i<nodes.length;i++){
+                		var treeNode=nodes[i];
+                		if(treeNode.check_Child_State==-1){
+                    		moveNodes(zTreeObj1,treeNode,zTreeObj2,leftDivStr,rightDivStr);
+                		};
+                	}
                 });
                 $("#toLeft").click(function(){
-                    moveNodes(zTreeObj2,zTreeObj2.getSelectedNodes()[0],zTreeObj1,rightDivStr,leftDivStr);
+                	var nodes=zTreeObj2.getCheckedNodes(true);
+                	for(var i=0;i<nodes.length;i++){
+                		var treeNode=nodes[i];
+                		if(treeNode.check_Child_State==-1){
+                			moveNodes(zTreeObj2,treeNode,zTreeObj1,rightDivStr,leftDivStr);
+                		};
+                	}
+                    
 
                 });    
             });
