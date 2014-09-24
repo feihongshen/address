@@ -48,12 +48,10 @@ var setting = {
 			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 			//刷新
 			 $("#refreshAllBtn").click(function(){
-	        	getAll();
+				 var treeObj = $.fn.zTree.getZTreeObj("tree");
+	 			 var node =  treeObj.getNodeByParam("id", 1, null);
+				 treeObj.reAsyncChildNodes(node, null,null);
 	        });
-			 //未绑定
-		        $("#unbindAllBtn").click(function(){
-		       		unbind();
-		       })
 		       
 	        $("#upup").click(function(){
 	        	if(!inital){
@@ -127,15 +125,13 @@ var setting = {
         </tr>
         <tr>
           <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
-          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a>&nbsp;
-          <a href="javascript:void(0)" id="unbindAllBtn" class="easyui-linkbutton">未绑定</a></td>
+          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a></td>
         </tr>
         <tr>
           <td><div id="promtInfo"></div>
           <ul id="tree" class="ztree " style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
-    </form>
     
     <div id="dlgStation" class="easyui-dialog" title="请选择需要导出关键字的站点" style="width:500px;height:320px;">
 	 <div id="stationShow" style="overflow:auto;height:240px;"></div>
@@ -159,7 +155,6 @@ var setting = {
   </div>
   
   <div data-options="region:'center'">
-   <form method="post" >  
           <table width="100%" height="550px;" border="0" cellspacing="1" cellpadding="5" style="background:#CCC">
   <tr height="20px">
     <td width="45%"   bgcolor="#FFFFFF">原站点：
@@ -181,10 +176,10 @@ var setting = {
       </td>
     </tr>
   <tr height="90%">
-    <td bgcolor="#FFFFFF"><ul class="ztree" id="sourceStationtree" style="width:auto;height:auto; overflow:auto;">
+    <td bgcolor="#FFFFFF" style=" vertical-align: top;"><ul class="ztree" id="sourceStationtree" style="width:auto;height:auto; overflow:auto;">
               
             </ul></td>
-    <td bgcolor="#FFFFFF"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
+    <td bgcolor="#FFFFFF" style=" vertical-align: top;"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
       
     </ul></td>
     </tr>
