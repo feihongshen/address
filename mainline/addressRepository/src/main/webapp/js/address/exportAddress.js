@@ -12,11 +12,13 @@
 				success : function(list) {
 					$("#stationShow").html("");
 					if(list&&list.length>0){
+						var ul=$("<ul></ul>").addClass("ul");
 						for(var i = 0;i<list.length;i++){
 							var item = list[i];
-							$("<span style='margin-right:30px;'><input type='checkbox' name='stationIds' value='"+item.id+"'><label>"+item.name+"</label></span>")
-							.appendTo($("#stationShow"));
+							$("<li><input type='checkbox' name='stationIds' value='"+item.id+"'><label>"+item.name+"</label></li>")
+							.appendTo(ul);
 						}
+						ul.appendTo($("#stationShow"));
 					}
 				}
 			});

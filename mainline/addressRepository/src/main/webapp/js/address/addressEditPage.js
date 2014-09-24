@@ -37,6 +37,13 @@ var inital=false;
 		$('#stationId').combobox('disable');
 	});
 	function zTreeBeforeRemove(treeId, treeNode) {
+		var l = $("#level").val();
+		if(l<4){
+			$.messager.alert("提示","不可删除省、市、区！");
+			return false;
+		}
+		
+		
 		if (confirm("确认删除该节点以及以下数据？")) {
 			var flag = true;
 			$.ajax({
@@ -57,12 +64,12 @@ var inital=false;
 			 return  false;
 		 }
 		 function zTreeOnRemove(event, treeId, treeNode) {
-			   $("#tips").html("");
-				$('#panelAlias').panel('setTitle','别名管理') ;
-				$("#addressId").val("");
-				$("#aliasTips").val("");
-				$("#parentId").val("");
-				 $("#aliasUl").html("");
+			$("#tips").html("");
+			$('#panelAlias').panel('setTitle','别名管理') ;
+			$("#addressId").val("");
+			$("#aliasTips").val("");
+			("#parentId").val("");
+			$("#aliasUl").html("");
 		 } 
 		 
 		 function myBeforeClick(treeId, treeNode, clickFlag) {
