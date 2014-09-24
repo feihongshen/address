@@ -125,7 +125,7 @@ var setting = {
 <div id="dlgImport" class="easyui-dialog" title="导入关键字" style="width:500px;height:320px;padding:10px;">
  <table width="100%"  border="0" cellspacing="5" cellpadding="0">
         <tr>
-          <td> <input type="file" id="file" name="file1" onchange="takefile('file');" >
+          <td> <input type="file" id="file" name="file" onchange="takefile('file');" >
               	选择导入文件：
             <input class="easyui-filebox" onclick="fileSelected('file');"  id="tools" data-options="prompt:'请选择'" style="width:200px">
             </td>
