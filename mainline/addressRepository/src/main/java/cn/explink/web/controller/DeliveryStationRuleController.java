@@ -124,23 +124,12 @@ public class DeliveryStationRuleController extends BaseController {
 	@RequestMapping("/saveDeliveryStationRuleJson")
 	public @ResponseBody AjaxJson saveDeliveryStationRuleJson(String jsonStr,HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj=new AjaxJson();
-		//TODO GET CUSTOMER FROM USER
-		String msg = "";
 		try {
 			JSONArray array =  JSONArray.fromObject(jsonStr);
 			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig());;
 			Long customerId=getCustomerId();
 			if(list!=null){
-				for(DeliveryStationRuleVo r:list){
-					try {
-						deliveryStationRuleService.createDeliveryStationRule(r.getAddressId(), r.getStationId(), customerId, r.getRuleExpression());
-					} catch (Exception e) {
-						msg+=r.getStationId()+":"+e.getMessage();
-						aj.setSuccess(false);
-						aj.setMsg(msg);
-						e.printStackTrace();
-					}
-				}
+				deliveryStationRuleService.createDeliveryStationRuleList(list,customerId );
 			}
 		} catch (Exception e) {
 			aj.setSuccess(false);

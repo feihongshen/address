@@ -281,4 +281,11 @@ public class DeliveryStationRuleService extends RuleService {
 		
 	}
 
+	public void createDeliveryStationRuleList(List<DeliveryStationRuleVo> list,
+			Long customerId) {
+		for(DeliveryStationRuleVo r:list){
+			 createDeliveryStationRule(r.getAddressId(), r.getStationId(), customerId, r.getRule());
+		}
+	}
+
 }
