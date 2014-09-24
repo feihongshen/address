@@ -184,7 +184,7 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 	public List<BeanVo> getStationAddressTree(Long customerId,
 			String inIds) {
-		Query query = getSession().createQuery("select new cn.explink.ws.vo.BeanVo(dsr.address.id,dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id in("+inIds+") and dsr.deliveryStation.customer.id=:customerId");
+		Query query = getSession().createQuery("select new cn.explink.ws.vo.BeanVo(dsr.address.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id in("+inIds+") and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
