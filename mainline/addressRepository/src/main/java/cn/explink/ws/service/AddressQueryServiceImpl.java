@@ -71,7 +71,7 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 	private void fillStation(List<Address> addressList,Long customerId) {
 		StringBuffer ids=new StringBuffer();
 		if(deliverStationRuleService==null){
-			deliverStationRuleService = ApplicationContextUtil.getBean("deliverStationRuleService");
+			deliverStationRuleService = ApplicationContextUtil.getBean("deliveryStationRuleService");
 		}
 		if(addressList!=null&&!addressList.isEmpty()){
 			for (Address a : addressList) {
