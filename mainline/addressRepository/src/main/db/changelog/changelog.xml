@@ -97,7 +97,7 @@
 	<!-- 为中国创建PARENT_ID -->
 	<changeSet id="yinyu-2014-09-24-01" author="yinyu">
 		<sql>
-			 UPDATE ADDRESS SET PARENT_ID=-1 where ADDRESS_LEVEL=0;
+			 UPDATE ADDRESS SET PARENT_ID = -1 where ADDRESS_LEVEL=0;
 		</sql>
 	</changeSet>
 </databaseChangeLog>
