@@ -26,9 +26,10 @@ public class VendorsAging {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ADDRESS_ID")
+	@JsonIgnore
 	private Address address;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "VENDORS_ID")
 	private Vendor vendor;
 
@@ -67,6 +68,14 @@ public class VendorsAging {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public Vendor getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
 
 	

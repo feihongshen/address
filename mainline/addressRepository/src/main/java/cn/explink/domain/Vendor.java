@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "VENDORS")
 public class Vendor {
@@ -28,6 +30,7 @@ public class Vendor {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CUSTOMER_ID")
+	@JsonIgnore
 	private Customer customer;
 
 	@Column(name = "STATUS", nullable = false)
