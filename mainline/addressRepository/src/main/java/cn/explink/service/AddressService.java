@@ -1,5 +1,6 @@
 package cn.explink.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -547,5 +548,18 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		
 		return address;
 	}
+
+	public Map getAdressPromtInfo(Long customerId) {
+		Map<String, BigInteger> map=new HashMap<String, BigInteger>();
+		String keysql="select count(1)  from address_permissions p left join address a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID="+customerId;
+		BigInteger keys=(BigInteger) getSession().createSQLQuery(keysql).uniqueResult();
+		String bindSql="select count(DISTINCT  r.ADDRESS_ID) from delivery_station_rules r left join delivery_stations d on r.DELIVERY_STATION_ID=d.ID  where d.STATUS=1 and d.CUSTOMER_ID="+customerId;
+		BigInteger binds=(BigInteger) getSession().createSQLQuery(bindSql).uniqueResult();
+		map.put("keys", keys);
+		map.put("binds", binds);
+		return map;
+	}
+
+
 
 }

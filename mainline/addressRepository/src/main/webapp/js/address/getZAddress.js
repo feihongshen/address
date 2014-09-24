@@ -16,6 +16,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 }	
 
 function getUrl(treeId, treeNode) {
+	
 	var url=ctx+"/address/getAddressTree?id="+treeNode.id;
 	return url;
 }
@@ -26,6 +27,7 @@ function getStationUrl(treeId, treeNode) {
 }
 
 function beforeExpand(treeId, treeNode) {
+	
 	if (!treeNode.isAjaxing) {
 		treeNode.times = 1;
 		ajaxGetNodes(treeNode, "refresh");
@@ -99,7 +101,10 @@ function expandNode(e) {
 	}
 }
 
+
 function searchVal(valName,treeName){
+		if (event.keyCode!=13) return;  //回车键的键值为13
+		event.stopPropagation();
 		var target = $.fn.zTree.getZTreeObj(treeName);
 		//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
 	    var nodes = target.transformToArray(target.getNodes()[0].children);

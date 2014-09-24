@@ -197,6 +197,17 @@ public class AddressController extends BaseController {
 		aj.setInfo(addressImportResult.getId()+"");
 		return aj;
 	}
+	
+	
+	@RequestMapping("/getPromtInfo")
+	public @ResponseBody AjaxJson getPromtInfo( HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj=new AjaxJson();
+		Long customerId = getCustomerId();
+		Map map=addressService.getAdressPromtInfo(customerId);
+		aj.setAttributes(map);
+		aj.setSuccess(true);
+		return aj;
+	}
 
 	
 	

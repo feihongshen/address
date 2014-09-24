@@ -14,9 +14,12 @@ function initStations(){
 					$("#targetStation").append(temp);
 					
 				}
-				//楷书初始化TREE和相关数据
-				initDemoTree('sourceStation');
-				
+				//初始化TREE和相关数据
+				//initDemoTree('sourceStation');
+				$("#targetStation").append("<option value='0'></option>");
+				$("#targetStation").val(0);
+				$("#sourceStation").append("<option value='0'></option>");
+				$("#sourceStation").val(0);
 			}
 		});
 }
