@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,11 @@ import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.domain.Address;
+import cn.explink.domain.Customer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
+import cn.explink.domain.Vendor;
+import cn.explink.domain.VendorsAging;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
@@ -24,6 +28,8 @@ import cn.explink.modle.DataGridReturn;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.DeliveryStationRuleVo;
+import cn.explink.web.vo.VendorsAgingVo;
 import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.OrderVo;
 
@@ -51,7 +57,7 @@ public class DeliveryStationRuleService extends RuleService {
 		// 判断是否与已有规则冲突
 		DeliveryStationRule confilctingRule = findConflictingRule(ruleExpression, address.getDeliveryStationRules());
 		if (confilctingRule != null) {
-			String message = null;
+			String message = "无效规则";
 			if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
 				message = "已有默认规则";
 			} else {
@@ -219,5 +225,60 @@ public class DeliveryStationRuleService extends RuleService {
 				targetQuery.executeUpdate();
 			}
 		}
+
+	public List<DeliveryStationRuleVo> getAllStationRule(String addressId,Long custmerId) {
+		String sql = "SELECT DSR.ID id,S.NAME deliveryStationName   ,DSR.RULE rule,DSR.RULE_TYPE ruleType ,DSR.RULE_EXPRESSION ruleExpression  FROM DELIVERY_STATION_RULES DSR ,DELIVERY_STATIONS S WHERE DSR.ADDRESS_ID=:addressId" +
+				"  AND S.CUSTOMER_ID=:customerId AND S.ID=DSR.DELIVERY_STATION_ID";
+		Query query = getSession().createSQLQuery( sql)   .setResultTransformer(Transformers.aliasToBean(DeliveryStationRuleVo.class)) ;
+		query.setLong("addressId", Long.parseLong(addressId));
+		query.setLong("customerId",  custmerId );
+		return   query.list();
+	}
+
+	public List<VendorsAging> getAllVendorAging(String addressId, Long custmerId) {
+		Query query = getSession().createQuery("from VendorsAging where address.id=:addressId and customer.id=:custmerId ");
+		query.setLong("custmerId", custmerId);
+		query.setLong("addressId", Long.parseLong(addressId));
+		return query.list();
+	}
+   
+	public void createVendorAge(Long addressId, Long vendorId, Long customerId,
+			String aging) {
+		
+		Query query = getSession().createQuery("from VendorsAging where address.id=:addressId and customer.id=:custmerId and vendor.id=:vendorId");
+		query.setLong("custmerId", customerId);
+		query.setLong("addressId", addressId );
+		query.setLong("vendorId", vendorId );
+		List l =  query.list();
+		if(l!=null&&!l.isEmpty()){
+			throw new ExplinkRuntimeException("同地址同一个供应商不能设置两个实效！");
+		}else{
+			VendorsAging  va = new VendorsAging();
+			Address a = new Address();
+			a.setId(addressId);
+			Vendor v = new Vendor();
+			v.setId(vendorId);
+			Customer c = new Customer();
+			c.setId(customerId);
+			va.setAddress(a);
+			va.setCustomer(c);
+			va.setVendor(v);
+			va.setAging(aging);
+			this.save(va);
+		}
+		
+	}
+
+	public void saveVendorAge(List<VendorsAgingVo> list, Long customerId) {
+		for(VendorsAgingVo r:list){
+		    createVendorAge(r.getAddressId(), r.getVendorId(), customerId, r.getAging());
+		}
+	}
+
+	public void deleteVendorAge(Long id) {
+		VendorsAging va =   (VendorsAging) getSession().load(VendorsAging.class, id);
+		getSession().delete(va);
+		
+	}
 
 }

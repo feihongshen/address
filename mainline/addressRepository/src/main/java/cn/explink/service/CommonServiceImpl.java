@@ -124,9 +124,4 @@ BasicHibernateDaoSupport  {
 		T entity=(T) getSession().load(persistentClass, id);
 		getSession().delete(entity);
 	}
-
-
-
-	
-	
 }
