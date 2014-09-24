@@ -2,25 +2,38 @@ package cn.explink.web.vo;
 
 public class DeliveryStationRuleVo {
 
-	private Long id;
-
-//	private String rule;
-//
-//	private Integer ruleType;
+	private Integer id;
+ 	private String rule;
+ 	private String ruleExpression;
+ 	private Integer ruleType;
 	private String deliveryStationName;
-
-//	private Date creationTime;
-
-	public DeliveryStationRuleVo(Long id, String deliveryStationName) {
-		this.id = id;
-		this.deliveryStationName = deliveryStationName;
+	private Long stationId;
+	private Long addressId;
+	
+	public Long getAddressId() {
+		return addressId;
 	}
 
-	public Long getId() {
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
+	}
+
+	public Long getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Long stationId) {
+		this.stationId = stationId;
+	}
+
+	public DeliveryStationRuleVo( ) {
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -30,6 +43,30 @@ public class DeliveryStationRuleVo {
 
 	public void setDeliveryStationName(String deliveryStationName) {
 		this.deliveryStationName = deliveryStationName;
+	}
+
+	public String getRule() {
+		return rule;
+	}
+
+	public void setRule(String rule) {
+		this.rule = rule;
+	}
+
+	public String getRuleExpression() {
+		return ruleExpression;
+	}
+
+	public void setRuleExpression(String ruleExpression) {
+		this.ruleExpression = ruleExpression;
+	}
+
+	public Integer getRuleType() {
+		return ruleType;
+	}
+
+	public void setRuleType(Integer ruleType) {
+		this.ruleType = ruleType;
 	}
 
 	

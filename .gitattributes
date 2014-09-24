@@ -144,6 +144,7 @@ mainline/addressRepository/src/main/java/cn/explink/web/filter/ExplinkFilter.jav
 mainline/addressRepository/src/main/java/cn/explink/web/vo/AddressImportTypeEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/DeliveryStationRuleVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/SingleAddressMappingResult.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/vo/VendorsAgingVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingService.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressMappingServiceImpl.java -text
 mainline/addressRepository/src/main/java/cn/explink/ws/service/AddressQueryService.java -text
