@@ -190,7 +190,7 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 
 	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
-		Query query = getSession().createQuery("select new cn.explink.tree.ZTreeNode( dsr.address.name,dsr.address.id,dsr.address.parentId,dsr.address.addressLevel,dsr.address.path ) from DeliveryStationRule dsr where  dsr.deliveryStation.id=:stationId and dsr.deliveryStation.customer.id=:customerId");
+		Query query = getSession().createQuery("select new cn.explink.tree.ZTreeNode( dsr.address.name,dsr.address.id,dsr.address.parentId,dsr.address.addressLevel,dsr.address.path ) from DeliveryStationRule dsr where  dsr.deliveryStation.id=:stationId and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
 		query.setLong("stationId", Long.parseLong(stationId));
 		return query.list();
