@@ -19,7 +19,6 @@
 <script type="text/javascript" src="${ctx}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
 <script type="text/javascript" src="${ctx}/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/getZAddress.js"></script>
-<script type="text/javascript" src="${ctx}/js/comm.js"></script>
 <script type="text/javascript">
 	var ctx = '<%=request.getContextPath() %>';
 </script>
