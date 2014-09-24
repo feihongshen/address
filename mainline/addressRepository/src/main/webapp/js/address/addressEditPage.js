@@ -36,8 +36,7 @@ var inital=false;
 		$('#stationId').combobox('disable');
 	});
 	function zTreeBeforeRemove(treeId, treeNode) {
-		var l = $("#level").val();
-		if(l<4){
+		if(treeNode.level<4){
 			$.messager.alert("提示","不可删除省、市、区！");
 			return false;
 		}

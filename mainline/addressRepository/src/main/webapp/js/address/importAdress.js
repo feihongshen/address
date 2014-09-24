@@ -36,7 +36,15 @@ var detailRow={
 			sortable : false
 		},{
 			field : 'address1',
-			title : '关键字',
+			title : '关键字1',
+			sortable : true
+		},{
+			field : 'address2',
+			title : '关键字2',
+			sortable : true
+		},{
+			field : 'address3',
+			title : '关键字3',
 			sortable : true
 		}, {
 			field : 'deliveryStationName',
