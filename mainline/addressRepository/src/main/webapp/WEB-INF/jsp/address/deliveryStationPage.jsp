@@ -67,7 +67,7 @@
 				<tbody>
 					<tr id="stationRuleOpe"> 
 						<td colspan="3" align="left"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitRules()">保存</a>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addRule()">新增</a></td> 
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addRule()"  id="addRule">新增</a></td> 
 					</tr> 
 				</tbody>
 	    	</table>
@@ -84,7 +84,7 @@
 				<tbody>
 					<tr id="ageOpe" > 
 						<td colspan="3" align="left"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitVendorAge()">保存</a>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addAge()">新增</a></td> 
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addAge()" id="addAge">新增</a></td> 
 					</tr> 
 				</tbody>
 	    	</table>
