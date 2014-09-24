@@ -31,7 +31,7 @@ import cn.explink.ws.vo.ResultCodeEnum;
 public class AddressQueryServiceImpl extends BaseWebserviceImpl implements AddressQueryService {
 
 	private static Logger logger = LoggerFactory.getLogger(AddressQueryServiceImpl.class);
-	@Autowired
+	 
 	private DeliveryStationRuleService deliverStationRuleService;
 	
 	@Override
@@ -70,6 +70,9 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 
 	private void fillStation(List<Address> addressList,Long customerId) {
 		StringBuffer ids=new StringBuffer();
+		if(deliverStationRuleService==null){
+			deliverStationRuleService = ApplicationContextUtil.getBean("deliverStationRuleService");
+		}
 		if(addressList!=null&&!addressList.isEmpty()){
 			for (Address a : addressList) {
 				ids.append(a.getId()+",");
