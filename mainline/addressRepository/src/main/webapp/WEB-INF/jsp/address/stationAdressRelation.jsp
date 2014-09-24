@@ -7,6 +7,18 @@
 <script type="text/javascript" src="${ctx}/js/address/mutitleTree.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/stationAdressRelation.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/exportAddress.js"></script>
+<style type="text/css">
+.ul{
+	list-style:none;
+	text-align:left;
+}
+.ul>li{
+	width:120px;
+	float:left;
+	overflow:hidden;
+	padding:0px;
+}
+</style>
 <script type="text/javascript">
 var backNode;
 var inital=false;
@@ -125,9 +137,11 @@ var setting = {
       </table>
     </form>
     
-    <div id="dlgStation" class="easyui-dialog" title="请选择需要导出关键字的站点" style="width:500px;height:320px;padding:10px;">
-	 <div id="stationShow" style="overflow:auto;height:200px;padding:10px;"></div>
-	 <div style="margin:auto;text-align:center;"><a href="javascript:$.messager.alert('提示', '请选择站点！')"  id="startExport">导出</a></div>
+    <div id="dlgStation" class="easyui-dialog" title="请选择需要导出关键字的站点" style="width:500px;height:320px;">
+	 <div id="stationShow" style="overflow:auto;height:240px;"></div>
+	 <div style="margin:auto;text-align:center;">
+	 <a href="javascript:$.messager.alert('提示', '请选择站点!')" class="easyui-linkbutton" id="startExport">导出</a>
+	 </div>
 </div>
 <div id="dlgImport" class="easyui-dialog" title="导入关键字" style="width:500px;height:320px;padding:10px;">
  <table width="100%"  border="0" cellspacing="5" cellpadding="0">

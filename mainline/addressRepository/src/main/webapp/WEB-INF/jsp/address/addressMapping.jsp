@@ -72,7 +72,7 @@ $(function(){
 <body>
 <div class="easyui-tabs" id="tabs">
     <div title="执行匹配" style="padding:10px">
-      <textarea name="needMatched" id="needMatched" class="textbox" style="height:500px; width:100%" data-options="multiline:true"></textarea>
+      <textarea name="needMatched" id="needMatched" class="textbox" style="height:450px; width:100%" data-options="multiline:true"></textarea>
       </input>
       <table width="100%" border="0" cellpadding="5" cellspacing="0">
         <tr>
