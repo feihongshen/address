@@ -2,6 +2,7 @@ package cn.explink.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -131,8 +135,6 @@ public class AddressController extends BaseController {
 		return addressService.getStationAddressTree(customerId,parentId);
 	}
 	
-	
-	
 	@RequestMapping("/getZTree")
 	public @ResponseBody List<ZTreeNode> getZTree(String name,  Integer band) {
 		Long customerId = getCustomerId();
@@ -203,7 +205,7 @@ public class AddressController extends BaseController {
 			importType = AddressImportTypeEnum.init.getValue();
 		}
 		InputStream in = null;
-		AjaxJson aj=new AjaxJson();
+		AjaxJson<AddressImportDetail> aj=new AjaxJson<AddressImportDetail>();
 		try {
 			in = file.getInputStream();
 			AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
@@ -214,6 +216,12 @@ public class AddressController extends BaseController {
 			}
 			aj.setSuccess(true);
 			aj.setMsg(addressImportResult.getId()+"");
+			if(addressImportResult.getAddressImportDetails()!=null){
+				for(AddressImportDetail a:addressImportResult.getAddressImportDetails()){
+					a.setAddressImportResult(null);
+				}
+			}
+			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
 			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
 		} catch (IOException e) {
 			aj.setSuccess(false);
@@ -221,7 +229,6 @@ public class AddressController extends BaseController {
 		}
 		return aj;
 	}
-	
 	
 	@RequestMapping("/getPromtInfo")
 	public @ResponseBody AjaxJson getPromtInfo( HttpServletRequest request, HttpServletResponse response) {
@@ -233,7 +240,16 @@ public class AddressController extends BaseController {
 		return aj;
 	}
 
-	
+	@RequestMapping("/getImportDetail")
+	public @ResponseBody List<AddressImportDetail> getImportDetail( HttpServletRequest request, HttpServletResponse response) {
+		Set<AddressImportDetail> set = (HashSet<AddressImportDetail>)request.getSession().getAttribute("list");
+		if(set!=null){
+			return new ArrayList<AddressImportDetail> ( (HashSet)request.getSession().getAttribute("list"));
+		}else{
+			return new ArrayList<AddressImportDetail> ();
+		}
+	}
+
 	
 	/**
 	 * 查询地址导入结果
@@ -272,9 +288,7 @@ public class AddressController extends BaseController {
 		addressImportResult.setId(Long.parseLong(request.getParameter("resultId")));
 		addressImportDetail.setAddressImportResult(addressImportResult);
 		HqlGenerateUtil.installHql(cq, addressImportDetail, request.getParameterMap());
-		
 		return this.addressImportService.getDataGridReturn(cq, true);
-		
 	}
 	
 	@RequestMapping("/subdatagrid")
@@ -575,55 +589,5 @@ public class AddressController extends BaseController {
 		}
 		return result;
 	}
-
-	public LuceneService getLuceneService() {
-		return luceneService;
-	}
-
-	public void setLuceneService(LuceneService luceneService) {
-		this.luceneService = luceneService;
-	}
-
-	public AddressService getAddressService() {
-		return addressService;
-	}
-
-	public void setAddressService(AddressService addressService) {
-		this.addressService = addressService;
-	}
-
-	public AddressImportService getAddressImportService() {
-		return addressImportService;
-	}
-
-	public void setAddressImportService(AddressImportService addressImportService) {
-		this.addressImportService = addressImportService;
-	}
-
-	public AddressImportResultService getAddressImportResultService() {
-		return addressImportResultService;
-	}
-
-	public void setAddressImportResultService(
-			AddressImportResultService addressImportResultService) {
-		this.addressImportResultService = addressImportResultService;
-	}
-
-	public DeliveryStationService getDeliveryStationService() {
-		return deliveryStationService;
-	}
-
-	public void setDeliveryStationService(
-			DeliveryStationService deliveryStationService) {
-		this.deliveryStationService = deliveryStationService;
-	}
-
-	public DelivererService getDelivererService() {
-		return delivererService;
-	}
-
-	public void setDelivererService(DelivererService delivererService) {
-		this.delivererService = delivererService;
-	}
-	
+	 
 }

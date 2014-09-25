@@ -1,5 +1,6 @@
 package cn.explink.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,15 +60,25 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 	public List<Address> getChildAddress(Long customerId, Long parentId) {
-		StringBuilder hql = new StringBuilder("select new cn.explink.domain.Address(a.id, a.name, a.addressLevel, a.parentId, a.path) from Address a, AddressPermission p");
-		hql.append(" where a.parentId = :parentId");
-		hql.append(" and a.id = p.addressId");
-		hql.append(" and p.customerId = :customerId");
-		Query query = getSession().createQuery(hql.toString());
-//		Criteria criteria = getSession().createCriteria(Address.class);
-		query.setLong("parentId", parentId);
-		query.setLong("customerId", customerId);
-		return query.list();
+		
+		String bindSql=" select DISTINCT  r.ADDRESS_ID id from DELIVERY_STATION_RULES r , DELIVERY_STATIONS d ,ADDRESS a where a.ID=r.ADDRESS_ID and a.PARENT_ID:=parentId r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID=:customerId";
+		List<Integer> binds=(List<Integer>) getSession().createSQLQuery(bindSql)
+				.setLong("customerId", customerId)
+				.setLong("parentId", parentId).list();
+		if(binds!=null&&!binds.isEmpty()){
+			StringBuilder hql = new StringBuilder("from Address(a.id, a.name, a.addressLevel, a.parentId, a.path) from Address a, AddressPermission p");
+			hql.append(" where a.parentId = :parentId");
+			hql.append(" and a.id = p.addressId");
+			hql.append(" and a.id in:idList ");
+			hql.append(" and p.customerId = :customerId");
+			Query query = getSession().createQuery(hql.toString());
+			query.setLong("parentId", parentId);
+			query.setParameterList("idList", binds);
+			query.setLong("customerId", customerId);
+			return query.list();
+		}else{
+			return new ArrayList<Address>();
+		}
 	}
 	//zTree 异步方法不能使用这个方法，这个事用来load data for initalize tree
 	public List<ZTreeNode> getAsyncAddress(Long customerId, Long parentId,String ids) {

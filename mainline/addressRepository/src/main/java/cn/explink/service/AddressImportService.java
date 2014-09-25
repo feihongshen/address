@@ -258,33 +258,44 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   Address a1 = null;
     		   Address a2 = null;
     		   Address a3 = null;
+    		   boolean isSaved = false;//一次导入只能保存一个关键字
+    		   
+    		   
     		   //处理第一关键字
     		   a1 = addressMap.get(d.getId()+"-"+detail.getAddress1());
     		   if(a1==null){//为空则创建并绑定
     			   a1 = createAndBind(d,detail.getAddress1(),customerId);
     			   addressMap.put(d.getId()+"-"+a1.getName(), a1);
+    			   isSaved = true;
     		   }
     		   bindAddress=a1;
 
     		   //处理第二关键字
     		   if(StringUtils.isNotBlank(detail.getAddress2())){
-    			    a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
+    			   if(isSaved){
+    				   throw new ExplinkRuntimeException("父节点不存在");
+    			   }
+    			   a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
         		   if(a2==null){//为空则创建并绑定
         			   a2 = createAndBind(a1,detail.getAddress2(),customerId);
         			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
+        			   isSaved = true;
         		   }
         		   bindAddress=a2;
-    		   }
+    		   } 
     		   
     		   //处理第三个关键字
     		   if(StringUtils.isNotBlank(detail.getAddress3())){
-    			    a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
+    			   if(isSaved){
+    				   throw new ExplinkRuntimeException("父节点不存在");
+    			   }
+    			   a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
         		   if(a3==null){//为空则创建并绑定
         			   a3 = createAndBind(a2,detail.getAddress3(),customerId);
         			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
         		   }
         		   bindAddress=a3;
-    		   }
+    		   } 
     		   if(importType==AddressImportTypeEnum.init.getValue()){//初始化导入：绑定站点和小件员
     			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
     	    			  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
@@ -382,7 +393,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	   permission.setAddressId(a1.getId());
 	   permission.setCustomerId(customerId);
 	   addressPermissionDao.save(permission);
-		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(a1.getId()));
+	   scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(a1.getId()));
 	   return a1;
 	}
 

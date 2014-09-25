@@ -8,16 +8,13 @@ import javax.jws.WebService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.explink.domain.Address;
 import cn.explink.domain.ClientApplication;
 import cn.explink.domain.DelivererRule;
 import cn.explink.service.AddressService;
 import cn.explink.service.DelivererRuleService;
-import cn.explink.service.DelivererService;
 import cn.explink.service.DeliveryStationRuleService;
-import cn.explink.tree.ZTreeNode;
 import cn.explink.util.AddressUtil;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.ws.vo.AddressQueryResult;
@@ -48,7 +45,7 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 		}
 		AddressService addressService = ApplicationContextUtil.getBean("addressService");
 		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
-		DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
+//		DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
 		try {
 			List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId);
 			fillStation(addressList,clientApplication.getCustomerId());

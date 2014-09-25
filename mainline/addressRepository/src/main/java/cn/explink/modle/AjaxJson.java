@@ -1,5 +1,7 @@
 package cn.explink.modle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,16 +10,25 @@ import java.util.Map;
  * @author
  * 
  */
-public class AjaxJson {
+public class AjaxJson<T> {
 
 	private boolean success = true;// 是否成功
 	private String msg = "操作成功";// 提示信息
 	private String info="通过验证";
 	private String status="y";
+	private  List<T> list = new ArrayList<T> ();
 	private Object obj = null;// 其他信息
 	private Map<String, Object> attributes;// 其他参数
 	public Map<String, Object> getAttributes() {
 		return attributes;
+	}
+
+	public List<T> getList() {
+		return list;
+	}
+
+	public void setList(List<T> list) {
+		this.list = list;
 	}
 
 	public void setAttributes(Map<String, Object> attributes) {
