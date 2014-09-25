@@ -11,6 +11,7 @@ var resultRow=
 		pagination : true,
 		pageList : [ 10, 20, 30],
 		sortOrder : 'asc',
+		sort:'importDate',
 		rownumbers : true,
 		singleSelect : true,
 		fitColumns : true,

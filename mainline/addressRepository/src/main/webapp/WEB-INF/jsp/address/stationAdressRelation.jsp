@@ -48,7 +48,8 @@ var setting = {
 			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 			//刷新
 			 $("#refreshAllBtn").click(function(){
-				 getAll();
+				 ids=getAllNodes();
+				 getAll(ids);
 	        });
 		       
 	        $("#upup").click(function(){
@@ -75,11 +76,11 @@ var setting = {
 
     });
 		 
-		 function getAll(){
+		 function getAll(ids){
 			 $.ajax({
 			 	 type: "POST",
 			 		url:ctx+"/address/getAddressTree",
-			 		data:{isBind:true},
+			 		data:{'ids':ids},
 			 		success:function(optionData){
 			 	        var t = $("#tree");
 			 	        zTree = $.fn.zTree.init(t, setting, optionData);
@@ -159,10 +160,10 @@ var setting = {
       </td>
     </tr>
   <tr height="90%">
-    <td bgcolor="#FFFFFF" style=" vertical-align: top;"><ul class="ztree" id="sourceStationtree" style="width:auto;height:auto; overflow:auto;">
+    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul style="overflow-y: scroll"  class="ztree" id="sourceStationtree" >
               
             </ul></td>
-    <td bgcolor="#FFFFFF" style=" vertical-align: top;"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
+    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
       
     </ul></td>
     </tr>

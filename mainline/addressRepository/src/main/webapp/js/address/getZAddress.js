@@ -235,6 +235,26 @@ function getPromtInfo(){
 }
 
 
+function getAllChildrenNodes(treeNode,result){
+	if (treeNode['isParent']) {
+		var childrenNodes = treeNode.children;
+		if (childrenNodes) {
+			for (var i = 0; i < childrenNodes.length; i++) {
+				result += ',' + childrenNodes[i].id;
+				result = getAllChildrenNodes(childrenNodes[i], result);
+			}
+		}
+	}
+	return result;
+}
 
+function getAllNodes(){
+	 var nodes = zTree.getNodes();  
+	 var result=nodes[0].id;
+	 result=getAllChildrenNodes(nodes[0],result);
+	 //result=result.substring(1, result.length);
+	 return result;
+	
+}
 
 

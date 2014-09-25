@@ -7,6 +7,10 @@ function initStations(){
 		 type: "POST",
 			url:ctx+"/deliveryStationRule/station4combobox",
 			success:function(optionData){
+				//初始化TREE和相关数据
+				//initDemoTree('sourceStation');
+				$("#targetStation").append("<option value='0'></option>");
+				$("#sourceStation").append("<option value='0'></option>");
 				for(var i=0;i<optionData.length;i++){
 					var option=$("  <option value="+optionData[i]['id']+">"+optionData[i]['text']+"</option>");
 					$("#sourceStation").append(option);
@@ -14,14 +18,8 @@ function initStations(){
 					$("#targetStation").append(temp);
 					
 				}
-				//初始化TREE和相关数据
-				//initDemoTree('sourceStation');
-				$("#targetStation").append("<option value='0'></option>");
 				$("#targetStation").val(0);
-				
-				$("#sourceStation").append("<option value='0'></option>");
 				$("#sourceStation").val(0);
-				
 				
 			}
 		});
