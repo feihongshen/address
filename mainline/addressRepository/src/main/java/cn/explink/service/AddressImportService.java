@@ -346,6 +346,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   }
     		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
     				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+    				detail.setAddressId(bindAddress.getId());
     		   }
     	   }
        }else{
