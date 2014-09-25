@@ -1,5 +1,6 @@
 package cn.explink.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +47,14 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 	public List<Address> getAddressByIdList(List<Long> idList) {
-		String hql = "from Address where id in :idList";
-		Query query = getSession().createQuery(hql);
-		query.setParameterList("idList", idList);
-		return query.list();
+		if(idList!=null&&!idList.isEmpty()){
+			String hql = "from Address where id in :idList";
+			Query query = getSession().createQuery(hql);
+			query.setParameterList("idList", idList);
+			return query.list();
+		}else{
+			return new ArrayList<Address>();
+		}
 	}
 
 	public List<Address> getChildAddress(Long customerId, Long parentId) {
