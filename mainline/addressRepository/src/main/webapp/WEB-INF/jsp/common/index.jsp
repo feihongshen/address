@@ -217,7 +217,7 @@
 				keyword : $("#keyword").val(),
 				id : row.id
 			};
-			dealAjaxOpration(surl, $.param(paras), "setData", false);
+			//dealAjaxOpration(surl, $.param(paras), "setData", false);
 		}
 		function saveAdmin() {
 			if ($('#aId').val() == "" && $('#password').val() == "") {
