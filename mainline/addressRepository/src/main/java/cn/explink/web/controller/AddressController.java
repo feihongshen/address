@@ -272,6 +272,10 @@ public class AddressController extends BaseController {
 	
 	@RequestMapping("/subdatagrid")
 	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		if(StringUtils.isBlank(dataGrid.getSort())){
+			dataGrid.setSort("importDate");
+		}
+		
 		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
 		String begin=request.getParameter("importDate_begin");
 		String end=request.getParameter("importDate_end");
