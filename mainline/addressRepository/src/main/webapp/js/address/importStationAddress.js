@@ -7,7 +7,7 @@ var resultRow=
 		loadMsg : '数据加载中...',
 		pageSize : 100000,
 		pagination : true,
-		pageList : [ 100, 200, 300 ],
+		pageList : [ 50, 100, 200 ],
 		sortOrder : 'asc',
 		rownumbers : false,
 		singleSelect : true,
@@ -52,7 +52,7 @@ var resultRow=
 		$('#stationList').datagrid(resultRow);
 		$("#file").hide();
 		$("#startImport").click(function(){
-			ajaxFileUpload();
+			ajaxFileUpload('file');
 		});
 		$('#dlg').dialog('close');
 	});
@@ -96,9 +96,14 @@ var resultRow=
 	//文件上传
 	function ajaxFileUpload(id) {
 		$("#startImport").attr('disabled', true);
+		var file = document.getElementById(id).files[0];
+		if(file==null){
+			$.messager.alert("提示","请选择文件！");
+			return ;
+		}
 		var stationId= $("#stationDlgId").val();
 		$.ajaxFileUpload({
-			url : ctx+'/address/importAddress?id='+id,
+			url : ctx+'/address/importAddress?stationId='+stationId+"&importType=2",
 			secureuri : false,
 			data:{importType:2,stationId:stationId},
 			fileElementId : 'file',
@@ -108,7 +113,7 @@ var resultRow=
 					$("#tools").val('上传成功'+data.info);
 					$("#startImport").attr('disabled', false);
 				} else {
-					alert(AjaxJson.msg);
+					$.messager.alert("提示",data.info);
 				}
 			},
 			error : function(AjaxJson, status, e) {
