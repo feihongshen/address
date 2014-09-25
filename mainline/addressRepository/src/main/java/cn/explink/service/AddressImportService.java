@@ -266,7 +266,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   if(StringUtils.isNotBlank(detail.getAddress2())){
     			    a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
         		   if(a2==null){//为空则创建并绑定
-        			   a2 = createAndBind(a1,detail.getAddress1(),customerId);
+        			   a2 = createAndBind(a1,detail.getAddress2(),customerId);
         			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
         		   }
         		   bindAddress=a2;
@@ -276,7 +276,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   if(StringUtils.isNotBlank(detail.getAddress3())){
     			    a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
         		   if(a3==null){//为空则创建并绑定
-        			   a3 = createAndBind(a2,detail.getAddress1(),customerId);
+        			   a3 = createAndBind(a3,detail.getAddress3(),customerId);
         			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
         		   }
         		   bindAddress=a3;
