@@ -9,7 +9,9 @@ var inital=false;
 			showRenameBtn : false
 		},
 		data : {
-			 
+			simpleData: {
+				enable: true
+			}
 		},
 		callback : {
 			beforeClick : myBeforeClick,
@@ -19,6 +21,7 @@ var inital=false;
 			beforeDrag:function(){return false;}
 		}
 	};
+	 
 	
 	$(document).ready(function() {
 		 getAll();
@@ -171,18 +174,9 @@ var inital=false;
 				async:false,
 				success : function(resp) {
 					if(resp.success){
-						 $.ajax({
-						 	 type: "POST",
-						 		url:ctx+"/address/getStationAddressTree",
-						 		data:{id:parentId},
-						 		async:false,
-						 		success:function(optionData){
-						 			 var treeObj = $.fn.zTree.getZTreeObj("tree");
-						 			 var node =  treeObj.getNodeByParam("id", parentId, null);
-						 			treeObj.removeChildNodes(node);
-						 			 newNodes = treeObj.addNodes(node, optionData);
-						 		}
-						 	});
+						 var treeObj = $.fn.zTree.getZTreeObj("tree");
+			 			 var node =  treeObj.getNodeByParam("id", parentId, null);
+			 			 treeObj.reAsyncChildNodes(node, "refresh");
 						 clearForm();
 					}else{
 						$.messager.alert("提示",resp.msg);
