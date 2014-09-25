@@ -7,7 +7,9 @@ var mySettings = {
 		url : getStationUrl
 	}, 
 	data : {
-		 
+		simpleData: {
+			enable: true
+		}
 	},
 	callback : {
 		beforeClick : myBeforeClick,
@@ -217,6 +219,10 @@ var mySettings = {
     		$.messager.alert("提示",'请选择关键字！');
     		return ;
     	}
+    	if($("#level").val()<4){
+    		$.messager.alert("提示",'省/市/区不允许关联站点');
+    		return ;
+    	}
     	var flag = true;
     	var msg = "";
     	$("#stationRule>tbody>tr[status='add']").each(function(){
@@ -256,6 +262,10 @@ var mySettings = {
     	var addressId= $("#addressId").val();
     	if(addressId==""){
     		$.messager.alert("提示",'请选择关键字！');
+    		return ;
+    	}
+    	if($("#level").val()<4){
+    		$.messager.alert("提示",'省/市/区不允许关联站点');
     		return ;
     	}
     	var flag = true;
