@@ -55,6 +55,7 @@
 	<div data-options="region:'center'" style="border:0px;">
 	 <div class="easyui-panel" title="关联站点-" id="relStation" style="padding-left:-1px;margin-bottom:10px;min-height:180px;width:auto">
 	    	<input type="hidden" id="addressId" />
+	    	<input type="hidden" id="level" />
 	    	<table id="stationRule" class="table table-bordered" >
 		    	<thead> 
 					<tr> 
