@@ -62,7 +62,7 @@ var hasIniUI=false;
 </head>
 <body>
 <div  id="tabs">
-    <div title="关键词导入" style="padding:10px;height: 500px">
+    <div title="关键词导入" style="padding:10px;height: 600px">
       <table width="100%"  border="0" cellspacing="5" cellpadding="0">
       <input type="file" id="file" name="file" onchange="takefile();" >
         <tr>
@@ -77,7 +77,7 @@ var hasIniUI=false;
       <table width="100%"  border="0" style="height:200px;" cellpadding="8" id="importAddressList" cellspacing="1" bgcolor="#CCCCCC">
       </table>
     </div>
-    <div title="历史导入记录" style="padding:10px;height: 500px">
+    <div title="历史导入记录" style="padding:10px;height: 600px">
     <table id="commissionBalanceListtb" width="100%" border="0" cellspacing="5" cellpadding="0">
         <tr>
           <td>导入日期：
@@ -88,7 +88,7 @@ var hasIniUI=false;
           <td></td>
         </tr>
       </table>
-      <div toolbar="#commissionBalanceListtb" id="addressImportResult" width="100%" border="0" cellpadding="8"  cellspacing="1" bgcolor="#CCCCCC">
+      <div  id="addressImportResult" width="100%" border="0" cellpadding="8"  cellspacing="1" bgcolor="#CCCCCC">
       </div>
     </div>
   </div>

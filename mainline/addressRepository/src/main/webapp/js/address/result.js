@@ -4,12 +4,12 @@ var resultRow=
 		idField : 'id',
 		title : '关键词数据',
 		url : 'subdatagrid?',
-		fit : true,
-		height : 400,
+		fit : false,
+		height : 500,
 		loadMsg : '数据加载中...',
-		pageSize : 100000,
+		pageSize : 10,
 		pagination : true,
-		pageList : [ 100, 200, 300 ],
+		pageList : [ 10, 20, 30],
 		sortOrder : 'asc',
 		rownumbers : true,
 		singleSelect : true,
@@ -50,7 +50,7 @@ var resultRow=
 					width : 50,
 					sortable : true,
 					formatter : function(value, rec, index) {
-						return new Date(value).Format('yyyy-MM-dd');
+						return new Date(value).Format('yyyy-MM-dd hh:mm:ss');
 					}
 				}
 
