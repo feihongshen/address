@@ -386,7 +386,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 			return false;
 		}else{
 			if(StringUtils.isBlank(detail.getAddress1())){
-				flag = false;
+				 throw new ExplinkRuntimeException("关键字为空！");
 			}else{
 				if(StringUtils.isBlank(detail.getAddress2())&&StringUtils.isNotBlank(detail.getAddress3())){
 					flag = false;
