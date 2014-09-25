@@ -209,6 +209,7 @@ public class AddressController extends BaseController {
 				return aj;
 			}
 			aj.setSuccess(true);
+			aj.setMsg(addressImportResult.getId()+"");
 			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
 		} catch (IOException e) {
 			aj.setSuccess(false);
@@ -543,8 +544,8 @@ public class AddressController extends BaseController {
 					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
 				}catch(Exception e){
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
-					logger.info(e.getMessage());
 					detail.setMessage(e.getMessage());
+					logger.info(e.getMessage());
 				}
               
 			}
