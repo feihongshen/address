@@ -20,6 +20,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,17 +202,18 @@ public class AddressController extends BaseController {
 		AjaxJson aj=new AjaxJson();
 		try {
 			in = file.getInputStream();
+			AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
+			if(null==addressImportResult){
+				aj.setSuccess(false);
+				aj.setMsg("数据异常");
+				return aj;
+			}
+			aj.setSuccess(true);
+			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
-		if(null==addressImportResult){
 			aj.setSuccess(false);
-			aj.setMsg("数据异常");
-			return aj;
+			aj.setInfo("导入文件异常！");
 		}
-		aj.setSuccess(true);
-		aj.setInfo(addressImportResult.getId()+"");
 		return aj;
 	}
 	
@@ -541,7 +543,7 @@ public class AddressController extends BaseController {
 					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
 				}catch(Exception e){
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
-					e.printStackTrace();
+					logger.info(e.getMessage());
 					detail.setMessage(e.getMessage());
 				}
               
