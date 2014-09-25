@@ -143,8 +143,11 @@
                 	var nodes=zTreeObj1.getCheckedNodes(true);
                 	for(var i=0;i<nodes.length;i++){
                 		var treeNode=nodes[i];
-                		if(treeNode.check_Child_State==-1){
+                		if(treeNode.check_Child_State=!1){
+                			var test=zTreeObj1.getNodeByParam("id",treeNode.id);
+                			if(test){
                     		moveNodes(zTreeObj1,treeNode,zTreeObj2,leftDivStr,rightDivStr);
+                			}
                 		};
                 	}
                 });
@@ -155,8 +158,11 @@
                 	var nodes=zTreeObj2.getCheckedNodes(true);
                 	for(var i=0;i<nodes.length;i++){
                 		var treeNode=nodes[i];
-                		if(treeNode.check_Child_State==-1){
+                		if(treeNode.check_Child_State!=1){
+                			var test=zTreeObj2.getNodeByParam("id",treeNode.id);
+                			if(test){
                 			moveNodes(zTreeObj2,treeNode,zTreeObj1,rightDivStr,leftDivStr);
+                			}
                 		};
                 	}
                     
