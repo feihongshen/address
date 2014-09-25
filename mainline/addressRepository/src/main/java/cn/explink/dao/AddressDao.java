@@ -33,7 +33,8 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 	public List<Address> getBaseAddress(int start, int end) {
-		String sql = "from Address where addressLevel <= 3";
+	//	String sql = "from Address where addressLevel <= 3";
+		String sql = "from Address where status = 1";
 		Query query = getSession().createQuery(sql);
 		query.setFirstResult(start);
 		query.setMaxResults(end);
