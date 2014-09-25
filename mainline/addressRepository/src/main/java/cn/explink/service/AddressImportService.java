@@ -673,7 +673,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 		List<Long> addressIdList = new ArrayList<Long>();
 		for (AddressImportDetail detail : details) {
 			Integer i=AddressImportDetailStatsEnum.failure.getValue();
-			if (i != detail.getStatus()) {
+			if (i != detail.getStatus()&&null!=detail.getAddressId()) {
 				addressIdList.add(detail.getAddressId());
 			}
 		}
