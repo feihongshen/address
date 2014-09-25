@@ -501,6 +501,12 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	
 	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {
 		List<ZTreeNode> list=getAsyncAddress(customerId, parentId,null);
+		appendStation(customerId, list);
+		
+		return list;
+	}
+
+	public void appendStation(Long customerId, List<ZTreeNode> list) {
 		StringBuffer ids=new StringBuffer();
 		for (ZTreeNode zTreeNode : list) {
 			ids.append(zTreeNode.getId()+",");
@@ -526,8 +532,6 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				}
 			}
 		}
-		
-		return list;
 	}
 
 	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {

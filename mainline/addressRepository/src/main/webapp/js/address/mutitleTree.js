@@ -143,7 +143,7 @@
                 	var nodes=zTreeObj1.getCheckedNodes(true);
                 	for(var i=0;i<nodes.length;i++){
                 		var treeNode=nodes[i];
-                		if(treeNode.check_Child_State=!1){
+                		if(treeNode.check_Child_State!=1){
                 			var test=zTreeObj1.getNodeByParam("id",treeNode.id);
                 			if(test){
                     		moveNodes(zTreeObj1,treeNode,zTreeObj2,leftDivStr,rightDivStr);

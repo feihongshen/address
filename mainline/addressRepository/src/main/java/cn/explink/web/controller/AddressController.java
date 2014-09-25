@@ -118,7 +118,11 @@ public class AddressController extends BaseController {
 	@RequestMapping("/getAddressTree")
 	public @ResponseBody List<ZTreeNode>  getAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "ids", required = false) String ids) {
 		Long customerId = getCustomerId();
-		return addressService.getAsyncAddress(customerId,parentId,ids);
+		List<ZTreeNode> list =addressService.getAsyncAddress(customerId,parentId,ids);
+		if(StringUtils.isNotBlank(ids)){
+			addressService.appendStation(customerId, list);
+		}
+		return list;
 	}
 	
 	@RequestMapping("/getStationAddressTree")

@@ -138,7 +138,7 @@ var setting = {
 </div>
   </div>
   
-  <div data-options="region:'center'">
+  <div data-options="region:'center'" >
           <table width="100%" height="550px;" border="0" cellspacing="1" cellpadding="5" style="background:#CCC">
   <tr height="20px">
     <td width="45%"   bgcolor="#FFFFFF">原站点：
@@ -159,8 +159,8 @@ var setting = {
       <input name="textfield5" type="text" id="targetStrVal" size="15" onkeydown="searchVal('targetStrVal','targetStationtree')" />
       </td>
     </tr>
-  <tr height="90%">
-    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul style="overflow-y: scroll"  class="ztree" id="sourceStationtree" >
+  <tr height="90%" s>
+    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul   class="ztree" id="sourceStationtree" >
               
             </ul></td>
     <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
