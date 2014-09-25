@@ -12,13 +12,13 @@
 <div class="easyui-layout" style="height:560px;">
 <div data-options="region:'center'" style="border:0px;">
 <table width="80%"  border="1"  cellpadding="8" id="stationList" cellspacing="1" bgcolor="#CCCCCC"></table>
- <div id="dlg" class="easyui-dialog" title="导入地址模板" style="width:400px;height:200px;padding:10px;">
+ <div id="dlg" class="easyui-dialog" title="导入地址模板" style="width:600px;height:400px;padding:10px;">
     <input type="hidden" id="stationDlgId" value=""/>
 	 <table width="100%"  border="0" cellspacing="5" cellpadding="0">
         <tr>
           <td> <input type="file" id="file" name="file" onchange="takefile('file');" />
               	选择导入文件：
-            <input class="easyui-filebox" onclick="fileSelected('file');" name="tools" id="tools" data-options="prompt:'请选择'" style="width:200px"/>
+            <input class="easyui-filebox" onclick="fileSelected('file');" name="tools" id="tools" data-options="prompt:'请选择'" style="width:400px"/>
             </td>
         </tr>
         <tr>
