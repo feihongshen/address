@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -60,7 +61,6 @@ import cn.explink.ws.vo.OrderVo;
 public class AddressController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(AddressController.class);
-
 	@Autowired
 	private LuceneService luceneService;
 
@@ -273,15 +273,21 @@ public class AddressController extends BaseController {
 	@RequestMapping("/subdatagrid")
 	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
-		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
 		String begin=request.getParameter("importDate_begin");
 		String end=request.getParameter("importDate_end");
+		try {
 		if(StringUtils.isNotBlank(begin)){
-			cq.ge("importDate", begin);
+			Date beginDate = DateUtils.parseDate(begin, "yyyy-MM-dd");
+			cq.ge("importDate", beginDate);
 		}
 		if(StringUtils.isNotBlank(end)){
-			cq.le("importDate", end);
+			Date endDate=DateUtils.parseDate(end, "yyyy-MM-dd");
+			cq.le("importDate", endDate);
 		}
+		} catch (java.text.ParseException e) {
+			logger.error(e.getMessage());
+		}
+		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
 		return this.addressImportResultService.getDataGridReturn(cq, true);
 		
 	}
