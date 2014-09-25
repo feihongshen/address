@@ -29,9 +29,12 @@ var inital=false;
 		 //折叠
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
+		 
 		 $("#refreshAllBtn").click(function(){
-			 getAll();
+			 ids=getAllNodes();
+			 getAll(ids);
 		 });
+		  
 		 //未绑定
 	        $("#unbindAllBtn").bind("click",function(){
 	        	unbind();

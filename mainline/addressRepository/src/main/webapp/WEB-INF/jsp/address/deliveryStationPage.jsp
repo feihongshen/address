@@ -33,7 +33,7 @@
 </style>
 </head>
 <body> 
-<div class="easyui-layout" style="height:500px;">
+<div class="easyui-layout" style="height:540px;">
 	 <div data-options="region:'west',split:true" title="条件搜索"  style="width:450px;">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>

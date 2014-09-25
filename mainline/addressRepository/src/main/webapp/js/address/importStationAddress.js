@@ -112,6 +112,20 @@ var resultRow=
 				if (data.success) {
 					$("#tools").val('上传成功'+data.info);
 					$("#startImport").attr('disabled', false);
+					$.ajax({
+						type : "POST",
+						url : ctx+"/address/getImportDetail",
+						 async:false,
+						 success : function(resp) {
+						flag = resp.success;
+						if (resp != null && resp.length > 0) {
+							$("#resultTable").html("");
+							$("#resultTable").append(generateResult(resp));
+						}
+					}
+					 });
+					
+					 
 				} else {
 					$.messager.alert("提示",data.info);
 				}
@@ -122,4 +136,24 @@ var resultRow=
 		});
 		return false;
 
+	}
+	function generateResult(list){
+		var html = "<thead><tr><td>省份</td><td>城市</td><td>区域</td><td>关键字1-关键字2-关键字3</td><td>站点</td><td>错误原因</td></tr><thead>";
+		for(var i = 0;i<list.length;i++){
+			var item = list[i];
+			html+="<tbody>";
+			if(item.status=1){
+				html+="<tr><td>"
+					+(item.province==null?"":item.province)+"</td><td>"
+					+(item.city==null?"":item.city)+"</td><td>"
+				    +(item.district==null?"":item.district)+"</td><td>"
+				    +(item.address1==null?"":item.address1)+"-"
+				    +(item.address2==null?"":item.address2)+"-"
+				    +(item.address3==null?"":item.address3)+"</td><td>"
+				    +(item.deliveryStationName==null?"":item.deliveryStationName)+"</td><td>"
+				    +(item.message==null?"":item.message)+"</td>";
+			}
+			html+="</tbody>";
+		}
+		return html;
 	}

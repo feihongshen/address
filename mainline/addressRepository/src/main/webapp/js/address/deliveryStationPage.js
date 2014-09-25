@@ -23,9 +23,10 @@ var mySettings = {
 		 //折叠
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
-		 $("#refreshAllBtn").click(function(){
-			 getAll();
-		 });
+			 $("#refreshAllBtn").click(function(){
+				 ids=getAllNodes();
+				 getAll(ids);
+			 });
 		 $.ajax({
 			 	type: "POST",
 				url:ctx+"/station/listAll",
