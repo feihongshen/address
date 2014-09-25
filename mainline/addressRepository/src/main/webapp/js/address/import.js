@@ -14,7 +14,7 @@ function ajaxFileUpload() {
 				$("#tools").val('上传成功');
 				$('#importAddressList').datagrid(
 						{
-							url : 'datagrid?resultId='+data.info,
+							url : 'datagrid?resultId='+data.msg,
 							pageNumber : 1
 						});
 				$("#startImport").attr('disabled', false);
