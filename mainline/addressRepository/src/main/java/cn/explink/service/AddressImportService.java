@@ -294,7 +294,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	  					dsr.setRule("");
     	  					dsr.setRuleExpression("");
     	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-    	  					deliveryStationRuleService.addRule(dsr);
+    	  					deliveryStationRuleService.addRule(dsr,customerId);
     	    			  }
     	    		   }
     	    		   if(StringUtils.isNotBlank(detail.getDelivererName())){//绑定小件员
@@ -307,7 +307,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   					dr.setRule("");
     		   					dr.setRuleExpression("");
     		   					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-    		   					delivererRuleService.addRule(dr);
+    		   					delivererRuleService.addRule(dr,customerId);
     		   				}else{
     		   					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
     		   					detail.setMessage("小件员不存在");
@@ -330,7 +330,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	  					dsr.setRule("");
     	  					dsr.setRuleExpression("");
     	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-    	  					deliveryStationRuleService.addRule(dsr);
+    	  					deliveryStationRuleService.addRule(dsr,customerId);
     	    			  }
     	    		   }
     		   }
@@ -416,7 +416,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 					dsr.setRule("");
 					dsr.setRuleExpression("");
 					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-					deliveryStationRuleService.addRule(dsr);
+					deliveryStationRuleService.addRule(dsr,customerId);
 				}else{
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 					detail.setMessage("站点不存在");
@@ -435,7 +435,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 					dr.setRule("");
 					dr.setRuleExpression("");
 					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-					delivererRuleService.addRule(dr);
+					delivererRuleService.addRule(dr,customerId);
 				}else{
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 					detail.setMessage("小件员不存在");
@@ -482,7 +482,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 					dsr.setRule("");
 					dsr.setRuleExpression("");
 					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-					deliveryStationRuleService.addRule(dsr);
+					deliveryStationRuleService.addRule(dsr,customerId);
 				}
 			}
 			//小件员规则
@@ -498,7 +498,7 @@ private boolean validateDetail(AddressImportDetail detail) {
 					dr.setRule("");
 					dr.setRuleExpression("");
 					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-					delivererRuleService.addRule(dr);
+					delivererRuleService.addRule(dr,customerId);
 				}
 			}
 			

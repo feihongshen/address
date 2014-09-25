@@ -39,14 +39,14 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		return query.list();
 	}
 
-	public List<DeliveryStationRule> getByAddressAndStation(Long addressId, Long stationId) {
-		StringBuilder hql = new StringBuilder("from DeliveryStationRule ");
-		hql.append(" where address.id=:addressId ");
-		hql.append(" and deliveryStation.id=:stationId ");
-		hql.append(" and ruleType = :ruleType");
-		Query query = getSession().createQuery(hql.toString());
+	public List getByAddressAndStation(Long addressId, Long stationId,Long customerId) {
+		String sql = "SELECT r.id FROM DELIVERY_STATION_RULES r ,DELIVERY_STATIONS" +
+				" s WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
+				" AND s.CUSTOMER_ID=:customerId " +
+				" AND r.ADDRESS_ID=:addressId";
+		Query query = getSession().createSQLQuery(sql);
 		query.setLong("addressId", addressId);
-		query.setLong("stationId", stationId);
+		query.setLong("customerId", customerId);
 		query.setInteger("ruleType", DelivererRuleTypeEnum.fallback.getValue());
 		return query.list();
 	}

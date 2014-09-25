@@ -187,11 +187,12 @@ public class DelivererRuleService extends RuleService {
 		return ruleList;
 	}
 
-	public void addRule(DelivererRule dr) {
-		List list = delivererRuleDao.getByAddressAndDeliverer(dr.getAddress().getId(),dr.getDeliverer().getId());
-		if(list==null||list.isEmpty()){
-			delivererRuleDao.save(dr);
+	public void addRule(DelivererRule dr,Long customerId) {
+		List list = delivererRuleDao.getByAddressAndDeliverer(dr.getAddress().getId(),dr.getDeliverer().getId(),customerId);
+		if(list!=null&&!list.isEmpty()){
+			  throw new ExplinkRuntimeException("配送站点已绑定默认小件员");
 		}
+		delivererRuleDao.save(dr);
 	}
 
 	public DelivererRule getById(Long ruleId) {

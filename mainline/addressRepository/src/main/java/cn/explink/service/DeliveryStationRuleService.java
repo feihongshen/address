@@ -176,11 +176,12 @@ public class DeliveryStationRuleService extends RuleService {
 		return deliveryStationRuleDao.getAddressIds(parentId,customerId);
 	}
 
-	public void addRule(DeliveryStationRule dsr) {
-		List list = deliveryStationRuleDao.getByAddressAndStation(dsr.getAddress().getId(),dsr.getDeliveryStation().getId());
-		if(list==null||list.isEmpty()){
-			deliveryStationRuleDao.save(dsr);
+	public void addRule(DeliveryStationRule dsr,Long customerId) {
+		List list = deliveryStationRuleDao.getByAddressAndStation(dsr.getAddress().getId(),dsr.getDeliveryStation().getId(),customerId);
+		if(list!=null&&!list.isEmpty()){
+			  throw new ExplinkRuntimeException("该关键字已绑定默认站点");
 		}
+		deliveryStationRuleDao.save(dsr);
 	}
 	public List<BeanVo> getStationAddressTree(Long customerId,
 			String inIds) {

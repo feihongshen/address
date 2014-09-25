@@ -31,14 +31,14 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
 		return query.list();
 	}
 
-	public List getByAddressAndDeliverer(Long addressId, Long did) {
-		StringBuilder hql = new StringBuilder("from DelivererRule ");
-		hql.append(" where address.id=:addressId ");
-		hql.append(" and deliverer.id=:did ");
-		hql.append(" and ruleType = :ruleType");
-		Query query = getSession().createQuery(hql.toString());
+	public List getByAddressAndDeliverer(Long addressId, Long did,Long customerId) {
+		String sql = "SELECT r.id FROM DELIVERER_RULES r ,DELIVERERS" +
+				" s WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
+				" AND s.CUSTOMER_ID=:customerId " +
+				" AND r.ADDRESS_ID=:addressId";
+		Query query = getSession().createSQLQuery(sql);
 		query.setLong("addressId", addressId);
-		query.setLong("did", did);
+		query.setLong("customerId", customerId);
 		query.setInteger("ruleType", DelivererRuleTypeEnum.fallback.getValue());
 		return query.list();
 	}
