@@ -45,6 +45,7 @@ import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
+import cn.explink.schedule.Constants;
 import cn.explink.tree.AddressImportEntry;
 import cn.explink.tree.TreeNode;
 import cn.explink.util.StringUtil;
@@ -86,6 +87,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	@Autowired
 	private AddressPermissionDao addressPermissionDao;
 
+	@Autowired
+	private ScheduledTaskService scheduledTaskService;
+	
 	/**
 	 * 创建导入模板
 	 * @param headerNameList
@@ -378,6 +382,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	   permission.setAddressId(a1.getId());
 	   permission.setCustomerId(customerId);
 	   addressPermissionDao.save(permission);
+		scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(a1.getId()));
 	   return a1;
 	}
 
