@@ -159,13 +159,19 @@ var setting = {
       <input name="textfield5" type="text" id="targetStrVal" size="15" onkeydown="searchVal('targetStrVal','targetStationtree')" />
       </td>
     </tr>
-  <tr height="90%" s>
-    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul   class="ztree" id="sourceStationtree" >
-              
-            </ul></td>
-    <td bgcolor="#FFFFFF" style="vertical-align: top;"><ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;">
-      
-    </ul></td>
+  <tr height="90%" style="overflow-y: scroll">
+  <div style="overflow-y: scroll">
+    <td bgcolor="#FFFFFF" style="vertical-align: top;">
+    <div style="overflow-y: scroll;height: 444px">
+    <ul   class="ztree" id="sourceStationtree" > </ul>
+    </div>
+    </td>
+    <td bgcolor="#FFFFFF" style="vertical-align: top;">
+    <div style="overflow-y: scroll;height: 444px">
+    <ul class="ztree" id="targetStationtree" style="width:auto;height:auto; overflow:auto;"> </ul>
+    </div>
+    </td>
+    </div>
     </tr>
     <tr height="20px"><td></td><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <div style="float: right">
