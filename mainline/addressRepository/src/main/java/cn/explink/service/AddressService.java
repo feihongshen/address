@@ -536,21 +536,18 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
 		List<ZTreeNode> address=deliverStationRuleService.getAdressByStation(customerId,stationId);
+		Set<Long> set=new HashSet<Long>();
 		if(null!=address&&address.size()>0){
 			StringBuffer aIds=new StringBuffer();
 			for (ZTreeNode a : address) {
-				aIds.append(a.getT()+"-");
+				aIds.append(a.getId()+"-"+a.getT()+"-");
 			}
 			String[] ids=aIds.toString().split("-");
-			Set<Long> set=new HashSet<Long>();
 			for (String id : ids) {
 				set.add(Long.parseLong(id));
 			}
-			List<ZTreeNode> pNodes=addressDao.getZTreeNodeByIdListAndCustomerId(set,customerId);
-			address.addAll(pNodes);
 		}
-		
-		return address;
+		return addressDao.getZTreeNodeByIdListAndCustomerId(set,customerId);
 	}
 
 	public Map getAdressPromtInfo(Long customerId) {
