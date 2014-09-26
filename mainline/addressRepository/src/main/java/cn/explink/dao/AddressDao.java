@@ -74,14 +74,18 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 					.setLong("deliveryStationId", deliveryStationId)
 					.setLong("parentId", parentId).list();
 			if(binds!=null&&!binds.isEmpty()){
-				StringBuilder hql = new StringBuilder("from Address a, AddressPermission p");
+				String ids = "";
+				for(Integer i :binds){
+					ids+=i+",";
+				}
+				ids = ids.substring(0,ids.length()-1);
+				StringBuilder hql = new StringBuilder("select a from Address a, AddressPermission p");
 				hql.append(" where a.parentId = :parentId");
 				hql.append(" and a.id = p.addressId");
-				hql.append(" and a.id in:idList ");
+				hql.append(" and a.id in ( "+ids).append(")");
 				hql.append(" and p.customerId = :customerId");
 				Query query = getSession().createQuery(hql.toString());
 				query.setLong("parentId", parentId);
-				query.setParameterList("idList", binds);
 				query.setLong("customerId", customerId);
 				return query.list();
 			}else{
