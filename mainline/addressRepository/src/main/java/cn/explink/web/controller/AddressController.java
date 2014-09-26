@@ -205,7 +205,7 @@ public class AddressController extends BaseController {
 			importType = AddressImportTypeEnum.init.getValue();
 		}
 		InputStream in = null;
-		AjaxJson<AddressImportDetail> aj=new AjaxJson<AddressImportDetail>();
+		AjaxJson  aj=new AjaxJson ();
 		try {
 			in = file.getInputStream();
 			AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
@@ -223,7 +223,8 @@ public class AddressController extends BaseController {
 			}
 			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
 			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
-		} catch (IOException e) {
+		} catch (Exception e) {
+			logger.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo("导入文件异常！");
 		}
@@ -465,8 +466,9 @@ public class AddressController extends BaseController {
 	 * 
 	 * @param in
 	 * @return
+	 * @throws IOException 
 	 */
-	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) {
+	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) throws Exception {
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
@@ -476,7 +478,7 @@ public class AddressController extends BaseController {
 		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
 		Set<String> addressNames = new HashSet<String>();
 		Set<String> adminNames = new HashSet<String>();
-		try {
+	 
 			XSSFWorkbook wb = new XSSFWorkbook(in);
 			XSSFSheet sheet = wb.getSheetAt(0);
 			int rowNum = 1;
@@ -515,10 +517,7 @@ public class AddressController extends BaseController {
 				details.add(detail);
 			}
 			
-		} catch (IOException e) {
-			logger.error("importAddress failed due to {}", e);
-			return null;
-		}
+		 
 			//查找客户已有关键词并构造addressMap
 			List<Address> addressList = addressService.getAddressByNames(addressNames,customerId);
 			if(addressList!=null&&!addressList.isEmpty()){
