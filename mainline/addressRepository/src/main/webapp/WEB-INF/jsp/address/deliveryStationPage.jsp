@@ -75,7 +75,7 @@
 		    	<thead> 
 					<tr> 
 						<th width="200px">供货商</th> 
-						<th width="320px">实效</th> 
+						<th width="320px">时效</th> 
 						<th width="60px">操作</th> 
 					</tr> 
 				</thead> 
