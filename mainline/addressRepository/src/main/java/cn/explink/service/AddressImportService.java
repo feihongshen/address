@@ -293,6 +293,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
         		   if(a3==null){//为空则创建并绑定
         			   a3 = createAndBind(a2,detail.getAddress3(),customerId);
         			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
+        			   isSaved=true;
         		   }
         		   bindAddress=a3;
     		   } 
