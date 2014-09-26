@@ -19,7 +19,7 @@ function ajaxFileUpload() {
 						});
 				$("#startImport").attr('disabled', false);
 			} else {
-				alert(AjaxJson.msg);
+				$.messager.alert('提示',data.info);
 			}
 		},
 		error : function(AjaxJson, status, e) {
@@ -35,7 +35,7 @@ function takefile() {
 	var fileName = file.name;
 	var file_typename = fileName.substring(fileName.lastIndexOf('.'),
 			fileName.length);
-	if (file_typename == '.xlsx') {//这里限定上传文件文件类型
+	if (file_typename == '.xls' || file_typename == '.xlsx') {//这里限定上传文件文件类型
 		if (file) {
 
 			var fileSize = 0;
@@ -55,7 +55,7 @@ function takefile() {
 		}
 
 	} else {
-		var temp = "上传文件应该是.xlsx后缀而不应该是" + file_typename + ",请重新选择文件";
+		var temp = "上传文件应该是.xls后缀而不应该是" + file_typename + ",请重新选择文件";
 		alert(temp);
 	}
 }
