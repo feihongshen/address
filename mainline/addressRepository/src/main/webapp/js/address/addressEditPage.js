@@ -1,4 +1,5 @@
 var inital=false;
+var stationList=[];
 	var mySettings = {
 		async : {
 			enable : true,
@@ -39,7 +40,25 @@ var inital=false;
 	        $("#unbindAllBtn").bind("click",function(){
 	        	unbind();
 	        }); 
-		$('#stationId').combobox('disable');
+		 $.ajax({
+			 	type: "POST",
+				url:ctx+"/station/listAll",
+				data:{},
+				async:false,
+				success : function(resp) {
+					$("#stationId").empty();
+					$("#stationId").append("<option value=''>  </option>");
+					if(resp.length>0){
+						for(var i = 0;i<resp.length;i++){
+							$("#stationId").append("<option value='"+resp[i].id+"'>"+resp[i].name+"</option>"); 
+						}
+					} 
+				}
+			});
+		
+		
+		
+		
 	});
 	function zTreeBeforeRemove(treeId, treeNode) {
 		if(treeNode.level<4){
@@ -131,10 +150,11 @@ var inital=false;
 				if(treeNode.level<3){
 					$('#stationId').val("");
 					$("input[name='stationId']").val("");
-					$('#stationId').combobox('disable');
+					$('#stationId').attr('disabled',true);
+					//$('#stationId').combobox('disable');
 					$('#addresses').attr('disabled',true);
 				}else{
-					$('#stationId').combobox('enable');
+					$('#stationId').attr('disabled',false);
 					$('#addresses').attr('disabled',false);
 				}
 				
@@ -157,7 +177,7 @@ var inital=false;
 	function submitForm(){
 		var addresses = $("#addresses").val();
 		var parentId = $("#parentId").val();
-		var stationId = $("input[name='stationId']").val();
+		var stationId = $("#stationId").val();
 		if($("#level").val()>5){
 			$.messager.alert("提示","最多支持第六级关键字！");
 			return false;
