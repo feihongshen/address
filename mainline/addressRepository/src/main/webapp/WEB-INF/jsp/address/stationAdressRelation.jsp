@@ -105,11 +105,10 @@ var setting = {
 <a href="javascript:" class="easyui-linkbutton" id="importAddress">导入关键字</a></td>
         </tr>
         <tr>
-          <td><input style="width:150px" id="searchA" onkeydown="searchVal('searchA','tree');" >
-        </tr>
-        <tr>
-          <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
-          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a></td>
+          <td><input style="width:150px" id="searchA" onkeydown="searchVal('searchA','tree');" > 
+          <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> 
+          	 <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a>
+          </td>
         </tr>
         <tr>
           <td><div id="promtInfo" ></div>

@@ -143,11 +143,11 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return aliasDao.getAliasByIdList(aliasIdList);
 	}
 
-	public List<Address> getChildAddress(Long customerId, Long addressId) {
+	public List<Address> getChildAddress(Long customerId, Long addressId,Long deliveryStationId) {
 		if (addressId == null) {
 			addressId = cn.explink.Constants.ADDRESS_ID_CHINA;
 		}
-		List<Address> addressList = addressDao.getChildAddress(customerId, addressId);
+		List<Address> addressList = addressDao.getChildAddress(customerId, addressId,deliveryStationId);
 		return addressList;
 	}
 	public void deleteAddress(Long addressId, Long customerId) {

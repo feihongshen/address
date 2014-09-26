@@ -18,13 +18,13 @@
           <td align="left">
           	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree');"/>
             </td>
-            <td  align="left">
+            <td  align="left" width="160px;">
          	 <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> 
           	 <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a>
           </td>
         </tr>
         <tr>
-          <td><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td colspan=2><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
       </div>

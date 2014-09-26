@@ -47,7 +47,7 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
 //		DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
 		try {
-			List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId);
+			List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId,deliveryStationId);
 			fillStation(addressList,clientApplication.getCustomerId());
 			List<AddressVo> addressVoList = AddressUtil.cloneToAddressVoList(addressList);
 			result.setAddressVoList(addressVoList);
@@ -91,8 +91,8 @@ public class AddressQueryServiceImpl extends BaseWebserviceImpl implements Addre
 			}
 			if(view.size()>0)
 			for (Address a : addressList) {
-				if(null!=view.get(a.getId())){
-					a.setName(a.getName()+" -- "+view.get(a.getId()));
+				if(null!=view.get(a.getId()+"")){
+					a.setName(a.getName()+" -- "+view.get(a.getId()+""));
 				}
 			}
 		}

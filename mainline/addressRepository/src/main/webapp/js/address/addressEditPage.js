@@ -31,7 +31,7 @@ var inital=false;
 		//刷新
 		 
 		 $("#refreshAllBtn").click(function(){
-			 ids=getAllNodes();
+			var  ids=getAllNodes();
 			 getAll(ids);
 		 });
 		  
@@ -139,11 +139,11 @@ var inital=false;
 				}
 				
 			}	
-			 function getAll(){
+			 function getAll(ids){
 				 $.ajax({
 				 	 type: "POST",
 				 		url:ctx+"/address/getAddressTree",
-				 		data:{isBind:true},
+				 		data:{ids:ids},
 				 		success:function(optionData){
 				 	        var t = $("#tree");
 				 	        zTree = $.fn.zTree.init(t, mySettings, optionData);

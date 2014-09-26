@@ -37,18 +37,16 @@
 	 <div data-options="region:'west',split:true" title="条件搜索"  style="width:450px;">
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
-          <td align="left">
-          	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree')" />
+           <td align="left">
+          	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree');"/>
             </td>
-        </tr>
-        <tr>
-          <td  align="left">
-          <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
-          <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新节点</a>
+            <td  align="left" width="160px;">
+         	 <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> 
+          	 <a href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a>
           </td>
         </tr>
         <tr>
-          <td><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td colspan=2><div id="promtInfo" ></div><ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
       </div>
