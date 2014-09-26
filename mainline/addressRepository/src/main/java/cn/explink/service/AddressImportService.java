@@ -310,6 +310,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	  					dsr.setRuleExpression("");
     	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
     	  					deliveryStationRuleService.addRule(dsr,customerId);
+    	  					isSaved=true;
     	    			  }
     	    		   }
     	    		   if(StringUtils.isNotBlank(detail.getDelivererName())){//绑定小件员
@@ -323,6 +324,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   					dr.setRuleExpression("");
     		   					dr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
     		   					delivererRuleService.addRule(dr,customerId);
+    		   					isSaved=true;
     		   				}else{
     		   					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
     		   					detail.setMessage("小件员不存在");
@@ -346,6 +348,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	  					dsr.setRuleExpression("");
     	  					dsr.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
     	  					deliveryStationRuleService.addRule(dsr,customerId);
+    	  					isSaved=true;
     	    			  }
     	    		   }
     		   }
@@ -358,6 +361,9 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	    				  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),ds.getId());
     	    			  }
     	    		   }
+    		   }
+    		   if(isSaved){
+    			   throw new ExplinkRuntimeException("数据重复！");
     		   }
     		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
     				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
