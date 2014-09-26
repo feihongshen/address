@@ -37,14 +37,11 @@
 	    			<td>
 	    			<input type="hidden" id="parentId" name="parentId" value=""/>
 	    			<input type="hidden" id="level" name="level" value=""/>
-	    			<input class="easyui-combobox" id="stationId" name="stationId"  style="width:250px" 
-					data-options="url:'${ctx }/station/listAll',
-					method:'get',
-					valueField:'id',
-					textField:'name',
-					panelHeight:'200'"/>&nbsp;&nbsp;上级关键词：<span id="tips" style="font-weight:bold;"></span>
+	    			<select id="stationId" name="stationId" >
+	    			</select>
 	    			</td>
 	    		</tr>
+	    		<tr><td colspan=2> 上级关键词：<span id="tips" style="font-weight:bold;"></span></td></tr>
 	    		<tr>
 	    			<td width="60px">关键词:</td>
 	    			<td>
