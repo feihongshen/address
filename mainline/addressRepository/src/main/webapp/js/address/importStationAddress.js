@@ -59,6 +59,7 @@ var resultRow=
 	
 	function importAddress(id){
 		$("#stationDlgId").val(id);
+		$("#resultTable").html("");
 		$('#dlg').dialog('open');
 	}
 	function fileSelected(id) {
@@ -142,7 +143,7 @@ var resultRow=
 		for(var i = 0;i<list.length;i++){
 			var item = list[i];
 			html+="<tbody>";
-			if(item.status=1){
+			if(item.status==1){
 				html+="<tr><td>"
 					+(item.province==null?"":item.province)+"</td><td>"
 					+(item.city==null?"":item.city)+"</td><td>"
