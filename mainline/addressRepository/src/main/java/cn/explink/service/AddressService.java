@@ -22,6 +22,7 @@ import cn.explink.dao.AliasDao;
 import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.OrderDao;
+import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Alias;
@@ -30,6 +31,7 @@ import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Order;
+import cn.explink.domain.VendorsAging;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
@@ -85,6 +87,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private DelivererRuleService delivererRuleService;
 	@Autowired
 	private DeliveryStationRuleDao deliveryStationRuleDao;
+
+	@Autowired
+	private VendorsAgingDao vendorAgingService;
 	
 	public void listAddress() {
 		List<Address> addressList = addressDao.getAllAddresses();
@@ -385,8 +390,17 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			result.setDelivererList(delivererList);
 			order.setDelivererIds(sb.toString());
 
-			// TODO 找到地址对应的供货商时效
-			result.setTimeLimitList(null);
+			// 找到地址对应的供货商时效
+			if (orderVo.getVendorId() != null) {
+				List<Integer> timeLimitList = new ArrayList<Integer>();
+				for (Address address : addressList) {
+					List<VendorsAging> vendorAgingList = vendorAgingService.getVendorAging(address.getId(), orderVo.getVendorId(), orderVo.getCustomerId());
+					if (vendorAgingList != null && vendorAgingList.size() > 0) {
+						timeLimitList.add(Integer.parseInt(vendorAgingList.get(0).getAging()));
+					}
+				}
+				result.setTimeLimitList(timeLimitList);
+			}
 		} catch (Exception e) {
 			logger.error("search address failed due to {}", e.getMessage(), e);
 			result.setResult(AddressMappingResultEnum.exceptionResult);

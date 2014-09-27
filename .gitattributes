@@ -40,6 +40,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/ScheduledTaskDao.java -t
 mainline/addressRepository/src/main/java/cn/explink/dao/SystemConfigDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/UserDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/VendorDao.java -text
+mainline/addressRepository/src/main/java/cn/explink/dao/VendorsAgingDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicHibernateDaoSupport.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicJdbcTemplateDaoSupport.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/LockOptions.java -text
