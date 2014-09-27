@@ -178,7 +178,7 @@ var stationList=[];
 		var addresses = $("#addresses").val();
 		var parentId = $("#parentId").val();
 		var stationId = $("#stationId").val();
-		if($("#level").val()<4){
+		if($("#level").val()<3){
 			$.messager.alert("提示","仅支持区域以下设置关键字！");
 			return false;
 		}
