@@ -159,7 +159,9 @@ public class DeliveryStationRuleService extends RuleService {
 				// 针对每一个address，没有匹配上任何客户化规则时，则匹配到默认规则
 				mappingRule = defaultRule;
 			}
-			ruleList.add(mappingRule);
+			if (mappingRule != null) {
+				ruleList.add(mappingRule);
+			}
 		}
 		return ruleList;
 	}
