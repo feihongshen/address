@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -120,6 +121,7 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation,Lo
 	    	if(a.getPath()!=null){
 	    		String[] ids = a.getPath().split("-");
 	    		for(int i =0;i<ids.length;i++){
+	    			if(StringUtils.isNotBlank(ids[i]))
 	    			addIds.add(Long.parseLong(ids[i]));
 	    		}
 	    	}
