@@ -23,7 +23,7 @@ public class AddressFilter {
 				lc.add(new AddressCompare(a) );
 			}
 			for(int i=0;i<lc.size();i++){
-				for(int j=i;j<=lc.size();j++){
+				for(int j=i;j<lc.size();j++){
 					if(i!=j)
 					compare(lc.get(i),lc.get(j));
 				}
