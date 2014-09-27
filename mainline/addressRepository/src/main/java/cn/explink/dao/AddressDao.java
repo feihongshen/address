@@ -69,7 +69,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 					" and a.PARENT_ID=:parentId " +
 					" and r.DELIVERY_STATION_ID=d.ID " +
 					" and d.STATUS=1" +
-					" and d.CUSTOMER_ID=:customerId and d.externalId=:deliveryStationId";
+					" and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
 			List<Integer> binds=(List<Integer>) getSession().createSQLQuery(bindSql)
 					.setLong("customerId", customerId)
 					.setLong("deliveryStationId", deliveryStationId)
