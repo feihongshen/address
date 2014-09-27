@@ -72,6 +72,8 @@ mainline/addressRepository/src/main/java/cn/explink/domain/enums/VendorStausEnmu
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/NumberExpression.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/RuleExpression.java -text
 mainline/addressRepository/src/main/java/cn/explink/exception/ExplinkRuntimeException.java -text
+mainline/addressRepository/src/main/java/cn/explink/lucene/AddressCompare.java -text
+mainline/addressRepository/src/main/java/cn/explink/lucene/AddressFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/lucene/Constants.java -text
 mainline/addressRepository/src/main/java/cn/explink/lucene/DictChange.java -text
 mainline/addressRepository/src/main/java/cn/explink/lucene/ExplinkIKConfig.java -text
