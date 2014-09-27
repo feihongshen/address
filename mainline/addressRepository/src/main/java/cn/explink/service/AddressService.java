@@ -285,7 +285,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @param orderList
 	 * @return
 	 */
-	public Map<String, Object> match(Long customerId, List<OrderVo> orderList) {
+	public Map<String, Object> txNoneMatch(Long customerId, List<OrderVo> orderList) {
 		Map<String, Object> attributes=new HashMap<String, Object>();
 		List<BeanVo> suList=new ArrayList<BeanVo>();
 		List<BeanVo> unList=new ArrayList<BeanVo>();

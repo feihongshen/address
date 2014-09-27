@@ -76,7 +76,7 @@ public class DeliveryStationRuleController extends BaseController {
 			list.add(order);
 		}
 		try {
-			Map<String, Object> attributes = addressService.match(customerId, list);
+			Map<String, Object> attributes = addressService.txNoneMatch(customerId, list);
 			attributes.put("insum", list.size());
 			aj.setAttributes(attributes);
 			
