@@ -108,134 +108,6 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		return wookbook;
 	}
 	
-	/**
-	 * 
-	 * @param in
-	 * @return
-	 */
-	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) {
-		Long customerId = user.getCustomer().getId();
-		AddressImportResult result = new AddressImportResult();
-		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
-		Map<String,Address> map = new HashMap<String,Address>();//省市区地址MAP(Key:省-市-区)
-		Map<String,Address> addressMap = new HashMap<String,Address>();//关键字MAP(Key:父ID-名称)
-		Map<String,DeliveryStation> stationMap = new HashMap<String,DeliveryStation>();	//站点MAP(Key:客户ID-名称)
-		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
-		Set<String> addressNames = new HashSet<String>();
-		Set<String> adminNames = new HashSet<String>();
-		try {
-			XSSFWorkbook wb = new XSSFWorkbook(in);
-			XSSFSheet sheet = wb.getSheetAt(0);
-			int rowNum = 1;
-			while (true) {
-				XSSFRow row = sheet.getRow(rowNum);
-				if (row == null) {
-					break;
-				}
-				rowNum++;
-				String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
-				String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
-				String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
-				String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
-				String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
-				String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
-				String deliveryStationName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
-				String delivererName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
-				
-				addNonNullValue(adminNames, province);
-				addNonNullValue(adminNames, city);
-				addNonNullValue(adminNames, district);
-				addNonNullValue(addressNames, address1);
-				addNonNullValue(addressNames, address2);
-				addNonNullValue(addressNames, address3);
-				
-				AddressImportDetail detail = new AddressImportDetail();
-				detail.setProvince(province);
-				detail.setCity(city);
-				detail.setDistrict(district);
-				detail.setAddress1(address1);
-				detail.setAddress2(address2);
-				detail.setAddress3(address3);
-				detail.setDeliveryStationName(deliveryStationName);
-				detail.setDelivererName(delivererName);
-				detail.setAddressImportResult(result);
-				details.add(detail);
-			}
-			
-		} catch (IOException e) {
-			logger.error("importAddress failed due to {}", e);
-			return null;
-		}
-			//查找客户已有关键词并构造addressMap
-			List<Address> addressList = addressDao.getAddressByNames(addressNames,customerId);
-			if(addressList!=null&&!addressList.isEmpty()){
-				for(Address a:addressList){
-					addressMap.put(a.getParentId()+"-"+a.getName(), a);
-				}
-			}
-			//查找所有行政关键词并构造map
-			List<Address> list = addressDao.getAdministrationAddress(adminNames,customerId);
-			if(list!=null&&!list.isEmpty()){
-				Map<String,String> m = new HashMap<String,String>();
-				for(Address a:list){
-					m.put(a.getId()+"", a.getName());
-				}
-				for(Address a:list){
-					if(new Integer(3).equals(a.getAddressLevel())){
-						String path = a.getPath();
-						String[] ids = path.split("-");
-						map.put(m.get(ids[1])+"-"+m.get(ids[2])+"-"+a.getName(), a);
-					}
-				}
-			}
-			//构造所有站点Map
-			 List<DeliveryStation> stationList = this.deliveryStationService.listAll(customerId);
-			 if(stationList!=null&&!stationList.isEmpty()){
-				 for(DeliveryStation ds:stationList){
-					 stationMap.put(customerId+"-"+ds.getName(), ds);
-				 }
-			 }
-			 
-			//构造所有小件员Map
-			 List<Deliverer> delivererList = this.delivererService.listAll(customerId);
-			 if(delivererList!=null&&!delivererList.isEmpty()){
-				 for(Deliverer d:delivererList){
-					 delivererMap.put(customerId+"-"+d.getName(), d);
-				 }
-			 }
-			for (AddressImportDetail detail : details) {
-				
-				try{
-					  this.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
-				}catch(Exception e){
-					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
-					e.printStackTrace();
-					detail.setMessage(e.getMessage());
-				}
-              
-			}
-			
-		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
-		detailSet.addAll(details);
-		result.setAddressImportDetails(detailSet);
-		int successCount = 0;
-		int failureCount = 0;
-		for (AddressImportDetail detail : details) {
-			if (detail.getStatus() != null && detail.getStatus().intValue() == AddressImportDetailStatsEnum.success.getValue()) {
-				successCount++;
-			} else {
-				failureCount++;
-			}
-		}
-		result.setSuccessCount(successCount);
-		result.setFailureCount(failureCount);
-		result.setImportDate(new Date());
-		result.setUserId(user.getId());
-		if(importType==AddressImportTypeEnum.init.getValue()){
-			addressImportResultDao.save(result);
-		}
-		return result;
-	}
     /**
      *   导入单行记录（新事务处理）
                        地址格式是否正确（  - -大望路）否-->失败 ：上级地址不存在
@@ -248,7 +120,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
      * @param addressMap 已经查出来的Map
      * @param customerId 
      */
-    public void txNewImportDetail(Map<String,Address> map,AddressImportDetail detail,Map<String,Address> addressMap,Map<String,DeliveryStation> stationMap,Map<String,Deliverer> delivererMap,Long customerId,Integer importType,Long stationId){
+    public void txNewImportDetail(Map<String,Address> map,AddressImportDetail detail,Map<String,Address> addressMap,Map<String,DeliveryStation> stationMap,Map<String,Deliverer> delivererMap,Map<Long,Address> bindMap,Long customerId,Integer importType,Long stationId){
        if(validateDetail(detail)){
     	   Address d =  map.get(detail.getProvince()+"-"+detail.getCity()+"-"+detail.getDistrict());
     	   if(d==null){
@@ -260,13 +132,19 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   Address a3 = null;
     		   boolean isSaved = false;//一次导入只能保存一个关键字
     		   
-    		   
     		   //处理第一关键字
     		   a1 = addressMap.get(d.getId()+"-"+detail.getAddress1());
     		   if(a1==null){//为空则创建并绑定
     			   a1 = createAndBind(d,detail.getAddress1(),customerId);
     			   addressMap.put(d.getId()+"-"+a1.getName(), a1);
+    			   bindMap.put(a1.getId(),a1);
     			   isSaved = true;
+    		   }else{
+    			   if( bindMap.get(a1.getId())==null){
+    				   bindAddress(a1,customerId);
+    				   isSaved = true;
+    				   bindMap.put(a1.getId(),a1);
+    			   }
     		   }
     		   bindAddress=a1;
 
@@ -279,7 +157,14 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
         		   if(a2==null){//为空则创建并绑定
         			   a2 = createAndBind(a1,detail.getAddress2(),customerId);
         			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
+        			   bindMap.put(a2.getId(),a2);
         			   isSaved = true;
+        		   }else{//是否已经绑定
+        			   if( bindMap.get(a2.getId())==null){
+        				   bindAddress(a2,customerId);
+        				   isSaved = true;
+        				   bindMap.put(a2.getId(),a2);
+        			   }
         		   }
         		   bindAddress=a2;
     		   } 
@@ -293,7 +178,14 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
         		   if(a3==null){//为空则创建并绑定
         			   a3 = createAndBind(a2,detail.getAddress3(),customerId);
         			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
+        			   bindMap.put(a3.getId(),a3);
         			   isSaved=true;
+        		   }else{
+        			   if( bindMap.get(a3.getId())==null){
+        				   bindAddress(a3,customerId);
+        				   isSaved = true;
+        				   bindMap.put(a3.getId(),a3);
+        			   }
         		   }
         		   bindAddress=a3;
     		   } 
@@ -363,7 +255,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	    			  }
     	    		   }
     		   }
-    		   if(isSaved){
+    		   if(!isSaved){
     			   throw new ExplinkRuntimeException("数据重复！");
     		   }
     		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
@@ -376,7 +268,14 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	   detail.setMessage("导入格式不合规范");
        }
     }
-   /**
+   private void bindAddress(Address a1, Long customerId) {
+	   AddressPermission permission = new AddressPermission();
+	   permission.setAddressId(a1.getId());
+	   permission.setCustomerId(customerId);
+	   addressPermissionDao.save(permission);
+	}
+
+/**
     *创建地址并绑定客户ID
     * @param parent
     * @param name

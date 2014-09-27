@@ -311,7 +311,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			}
 			result.add(singleResult);
 		}
-		int pper=(suList.size()+dList.size())/orderList.size()*100;
+		int pper=(int)((suList.size()+dList.size()+0.0)/orderList.size()*100);
 		attributes.put("susum", suList.size());
 		attributes.put("unsum", unList.size());
 		attributes.put("dsum", dList.size());
@@ -569,6 +569,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public List<cn.explink.domain.Address> getAdministrationAddress(
 			Set<String> adminNames, Long customerId) {
 		return addressDao.getAdministrationAddress(adminNames,  customerId);
+	}
+
+	public List<Address> getAllBands(Long customerId) {
+		return addressDao.getAllBands(  customerId);
 	}
 
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
+import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.tree.ZTreeNode;
 
@@ -252,6 +253,14 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	}
 
 
-
+	public List<Address> getAllBands(Long customerId) {
+		StringBuilder hql = new StringBuilder("select a  from Address  a, AddressPermission p ");
+		hql.append(" where a.addressLevel >3 ");
+		hql.append(" and a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		Query query = getSession().createQuery(hql.toString());
+		query.setLong("customerId", customerId);
+		return query.list(); 
+	}
 	
 }

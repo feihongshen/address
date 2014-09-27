@@ -224,6 +224,7 @@ public class AddressController extends BaseController {
 			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
 			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo("导入文件异常！");
@@ -476,6 +477,7 @@ public class AddressController extends BaseController {
 		Map<String,Address> addressMap = new HashMap<String,Address>();//关键字MAP(Key:父ID-名称)
 		Map<String,DeliveryStation> stationMap = new HashMap<String,DeliveryStation>();	//站点MAP(Key:客户ID-名称)
 		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
+		Map<Long,Address>   bindMap = new HashMap<Long,Address>();//客户已经包含的地址列表
 		Set<String> addressNames = new HashSet<String>();
 		Set<String> adminNames = new HashSet<String>();
 	 
@@ -550,15 +552,23 @@ public class AddressController extends BaseController {
 			 
 			//构造所有小件员Map
 			 List<Deliverer> delivererList =  delivererService.listAll(customerId);
+			 
 			 if(delivererList!=null&&!delivererList.isEmpty()){
 				 for(Deliverer d:delivererList){
 					 delivererMap.put(customerId+"-"+d.getName(), d);
 				 }
 			 }
+			 //构造该客户的绑定地址
+			 List<Address> bandList = this.addressService.getAllBands(customerId);
+			 if(bandList!=null){
+				 for(Address a:bandList){
+					 bindMap.put(a.getId(), a); 
+				 }
+			 }
+			 
 			for (AddressImportDetail detail : details) {
-				
 				try{
-					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, customerId, importType,stationId);
+					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap,bindMap, customerId, importType,stationId);
 				}catch(Exception e){
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 					detail.setMessage(e.getMessage());
