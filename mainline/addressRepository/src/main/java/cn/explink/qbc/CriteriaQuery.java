@@ -19,31 +19,51 @@ import cn.explink.modle.SortDirection;
 
 /**
  * 
- *类描述：CriteriaQuery类是对hibernate QBC查询方法的封装，需要的参数是当前操作的实体类
+ * 类描述：CriteriaQuery类是对hibernate QBC查询方法的封装，需要的参数是当前操作的实体类
  */
-@SuppressWarnings({"rawtypes","static-access"})
+@SuppressWarnings({ "rawtypes", "static-access" })
 public class CriteriaQuery implements Serializable {
+
 	public CriteriaQuery() {
 
 	}
 
 	private static final long serialVersionUID = 1L;
+
 	private int curPage = 1;// 当前页
+
 	private int pageSize = 10;// 默认一页条数
+
 	private String myAction;// 请求的action 地址
+
 	private String myForm;// form 名字
-	private CriterionList criterionList=new CriterionList();//自定义查询条件集合
-	private CriterionList jqcriterionList=new CriterionList();//jquery datatable控件生成查询条件集合
+
+	private CriterionList criterionList = new CriterionList();// 自定义查询条件集合
+
+	private CriterionList jqcriterionList = new CriterionList();// jquery
+																// datatable控件生成查询条件集合
+
 	private int isUseimage = 0;// 翻页工具条样式
+
 	private DetachedCriteria detachedCriteria;
-	private static Map<String, Object> map;
-	private static Map<String, Object> ordermap;//排序字段
+
+	private Map<String, Object> map;
+
+	private Map<String, Object> ordermap;// 排序字段
+
 	private boolean flag = true;// 对同一字段进行第二次重命名查询时值设置FASLE不保存重命名查询条件
-	private String field="";//查询需要显示的字段
-	private Class entityClass;//POJO
+
+	private String field = "";// 查询需要显示的字段
+
+	private Class entityClass;// POJO
+
 	private List results;// 结果集
+
 	private int total;
-	private List<String> alias = new ArrayList<String>();//保存创建的aliasName 防止重复创建
+
+	private List<String> alias = new ArrayList<String>();// 保存创建的aliasName
+															// 防止重复创建
+
 	public List getResults() {
 		return results;
 	}
@@ -77,6 +97,7 @@ public class CriteriaQuery implements Serializable {
 	public void setEntityClass(Class entityClass) {
 		this.entityClass = entityClass;
 	}
+
 	public CriterionList getJqcriterionList() {
 		return jqcriterionList;
 	}
@@ -111,24 +132,24 @@ public class CriteriaQuery implements Serializable {
 		this.detachedCriteria = DetachedCriteria.forClass(entityClass);
 		this.map = new HashMap<String, Object>();
 	}
-	public CriteriaQuery(Class entityClass,DataGrid dg) {
-		this.curPage = dg.getPage();
-		//String[] fieldstring=dg.getField().split(",");
-		//this.detachedCriteria = DetachedCriteriaUtil
-		//.createDetachedCriteria(c, "start", "_table",fieldstring);
-		this.detachedCriteria = DetachedCriteria.forClass(entityClass);
-		//Criteria criteria = null;
 
-		this.field=dg.getField();
-		this.entityClass=entityClass;
-		this.dataGrid=dg;
-		this.pageSize=dg.getRows();
+	public CriteriaQuery(Class entityClass, DataGrid dg) {
+		this.curPage = dg.getPage();
+		// String[] fieldstring=dg.getField().split(",");
+		// this.detachedCriteria = DetachedCriteriaUtil
+		// .createDetachedCriteria(c, "start", "_table",fieldstring);
+		this.detachedCriteria = DetachedCriteria.forClass(entityClass);
+		// Criteria criteria = null;
+
+		this.field = dg.getField();
+		this.entityClass = entityClass;
+		this.dataGrid = dg;
+		this.pageSize = dg.getRows();
 		this.map = new HashMap<String, Object>();
 		this.ordermap = new HashMap<String, Object>();
 	}
 
-	public CriteriaQuery(Class c, int pageSize, int curPage,
-			String myAction, String myForm) {
+	public CriteriaQuery(Class c, int pageSize, int curPage, String myAction, String myForm) {
 		this.pageSize = pageSize;
 		this.curPage = curPage;
 		this.myAction = myAction;
@@ -139,11 +160,9 @@ public class CriteriaQuery implements Serializable {
 	/**
 	 * 加载条件(条件之间有关联) hql((this_.0 like ? and this_.1 like ?) or this_.2 like ?)
 	 * 表示法cq.add(cq.or(cq.and(cq, 0, 1), cq, 2))----- hql2:(this_.0 like ? or
-	 * this_.1 like ?) 表示法:cq.add(cq.or(cq, 0, 1));
-	 * 例子：cq.in("TBPrjstatus.code", status);
-		cq.eq("attn", user.getUserName());
-		cq.isNull("attn");
-		cq.add(cq.and(cq.or(cq, 1, 2), cq, 0));
+	 * this_.1 like ?) 表示法:cq.add(cq.or(cq, 0, 1)); 例子：cq.in("TBPrjstatus.code",
+	 * status); cq.eq("attn", user.getUserName()); cq.isNull("attn");
+	 * cq.add(cq.and(cq.or(cq, 1, 2), cq, 0));
 	 */
 	public void add(Criterion c) {
 		detachedCriteria.add(c);
@@ -174,7 +193,7 @@ public class CriteriaQuery implements Serializable {
 	 * @param value引用名
 	 */
 	public void createAlias(String name, String value) {
-		if(!alias.contains(name)){
+		if (!alias.contains(name)) {
 			detachedCriteria.createAlias(name, value);
 			alias.add(name);
 		}
@@ -199,8 +218,7 @@ public class CriteriaQuery implements Serializable {
 	 * @return
 	 */
 	public Criterion and(CriteriaQuery query, int source, int dest) {
-		return Restrictions.and(query.getCriterionList().getParas(source),
-				query.getCriterionList().getParas(dest));
+		return Restrictions.and(query.getCriterionList().getParas(source), query.getCriterionList().getParas(dest));
 	}
 
 	/**
@@ -216,22 +234,23 @@ public class CriteriaQuery implements Serializable {
 	public Criterion and(Criterion c, CriteriaQuery query, int souce) {
 		return Restrictions.and(c, query.getCriterionList().getParas(souce));
 	}
-	
+
 	/**
-	 *根据CriterionList组合嵌套条件
+	 * 根据CriterionList组合嵌套条件
 	 */
 	public Criterion getOrCriterion(CriterionList list) {
-		Criterion c1=null;
-		Criterion c2=null;
-		Criterion c3=null;
-		c1=list.getParas(0);
+		Criterion c1 = null;
+		Criterion c2 = null;
+		Criterion c3 = null;
+		c1 = list.getParas(0);
 		for (int i = 1; i < list.size(); i++) {
-			c2=list.getParas(i);
-			c3=getor(c1, c2);
-			c1=c3;
+			c2 = list.getParas(i);
+			c3 = getor(c1, c2);
+			c1 = c3;
 		}
 		return c3;
 	}
+
 	/**
 	 * 设置组合后的Criterion OR关系
 	 * 
@@ -240,10 +259,9 @@ public class CriteriaQuery implements Serializable {
 	 * @param dest
 	 * @return
 	 */
-	public Criterion getor(Criterion c1,Criterion c2) {
+	public Criterion getor(Criterion c1, Criterion c2) {
 		return Restrictions.or(c1, c2);
 	}
-	
 
 	/**
 	 * 设置条件之间and关系
@@ -268,8 +286,7 @@ public class CriteriaQuery implements Serializable {
 	 * @return
 	 */
 	public Criterion or(CriteriaQuery query, int source, int dest) {
-		return Restrictions.or(query.getCriterionList().getParas(source), query
-				.getCriterionList().getParas(dest));
+		return Restrictions.or(query.getCriterionList().getParas(source), query.getCriterionList().getParas(dest));
 	}
 
 	/**
@@ -308,9 +325,10 @@ public class CriteriaQuery implements Serializable {
 	 *            ：排序字段值（"asc","desc"）
 	 */
 	public void addOrder(String ordername, SortDirection ordervalue) {
-		ordermap.put(ordername,ordervalue);
+		ordermap.put(ordername, ordervalue);
 
 	}
+
 	/**
 	 * 设置order（排序）查询条件
 	 * 
@@ -329,26 +347,26 @@ public class CriteriaQuery implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
-	 * 创建 alias 
+	 * 创建 alias
+	 * 
 	 * @param entitys
-	 * 规则 entitys 为a.b.c 这种将会创建 alias a和alias  b而不会创建c
-	 * 因为这样更加容易传值
+	 *            规则 entitys 为a.b.c 这种将会创建 alias a和alias b而不会创建c 因为这样更加容易传值
 	 */
 	public void judgecreateAlias(String entitys) {
 		String[] aliass = entitys.split("\\.");
-		for (int i = 0 ;i<aliass.length-1;i++){
+		for (int i = 0; i < aliass.length - 1; i++) {
 			createAlias(aliass[i], aliass[i]);
 		}
 	}
 
-	public static Map<String, Object> getOrdermap() {
-		return ordermap;
+	public Map<String, Object> getOrdermap() {
+		return this.ordermap;
 	}
 
-	public static void setOrdermap(Map<String, Object> ordermap) {
-		CriteriaQuery.ordermap = ordermap;
+	public void setOrdermap(Map<String, Object> ordermap) {
+		this.ordermap = ordermap;
 	}
 
 	/**
@@ -395,7 +413,8 @@ public class CriteriaQuery implements Serializable {
 	 */
 	public void like(String keyname, Object keyvalue) {
 		if (keyvalue != null && keyvalue != "") {
-			//criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+ "%"));
+			// criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+
+			// "%"));
 			criterionList.addPara(Restrictions.like(keyname, keyvalue));
 			if (flag) {
 				this.put(keyname, keyvalue);
