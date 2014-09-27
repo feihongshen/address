@@ -24,8 +24,7 @@ public class AddressFilter {
 				lc.add(new AddressCompare(a) );
 			}
 			for(int i=0;i<lc.size();i++){
-				for(int j=i;j<lc.size();j++){
-					if(i!=j)
+				for(int j=i+1;j<lc.size();j++){
 					compare(lc.get(i),lc.get(j));
 				}
 			}
@@ -39,7 +38,7 @@ public class AddressFilter {
 			}
 		}
 		for(AddressCompare ac:lc){
-		    if(ac.hasSsq&&!ac.isPath&&ac.score==maxScore){
+		    if(ac.hasSsq&&!ac.isPath&&ac.score==maxScore&&ac.address.getAddressLevel()>3){
 		    	result.add(ac.address);
 		    }
 		}
