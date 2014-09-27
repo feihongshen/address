@@ -490,7 +490,6 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				a.setName(alias);
 				a.setOldName(address.getName());
 				createAlias(a);
-				scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getId()));
 			}else{
 				aj.setSuccess(false);
 				aj.setMsg("已存在别名："+alias);
