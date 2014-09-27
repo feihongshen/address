@@ -252,7 +252,7 @@ public class DeliveryStationRuleService extends RuleService {
 
 		List existingVendorAgingList = vendorsAgingDao.getVendorAging(addressId, vendorId, customerId);
 		if (existingVendorAgingList != null && !existingVendorAgingList.isEmpty()) {
-			throw new ExplinkRuntimeException("同地址同一个供应商不能设置两个实效！");
+			throw new ExplinkRuntimeException("同地址同一个供应商不能设置两个时效！");
 		} else {
 			VendorsAging va = new VendorsAging();
 			Address a = new Address();
