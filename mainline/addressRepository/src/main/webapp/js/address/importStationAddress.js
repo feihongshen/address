@@ -118,7 +118,6 @@ var resultRow=
 						url : ctx+"/address/getImportDetail",
 						 async:false,
 						 success : function(resp) {
-						flag = resp.success;
 						if (resp != null && resp.length > 0) {
 							$("#resultTable").html("");
 							$("#resultTable").append(generateResult(resp));
@@ -138,10 +137,10 @@ var resultRow=
 
 	}
 	function generateResult(list){
-		var html = "<thead><tr><td>省份</td><td>城市</td><td>区域</td><td>关键字1-关键字2-关键字3</td><td>站点</td><td>错误原因</td></tr><thead>";
+		var html = "<thead><tr><td>省份</td><td>城市</td><td>区域</td><td>关键字1-关键字2-关键字3</td><td>站点</td><td>错误原因</td></tr></thead>";
+		html+="<tbody>";
 		for(var i = 0;i<list.length;i++){
 			var item = list[i];
-			html+="<tbody>";
 			if(item.status==1){
 				html+="<tr><td>"
 					+(item.province==null?"":item.province)+"</td><td>"
@@ -151,9 +150,9 @@ var resultRow=
 				    +(item.address2==null?"":item.address2)+"-"
 				    +(item.address3==null?"":item.address3)+"</td><td>"
 				    +(item.deliveryStationName==null?"":item.deliveryStationName)+"</td><td>"
-				    +(item.message==null?"":item.message)+"</td>";
+				    +(item.message==null?"":item.message)+"</td></tr>";
 			}
-			html+="</tbody>";
 		}
+		html+="</tbody>";
 		return html;
 	}
