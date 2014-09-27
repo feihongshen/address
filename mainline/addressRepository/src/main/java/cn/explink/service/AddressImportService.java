@@ -219,8 +219,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   					delivererRuleService.addRule(dr,customerId);
     		   					isSaved=true;
     		   				}else{
-    		   					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
-    		   					detail.setMessage("小件员不存在");
+    		   				    throw new ExplinkRuntimeException("小件员不存在");
     		   				}
     	    		   }
     		   }
