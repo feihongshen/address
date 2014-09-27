@@ -22,6 +22,7 @@ import cn.explink.dao.AliasDao;
 import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.OrderDao;
+import cn.explink.dao.VendorDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
@@ -88,6 +89,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	@Autowired
 	private DeliveryStationRuleDao deliveryStationRuleDao;
 
+	@Autowired
+	private VendorDao vendorDao;
+	
 	@Autowired
 	private VendorsAgingDao vendorAgingService;
 	
@@ -394,7 +398,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			if (orderVo.getVendorId() != null) {
 				List<Integer> timeLimitList = new ArrayList<Integer>();
 				for (Address address : addressList) {
-					List<VendorsAging> vendorAgingList = vendorAgingService.getVendorAging(address.getId(), orderVo.getVendorId(), orderVo.getCustomerId());
+					List<VendorsAging> vendorAgingList = vendorAgingService.getVendorAgingByExternalId(address.getId(), orderVo.getVendorId(), orderVo.getCustomerId());
 					if (vendorAgingList != null && vendorAgingList.size() > 0) {
 						timeLimitList.add(Integer.parseInt(vendorAgingList.get(0).getAging()));
 					}
