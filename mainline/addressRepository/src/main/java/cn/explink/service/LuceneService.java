@@ -41,6 +41,7 @@ import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Alias;
 import cn.explink.domain.Order;
+import cn.explink.lucene.AddressFilter;
 import cn.explink.lucene.Constants;
 import cn.explink.lucene.DictChange;
 import cn.explink.lucene.ExplinkIKConfig;
@@ -322,7 +323,7 @@ public class LuceneService {
 				List<Address> relatedAddressList = addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
 				logger.info("relatedAddressList = " + relatedAddressList);
 				// 得分评估，过滤掉不符合条件的地址
-				addressList = ScoreFilter.filter(relatedAddressList);
+				addressList = AddressFilter.filter(relatedAddressList);
 			}
 		}
 
