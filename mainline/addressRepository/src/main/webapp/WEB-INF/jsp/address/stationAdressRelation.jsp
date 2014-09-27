@@ -18,6 +18,38 @@
 	overflow:hidden;
 	padding:0px;
 }
+.table {
+    border-collapse: collapse;
+    border-left: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    color: #333333;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    width: 100%;
+    font-size:12px;
+}
+.table > tbody {
+    display: table-row-group;
+    vertical-align: middle;
+}
+ .table > tbody > tr td, table th {
+    border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    line-height: 1.4em;
+    padding: 7px 8px;
+    vertical-align: middle;
+    font-size:12px;
+}
+ .table > thead > tr> td {
+    border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    line-height: 1.4em;
+    padding: 7px 8px;
+    background-color:#9BCD9B;
+    vertical-align: middle;
+    font-size:14px;
+    color:#000;
+     font-weight:bold;
+}
 </style>
 <script type="text/javascript">
 var backNode;
@@ -48,7 +80,7 @@ var setting = {
 			 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 			//刷新
 			 $("#refreshAllBtn").click(function(){
-				 ids=getAllNodes();
+				 var ids=getAllNodes();
 				 getAll(ids);
 	        });
 		       
@@ -122,17 +154,17 @@ var setting = {
 	 <a href="javascript:$.messager.alert('提示', '请选择站点!')" class="easyui-linkbutton" id="startExport">导出</a>
 	 </div>
 </div>
-<div id="dlgImport" class="easyui-dialog" title="导入关键字" style="width:500px;height:320px;padding:10px;">
+<div id="dlgImport" class="easyui-dialog" title="导入关键字"  style="width:650px;height:440px;padding:10px;">
  <table width="100%"  border="0" cellspacing="5" cellpadding="0">
         <tr>
-          <td> <input type="file" id="file" name="file" onchange="takefile('file');" >
+          <td> <input type="file" id="file" name="file" onchange="takefile('file');" />
               	选择导入文件：
-            <input class="easyui-filebox" onclick="fileSelected('file');"  id="tools" data-options="prompt:'请选择'" style="width:200px">
-            </td>
+            <input class="easyui-filebox" onclick="fileSelected('file');" name="tools" id="tools" data-options="prompt:'请选择'" style="width:400px"/>
+            </td><td><a href="javascript:void(0)" class="easyui-linkbutton" id="startKwImport">开始导入</a>&nbsp;</td>
         </tr>
-        <tr>
-          <td><a href="javascript:void(0)" class="easyui-linkbutton" id="startKwImport">开始导入</a>&nbsp;</td>
-        </tr>
+      </table>
+       <table width="100%" id="resultTable" border="0" cellspacing="5" cellpadding="0" class="table" style="margin-top:0px;">
+       	 
       </table>
 </div>
   </div>

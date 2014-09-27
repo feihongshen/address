@@ -28,19 +28,18 @@
     padding: 7px 8px;
     vertical-align: middle;
     font-size:12px;
+   
 }
  .table > thead > tr> td {
     border-bottom: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
     line-height: 1.4em;
     padding: 7px 8px;
-    background-color:#334433;
+    background-color:#9BCD9B;
     vertical-align: middle;
     font-size:14px;
-    color:#fff;
-}
-.table{
-	width:auto;height:auto;
+    color:#000;
+     font-weight:bold;
 }
 </style>
 </head>
