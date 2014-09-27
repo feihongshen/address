@@ -63,7 +63,7 @@
   <table width="100%" border=0 cellspacing="0" cellpadding="0">
     <tr>
       <td><strong>地址库管理平台</strong></td>
-      <td align="right" style="font-size:12px"><a href="javascript:changePass();">修改密码</a>　&nbsp;<a href="/user/logout.htm">退出</a></td>
+      <td align="right" style="font-size:12px"><a href="javascript:changePass();">修改密码</a>　&nbsp;<a href="<%=request.getContextPath()%>/resources/j_spring_security_logout">退出</a></td>
     </tr>
   </table>
 </div>
@@ -85,7 +85,7 @@
     </li>
   </ul>
 </div>
-<div data-options="region:'south',border:false" style="height:30px;background:#A9FACD;padding:10px;">Copyright ? 2008-2014 Lefeng.com All Rights Reserved. </div>
+<div data-options="region:'south',border:false" style="height:30px;background:#A9FACD;padding:10px;">Copyright ? 2014-2015 Explink.cn All Rights Reserved. </div>
 <div data-options="region:'center'" id="mainDiv">
   <div class="easyui-tabs" id="adminTabs">
     <div title="欢迎首页" style="padding:1px">
@@ -265,15 +265,15 @@
 		function chngPass() {
 			if ($('#password').val() != ""
 					&& $('#password').val() != $('#cfmpass').val()) {
-				alert("[登录密码]和[确认密码]不相同，请重新输入！");
+				$.messager.alert('提示',"[登录密码]和[确认密码]不相同，请重新输入！");
 				return false;
 			}
 			if ($('#password').val() != "" && $('#password').val().length < 5) {
-				alert("[登录密码]不能小于5位，请重新填写!");
+				$.messager.alert('提示',"[登录密码]不能小于5位，请重新填写!");
 				return false;
 			}
 			$('#fmChng').form('submit', {
-				url : "/user/chngpass.htm",
+				url : "/user/resetPsd",
 				onSubmit : function() {
 					return $(this).form('validate');
 				},
