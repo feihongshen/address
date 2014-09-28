@@ -54,7 +54,7 @@ $(function(){
 				usedTable=$("#dtable");
 				break;
 			case '命中关键字未匹配站点':
-				tableData=usedData['unList'];
+				tableData=usedData['kList'];
 				usedTable=$("#keytable");
 				break;
 

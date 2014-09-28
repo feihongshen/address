@@ -291,6 +291,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		List<BeanVo> suList=new ArrayList<BeanVo>();
 		List<BeanVo> unList=new ArrayList<BeanVo>();
 		List<BeanVo> dList=new ArrayList<BeanVo>();
+		List<BeanVo> kList=new ArrayList<BeanVo>();
 		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
@@ -303,8 +304,13 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				unList.add(b);
 				break;
 			case  singleResult:
-				b.setVal(singleResult.getDeliveryStationList().get(0).getName());
-				suList.add(b);
+				if(singleResult.getDeliveryStationList().isEmpty()){
+					b.setVal("未匹配");
+					kList.add(b);
+				}else{
+					b.setVal(singleResult.getDeliveryStationList().get(0).getName());
+					suList.add(b);
+				}
 				break;
 			case  multipleResult:
 				List<DeliveryStation> dlist=singleResult.getDeliveryStationList();
@@ -329,6 +335,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		attributes.put("dList", dList);
 		attributes.put("unList", unList);
 		attributes.put("suList", suList);
+		attributes.put("kList", kList);
 		return attributes;
 	}
 
