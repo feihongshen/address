@@ -48,6 +48,7 @@ import cn.explink.modle.DataGridReturn;
 import cn.explink.schedule.Constants;
 import cn.explink.tree.AddressImportEntry;
 import cn.explink.tree.TreeNode;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
 
@@ -723,7 +724,21 @@ private boolean validateDetail(AddressImportDetail detail) {
 			}
 		}
 		if (addressIdList.size() > 0) {
-			addressService.batchUnbindAddress(addressIdList, customerId);
+			List<String> appendedChildrenIdList= addressService.findCannotRemoveIds(addressIdList,customerId);
+			Set<String> set=new HashSet<String>();
+			for (String string : appendedChildrenIdList) {
+				String[] ids=string.split("-");
+				for (String id : ids) {
+					set.add(id);
+				}
+				set.remove("");
+			}
+			for (String id : set) {
+				addressIdList.remove(Long.parseLong(id));
+			}
+			if(addressIdList.size() > 0){
+				addressService.batchUnbindAddress(addressIdList, customerId);
+			}
 		}
 		addressImportResultDao.delete(addressImportResult);
 	}

@@ -614,6 +614,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return addressDao.getAllBands(  customerId);
 	}
 
+	public List<String> findCannotRemoveIds(List<Long> addressIdList,Long customerId) {
+		String hql="select a.path from Address as a, AddressPermission p where a.id = p.addressId and p.customerId = :customerId and a.parentId in :addressIdList and a.id not in:addressIdList";
+		Query query = getSession().createQuery(hql);
+		query.setParameterList("addressIdList", addressIdList);
+		query.setLong("customerId", customerId);
+		return query.list();
+	}
+
 
 
 }
