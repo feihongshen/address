@@ -63,7 +63,7 @@ public class DeliveryStationController extends BaseController {
 		headerNameList.add("地址1");
 		headerNameList.add("地址2");
 		headerNameList.add("地址3");
-		headerNameList.add("原站点");
+		headerNameList.add("站点");
 		DeliveryStation station =  (DeliveryStation) deliveryStationService.getById(id);
 		List<List<String>>   addressList  =deliveryStationService.getAddressById(id,station.getName())  ;
 		XSSFWorkbook wb = deliveryStationService.createAddressFile(headerNameList,addressList);
