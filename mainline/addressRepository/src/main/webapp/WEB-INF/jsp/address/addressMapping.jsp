@@ -64,7 +64,7 @@ $(function(){
 			$(".tr"+title).remove();
 			if(usedTable){
 				for(var i=0;i<tableData.length;i++){
-					var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['key']+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>"
+					var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>"
 					usedTable.append(tr);
 				}
 			}
