@@ -36,7 +36,7 @@ $(function(){
 	});
 	$("#tabs").tabs({ 
 		onSelect:function(title){ 
-			var usedTable=$("#untable");
+			var usedTable;
 			if(!usedData){
 				return;
 			}
@@ -62,9 +62,11 @@ $(function(){
 				break;
 			}
 			$(".tr"+title).remove();
-			for(var i=0;i<tableData.length;i++){
-				var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['key']+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>"
-				usedTable.append(tr);
+			if(usedTable){
+				for(var i=0;i<tableData.length;i++){
+					var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['key']+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>"
+					usedTable.append(tr);
+				}
 			}
 		}
 	});
