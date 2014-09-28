@@ -35,6 +35,7 @@ public class StringUtil {
 	private static Pattern abcPattern = Pattern.compile("^[a-z|A-Z]+$");
 	public static final String splitStrPattern = ",|，|;|；|、|\\.|。|-|_|\\(|\\)|\\[|\\]|\\{|\\}|\\\\|/| |　|\"";
 	private static Log logger = LogFactory.getLog(StringUtil.class);
+	private static String specialCharacter ="+-&&||!(){}[]^\"~*?:\\/";
 	public static boolean isEmpty(String string) {
 		return string == null || string.trim().isEmpty();
 	}
@@ -1805,5 +1806,23 @@ public class StringUtil {
 
 	public static int length(String str) {
 		return str == null ? 0 : str.length();
+	}
+	
+	public static String filterQureyStr(String str){
+		if(StringUtils.isNotBlank(str)){
+		
+			for(int i =0;i<specialCharacter.length();i++){
+				char c = specialCharacter.charAt(i);
+				str = str.replace(c+"", "");
+			}
+			return str;
+		}else{
+			return "";
+		}
+	}
+	public static void main(String [] args){
+		String str = "abcdefg|afilterQureyStr +-&&||!(){}[]^\"~*?:\\/";
+		System.out.println(str);
+		System.out.println(filterQureyStr(str));
 	}
 }
