@@ -47,6 +47,7 @@ import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
+import cn.explink.modle.ImportProcessJson;
 import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
@@ -217,7 +218,7 @@ public class AddressController extends BaseController {
 		AjaxJson  aj=new AjaxJson ();
 		try {
 			in = file.getInputStream();
-			AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId);
+			AddressImportResult addressImportResult = importAddress(in, getLogginedUser(),importType,stationId,request);
 			if(null==addressImportResult){
 				aj.setSuccess(false);
 				aj.setMsg("数据异常");
@@ -298,8 +299,25 @@ public class AddressController extends BaseController {
 			return new ArrayList<AddressImportDetail> ();
 		}
 	}
-
-	
+	/**
+	 * 获取导入进度
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/getImportProc")
+	public @ResponseBody  ImportProcessJson getImportProc( HttpServletRequest request, HttpServletResponse response) {
+		if(request.getSession().getAttribute("proc")!=null){
+			ImportProcessJson pr = (ImportProcessJson)request.getSession().getAttribute("proc");
+			pr.cal();
+			return pr;
+		}
+		else{
+			return null;
+		}
+			
+	 
+	}
 	/**
 	 * 查询地址导入结果
 	 * @param model
@@ -516,7 +534,7 @@ public class AddressController extends BaseController {
 	 * @return
 	 * @throws IOException 
 	 */
-	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId) throws Exception {
+	public AddressImportResult importAddress(InputStream in, User user,Integer importType,Long stationId, HttpServletRequest req) throws Exception {
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
@@ -566,7 +584,6 @@ public class AddressController extends BaseController {
 				details.add(detail);
 			}
 			
-		 
 			//查找客户已有关键词并构造addressMap
 			List<Address> addressList = addressService.getAddressByNames(addressNames,customerId);
 			if(addressList!=null&&!addressList.isEmpty()){
@@ -612,18 +629,28 @@ public class AddressController extends BaseController {
 					 bindMap.put(a.getId(), a); 
 				 }
 			 }
-			 
+			ImportProcessJson proc = new 	ImportProcessJson();
+			req.getSession().setAttribute("proc", proc);
+			proc.setTotal(details.size());
 			for (AddressImportDetail detail : details) {
 				try{
 					addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap,bindMap, customerId, importType,stationId);
+					if(new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
+						proc.setFailure(proc.getFailure()+1);
+					}else{
+						proc.setSuccess(proc.getSuccess()+1);
+					}
+					proc.setProcessed(proc.getProcessed()+1);
+					
 				}catch(Exception e){
 					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 					detail.setMessage(e.getMessage());
 					logger.info(e.getMessage());
+					proc.setFailure(proc.getFailure()+1);
+					proc.setProcessed(proc.getProcessed()+1);
 				}
-              
 			}
-			
+	 	req.getSession().removeAttribute("proc");	
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
 		detailSet.addAll(details);
 		result.setAddressImportDetails(detailSet);
