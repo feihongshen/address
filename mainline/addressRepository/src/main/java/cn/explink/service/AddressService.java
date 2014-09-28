@@ -326,6 +326,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				dList.add(b);
 				break;
 			default:
+				b.setVal("未匹配");
 				unList.add(b);
 				break;
 			}
@@ -333,7 +334,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 		int pper=(int)((suList.size()+dList.size()+0.0)/orderList.size()*100);
 		attributes.put("susum", suList.size());
-		attributes.put("unsum", unList.size());
+		attributes.put("unsum", unList.size()+kList.size());
 		attributes.put("dsum", dList.size());
 		attributes.put("pper", pper);
 		attributes.put("dList", dList);
