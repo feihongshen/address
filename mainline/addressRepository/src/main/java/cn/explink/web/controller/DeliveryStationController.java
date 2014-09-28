@@ -64,7 +64,6 @@ public class DeliveryStationController extends BaseController {
 		headerNameList.add("地址2");
 		headerNameList.add("地址3");
 		headerNameList.add("原站点");
-		headerNameList.add("新站点");
 		DeliveryStation station =  (DeliveryStation) deliveryStationService.getById(id);
 		List<List<String>>   addressList  =deliveryStationService.getAddressById(id,station.getName())  ;
 		XSSFWorkbook wb = deliveryStationService.createAddressFile(headerNameList,addressList);
@@ -104,8 +103,9 @@ public class DeliveryStationController extends BaseController {
 		headerNameList.add("地址1");
 		headerNameList.add("地址2");
 		headerNameList.add("地址3");
-		headerNameList.add("站点");
-		List<List<String>>   addressList = new ArrayList();
+		headerNameList.add("原站点");
+		headerNameList.add("新站点");
+		List<List<String>>   addressList = new ArrayList<List<String>>();
 		String fileName = "";
 		if(StringUtils.isNotEmpty(ids)){
 			String[]  id= ids.split(",");
