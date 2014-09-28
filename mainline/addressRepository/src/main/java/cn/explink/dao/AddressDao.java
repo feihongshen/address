@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
@@ -64,25 +65,22 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	public List<Address> getChildAddress(Long customerId, Long parentId, Long deliveryStationId) {
 		Address parent = this.get(parentId);
 		if(parent!=null&&parent.getAddressLevel()>2){
-			String bindSql=" select a.ID,a.NAME,a.PATH ,a.PARENT_ID parentId from DELIVERY_STATION_RULES r ," +
+			String bindSql=" select concat(a.path,'-',a.ID) from DELIVERY_STATION_RULES r ," +
 					" DELIVERY_STATIONS d ," +
 					" ADDRESS a where a.ID=r.ADDRESS_ID " +
-					" and a.PARENT_ID=:parentId " +
 					" and r.DELIVERY_STATION_ID=d.ID " +
 					" and d.STATUS=1" +
 					" and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
-			List<Address> bindsList=(List<Address>) getSession().createSQLQuery(bindSql).addEntity(Address.class)
+			List<String> bindsList=(List<String>) getSession().createSQLQuery(bindSql) 
 					.setLong("customerId", customerId)
-					.setLong("deliveryStationId", deliveryStationId)
-					.setLong("parentId", parentId).list();
+					.setLong("deliveryStationId", deliveryStationId).list();
 			Set<String> binds = new HashSet<String>();
 			if(bindsList!=null&&!bindsList.isEmpty()){
-				for(Address a:bindsList){
-					String [] ps =  a.getPath().split("-");
+				for(String a:bindsList){
+					String [] ps =  a.split("-");
 					for(int j = 0;j<ps.length;j++){
 						binds.add(ps[j]);
 					}
-					binds.add(a.getId()+"");
 				}
 			}
 			if(binds!=null&&!binds.isEmpty()){
