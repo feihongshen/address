@@ -278,6 +278,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 		return result;
 	}
+	
 	/**
 	 * 匹配接口不做存储
 	 * 
@@ -553,7 +554,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
 		List<ZTreeNode> address=deliverStationRuleService.getAdressByStation(customerId,stationId);
-		Set<Long> set=new HashSet<Long>();
+		Set<String> set=new HashSet<String>();
 		if(null!=address&&address.size()>0){
 			StringBuffer aIds=new StringBuffer();
 			for (ZTreeNode a : address) {
@@ -561,10 +562,20 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			}
 			String[] ids=aIds.toString().split("-");
 			for (String id : ids) {
-				set.add(Long.parseLong(id));
+				set.add(id);
 			}
+			set.remove("");
+			aIds.setLength(0);
+			for (String string : set) {
+				aIds.append(string+",");
+			}
+			aIds.setLength(aIds.length()-1);
+			return addressDao.getZTreeNodeByIdListAndCustomerId(aIds.toString(),customerId);
 		}
-		return addressDao.getZTreeNodeByIdListAndCustomerId(set,customerId);
+			
+		else{
+			return null;
+		}
 	}
 
 	public Map getAdressPromtInfo(Long customerId) {

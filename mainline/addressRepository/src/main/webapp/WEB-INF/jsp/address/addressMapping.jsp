@@ -22,6 +22,9 @@ $(function(){
 			data:{needMatched:$("#needMatched").val()},
 			success:function(optionData){
 				var data=optionData['attributes'];
+				if(!data){
+					alert("没有相关匹配");
+				}
 				for(var i=0;i<arrsum.length;i++){
 					var temp=arrsum[i];
 					$("."+temp).text(data[temp]);
