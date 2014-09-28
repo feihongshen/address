@@ -71,13 +71,13 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 					" and r.DELIVERY_STATION_ID=d.ID " +
 					" and d.STATUS=1" +
 					" and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
-			List<String> bindsList=(List<String>) getSession().createSQLQuery(bindSql) 
+			List<Object> bindsList=(List<Object>) getSession().createSQLQuery(bindSql) 
 					.setLong("customerId", customerId)
 					.setLong("deliveryStationId", deliveryStationId).list();
 			Set<String> binds = new HashSet<String>();
 			if(bindsList!=null&&!bindsList.isEmpty()){
-				for(String a:bindsList){
-					String [] ps =  a.split("-");
+				for(Object a:bindsList){
+					String [] ps =  (a+"").split("-");
 					for(int j = 0;j<ps.length;j++){
 						binds.add(ps[j]);
 					}
