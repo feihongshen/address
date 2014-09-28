@@ -57,7 +57,7 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		return query.list();
 	}
 	public List<ComboBox> getComBoxDeliveryStation(Long customerId) {
-		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId ";
+		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId order by ds.name ";
 		Query query = getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		return query.list();
