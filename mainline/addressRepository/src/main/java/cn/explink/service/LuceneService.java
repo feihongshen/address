@@ -47,6 +47,7 @@ import cn.explink.lucene.DictChange;
 import cn.explink.lucene.ExplinkIKConfig;
 import cn.explink.lucene.LuceneEnvironment;
 import cn.explink.lucene.ScoreFilter;
+import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.OrderVo;
 import cn.explink.ws.vo.OrderAddressMappingResult;
 
@@ -306,7 +307,7 @@ public class LuceneService {
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();
-		Query query = parser.parse(addressLine);
+		Query query = parser.parse(StringUtil.filterQureyStr(addressLine));
 		TopDocs topDocs = searcher.search(query, LuceneEnvironment.DEFAULT_MAX_RESULT_COUNT);
 		System.out.println("maxScore = " + topDocs.getMaxScore());
 		if (topDocs.scoreDocs != null) {
