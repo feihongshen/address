@@ -65,7 +65,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	public List<Address> getChildAddress(Long customerId, Long parentId, Long deliveryStationId) {
 		Address parent = this.get(parentId);
 		if(parent!=null&&parent.getAddressLevel()>2){
-			String bindSql=" select concat(a.path,'-',a.ID) from DELIVERY_STATION_RULES r ," +
+			String bindSql=" select concat(a.path,'-',CAST(a.ID AS CHAR)) from DELIVERY_STATION_RULES r ," +
 					" DELIVERY_STATIONS d ," +
 					" ADDRESS a where a.ID=r.ADDRESS_ID " +
 					" and r.DELIVERY_STATION_ID=d.ID " +
