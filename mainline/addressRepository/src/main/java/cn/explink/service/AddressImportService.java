@@ -132,19 +132,15 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     		   Address a2 = null;
     		   Address a3 = null;
     		   boolean isSaved = false;//一次导入只能保存一个关键字
-    		   
     		   //处理第一关键字
     		   a1 = addressMap.get(d.getId()+"-"+detail.getAddress1());
     		   if(a1==null){//为空则创建并绑定
     			   a1 = createAndBind(d,detail.getAddress1(),customerId);
-    			   addressMap.put(d.getId()+"-"+a1.getName(), a1);
-    			   bindMap.put(a1.getId(),a1);
     			   isSaved = true;
     		   }else{
     			   if( bindMap.get(a1.getId())==null){
     				   bindAddress(a1,customerId);
     				   isSaved = true;
-    				   bindMap.put(a1.getId(),a1);
     			   }
     		   }
     		   bindAddress=a1;
@@ -157,14 +153,11 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     			   a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
         		   if(a2==null){//为空则创建并绑定
         			   a2 = createAndBind(a1,detail.getAddress2(),customerId);
-        			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
-        			   bindMap.put(a2.getId(),a2);
         			   isSaved = true;
         		   }else{//是否已经绑定
         			   if( bindMap.get(a2.getId())==null){
         				   bindAddress(a2,customerId);
         				   isSaved = true;
-        				   bindMap.put(a2.getId(),a2);
         			   }
         		   }
         		   bindAddress=a2;
@@ -178,14 +171,11 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     			   a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
         		   if(a3==null){//为空则创建并绑定
         			   a3 = createAndBind(a2,detail.getAddress3(),customerId);
-        			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
-        			   bindMap.put(a3.getId(),a3);
         			   isSaved=true;
         		   }else{
         			   if( bindMap.get(a3.getId())==null){
         				   bindAddress(a3,customerId);
         				   isSaved = true;
-        				   bindMap.put(a3.getId(),a3);
         			   }
         		   }
         		   bindAddress=a3;
@@ -244,21 +234,12 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	  					isSaved=true;
     	    			  }
     	    		   }
-    		   }
-    		   if(importType==AddressImportTypeEnum.stationMove.getValue()){//站点移动
-    			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
-    	    			  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
-    	    			  if(ds==null){
-    	    				  throw new ExplinkRuntimeException("配送站点不存在");
-    	    			  }else{
-    	    				  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),ds.getId());
-    	    				  isSaved=true;
-    	    			  }
-    	    		   }
-    		   }
+    		   } 
     		   if(!isSaved){
     			   throw new ExplinkRuntimeException("数据重复！");
     		   }
+    		   addressMap.put(bindAddress.getParentId()+"-"+bindAddress.getName(), bindAddress);
+			   bindMap.put(bindAddress.getId(),bindAddress);
     		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
     				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
     				detail.setAddressId(bindAddress.getId());
