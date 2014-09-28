@@ -25,6 +25,7 @@
 	});
 	$("#importAddress").bind("click",function(){
 		$('#dlgImport').dialog('open');
+		$("#resultTable").html("");
 	});
 	
 	$("#stationShow").find("input[name='stationIds']").live("click",function(){
@@ -44,7 +45,7 @@
 	$("#startKwImport").click(function(){
 		$("#startKwImport").attr('disabled', true);
 		$.ajaxFileUpload({
-			url : ctx+'/address/importAddress?importType=3',
+			url : ctx+'/address/moveAddress',
 			secureuri : false,
 			fileElementId : 'file',
 			dataType: 'json',
@@ -110,21 +111,21 @@
 		}
 	}
 	function generateResult(list){
-		var html = "<thead><tr><td>省份</td><td>城市</td><td>区域</td><td>关键字1-关键字2-关键字3</td><td>站点</td><td>错误原因</td></tr></thead>";
+		var html = "<thead><tr><td>省份</td><td>城市</td><td>区域</td><td>关键字1-关键字2-关键字3</td><td>原站点</td><td>新站点</td><td>状态</td><td>错误原因</td></tr></thead>";
 		html+="<tbody>";
 		for(var i = 0;i<list.length;i++){
 			var item = list[i];
-			if(item.status==1){
-				html+="<tr><td>"
+					html+="<tr><td>"
 					+(item.province==null?"":item.province)+"</td><td>"
 					+(item.city==null?"":item.city)+"</td><td>"
 				    +(item.district==null?"":item.district)+"</td><td>"
 				    +(item.address1==null?"":item.address1)+"-"
 				    +(item.address2==null?"":item.address2)+"-"
 				    +(item.address3==null?"":item.address3)+"</td><td>"
+				    +(item.deliveryStationOldName==null?"":item.deliveryStationOldName)+"</td><td>"
 				    +(item.deliveryStationName==null?"":item.deliveryStationName)+"</td><td>"
+				    +(item.status==0?"成功":"失败")+"</td><td>"
 				    +(item.message==null?"":item.message)+"</td></tr>";
-			}
 		}
 		html+="</tbody>";
 		return html;

@@ -82,6 +82,7 @@ public class AddressController extends BaseController {
 	
 	@Autowired
 	private DelivererService delivererService;
+	 
 	
 	@RequestMapping("/index")
 	public String index(Model model) {
@@ -197,7 +198,15 @@ public class AddressController extends BaseController {
 		}
 		return null;
 	}
-
+     /**
+      * Excel导入关键字
+      * @param request
+      * @param response
+      * @param file
+      * @param importType
+      * @param stationId
+      * @return
+      */
 	@RequestMapping("/importAddress")
 	public @ResponseBody AjaxJson importAddress( HttpServletRequest request, HttpServletResponse response,
 			 MultipartFile file,Integer importType,Long stationId) {
@@ -231,6 +240,44 @@ public class AddressController extends BaseController {
 		}
 		return aj;
 	}
+	
+	 /**
+     * Excel导入关键字
+     * @param request
+     * @param response
+     * @param file
+     * @param importType
+     * @param stationId
+     * @return
+     */
+	@RequestMapping("/moveAddress")
+	public @ResponseBody AjaxJson moveAddress( HttpServletRequest request, HttpServletResponse response,MultipartFile file ) {
+		InputStream in = null;
+		AjaxJson  aj=new AjaxJson ();
+		try {
+			in = file.getInputStream();
+			AddressImportResult addressImportResult = moveAddress(in, getLogginedUser());
+			if(null==addressImportResult){
+				aj.setSuccess(false);
+				aj.setMsg("数据异常");
+				return aj;
+			}
+			aj.setSuccess(true);
+			aj.setMsg(addressImportResult.getId()+"");
+			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
+			aj.setInfo("导入成功："+addressImportResult.getSuccessCount()+"个；导入失败："+addressImportResult.getFailureCount()+"个");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			aj.setSuccess(false);
+			aj.setInfo(e.getMessage());
+		}
+		return aj;
+	}
+	
+	
+	
+	
 	
 	@RequestMapping("/getPromtInfo")
 	public @ResponseBody AjaxJson getPromtInfo( HttpServletRequest request, HttpServletResponse response) {
@@ -598,5 +645,119 @@ public class AddressController extends BaseController {
 		}
 		return result;
 	}
-	 
+	public AddressImportResult moveAddress(InputStream in, User user) throws Exception {
+		Long customerId = user.getCustomer().getId();
+		AddressImportResult result = new AddressImportResult();
+		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
+		Map<String,Address> map = new HashMap<String,Address>();//省市区地址MAP(Key:省-市-区)
+		Map<String,Address> addressMap = new HashMap<String,Address>();//关键字MAP(Key:父ID-名称)
+		Map<String,DeliveryStation> stationMap = new HashMap<String,DeliveryStation>();	//站点MAP(Key:客户ID-名称)
+		Map<String,Deliverer> delivererMap = new HashMap<String,Deliverer>();//小件员MAP(Key:客户ID-名称)
+		Map<Long,Address>   bindMap = new HashMap<Long,Address>();//客户已经包含的地址列表
+		Set<String> addressNames = new HashSet<String>();
+		Set<String> adminNames = new HashSet<String>();
+			XSSFWorkbook wb = new XSSFWorkbook(in);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			int rowNum = 1;
+			while (true) {
+				XSSFRow row = sheet.getRow(rowNum);
+				if (row == null) {
+					break;
+				}
+				rowNum++;
+				String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
+				String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
+				String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
+				String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
+				String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
+				String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
+				String deliveryStationOldName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
+				String deliveryStationName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
+ 				
+				addressImportService.addNonNullValue(adminNames, province);
+				addressImportService.addNonNullValue(adminNames, city);
+				addressImportService.addNonNullValue(adminNames, district);
+				addressImportService.addNonNullValue(addressNames, address1);
+				addressImportService.addNonNullValue(addressNames, address2);
+				addressImportService.addNonNullValue(addressNames, address3);
+				
+				AddressImportDetail detail = new AddressImportDetail();
+				detail.setProvince(province);
+				detail.setCity(city);
+				detail.setDistrict(district);
+				detail.setAddress1(address1);
+				detail.setAddress2(address2);
+				detail.setAddress3(address3);
+				detail.setDeliveryStationOldName(deliveryStationOldName);
+				detail.setDeliveryStationName(deliveryStationName);
+				detail.setAddressImportResult(result);
+				details.add(detail);
+			}
+			
+		 
+			//查找客户已有关键词并构造addressMap
+			List<Address> addressList = addressService.getAddressByNames(addressNames,customerId);
+			if(addressList!=null&&!addressList.isEmpty()){
+				for(Address a:addressList){
+					addressMap.put(a.getParentId()+"-"+a.getName(), a);
+				}
+			}
+			//查找所有行政关键词并构造map
+			List<Address> list = addressService.getAdministrationAddress(adminNames,customerId);
+			if(list!=null&&!list.isEmpty()){
+				Map<String,String> m = new HashMap<String,String>();
+				for(Address a:list){
+					m.put(a.getId()+"", a.getName());
+				}
+				for(Address a:list){
+					if(new Integer(3).equals(a.getAddressLevel())){
+						String path = a.getPath();
+						String[] ids = path.split("-");
+						map.put(m.get(ids[1])+"-"+m.get(ids[2])+"-"+a.getName(), a);
+					}
+				}
+			}
+			//构造所有站点Map
+			 List<DeliveryStation> stationList =  deliveryStationService.listAll(customerId);
+			 if(stationList!=null&&!stationList.isEmpty()){
+				 for(DeliveryStation ds:stationList){
+					 stationMap.put(customerId+"-"+ds.getName(), ds);
+				 }
+			 }
+			 
+			 //构造该客户的绑定地址
+			 List<Address> bandList = this.addressService.getAllBands(customerId);
+			 if(bandList!=null){
+				 for(Address a:bandList){
+					 bindMap.put(a.getId(), a); 
+				 }
+			 }
+			for (AddressImportDetail detail : details) {
+				try{
+					addressImportService.txNewMoveDetail(map, detail, addressMap, stationMap, delivererMap,bindMap, customerId);
+				}catch(Exception e){
+					detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+					detail.setMessage(e.getMessage());
+					logger.info(e.getMessage());
+				}
+			}
+		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
+		detailSet.addAll(details);
+		result.setAddressImportDetails(detailSet);
+		int successCount = 0;
+		int failureCount = 0;
+		for (AddressImportDetail detail : details) {
+			if (detail.getStatus() != null && detail.getStatus().intValue() == AddressImportDetailStatsEnum.success.getValue()) {
+				successCount++;
+			} else {
+				failureCount++;
+			}
+		}
+		result.setSuccessCount(successCount);
+		result.setFailureCount(failureCount);
+		result.setImportDate(new Date());
+		result.setUserId(user.getId());
+		return result;
+	}
+	
 }

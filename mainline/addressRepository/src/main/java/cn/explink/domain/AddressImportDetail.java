@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -70,6 +71,9 @@ public class AddressImportDetail {
 	@JoinColumn(name = "RESULT_ID")
 	private AddressImportResult addressImportResult;
 
+	@Transient
+	private String deliveryStationOldName;
+	
 	public Long getId() {
 		return id;
 	}
@@ -228,4 +232,11 @@ public class AddressImportDetail {
 		return builder.toString();
 	}
 
+	public String getDeliveryStationOldName() {
+		return deliveryStationOldName;
+	}
+
+	public void setDeliveryStationOldName(String deliveryStationOldName) {
+		this.deliveryStationOldName = deliveryStationOldName;
+	}
 }

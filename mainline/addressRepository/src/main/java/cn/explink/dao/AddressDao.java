@@ -3,6 +3,7 @@ package cn.explink.dao;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,27 +64,37 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	public List<Address> getChildAddress(Long customerId, Long parentId, Long deliveryStationId) {
 		Address parent = this.get(parentId);
 		if(parent!=null&&parent.getAddressLevel()>2){
-			String bindSql=" select DISTINCT  r.ADDRESS_ID id from DELIVERY_STATION_RULES r ," +
+			String bindSql=" select a.ID,a.NAME,a.PATH ,a.PARENT_ID parentId from DELIVERY_STATION_RULES r ," +
 					" DELIVERY_STATIONS d ," +
 					" ADDRESS a where a.ID=r.ADDRESS_ID " +
 					" and a.PARENT_ID=:parentId " +
 					" and r.DELIVERY_STATION_ID=d.ID " +
 					" and d.STATUS=1" +
 					" and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
-			List<Integer> binds=(List<Integer>) getSession().createSQLQuery(bindSql)
+			List<Address> bindsList=(List<Address>) getSession().createSQLQuery(bindSql).addEntity(Address.class)
 					.setLong("customerId", customerId)
 					.setLong("deliveryStationId", deliveryStationId)
 					.setLong("parentId", parentId).list();
+			Set<String> binds = new HashSet<String>();
+			if(bindsList!=null&&!bindsList.isEmpty()){
+				for(Address a:bindsList){
+					String [] ps =  a.getPath().split("-");
+					for(int j = 0;j<ps.length;j++){
+						binds.add(ps[j]);
+					}
+					binds.add(a.getId()+"");
+				}
+			}
 			if(binds!=null&&!binds.isEmpty()){
 				String ids = "";
-				for(Integer i :binds){
+				for(String i :binds){
 					ids+=i+",";
 				}
 				ids = ids.substring(0,ids.length()-1);
 				StringBuilder hql = new StringBuilder("select a from Address a, AddressPermission p");
 				hql.append(" where a.parentId = :parentId");
 				hql.append(" and a.id = p.addressId");
-				hql.append(" and a.id in ( "+ids).append(")");
+				hql.append(" and a.id in ( "+ids+")");
 				hql.append(" and p.customerId = :customerId");
 				Query query = getSession().createQuery(hql.toString());
 				query.setLong("parentId", parentId);
@@ -272,6 +283,20 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		Query query = getSession().createQuery(hql.toString());
 		query.setLong("customerId", customerId);
 		return query.list(); 
+	}
+
+	public DeliveryStationRule getDefaultStation(Long addressId) {
+		String hql = "from DeliveryStationRule" +
+				" where address.id = :addressId" +
+				" and ruleType=1 ";
+		Query query = getSession().createQuery(hql);
+		query.setLong("addressId", addressId);
+		List<DeliveryStationRule> list = query.list();
+		if(list!=null&&!list.isEmpty()){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 	
 }

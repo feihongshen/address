@@ -38,6 +38,7 @@ public class AddressFilter {
 			}
 		}
 		for(AddressCompare ac:lc){
+			ac.address.setPath(ac.address.getPath().substring(1,ac.address.getPath().length()-1));
 		    if(ac.hasSsq&&!ac.isPath&&ac.score==maxScore&&ac.address.getAddressLevel()>3){
 		    	result.add(ac.address);
 		    }

@@ -268,6 +268,129 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	   detail.setMessage("导入格式不合规范");
        }
     }
+    /**
+     *   导入单行记录（新事务处理）
+                       地址格式是否正确（  - -大望路）否-->失败 ：上级地址不存在
+    	  三级地址是否存在（北京-市辖区-朝阳区） 否-->失败：上级地址不存在
+    	 四、伍、六级地址是否存在（不存在：创建 [如果是最后一级，]，存在：添加至地址MAP）
+    	 站点非空（绑定判别-抛异常站点不存在）
+    	  配送员非空（绑定判别-为空抛异常配送员不存在） 
+     * @param map 名称-Address
+     * @param detail 但行记录
+     * @param addressMap 已经查出来的Map
+     * @param customerId 
+     */
+    public void txNewMoveDetail(Map<String,Address> map,AddressImportDetail detail,Map<String,Address> addressMap,Map<String,DeliveryStation> stationMap,Map<String,Deliverer> delivererMap,Map<Long,Address> bindMap,Long customerId){
+       if(validateDetail(detail)){
+    	   Address d =  map.get(detail.getProvince()+"-"+detail.getCity()+"-"+detail.getDistrict());
+    	   if(d==null){
+    		   throw new ExplinkRuntimeException("省/市/区地址不存在");
+    	   }else{
+    		   Address bindAddress = null;//需要绑定站点或者配送员的地址（动态变化，取最后一级地址）
+    		   Address a1 = null;
+    		   Address a2 = null;
+    		   Address a3 = null;
+    		   boolean isSaved = false;//一次导入只能保存一个关键字
+    		   
+    		   //处理第一关键字
+    		   a1 = addressMap.get(d.getId()+"-"+detail.getAddress1());
+    		   if(a1==null){//为空则创建并绑定
+    			   a1 = createAndBind(d,detail.getAddress1(),customerId);
+    			   addressMap.put(d.getId()+"-"+a1.getName(), a1);
+    			   bindMap.put(a1.getId(),a1);
+    			   isSaved = true;
+    		   }else{
+    			   if( bindMap.get(a1.getId())==null){
+    				   bindAddress(a1,customerId);
+    				   isSaved = true;
+    				   bindMap.put(a1.getId(),a1);
+    			   }
+    		   }
+    		   bindAddress=a1;
+
+    		   //处理第二关键字
+    		   if(StringUtils.isNotBlank(detail.getAddress2())){
+    			   if(isSaved){
+    				   throw new ExplinkRuntimeException("父节点不存在");
+    			   }
+    			   a2 = addressMap.get(a1.getId()+"-"+detail.getAddress2());
+        		   if(a2==null){//为空则创建并绑定
+        			   a2 = createAndBind(a1,detail.getAddress2(),customerId);
+        			   addressMap.put(a1.getId()+"-"+a2.getName(), a2);
+        			   bindMap.put(a2.getId(),a2);
+        			   isSaved = true;
+        		   }else{//是否已经绑定
+        			   if( bindMap.get(a2.getId())==null){
+        				   bindAddress(a2,customerId);
+        				   isSaved = true;
+        				   bindMap.put(a2.getId(),a2);
+        			   }
+        		   }
+        		   bindAddress=a2;
+    		   } 
+    		   
+    		   //处理第三个关键字
+    		   if(StringUtils.isNotBlank(detail.getAddress3())){
+    			   if(isSaved){
+    				   throw new ExplinkRuntimeException("父节点不存在");
+    			   }
+    			   a3 = addressMap.get(a2.getId()+"-"+detail.getAddress3());
+        		   if(a3==null){//为空则创建并绑定
+        			   a3 = createAndBind(a2,detail.getAddress3(),customerId);
+        			   addressMap.put(a2.getId()+"-"+a3.getName(), a3);
+        			   bindMap.put(a3.getId(),a3);
+        			   isSaved=true;
+        		   }else{
+        			   if( bindMap.get(a3.getId())==null){
+        				   bindAddress(a3,customerId);
+        				   isSaved = true;
+        				   bindMap.put(a3.getId(),a3);
+        			   }
+        		   }
+        		   bindAddress=a3;
+    		   } 
+    		  
+			   if(StringUtils.isNotBlank(detail.getDeliveryStationName())){ 
+				     if(StringUtils.isNotBlank(detail.getDeliveryStationOldName())){
+				    	 DeliveryStation oldDs =  stationMap.get(customerId+"-"+detail.getDeliveryStationOldName());
+				    	 DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
+		    			  if(oldDs==null){
+		    				  throw new ExplinkRuntimeException("原配送站点不存在");
+		    			  }else{
+		    				 if(ds==null) {
+		    					  throw new ExplinkRuntimeException("配送站点不存在");
+		    				 }else{
+			    				 int count =  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),oldDs.getId(),ds.getId());
+			    				 if(count>0){
+			    					  isSaved=true;
+			    				  }
+		    				 }
+		    			  }
+				     }else{
+				    	  DeliveryStation ds =  stationMap.get(customerId+"-"+detail.getDeliveryStationName());
+		    			  if(ds==null){
+		    				  throw new ExplinkRuntimeException("配送站点不存在");
+		    			  }else{
+		    				  int count =  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),ds.getId());
+		    				  if(count>0){
+		    					  isSaved=true;
+		    				  }
+		    			  }
+				     }
+	    		 }
+			   if(!isSaved){
+				   throw new ExplinkRuntimeException("关键词无变化！");
+			   }
+    		   if(!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())){
+    				detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
+    				detail.setAddressId(bindAddress.getId());
+    		   }
+    	   }
+       }else{
+    	   detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
+    	   detail.setMessage("导入格式不合规范");
+       }
+    }
    private void bindAddress(Address a1, Long customerId) {
 	   AddressPermission permission = new AddressPermission();
 	   permission.setAddressId(a1.getId());

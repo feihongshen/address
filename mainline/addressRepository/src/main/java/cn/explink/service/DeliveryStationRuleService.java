@@ -210,13 +210,13 @@ public class DeliveryStationRuleService extends RuleService {
 		return query.list();
 	}
 
-	public void removeAddressRule(Long addressId, Long stationId) {
-		Query query = getSession().createSQLQuery("UPDATE DELIVERY_STATION_RULES SET  DELIVERY_STATION_ID = :stationId WHERE ADDRESS_ID=:addressId");
-		query.setLong("addressId", addressId);
-		query.setLong("stationId", stationId);
-		query.executeUpdate();
+	public int removeAddressRule(Long addressId, Long stationId) {
+		return deliveryStationRuleDao.removeAddressRule( addressId,  stationId);
+		
 	}
-
+	public int removeAddressRule(Long addressId,Long oldStationId, Long stationId) {
+		 return deliveryStationRuleDao.removeAddressRule( addressId,oldStationId,  stationId);
+	}
 	public void changeStationRelation(Long sourceStationId, Long targetStationId, String sourceAddressId, String targetAddressId) {
 		if (StringUtils.isNotBlank(sourceAddressId)) {
 			String sourceSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`=" + sourceStationId + " WHERE `DELIVERY_STATION_ID`="

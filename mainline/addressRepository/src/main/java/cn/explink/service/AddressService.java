@@ -218,6 +218,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @return true：已绑定，false：新绑定
 	 */
 	public boolean bindAddressWithStation(Address address, Long stationId) {
+		DeliveryStationRule defaultRule = addressDao.getDefaultStation(address.getId());
+		if(defaultRule!=null){
+			 throw new ExplinkRuntimeException("该关键字已绑定默认站点"+defaultRule.getDeliveryStation().getName());
+		}
 		DeliveryStationRule dsr = addressDao.getStationRuleByAddressAndStation(address.getId(), stationId);
 		if (dsr == null) {
 			dsr = new DeliveryStationRule();

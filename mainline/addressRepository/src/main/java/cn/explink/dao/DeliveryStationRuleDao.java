@@ -50,5 +50,24 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		query.setInteger("ruleType", DelivererRuleTypeEnum.fallback.getValue());
 		return query.list();
 	}
+
+
+	public int removeAddressRule(Long addressId, Long stationId) {
+		Query query = getSession().createSQLQuery("UPDATE DELIVERY_STATION_RULES SET  DELIVERY_STATION_ID = :stationId WHERE ADDRESS_ID=:addressId");
+		query.setLong("addressId", addressId);
+		query.setLong("stationId", stationId);
+		return query.executeUpdate();
+	}
+
+
+	public int removeAddressRule(Long addressId, Long oldStationId,
+			Long stationId) {
+		Query query = getSession().createSQLQuery("UPDATE DELIVERY_STATION_RULES SET  DELIVERY_STATION_ID = :stationId WHERE ADDRESS_ID=:addressId" +
+				" and DELIVERY_STATION_ID=:oldStationId");
+		query.setLong("addressId", addressId);
+		query.setLong("stationId", stationId);
+		query.setLong("oldStationId", oldStationId);
+		return query.executeUpdate();
+	}
  
 }
