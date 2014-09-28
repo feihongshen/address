@@ -17,7 +17,9 @@ import cn.explink.dao.DelivererRuleDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
+import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.util.JsonUtil;
@@ -136,8 +138,14 @@ public class DelivererRuleService extends RuleService {
 	 * @return
 	 */
 	private boolean isConflict(RuleExpression ruleExpression, DelivererRule existingRule) {
-		if (DelivererRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
 			return true;
+		}
+		if (ruleExpression != null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+			return false;
+		}
+		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() != existingRule.getRuleType().intValue()) {
+			return false;
 		}
 		RuleExpression existingRuleExpression = JsonUtil.readValue(existingRule.getRuleExpression(), RuleExpression.class);
 		return isConflict(ruleExpression, existingRuleExpression);
