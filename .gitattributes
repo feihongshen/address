@@ -88,6 +88,7 @@ mainline/addressRepository/src/main/java/cn/explink/modle/ComboBox.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/ComboTree.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/DataGrid.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/DataGridReturn.java -text
+mainline/addressRepository/src/main/java/cn/explink/modle/ImportProcessJson.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/SortDirection.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/SortInfo.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/CriteriaQuery.java -text
