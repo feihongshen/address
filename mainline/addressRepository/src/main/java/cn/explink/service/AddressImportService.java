@@ -251,6 +251,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
     	    				  throw new ExplinkRuntimeException("配送站点不存在");
     	    			  }else{
     	    				  deliveryStationRuleService.removeAddressRule(bindAddress.getId(),ds.getId());
+    	    				  isSaved=true;
     	    			  }
     	    		   }
     		   }

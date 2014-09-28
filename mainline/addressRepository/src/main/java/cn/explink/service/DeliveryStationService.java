@@ -136,6 +136,7 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation,Lo
 	    	if(a.getPath()!=null){
 	    		String[] ids = a.getPath().split("-");
 	    		for(int i =0;i<ids.length;i++){
+	    			if(StringUtils.isNotBlank(ids[i]))
 	    			row.add(addMap.get(Long.parseLong(ids[i])));
 	    		}
 	    		row.add(a.getName());
