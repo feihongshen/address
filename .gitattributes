@@ -20,6 +20,7 @@ mainline/addressRepository/src/main/db/changelog/address_init_data.sql -text
 mainline/addressRepository/src/main/db/changelog/address_init_table.sql -text
 mainline/addressRepository/src/main/db/changelog/changelog.xml -text
 mainline/addressRepository/src/main/db/changelog/customer_init_explink.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_gzpx.sql -text
 mainline/addressRepository/src/main/db/changelog/quartz_init.sql -text
 mainline/addressRepository/src/main/db/pom.xml -text
 mainline/addressRepository/src/main/java/cn/explink/Constants.java -text

@@ -100,4 +100,10 @@
 			 UPDATE ADDRESS SET PARENT_ID = -1 where ADDRESS_LEVEL=0 ;  
 		</sql>
 	</changeSet>
+	
+	<!-- 创建贵州品信客户 -->
+	<changeSet id="xushiju-2014-09-30-01" author="xushiju">
+		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
 </databaseChangeLog>
