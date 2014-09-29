@@ -263,8 +263,8 @@ public class LuceneService {
 				indexWriter.addDocument(createDocument(alias));
 			}
 		}
-		
 		indexWriter.commit();
+		LuceneEnvironment.getInstance().resetSearcher();
 	}
 
 	private Document createDocument(Address address) throws IOException {
