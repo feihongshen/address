@@ -25,21 +25,6 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<!-- 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${jdbc.drivers}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="initialSize" value="${jdbc.initialSize}" />
-		<property name="maxActive" value="${jdbc.maxActive}" />
-		<property name="maxWait" value="${jdbc.maxWait}" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="testOnBorrow" value="true" />
-		<property name="validationQuery" value="SELECT 1" />
-	</bean>
-	 -->
-	 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="${jdbc.drivers}" />
@@ -107,17 +92,4 @@
 	     -->
 	</aop:config>
 
-	<!-- Hibernate template beans 
-	<bean id="hibernateTemplate"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory"></property>
-	</bean>
-	-->
-	
-    <!-- Basic DAO Support injection 
-    <bean id="basicHibernateDaoSupport"
-    	class="com.lefeng.ordertracer.dao.support.BasicHibernateDaoSupport"
-    	abstract="true">
-    </bean>
-    -->
 </beans>

@@ -553,9 +553,6 @@
 				<jdbc.url>jdbc:mysql://localhost:3306/address_repository?characterEncoding=utf8</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>root</jdbc.password>
-				<jdbc.initialSize>10</jdbc.initialSize>
-				<jdbc.maxActive>30</jdbc.maxActive>
-				<jdbc.maxWait>6000</jdbc.maxWait>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
@@ -582,9 +579,6 @@
 				<jdbc.url>jdbc:mysql://192.0.170.55:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password></jdbc.password>
-				<jdbc.initialSize>10</jdbc.initialSize>
-				<jdbc.maxActive>30</jdbc.maxActive>
-				<jdbc.maxWait>6000</jdbc.maxWait>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
@@ -600,6 +594,32 @@
 				<luceneIndexPath>/home/appusr/address/lucene/index</luceneIndexPath>
 				<luceneDictPath>/home/appusr/address/lucene/dict</luceneDictPath>
 				<label>test</label>
+			</properties>
+		</profile>
+		<profile>
+			<id>stressTest</id>
+			<properties>
+				<!-- tomcat port:10180, shutdown port:10181, jmxremote port: 10182 -->
+				<tomcat.manager.url>http://192.168.0.217:10180/manager</tomcat.manager.url>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://192.168.0.217:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password></jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/appusr/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/appusr/address/lucene/dict</luceneDictPath>
+				<label>stressTest</label>
 			</properties>
 		</profile>
 		<profile>
