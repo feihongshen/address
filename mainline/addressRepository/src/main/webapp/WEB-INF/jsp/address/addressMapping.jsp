@@ -11,7 +11,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript">
-var arrsum=['insum','unsum','susum','dsum','pper'];
+var arrsum=['insum','unsum','susum','dsum','ksum','pper'];
 var usedData;
 var tableData;
 $(function(){
@@ -29,6 +29,8 @@ $(function(){
 					var temp=arrsum[i];
 					$("."+temp).text(data[temp]);
 				}
+				var unsumCount=data['unsum']*1+data['ksum']*1;
+				$("#unsumCount").text(unsumCount);
 				usedData=data;
 				
 			}
@@ -82,7 +84,7 @@ $(function(){
       <table width="100%" border="0" cellpadding="5" cellspacing="0">
         <tr>
           <td><a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a></td>
-          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span class="unsum">0</span>,成功匹配<span class="susum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0</span>%</td>
+          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span id="unsumCount">0</span>,成功匹配<span class="susum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0</span>%</td>
         </tr>
       </table>
     </div>
@@ -101,7 +103,7 @@ $(function(){
       </table>
     </div>
     <div title="匹配成功" style="padding:10px">
-      <h2 align="right">匹配成功共<span class="susum">0条</span></h2>
+      <h2 align="right">匹配成功共<span class="susum">0</span>条</h2>
       <table id="sutable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
@@ -114,7 +116,7 @@ $(function(){
       </table>
     </div>
     <div title="匹配多站" style="padding:10px">
-      <h2 align="right">匹配多站共<span class="dsum">0条</span></h2>
+      <h2 align="right">匹配多站共<span class="dsum">0</span>条</h2>
       <table  id="dtable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
@@ -127,7 +129,7 @@ $(function(){
       </table>
     </div>
     <div title="命中关键字未匹配站点" style="padding:10px">
-      <h2 align="right">关键字未匹配站点共<span class="unsum">0条</span></h2>
+      <h2 align="right">关键字未匹配站点共<span class="ksum">0</span>条</h2>
       <table id="keytable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
