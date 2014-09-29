@@ -334,7 +334,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 		int pper=(int)((suList.size()+dList.size()+0.0)/orderList.size()*100);
 		attributes.put("susum", suList.size());
-		attributes.put("unsum", unList.size()+kList.size());
+		attributes.put("ksum", kList.size());
+		attributes.put("unsum", unList.size());
 		attributes.put("dsum", dList.size());
 		attributes.put("pper", pper);
 		attributes.put("dList", dList);
