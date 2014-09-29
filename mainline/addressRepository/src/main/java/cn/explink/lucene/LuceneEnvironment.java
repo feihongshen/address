@@ -17,6 +17,8 @@ import cn.explink.util.ResourceBundleUtil;
 
 public class LuceneEnvironment {
 
+	private static int initWriterCount = 0;
+	private static int initSearchCount = 0;
 	private static LuceneEnvironment instance = new LuceneEnvironment();
 
 	public static final int DEFAULT_MAX_RESULT_COUNT = 1000;
@@ -57,6 +59,7 @@ public class LuceneEnvironment {
 			FSDirectory fsDirectory = getIndexDirectory();
 			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_47, analyzer);
 			indexWriter = new IndexWriter(fsDirectory, config);
+			initWriterCount++;
 		}
 		return indexWriter;
 	}
@@ -64,6 +67,7 @@ public class LuceneEnvironment {
 	public IndexSearcher getIndexSearch() throws IOException {
 		if (indexSearch == null) {
 			indexSearch = new IndexSearcher(DirectoryReader.open(getIndexDirectory()));
+			initSearchCount++;
 		}
 		return indexSearch;
 	}
@@ -74,4 +78,15 @@ public class LuceneEnvironment {
 		}
 		return queryParser;
 	}
+	/**
+	 * 重置查询方法
+	 */
+	public void resetSearcher() {
+		try {
+			indexSearch = new IndexSearcher(DirectoryReader.open(getIndexDirectory()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
