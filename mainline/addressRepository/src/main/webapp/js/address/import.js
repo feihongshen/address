@@ -2,13 +2,15 @@
 //文件上传
 function ajaxFileUpload() {
 	$("#startImport").attr('disabled', true);
+	process=null;
+	flushProcess();	
+	$("#procDiv").fadeIn("fast");
 	$.ajaxFileUpload({
 		url : 'importAddress',
 		secureuri : false,
 		fileElementId : 'file',
 		dataType: 'json',
 		success : function(data, status) {
-			//alert(1);
 			if (data.success) {
 				var usedTable=$("#importAddressList");
 				$("#tools").val('上传成功');
@@ -18,18 +20,46 @@ function ajaxFileUpload() {
 							pageNumber : 1
 						});
 				$("#startImport").attr('disabled', false);
+				$("#procDiv").fadeOut("slow");
 			} else {
 				$.messager.alert('提示',data.info);
 			}
+			 clearInterval(t);
 		},
 		error : function(AjaxJson, status, e) {
-			alert("网络异常！");
+			$.messager.alert('提示',"网络异常！");
 		}
-	})
-
+	});
 	return false;
-
 }
+function flushProcess(){
+	 t = setInterval(flush,2000);
+}
+function flush(){
+	 $.ajax({
+		 	type: "POST",
+			url:"getImportProc",
+			async:true,
+			success : function(resp) {
+				 if(resp!=null&&resp!=''){
+					 process=resp;
+					 showProcess(process);
+				 } 
+			}
+    });
+};
+function showProcess(process){
+	if(process.total==0){
+		 $('#proc').progressbar('setValue', 0);
+	}else{
+		 $('#proc').progressbar('setValue', process.percent );
+	}
+	$("#importProc").html("总数："+process.total+"\t已完成:"+process.processed+"\t成功:"+process.success
+				+"\t失败:"+process.failure);
+}
+
+
+
 function takefile() {
 	var file = document.getElementById('file').files[0];
 	var fileName = file.name;
