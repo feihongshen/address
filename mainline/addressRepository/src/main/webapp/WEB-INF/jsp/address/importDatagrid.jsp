@@ -20,6 +20,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
 <script type="text/javascript">
+var process = {};
+var t ;
 var hasIniUI=false;
 	$(function() {
 		$("#tabs").tabs({ 
@@ -66,12 +68,13 @@ var hasIniUI=false;
       <table width="100%"  border="0" cellspacing="5" cellpadding="0">
       <input type="file" id="file" name="file" onchange="takefile();" >
         <tr>
-          <td>选择导入文件：
+          <td>
+                               <div style="float:left">选择导入文件：
             <input class="easyui-filebox" onclick="fileSelected();" name="tools" id="tools" data-options="prompt:'请选择'" style="width:200px">
-            &nbsp;<a href="javascript:void(0)" class="easyui-linkbutton" id="startImport">开始导入</a>&nbsp;<a href="downloadAddressTemplate">下载导入模板</a></td>
-        </tr>
-        <tr>
-          <td></td>
+            &nbsp;<a href="javascript:void(0)" class="easyui-linkbutton" id="startImport">开始导入</a>&nbsp;
+            <a href="downloadAddressTemplate">下载导入模板</a></div>
+           <div id="procDiv" style="display:none"><div id="proc" class="easyui-progressbar" style="width:400px;float:left;margin-left:30px;"></div>
+            <span id="importProc" style="padding:10px 0px 0px 10px;"></span></div></td>
         </tr>
       </table>
       <table width="100%"  border="0" style="height:200px;" cellpadding="8" id="importAddressList" cellspacing="1" bgcolor="#CCCCCC">
