@@ -34,4 +34,12 @@ public class UserDao extends BasicHibernateDaoSupport<User, Long> {
 		return view;
 	}
 
+	public void resetPsd(Long id, String password) {
+		String hql = "update User set password=:password where id=:id";
+		Query query = getSession().createQuery(hql);
+		query.setString("password", password); 
+		query.setLong("id", id);
+	    query.executeUpdate();
+	}
+
 }

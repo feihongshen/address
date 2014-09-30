@@ -144,6 +144,7 @@ mainline/addressRepository/src/main/java/cn/explink/web/controller/DeliveryStati
 mainline/addressRepository/src/main/java/cn/explink/web/controller/LoginController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/ScheduledTaskController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/StationAdressRelationController.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/controller/UserController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/AddressLoginFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/ExplinkFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/AddressImportTypeEnum.java -text

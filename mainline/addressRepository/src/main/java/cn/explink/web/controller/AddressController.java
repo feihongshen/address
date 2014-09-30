@@ -310,6 +310,9 @@ public class AddressController extends BaseController {
 		if(request.getSession().getAttribute("proc")!=null){
 			ImportProcessJson pr = (ImportProcessJson)request.getSession().getAttribute("proc");
 			pr.cal();
+			if(pr.isFinish()){
+				request.getSession().removeAttribute("proc");
+			}
 			return pr;
 		}
 		else{
@@ -650,7 +653,7 @@ public class AddressController extends BaseController {
 					proc.setProcessed(proc.getProcessed()+1);
 				}
 			}
-	 	req.getSession().removeAttribute("proc");	
+		proc.setFinish(true);
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
 		detailSet.addAll(details);
 		result.setAddressImportDetails(detailSet);
