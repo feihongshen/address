@@ -107,11 +107,11 @@
     </div>
     <div class="fitem">
       <label>登录密码:</label>
-      <input type="password" id="password" name="pass" />
+      <input type="password"   name="pass" />
     </div>
     <div class="fitem">
       <label>确认密码:</label>
-      <input type="password" id="cfmpass" name="cfmpass" />
+      <input type="password"  name="cfmpass" />
     </div>
     <div class="fitem">
       <label>姓名:</label>
@@ -148,7 +148,6 @@
 <div id="dlg-buttons"> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveAdmin()">保存</a> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a> </div>
 <div id="dlgChng" class="easyui-dialog" style="width:360px;height:220px;padding:10px 20px"  
             closed="true" buttons="#dlgChng-buttons">
-  <div class="ftitle">修改密码</div>
   <form id="fmChng" method="post" novalidate>
     <div class="fitem">
       <label>原始密码:</label>
@@ -156,7 +155,7 @@
     </div>
     <div class="fitem">
       <label>登录密码:</label>
-      <input type="password" id="password" name="pass" class="easyui-validatebox" required="true"/>
+      <input type="password" id="password" name="password" class="easyui-validatebox" required="true"/>
     </div>
     <div class="fitem">
       <label>确认密码:</label>
@@ -260,11 +259,18 @@
 			var paras = {
 				keyword : $("#keyword").val()
 			};
-			dealAjaxOpration(surl, $.param(paras), "setData", false);
+			//dealAjaxOpration(surl, $.param(paras), "setData", false);
 		}
 		function chngPass() {
-			if ($('#password').val() != ""
-					&& $('#password').val() != $('#cfmpass').val()) {
+			var oldpass = $("#oldpass").val();
+			var password = $("#password").val();
+			var cfmpass = $("#cfmpass").val();
+			if(oldpass==""||password==""||cfmpass==""){
+				$.messager.alert('提示',"请输入密码！");
+				return false;
+			}
+			
+			if ($('#password').val() != $('#cfmpass').val()) {
 				$.messager.alert('提示',"[登录密码]和[确认密码]不相同，请重新输入！");
 				return false;
 			}
@@ -273,16 +279,17 @@
 				return false;
 			}
 			$('#fmChng').form('submit', {
-				url : "/user/resetPsd",
+				url : "<%=request.getContextPath()%>/user/resetPsd",
 				onSubmit : function() {
 					return $(this).form('validate');
 				},
-				success : function(result) {
-					var result = eval('(' + result + ')');
-					if (result.errorMsg) {
-						alert(result.errorMsg);
-					} else {
+				success : function(data) {
+					resp = eval('(' + data + ')');
+					if(resp.success){
+						$.messager.alert('提示',"密码修改成功！");
 						$('#dlgChng').dialog('close');
+					}else{
+						$.messager.alert('提示',resp.msg);
 					}
 				}
 			});
