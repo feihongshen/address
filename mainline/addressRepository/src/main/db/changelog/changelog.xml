@@ -106,4 +106,10 @@
 		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
+	
+	<!-- 创建新京报客户 -->
+	<changeSet id="xushiju-2014-10-09-01" author="xushiju">
+		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
 </databaseChangeLog>
