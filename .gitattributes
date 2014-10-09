@@ -21,6 +21,7 @@ mainline/addressRepository/src/main/db/changelog/address_init_table.sql -text
 mainline/addressRepository/src/main/db/changelog/changelog.xml -text
 mainline/addressRepository/src/main/db/changelog/customer_init_explink.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_gzpx.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_xjb.sql -text
 mainline/addressRepository/src/main/db/changelog/quartz_init.sql -text
 mainline/addressRepository/src/main/db/pom.xml -text
 mainline/addressRepository/src/main/java/cn/explink/Constants.java -text
@@ -256,7 +257,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/black/datagrid.css 
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/datebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/dialog.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/easyui.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/black/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/black/images/calendar_arrows.png -text
@@ -302,7 +302,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/datagrid.
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/datebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/dialog.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/easyui.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/bootstrap/images/calendar_arrows.png -text
@@ -348,7 +347,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/default/datagrid.cs
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/datebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/dialog.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/easyui.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/default/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/default/images/calendar_arrows.png -text
@@ -394,7 +392,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/datagrid.css -
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/datebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/dialog.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/easyui.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/images/calendar_arrows.png -text
@@ -433,7 +430,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/tree.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/validatebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/gray/window.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/icon.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/icons/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/icons/back.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/icons/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/icons/cancel.png -text
@@ -463,7 +459,6 @@ mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/datagrid.css 
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/datebox.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/dialog.css -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/easyui.css -text
-mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/css/easyui/themes/metro/images/calendar_arrows.png -text
@@ -736,7 +731,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/black/datagrid.css -
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/datebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/dialog.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/easyui.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/black/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/black/images/calendar_arrows.png -text
@@ -782,7 +776,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/datagrid.c
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/datebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/dialog.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/easyui.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/bootstrap/images/calendar_arrows.png -text
@@ -828,7 +821,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/default/datagrid.css
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/datebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/dialog.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/easyui.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/default/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/default/images/calendar_arrows.png -text
@@ -874,7 +866,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/datagrid.css -t
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/datebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/dialog.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/easyui.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/images/calendar_arrows.png -text
@@ -913,7 +904,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/tree.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/validatebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/gray/window.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icon.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/back.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/cancel.png -text
@@ -943,7 +933,6 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/datagrid.css -
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/datebox.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/dialog.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/easyui.css -text
-mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/images/Thumbs.db -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/images/accordion_arrows.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/images/blank.gif -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/images/calendar_arrows.png -text
