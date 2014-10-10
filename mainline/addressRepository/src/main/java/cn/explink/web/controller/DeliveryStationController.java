@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.criterion.Restrictions;
 import org.jboss.logging.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public class DeliveryStationController extends BaseController {
 	public @ResponseBody DataGridReturn list(DeliveryStation deliveryStation,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(DeliveryStation.class, dataGrid);
 		cq.addOrder("name", SortDirection.asc);
+		cq.add(Restrictions.eq("customer.id", this.getCustomerId()));
 		HqlGenerateUtil.installHql(cq, deliveryStation, request.getParameterMap());
 		return this.deliveryStationService.getDataGridReturn(cq, true);
 	}
