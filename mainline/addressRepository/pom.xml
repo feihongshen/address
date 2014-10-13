@@ -522,7 +522,7 @@
 					<url>${tomcat.manager.url}</url>
 					<username>tomcat</username>
 					<password>tomcat</password>
-					<path>/address</path>
+					<path>${tomcat.path}</path>
 					<update>true</update>
 				</configuration>
 			</plugin>
@@ -575,6 +575,7 @@
 			<properties>
 				<!-- tomcat port:10180, shutdown port:10181, jmxremote port: 10182 -->
 				<tomcat.manager.url>http://192.0.170.109:10180/manager</tomcat.manager.url>
+				<tomcat.path>/address</tomcat.path>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
 				<jdbc.url>jdbc:mysql://192.0.170.55:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
@@ -602,7 +603,7 @@
 				<!-- tomcat port:10180, shutdown port:10181, jmxremote port: 10182 -->
 				<tomcat.manager.url>http://192.168.0.217:10180/manager</tomcat.manager.url>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://localhost:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>root</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
