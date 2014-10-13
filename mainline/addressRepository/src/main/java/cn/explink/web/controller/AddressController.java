@@ -2,7 +2,6 @@ package cn.explink.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,16 +14,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +38,6 @@ import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
-import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
@@ -56,7 +50,6 @@ import cn.explink.service.DelivererService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.service.LuceneService;
 import cn.explink.tree.ZTreeNode;
-import cn.explink.util.DateTimeUtil;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
@@ -321,26 +314,6 @@ public class AddressController extends BaseController {
 			
 	 
 	}
-	/**
-	 * 查询地址导入结果
-	 * @param model
-	 * @param startDateString
-	 * @param endDateString
-	 * @return
-	 */
-	@RequestMapping("/importAddressResultList")
-	public String importAddressResultList(Model model, @RequestParam(value = "startDate", required = false) String startDateString
-			,@RequestParam(value ="endDate",required = false) String endDateString) {
-		try {
-			Date startDate = DateTimeUtil.parseDate(startDateString);
-			Date endDate = DateTimeUtil.parseDate(endDateString);
-			List<AddressImportResult> resultList = addressImportService.getImportAddressResults(startDate, endDate);
-			model.addAttribute("resultList", resultList);
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 	
 	@RequestMapping("/deleteImportAddressResult")
 	public @ResponseBody AjaxJson  deleteImportAddressResult(Model model
@@ -382,6 +355,7 @@ public class AddressController extends BaseController {
 		} catch (java.text.ParseException e) {
 			logger.error(e.getMessage());
 		}
+		addressImportResult.setUserId(getCustomerId());
 		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
 		return this.addressImportResultService.getDataGridReturn(cq, true);
 		
