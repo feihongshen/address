@@ -97,11 +97,8 @@ var setting = {
 	        	$('.easyui-layout').layout('expand','north');
 	        })
 	        
-	        $("#sourceStation").change(function(){
+	        $(".station4combobox").change(function(){
 	        	initDemoTree('sourceStation');
-	        	
-	        })
-	        $("#targetStation").change(function(){
 	        	initDemoTree('targetStation');
 	        	
 	        })
@@ -173,13 +170,13 @@ var setting = {
           <table width="100%" height="550px;" border="0" cellspacing="1" cellpadding="5" style="background:#CCC">
   <tr height="20px">
     <td width="45%"   bgcolor="#FFFFFF">原站点：
-      <select id="sourceStation" name="station4combobox" style="width:120px;">
+      <select id="sourceStation" class="station4combobox"  style="width:120px;">
       </select></td>
     <td width="50" rowspan="3" align="center" bgcolor="#FFFFFF">
       <p><a href="javascript:void(0)" class="easyui-linkbutton" id="toRight">&gt;</a></p>
       <p><a href="javascript:void(0)" class="easyui-linkbutton" id="toLeft">&lt;</a></p></td>
     <td width="45%" bgcolor="#FFFFFF">拆到目标站点：
-      <select id="targetStation" name="state" style="width:120px;">
+      <select id="targetStation" class="station4combobox" style="width:120px;">
       </select></td>
     </tr>
   <tr >
