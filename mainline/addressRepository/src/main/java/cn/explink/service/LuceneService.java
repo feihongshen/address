@@ -316,6 +316,17 @@ public class LuceneService {
 			for (ScoreDoc doc : topDocs.scoreDocs) {
 				Document document = searcher.doc(doc.doc);
 				IndexableField addressIdField = document.getField("addressId");
+				
+				IndexableField aliasIdField = document.getField("aliasId");
+				if (aliasIdField != null) {
+					String aliasId = aliasIdField.stringValue();
+					if (aliasId != null) {
+						Alias alias = aliasDao.get(Long.parseLong(aliasId));
+						if (alias!=null&&alias.getCustomerId() != null && customerId.longValue() != alias.getCustomerId().longValue()) {
+							continue;
+						}
+					}
+				}
 				addressIdList.add(Long.parseLong(addressIdField.stringValue()));
 			}
 			
