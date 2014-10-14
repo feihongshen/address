@@ -146,8 +146,8 @@ public class DeliveryStationRuleService extends RuleService {
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
 			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
 			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
-
-			for (DeliveryStationRule rule : address.getDeliveryStationRules()) {
+			List<DeliveryStationRule> list=getByCustormerAndAdressId(orderVo.getCustomerId(),address.getId());
+			for (DeliveryStationRule rule : list) {
 				if (DeliveryStationRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
 					defaultRule = rule;
 				} else {
@@ -198,6 +198,15 @@ public class DeliveryStationRuleService extends RuleService {
 						"select new cn.explink.ws.vo.BeanVo(dsr.address.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id in("
 								+ inIds + ") and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
+		return query.list();
+	}
+	
+	public List<DeliveryStationRule> getByCustormerAndAdressId(Long customerId, Long aId) {
+		Query query = getSession()
+				.createQuery(
+						"select dsr from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id =:aId and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
+		query.setLong("customerId", customerId);
+		query.setLong("aId", aId);
 		return query.list();
 	}
 
