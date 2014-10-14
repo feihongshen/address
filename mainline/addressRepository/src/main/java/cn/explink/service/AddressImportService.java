@@ -359,6 +359,8 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 		    				  }
 		    			  }
 				     }
+	    		 }else{
+	    			 throw new ExplinkRuntimeException("配送站点不存在");
 	    		 }
 			   if(!isSaved){
 				   throw new ExplinkRuntimeException("关键词无变化！");
