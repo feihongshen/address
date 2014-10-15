@@ -72,9 +72,8 @@ public class DelivererRuleService extends RuleService {
 		Address address = addressDao.get(addressId);
 		Deliverer deliverer = delivererDao.getDeliverer(customerId,delivererId);
 		// 判断是否与已有规则冲突
-		 Set<DelivererRule> filterdRules =filter( customerId,address.getDelivererRules());
-		
-		DelivererRule confilctingRule = findConflictingRule(ruleExpression,filterdRules );
+		Set<DelivererRule> filterdRules = filter(customerId, address.getDelivererRules());
+		DelivererRule confilctingRule = findConflictingRule(ruleExpression, filterdRules);
 		if (confilctingRule != null) {
 			String message = null;
 			if (DelivererRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
@@ -100,22 +99,17 @@ public class DelivererRuleService extends RuleService {
 		return delivererRule;
 	}
 	
-	private Set<DelivererRule> filter(Long customerId,
-			Set<DelivererRule> delivererRules) {
-		Set<DelivererRule> fset = new HashSet<DelivererRule>();
-		if(delivererRules!=null){
-			for(DelivererRule d:delivererRules){
-				try{
-					if(customerId.equals(d.getDeliverer().getCustomer().getId())){
-						fset.add(d);
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			return fset;
-		}else
+	private Set<DelivererRule> filter(Long customerId, Set<DelivererRule> delivererRules) {
+		if (delivererRules == null) {
 			return null;
+		}
+		Set<DelivererRule> filteredRules = new HashSet<DelivererRule>();
+		for (DelivererRule rule : delivererRules) {
+			if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
+				filteredRules.add(rule);
+			}
+		}
+		return filteredRules;
 	}
 
 	public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {

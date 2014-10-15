@@ -2,6 +2,7 @@ package cn.explink.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Customer;
+import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Vendor;
@@ -59,7 +61,8 @@ public class DeliveryStationRuleService extends RuleService {
 		Address address = addressDao.get(addressId);
 		DeliveryStation deliveryStation = deliveryStationDao.get(deliveryStationId);
 		// 判断是否与已有规则冲突
-		DeliveryStationRule confilctingRule = findConflictingRule(ruleExpression, address.getDeliveryStationRules());
+		Set<DeliveryStationRule> filterdRules = filter(customerId, address.getDeliveryStationRules());
+		DeliveryStationRule confilctingRule = findConflictingRule(ruleExpression, filterdRules);
 		if (confilctingRule != null) {
 			String message = "无效规则";
 			if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
@@ -87,6 +90,19 @@ public class DeliveryStationRuleService extends RuleService {
 		return deliveryStationRule;
 	}
 
+	private Set<DeliveryStationRule> filter(Long customerId, Set<DeliveryStationRule> deliveryStationRules) {
+		if (deliveryStationRules == null) {
+			return null;
+		}
+		Set<DeliveryStationRule> filteredRules = new HashSet<DeliveryStationRule>();
+		for (DeliveryStationRule rule : deliveryStationRules) {
+			if (customerId.equals(rule.getDeliveryStation().getCustomer().getId())) {
+				filteredRules.add(rule);
+			}
+		}
+		return filteredRules;
+	}
+	
 	/**
 	 * 查找冲突的规则
 	 * 
