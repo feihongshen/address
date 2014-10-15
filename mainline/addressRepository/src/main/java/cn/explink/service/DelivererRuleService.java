@@ -2,6 +2,7 @@ package cn.explink.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,9 @@ public class DelivererRuleService extends RuleService {
 		Address address = addressDao.get(addressId);
 		Deliverer deliverer = delivererDao.getDeliverer(customerId,delivererId);
 		// 判断是否与已有规则冲突
-		DelivererRule confilctingRule = findConflictingRule(ruleExpression, address.getDelivererRules());
+		 Set<DelivererRule> filterdRules =filter( customerId,address.getDelivererRules());
+		
+		DelivererRule confilctingRule = findConflictingRule(ruleExpression,filterdRules );
 		if (confilctingRule != null) {
 			String message = null;
 			if (DelivererRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
@@ -97,6 +100,24 @@ public class DelivererRuleService extends RuleService {
 		return delivererRule;
 	}
 	
+	private Set<DelivererRule> filter(Long customerId,
+			Set<DelivererRule> delivererRules) {
+		Set<DelivererRule> fset = new HashSet<DelivererRule>();
+		if(delivererRules!=null){
+			for(DelivererRule d:delivererRules){
+				try{
+					if(customerId.equals(d.getDeliverer().getCustomer().getId())){
+						fset.add(d);
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			return fset;
+		}else
+			return null;
+	}
+
 	public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {
 		if (addressId == null) {
 			return null;
