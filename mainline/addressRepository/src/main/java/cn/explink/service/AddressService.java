@@ -624,6 +624,11 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return query.list();
 	}
 
+	public List<cn.explink.domain.Address> getAddressByNames(
+			Set<String> addressNames) {
+		return addressDao.getAddressByNames(addressNames);
+	}
+
 
 
 }

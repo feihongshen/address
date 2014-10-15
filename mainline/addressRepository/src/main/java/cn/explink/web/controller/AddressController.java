@@ -561,8 +561,8 @@ public class AddressController extends BaseController {
 				details.add(detail);
 			}
 			
-			//查找客户已有关键词并构造addressMap
-			List<Address> addressList = addressService.getAddressByNames(addressNames,customerId);
+			//查找关键词并构造addressMap
+			List<Address> addressList = addressService.getAddressByNames(addressNames);
 			if(addressList!=null&&!addressList.isEmpty()){
 				for(Address a:addressList){
 					addressMap.put(a.getParentId()+"-"+a.getName(), a);
