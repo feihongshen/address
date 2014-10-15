@@ -228,4 +228,15 @@ public class DelivererRuleService extends RuleService {
 		getSession().delete(r);
 	}
 
+	public void deleteRuleByIds(List<Long> addressIdList, Long customerId) {
+		String sql = "SELECT R.ID FROM DELIVERER_RULES  R ,DELIVERERS S  WHERE R.ADDRESS_ID IN :idList AND S.CUSTOMER_ID =:customerId AND S.ID=R.DELIVERER_ID";
+		List<Integer> list = getSession().createSQLQuery(sql)
+			.setParameterList("idList", addressIdList)
+			.setLong("customerId", customerId).list();
+		for(Integer l:list){
+			this.delete(Long.parseLong(l+""));
+		}
+		
+	}
+
 }

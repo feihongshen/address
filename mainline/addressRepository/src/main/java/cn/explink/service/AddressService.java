@@ -190,6 +190,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		//批量删除站点关联关系
 		deliveryStationRuleDao.deleteRuleByIds(addressIdList, customerId);
 		
+		delivererRuleService.deleteRuleByIds(addressIdList, customerId);
+
+		
 		
 	}
 
