@@ -19,7 +19,8 @@ var stationList=[];
 			onClick : myClick,
 			beforeRemove : zTreeBeforeRemove,
 			onRemove : zTreeOnRemove,
-			beforeDrag:function(){return false;}
+			beforeDrag:function(){return false;},
+			onAsyncSuccess: onAsyncSuccess
 		}
 	};
 	 
@@ -162,7 +163,7 @@ var stationList=[];
 			 function getAll(ids){
 				 $.ajax({
 				 	 type: "POST",
-				 		url:ctx+"/address/getAddressTree",
+				 		url:ctx+"/address/getAddressTree?pageSize=1000000",
 				 		data:{ids:ids},
 				 		success:function(optionData){
 				 	        var t = $("#tree");

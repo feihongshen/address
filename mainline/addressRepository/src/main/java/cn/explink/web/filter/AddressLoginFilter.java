@@ -12,11 +12,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.TextEscapeUtils;
 
+import cn.explink.domain.SystemConfig;
 import cn.explink.domain.User;
+import cn.explink.service.SystemConfigService;
+import cn.explink.util.ApplicationContextUtil;
 import cn.explink.web.ExplinkUserDetail;
 
 public class AddressLoginFilter extends UsernamePasswordAuthenticationFilter {
-
+	
+	
 	private boolean postOnly = true;
 
 	private boolean allowEmptyValidateCode = true;
@@ -59,7 +63,6 @@ public class AddressLoginFilter extends UsernamePasswordAuthenticationFilter {
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userName, password);
 		// Allow subclasses to set the "details" property
 		setDetails(request, authRequest);
-		
 		Authentication authentication = getAuthenticationManager().authenticate(authRequest);
 		ExplinkUserDetail userDetail = (ExplinkUserDetail) authentication.getPrincipal();
 		User user = userDetail.getUser();
@@ -68,6 +71,7 @@ public class AddressLoginFilter extends UsernamePasswordAuthenticationFilter {
 		}
 		return authentication;
 	}
+
 
 	/*
 	 * public String getIpAddr(HttpServletRequest request) { String ip =
@@ -126,4 +130,6 @@ public class AddressLoginFilter extends UsernamePasswordAuthenticationFilter {
 	public void setAllowEmptyValidateCode(boolean allowEmptyValidateCode) {
 		this.allowEmptyValidateCode = allowEmptyValidateCode;
 	}
+
+	
 }

@@ -115,9 +115,10 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getAddressTree")
-	public @ResponseBody List<ZTreeNode>  getAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "ids", required = false) String ids) {
+	public @ResponseBody List<ZTreeNode>  getAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "ids", required = false) String ids
+			,@RequestParam(value = "page", required = false) Integer page,@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		Long customerId = getCustomerId();
-		List<ZTreeNode> list =addressService.getAsyncAddress(customerId,parentId,ids);
+		List<ZTreeNode> list =addressService.getAsyncAddressPage(customerId,parentId,ids,page,pageSize);
 		if(StringUtils.isNotBlank(ids)){
 			addressService.appendStation(customerId, list);
 		}
@@ -129,6 +130,14 @@ public class AddressController extends BaseController {
 		Long customerId = getCustomerId();
 		return addressService.getStationAddressTree(customerId,parentId);
 	}
+	
+	@RequestMapping("/getStationAddressTreePage")
+	public @ResponseBody List<ZTreeNode>  getStationAddressTree( @RequestParam(value = "id", required = false) Long parentId,@RequestParam(value = "level", required = false) Long level,
+			@RequestParam(value = "page", required = false) Integer page,@RequestParam(value = "pageSize", required = false) Integer pageSize) {
+		Long customerId = getCustomerId();
+		return addressService.getStationAddressTreePage(customerId,parentId,page,pageSize);
+	}
+	
 	
 	@RequestMapping("/getZTree")
 	public @ResponseBody List<ZTreeNode> getZTree(String name,  Integer band) {

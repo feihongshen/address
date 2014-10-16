@@ -1,0 +1,1 @@
+insert  into `system_config`(`ID`,`NAME`,`VALUE`,`DESCRIPTION`,`EDITABLE`) values (1,'pageSize4Tree','100','地址树分页大小',1);

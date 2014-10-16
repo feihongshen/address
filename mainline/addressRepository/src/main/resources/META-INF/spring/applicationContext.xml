@@ -29,7 +29,13 @@
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton" init-method="initLucene" />
-	
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	<property name="messageConverters">  
+        <list>
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+        </list>  
+    </property>
+</bean>
 	<!-- web service -->
 	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl" address="/AddressSyncService" />
 	<jaxws:endpoint id="addressMappingService" implementor="cn.explink.ws.service.AddressMappingServiceImpl" address="/AddressMappingService" />

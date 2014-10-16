@@ -3,6 +3,7 @@ package cn.explink.dao;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
+import cn.explink.dao.support.DataInfo;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Deliverer;
@@ -295,6 +297,46 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		}else{
 			return null;
 		}
+	}
+
+	public List<ZTreeNode> getAsyncAddressPage(Long customerId, Long parentId,
+			String ids, Integer page, Integer pageSize) {
+		StringBuilder hql = new StringBuilder("select new cn.explink.tree.ZTreeNode( a.name,a.id,a.parentId ,a.addressLevel) from Address a, AddressPermission p");
+		if(parentId==null){
+			if(StringUtils.isNotBlank(ids)){
+				hql.append(" where a.id in ("+ids+")");
+			}else{
+				hql.append(" where a.parentId < 2");
+			}
+		}else{
+			hql.append(" where a.parentId = "+parentId);
+		}
+		hql.append(" and a.id = p.addressId");
+		hql.append(" and p.customerId = :customerId");
+		
+		StringBuilder hqlCount = new StringBuilder("select count(a.id) from Address a, AddressPermission p");
+		if(parentId==null){
+			if(StringUtils.isNotBlank(ids)){
+				hqlCount.append(" where a.id in ("+ids+")");
+			}else{
+				hqlCount.append(" where a.parentId < 2");
+			}
+		}else{
+			hqlCount.append(" where a.parentId = "+parentId);
+		}
+		hqlCount.append(" and a.id = p.addressId");
+		hqlCount.append(" and p.customerId = :customerId");
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put("customerId", customerId);
+		DataInfo di = this.findByHql(hql.toString(), hqlCount.toString(), page, pageSize, param);
+		List<ZTreeNode> l = (List<ZTreeNode>) di.getResult();
+		for(ZTreeNode n:l){
+			n.setMaxPage(di.getPageCount());
+			n.setPage(di.getPage());
+			n.setMaxPage(di.getPageCount());
+		}
+		
+		return l;
 	}
 	
 }

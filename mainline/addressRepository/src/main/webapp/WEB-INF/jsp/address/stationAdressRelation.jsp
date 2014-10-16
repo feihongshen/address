@@ -50,7 +50,13 @@
     color:#000;
      font-weight:bold;
 }
+span.button.firstPage {float:right; margin-left:2px; margin-right: 0; background-position:-144px -16px; vertical-align:top; *vertical-align:middle}
+ span.button.prevPage {float:right; margin-left:2px; margin-right: 0; background-position:-144px -48px; vertical-align:top; *vertical-align:middle}
+ span.button.nextPage {float:right; margin-left:2px; margin-right: 0; background-position:-144px -64px; vertical-align:top; *vertical-align:middle}
+ span.button.lastPage {float:right; margin-left:2px; margin-right: 0; background-position:-144px -32px; vertical-align:top; *vertical-align:middle}
+
 </style>
+ 
 <script type="text/javascript">
 var backNode;
 var inital=false;
@@ -73,7 +79,7 @@ var setting = {
 };
 
 		 $(document).ready(function(){
-			
+			 
 			 getAll();
 			 getPromtInfo();
 			 //折叠
@@ -108,7 +114,7 @@ var setting = {
 		 function getAll(ids){
 			 $.ajax({
 			 	 type: "POST",
-			 		url:ctx+"/address/getAddressTree",
+			 		url:ctx+"/address/getAddressTree?pageSize=1000000",
 			 		data:{'ids':ids},
 			 		success:function(optionData){
 			 	        var t = $("#tree");
@@ -141,7 +147,7 @@ var setting = {
         </tr>
         <tr>
           <td><div id="promtInfo" ></div>
-          <ul id="tree" class="ztree " style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <ul id="tree" class="ztree " style="width:400px;height:auto; overflow:auto;"></ul></td>
         </tr>
       </table>
     

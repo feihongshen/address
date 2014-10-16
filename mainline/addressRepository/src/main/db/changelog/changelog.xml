@@ -112,4 +112,11 @@
 		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
+	
+	<!-- 新增系统参数（树分页大小） -->
+	<changeSet id="chris-2014-10-17-01" author="chris">
+		<sqlFile path="config_init.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
+	
 </databaseChangeLog>

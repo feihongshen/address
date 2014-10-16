@@ -14,7 +14,8 @@ var mySettings = {
 	callback : {
 		beforeClick : myBeforeClick,
 		onClick : myClick,
-		beforeDrag:function(){return false;}
+		beforeDrag:function(){return false;},
+		onAsyncSuccess: onAsyncSuccess
 	}
 };
 	$(document).ready(function() {
@@ -137,7 +138,7 @@ var mySettings = {
 			 function getAll(ids){
 				 $.ajax({
 				 	 type: "POST",
-				 		url:ctx+"/address/getAddressTree",
+				 		url:ctx+"/address/getAddressTree?pageSize=1000000",
 				 		data:{ids:ids},
 				 		success:function(optionData){
 				 	        var t = $("#tree");

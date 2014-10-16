@@ -73,7 +73,7 @@ function saveRule(){
 		if(deliveryStationRule){
 			
 		$.ajax({
-			 type: "POST",
+			    type: "POST",
 				url:cxt+"/deliveryStationRule/saveDeliveryStationRule",
 				data:{"deliveryStationRule":deliveryStationRule,"addressId":addressId},
 				success:function(optionData){

@@ -67,12 +67,33 @@ public class ZTreeNode{
 	
 	private boolean isParent=true;
 
+	private Integer page =1 ;
+	private Integer pageSize=10 ;
+	private Integer maxPage= 1;
+	
+	public Integer getMaxPage() {
+		return maxPage;
+	}
+	public void setMaxPage(Integer maxPage) {
+		this.maxPage = maxPage;
+	}
 	public boolean isIsParent() {
 		return isParent;
 	}
 	public void setIsParent(boolean isParent) {
 		this.isParent = isParent;
 	}
-
+	public Integer getPage() {
+		return page;
+	}
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+	public Integer getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 
 }

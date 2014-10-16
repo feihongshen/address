@@ -27,7 +27,7 @@
 				<ref bean="updateIndexTimer" />
 			</list>
 		</property>
-		<property name="dataSource" ref="dataSource"></property>
+	   <property name="dataSource" ref="dataSource"></property> 
 		<property name="quartzProperties">
 			<props>
 				<prop key="org.quartz.scheduler.instanceName">TMS_INF_SCHEDULER</prop>

@@ -16,24 +16,24 @@ function onClick(event, treeId, treeNode, clickFlag) {
 }	
 
 function getUrl(treeId, treeNode) {
-	
-	var url=ctx+"/address/getAddressTree?id="+treeNode.id;
+	var url=ctx+"/address/getAddressTree?id="+treeNode.id+"&pageSize="+pageSize;
 	return url;
 }
 
 function getStationUrl(treeId, treeNode) {
-	var url=ctx+"/address/getStationAddressTree?id="+treeNode.id+"&level="+treeNode.level;
+	var url=ctx+"/address/getStationAddressTreePage?id="+treeNode.id+"&level="+treeNode.level+"&page="+treeNode.page+"&pageSize="+pageSize;
+	var aObj = $("#" + treeNode.tId + "_a");
+	aObj.attr("title",treeNode.name+ "当前第 " + treeNode.page + " 页 / 共 " + treeNode.maxPage + " 页");
 	return url;
 }
 
 function beforeExpand(treeId, treeNode) {
-	
 	if (!treeNode.isAjaxing) {
 		treeNode.times = 1;
 		ajaxGetNodes(treeNode, "refresh");
 		return true;
 	} else {
-		$.message.alert("提示","zTree 正在下载数据中，请稍后展开节点。。。");
+		$.messager.alert("提示","zTree 正在下载数据中，请稍后展开节点。。。");
 		return false;
 	}
 }
@@ -42,23 +42,29 @@ function onAsyncSuccess(event, treeId, treeNode, msg) {
 		treeNode.icon = cxt+"/css/zTree/zTreeStyle/img/loading.gif";
 		return;
 	}
+	var child = treeNode.children[0];
+	if(child){
+		if(child.maxPage>1){
+			treeNode.maxPage=child.maxPage;
+			addDiyDom(treeId,treeNode);
+		}
+	}
 	//每次最多加载100个
-	totalCount = 0;
+/*	totalCount = 0;
 	if (treeNode.children.length < totalCount) {
 		setTimeout(function() {ajaxGetNodes(treeNode);}, perTime);
 	} else {
 		treeNode.icon = "";
 		zTree.updateNode(treeNode);
 		if(!treeNode.children[0]){
-			treeNode.icon = cxt+"/css/zTree/zTreeStyle/img/loading.gif";
+			treeNode.icon = ctx+"/css/zTree/zTreeStyle/img/loading.gif";
 		}else{
-			
 			zTree.selectNode(treeNode.children[0]);
 		}
-	}
+	}*/
 }
 function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
-	$.message.alert("提示","异步获取数据出现异常。");
+	$.messager.alert("提示","异步获取数据出现异常。");
 	treeNode.icon = "";
 	zTree.updateNode(treeNode);
 }
@@ -256,5 +262,54 @@ function getAllNodes(){
 	 return result;
 	
 }
-
-
+function addDiyDom(treeId, treeNode) {
+	var aObj = $("#" + treeNode.tId + "_a");
+	if($("#lastBtn_"+treeNode.id).size()>0){
+		return ;
+	}
+	if ($("#addBtn_"+treeNode.id).length>0) return;
+	var addStr = "<span class='button lastPage' id='lastBtn_" + treeNode.id
+		+ "' title='last page' onfocus='this.blur();'></span><span class='button nextPage' id='nextBtn_" + treeNode.id
+		+ "' title='next page' onfocus='this.blur();'></span><span class='button prevPage' id='prevBtn_" + treeNode.id
+		+ "' title='prev page' onfocus='this.blur();'></span><span class='button firstPage' id='firstBtn_" + treeNode.id
+		+ "' title='first page' onfocus='this.blur();'></span>";
+	aObj.after(addStr);
+	var first = $("#firstBtn_"+treeNode.id);
+	var prev = $("#prevBtn_"+treeNode.id);
+	var next = $("#nextBtn_"+treeNode.id);
+	var last = $("#lastBtn_"+treeNode.id);
+	treeNode.maxPage = Math.round(treeNode.count/treeNode.pageSize - .5) + (treeNode.count%treeNode.pageSize == 0 ? 0:1);
+	first.bind("click", function(){
+		if (!treeNode.isAjaxing) {
+			goPage(treeId,treeNode, 1);
+		}
+	});
+	last.bind("click", function(){
+		if (!treeNode.isAjaxing) {
+			goPage(treeId,treeNode, treeNode.maxPage);
+		}
+	});
+	prev.bind("click", function(){
+		if (!treeNode.isAjaxing) {
+			goPage(treeId,treeNode, treeNode.page-1);
+		}
+	});
+	next.bind("click", function(){
+		if (!treeNode.isAjaxing) {
+			goPage(treeId,treeNode, treeNode.page+1);
+		}
+	});
+};
+var curPage = 0;
+function goPage(treeId,treeNode, page) {
+	var child = treeNode.children[0];
+	if(child&&child.maxPage>=page&&page>0){
+		treeNode.page = page;
+		if (treeNode.page<1) treeNode.page = 1;
+		if (treeNode.page>treeNode.maxPage) treeNode.page = treeNode.maxPage;
+		if (curPage == treeNode.page) return;
+		curPage = treeNode.page;
+		var zTree = $.fn.zTree.getZTreeObj(treeId);
+		zTree.reAsyncChildNodes(treeNode, "refresh");
+	}
+}

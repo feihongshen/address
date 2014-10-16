@@ -536,10 +536,11 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {
 		List<ZTreeNode> list=getAsyncAddress(customerId, parentId,null);
 		appendStation(customerId, list);
-		
 		return list;
 	}
 
+	 
+	
 	public void appendStation(Long customerId, List<ZTreeNode> list) {
 		StringBuffer ids=new StringBuffer();
 		for (ZTreeNode zTreeNode : list) {
@@ -632,6 +633,17 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return addressDao.getAddressByNames(addressNames);
 	}
 
+	public List<ZTreeNode> getStationAddressTreePage(Long customerId,
+			Long parentId, Integer page, Integer pageSize) {
+		List<ZTreeNode> list=getAsyncAddressPage(customerId, parentId,null,page,pageSize);
+		appendStation(customerId, list);
+		return list;
+	}
+
+	public List<ZTreeNode> getAsyncAddressPage(Long customerId, Long parentId,
+			String ids, Integer page, Integer pageSize) {
+		return addressDao.getAsyncAddressPage(customerId,parentId,ids,page,pageSize);
+	}
 
 
 }

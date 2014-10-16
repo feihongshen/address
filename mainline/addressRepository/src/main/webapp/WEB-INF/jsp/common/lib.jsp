@@ -1,6 +1,7 @@
-<%@ page import="java.util.*,org.apache.commons.lang3.StringUtils,org.apache.commons.lang3.ObjectUtils" %>
+<%@ page import="java.util.*,cn.explink.domain.SystemConfig,cn.explink.util.ConfigManager,org.apache.commons.lang3.StringUtils,org.apache.commons.lang3.ObjectUtils" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+ 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
@@ -9,6 +10,7 @@
 	session.setAttribute("themeName", defaultTheme);
 	session.setAttribute("themeVersion", themeVersion);
 	pageContext.setAttribute("timeInMillis", System.currentTimeMillis());
+	SystemConfig sc = (SystemConfig)ConfigManager.getInstance().get("pageSize4Tree");
 %>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/easyui/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/css/easyui/themes/icon.css" />
@@ -21,4 +23,10 @@
 <script type="text/javascript" src="${ctx}/js/address/getZAddress.js"></script>
 <script type="text/javascript">
 	var ctx = '<%=request.getContextPath() %>';
+	var pageSize = '<%=sc.getValue() %>';
+	if(pageSize!='null'){
+		pageSize=parseInt(pageSize);
+	}else{
+		pageSize=100;
+	}
 </script>

@@ -1,9 +1,12 @@
 package cn.explink.dao.support;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -166,5 +169,39 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 		Criteria criteria = getSession().createCriteria(entityClass);
 		return criteria;
 	}
-
+	public  DataInfo  findByHql(String hql,String hqlCount,Integer page,Integer pageSize,Map<String,Object> param){
+		DataInfo  d = new DataInfo ();
+	    if(page==null||page<=0){
+	    	page=1;
+	    }
+	    if(pageSize==null||pageSize<=0){
+	    	pageSize=100;
+	    }
+	    Query querys = getSession().createQuery(hql);
+	    Query queryCount = getSession().createQuery(hqlCount);
+	    if(param!=null){
+	    	for(String k :param.keySet()){
+	    			querys.setParameter(k,  param.get(k));
+	    			queryCount.setParameter(k,  param.get(k));
+	        }
+	    }
+	    List l = querys.setFirstResult((page-1)*pageSize ).setMaxResults(pageSize).list();
+	    Integer count = ((Long) queryCount.uniqueResult()).intValue();
+	    d.setResult(l);
+	    d.setTotalCount(count);
+	    d.setPage(page);
+	    d.setPageSize(pageSize);
+	    d.setPageCount(maxPageSize(count,pageSize)	);
+		return d;
+	}
+	public int maxPageSize(int count,int pageSize){
+		if(pageSize>0){
+			if((count%pageSize)!=0){
+				return (count/pageSize)+1;
+			}else{
+				return (count/pageSize);
+			}
+		}
+		return 0;
+	}
 }

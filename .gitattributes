@@ -19,6 +19,7 @@ mainline/addressRepository/pom.xml -text
 mainline/addressRepository/src/main/db/changelog/address_init_data.sql -text
 mainline/addressRepository/src/main/db/changelog/address_init_table.sql -text
 mainline/addressRepository/src/main/db/changelog/changelog.xml -text
+mainline/addressRepository/src/main/db/changelog/config_init.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_explink.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_gzpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xjb.sql -text
@@ -45,6 +46,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/VendorDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/VendorsAgingDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicHibernateDaoSupport.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicJdbcTemplateDaoSupport.java -text
+mainline/addressRepository/src/main/java/cn/explink/dao/support/DataInfo.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/LockOptions.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Address.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportDetail.java -text
@@ -119,6 +121,8 @@ mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationServi
 mainline/addressRepository/src/main/java/cn/explink/service/LuceneService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RuleService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/ScheduledTaskService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/SystemConfigService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/SystemConfigServiceImpl.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/UserService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/VendorService.java -text
 mainline/addressRepository/src/main/java/cn/explink/tree/AddressImportEntry.java -text
@@ -127,6 +131,7 @@ mainline/addressRepository/src/main/java/cn/explink/tree/ZTreeNode.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/AddressUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ApplicationContextUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/BeanInvokingJobDetailFactoryBean.java -text
+mainline/addressRepository/src/main/java/cn/explink/util/ConfigManager.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ContextHolderUtils.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/DateTimeUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/HqlGenerateUtil.java -text
