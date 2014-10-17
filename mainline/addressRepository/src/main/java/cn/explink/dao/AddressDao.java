@@ -204,9 +204,9 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
      * @param parentId
      * @return
      */
-	public Address getAddressByNameAndPid(String name, Long parentId,Long customerId) {
-		Query query =getSession().createSQLQuery("select a.* from  ADDRESS a left join ADDRESS_PERMISSIONS p on a.id=p.ADDRESS_ID where a.NAME=:name and a.PARENT_ID=:parentId and p.CUSTOMER_ID=:customerId")
-				.setString("name", name).setLong("parentId", parentId).setLong("customerId", customerId);
+	public Address getAddressByNameAndPid(String name, Long parentId ) {
+		Query query =getSession().createSQLQuery("select a.* from  ADDRESS a  where a.NAME=:name and a.PARENT_ID=:parentId  ")
+				.setString("name", name).setLong("parentId", parentId) ;
 		return (Address) query.uniqueResult();	
 	}
 
