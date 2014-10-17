@@ -64,4 +64,8 @@ public class VendorService {
 		return vendorDao.getComBoxDeliveryStation(customerId);
 	}
 
+	public void deleteAgingByIds(List<Long> addressIdList, Long customerId) {
+		  vendorDao.deleteAgingByIds(addressIdList,customerId);
+	}
+
 }

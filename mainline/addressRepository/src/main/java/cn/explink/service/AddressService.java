@@ -77,6 +77,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	@Autowired
 	private LuceneService luceneService;
+	
+
+	@Autowired
+	private VendorService vendorService ;
 
 	@Autowired
 	private OrderDao orderDao;
@@ -192,7 +196,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		
 		delivererRuleService.deleteRuleByIds(addressIdList, customerId);
 
-		
+		vendorService.deleteAgingByIds(addressIdList, customerId);
 		
 	}
 

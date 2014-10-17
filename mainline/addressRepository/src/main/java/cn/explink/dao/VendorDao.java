@@ -31,5 +31,15 @@ public class VendorDao extends BasicHibernateDaoSupport<Vendor, Long> {
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
+
+	public void deleteAgingByIds(List<Long> addressIdList, Long customerId) {
+		if(addressIdList!=null&&addressIdList.size()>0&&customerId!=null){
+			String sql = "delete from VENDORS_AGING where ADDRESS_ID in:list and CUSTOMER_ID=:customerId";
+			Query query = getSession().createSQLQuery(sql)
+					.setParameterList("list", addressIdList)
+					.setLong("customerId", customerId);
+			query.executeUpdate();
+		}
+	}
 	
 }
