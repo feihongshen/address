@@ -205,9 +205,13 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
      * @return
      */
 	public Address getAddressByNameAndPid(String name, Long parentId ) {
-		Query query =getSession().createSQLQuery("select a.* from  ADDRESS a  where a.NAME=:name and a.PARENT_ID=:parentId  ")
+		Query query =getSession().createQuery("from Address  where name=:name and  parentId=:parentId  ")
 				.setString("name", name).setLong("parentId", parentId) ;
-		return (Address) query.uniqueResult();	
+		List<Address> list = query.list();
+		if(list!=null&&list.size()>0){
+			return list.get(0);
+		}
+		return null;	
 	}
 
 	public DeliveryStationRule getStationRuleByAddressAndStation(Long addressId,
