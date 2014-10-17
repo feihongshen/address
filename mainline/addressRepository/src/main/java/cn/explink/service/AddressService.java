@@ -462,7 +462,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			Address a = new Address();
 			a.setParentId(parentId);
 			a.setName(addressLine);
-			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId,customerId);
+			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId );
 			if(l!=null ){//已存在则绑定
 				a = l;
 				bindAddress(l,  customerId);
@@ -486,7 +486,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			Address a = new Address();
 			a.setParentId(parentId);
 			a.setName(addressLine);
-			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId,customerId);
+			Address l = addressDao.getAddressByNameAndPid(addressLine, parentId);
 			if(l!=null ){//已存在则绑定
 				bindAddress(l,  customerId);
 				a=l;
