@@ -40,8 +40,8 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 	}
 
 	public List getByAddressAndStation(Long addressId, Long stationId,Long customerId) {
-		String sql = "SELECT r.id FROM DELIVERY_STATION_RULES r ,DELIVERY_STATIONS" +
-				" s WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
+		String sql = "SELECT r.id FROM DELIVERY_STATION_RULES r left join DELIVERY_STATIONS" +
+				" s on s.ID=r.DELIVERY_STATION_ID WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
 				" AND s.CUSTOMER_ID=:customerId " +
 				" AND r.ADDRESS_ID=:addressId";
 		Query query = getSession().createSQLQuery(sql);
