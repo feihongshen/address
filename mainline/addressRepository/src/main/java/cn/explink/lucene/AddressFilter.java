@@ -6,7 +6,6 @@ import java.util.List;
 import cn.explink.domain.Address;
 
 public class AddressFilter {
-    public static int maxScore = 0;
 	/**
 	 * 从索引匹配的地址中过滤出符合条件的地址
 	 * 1. 每个地址和剩余地址匹配，判别1：是否在路径上 2：是否包含过省市区关键字
@@ -16,7 +15,7 @@ public class AddressFilter {
 	 * @return
 	 */
 	public static List<Address> filter(List<Address> sourceAddressList) {
-		maxScore = 0;
+		int maxScore = 0;
 		List<AddressCompare> lc = new ArrayList<AddressCompare> ();
 		if(sourceAddressList!=null&&!sourceAddressList.isEmpty()){
 			for(Address a:sourceAddressList){
