@@ -32,8 +32,8 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
 	}
 
 	public List getByAddressAndDeliverer(Long addressId, Long did,Long customerId) {
-		String sql = "SELECT r.id FROM DELIVERER_RULES r ,DELIVERERS" +
-				" s WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
+		String sql = "SELECT r.id FROM DELIVERER_RULES r left join DELIVERERS" +
+				" s on r.DELIVERER_ID=s.ID WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " +
 				" AND s.CUSTOMER_ID=:customerId " +
 				" AND r.ADDRESS_ID=:addressId";
 		Query query = getSession().createSQLQuery(sql);
