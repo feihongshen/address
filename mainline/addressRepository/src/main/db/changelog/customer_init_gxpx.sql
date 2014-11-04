@@ -2,7 +2,7 @@
 INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (4, '广西品信', 0, '');
 
 -- 新建客户应用
-INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (4, 'gxpx', 'gxpx', 3, 1);
+INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (4, 'gxpx', 'gxpx', 4, 1);
 
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (4, 'gxpx', 'gxpx', 0, 4);
