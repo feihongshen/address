@@ -119,4 +119,9 @@
 			relativeToChangelogFile="true" />
 	</changeSet>
 	
+	<!-- 创建广西品信客户 -->
+	<changeSet id="xushiju-2014-11-04-01" author="xushiju">
+		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8"
+			relativeToChangelogFile="true" />
+	</changeSet>
 </databaseChangeLog>
