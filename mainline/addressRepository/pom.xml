@@ -627,7 +627,7 @@
 			<id>prod</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.70.34:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.70.37:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
