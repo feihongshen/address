@@ -2,7 +2,7 @@
 INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (5, '重庆华宇', 0, '');
 
 -- 新建客户应用
-INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (5, 'cqhy', 'gxpx', 5, 1);
+INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (5, 'cqhy', 'cqhy', 5, 1);
 
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (5, 'cqhy', 'cqhy', 0, 5);
