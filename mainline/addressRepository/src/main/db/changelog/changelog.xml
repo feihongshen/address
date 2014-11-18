@@ -130,4 +130,10 @@
 		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8"
 			relativeToChangelogFile="true" />
 	</changeSet>
+	
+	<changeSet id="xushiju-2014-11-17-01" author="xushiju">
+		<sql>
+			 UPDATE `SYSTEM_CONFIG` SET VALUE = '1000' where id = 1;  
+		</sql>
+	</changeSet>
 </databaseChangeLog>
