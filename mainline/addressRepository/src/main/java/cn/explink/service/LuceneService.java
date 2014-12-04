@@ -309,15 +309,13 @@ public class LuceneService {
 		QueryParser parser = luceneEnv.getQueryParser();
 		Query query = parser.parse(StringUtil.filterQureyStr(addressLine));
 		TopDocs topDocs = searcher.search(query, LuceneEnvironment.DEFAULT_MAX_RESULT_COUNT);
-		System.out.println("maxScore = " + topDocs.getMaxScore());
 		if (topDocs.scoreDocs != null) {
-			System.out.println("length = " + topDocs.scoreDocs.length);
 			List<Long> addressIdList = new ArrayList<Long>();
 			for (ScoreDoc doc : topDocs.scoreDocs) {
 				Document document = searcher.doc(doc.doc);
 				IndexableField addressIdField = document.getField("addressId");
-				
 				IndexableField aliasIdField = document.getField("aliasId");
+				logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
 				if (aliasIdField != null) {
 					String aliasId = aliasIdField.stringValue();
 					if (aliasId != null) {
