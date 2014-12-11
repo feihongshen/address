@@ -126,7 +126,7 @@ public class DeliveryStationRuleController extends BaseController {
 		AjaxJson aj=new AjaxJson();
 		try {
 			JSONArray array =  JSONArray.fromObject(jsonStr);
-			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig());;
+			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig()); 
 			Long customerId=getCustomerId();
 			if(list!=null){
 				deliveryStationRuleService.createDeliveryStationRuleList(list,customerId );
