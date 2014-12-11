@@ -261,12 +261,15 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
 			
 			List<AddressVo> addressList = new ArrayList<AddressVo>();
+			
 			orderResult.setAddressList(addressList);
 			for (Address address : singleResult.getRelatedAddressList() ) {
 				AddressVo addressVo = new AddressVo();
 				BeanUtils.copyProperties(address, addressVo);
 				addressList.add(addressVo);
 			}
+			
+			
 			
 			List<DeliveryStationVo> deliveryStationList = new ArrayList<DeliveryStationVo>();
 			orderResult.setDeliveryStationList(deliveryStationList);
@@ -275,13 +278,22 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				BeanUtils.copyProperties(ds, dsVo);
 				deliveryStationList.add(dsVo);
 			}
-			
 			List<DelivererVo> delivererList = new ArrayList<DelivererVo>();
 			orderResult.setDelivererList(delivererList);
 			for (Deliverer deliverer : singleResult.getDelivererList()) {
 				DelivererVo delivererVo = new DelivererVo();
 				BeanUtils.copyProperties(deliverer, delivererVo);
 				delivererList.add(delivererVo);
+			}
+			
+			if(deliveryStationList.size()==0){
+				orderResult.setResult(AddressMappingResultEnum.zeroResult);
+			}
+			if(deliveryStationList.size()==1){
+				orderResult.setResult(AddressMappingResultEnum.singleResult);
+			}
+			if(deliveryStationList.size()>1){
+				orderResult.setResult(AddressMappingResultEnum.multipleResult);
 			}
 			
 			orderResult.setTimeLimitList(singleResult.getTimeLimitList());
