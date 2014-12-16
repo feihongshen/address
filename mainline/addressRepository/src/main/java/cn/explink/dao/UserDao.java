@@ -19,15 +19,15 @@ public class UserDao extends BasicHibernateDaoSupport<User, Long> {
 
 	public List<User> getUsersByName(String name) {
 		String hql = "from User where name = :name";
-		Query query = getSession().createQuery(hql);
+		Query query = this.getSession().createQuery(hql);
 		query.setString("name", name);
 		return query.list();
 	}
 
 	public Map<Long, String> getview() {
-		Map<Long, String> view=new HashMap<Long, String>();
-		List<User> ulist=loadAll(User.class);
-		
+		Map<Long, String> view = new HashMap<Long, String>();
+		List<User> ulist = this.loadAll(User.class);
+
 		for (User user : ulist) {
 			view.put(user.getId(), user.getName());
 		}
@@ -36,10 +36,10 @@ public class UserDao extends BasicHibernateDaoSupport<User, Long> {
 
 	public void resetPsd(Long id, String password) {
 		String hql = "update User set password=:password where id=:id";
-		Query query = getSession().createQuery(hql);
-		query.setString("password", password); 
+		Query query = this.getSession().createQuery(hql);
+		query.setString("password", password);
 		query.setLong("id", id);
-	    query.executeUpdate();
+		query.executeUpdate();
 	}
 
 }

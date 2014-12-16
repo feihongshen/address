@@ -47,10 +47,11 @@ function onAsyncSuccess(event, treeId, treeNode, msg) {
 		if(child.maxPage>1){
 			treeNode.maxPage=child.maxPage;
 			addDiyDom(treeId,treeNode);
+			child.page = 1;
 		}
 	}
 	//每次最多加载100个
-/*	totalCount = 0;
+	/*totalCount = 0;
 	if (treeNode.children.length < totalCount) {
 		setTimeout(function() {ajaxGetNodes(treeNode);}, perTime);
 	} else {
@@ -278,7 +279,7 @@ function addDiyDom(treeId, treeNode) {
 	var prev = $("#prevBtn_"+treeNode.id);
 	var next = $("#nextBtn_"+treeNode.id);
 	var last = $("#lastBtn_"+treeNode.id);
-	treeNode.maxPage = Math.round(treeNode.count/treeNode.pageSize - .5) + (treeNode.count%treeNode.pageSize == 0 ? 0:1);
+	//treeNode.maxPage = Math.round(treeNode.count/treeNode.pageSize - .5) + (treeNode.count%treeNode.pageSize == 0 ? 0:1);
 	first.bind("click", function(){
 		if (!treeNode.isAjaxing) {
 			goPage(treeId,treeNode, 1);
@@ -302,8 +303,9 @@ function addDiyDom(treeId, treeNode) {
 };
 var curPage = 0;
 function goPage(treeId,treeNode, page) {
-	var child = treeNode.children[0];
-	if(child&&child.maxPage>=page&&page>0){
+	//child = treeNode.children[0];
+	//if(child&&child.maxPage>=page&&page>0){
+	if(treeNode.maxPage>=page&&page>0){
 		treeNode.page = page;
 		if (treeNode.page<1) treeNode.page = 1;
 		if (treeNode.page>treeNode.maxPage) treeNode.page = treeNode.maxPage;

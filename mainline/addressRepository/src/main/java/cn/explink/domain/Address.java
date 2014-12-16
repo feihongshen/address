@@ -54,13 +54,12 @@ public class Address {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "address")
 	private Set<DelivererRule> delivererRules = new HashSet<DelivererRule>();
-	
+
 	public Address() {
 		super();
 	}
 
-	public Address(Long id, String name, Integer addressLevel, Long parentId,
-			String path) {
+	public Address(Long id, String name, Integer addressLevel, Long parentId, String path) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -69,9 +68,8 @@ public class Address {
 		this.path = path;
 	}
 
-
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -79,7 +77,7 @@ public class Address {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -87,7 +85,7 @@ public class Address {
 	}
 
 	public String getOldName() {
-		return oldName;
+		return this.oldName;
 	}
 
 	public void setOldName(String oldName) {
@@ -95,7 +93,7 @@ public class Address {
 	}
 
 	public Integer getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(Integer status) {
@@ -103,7 +101,7 @@ public class Address {
 	}
 
 	public Integer getAddressTypeId() {
-		return addressTypeId;
+		return this.addressTypeId;
 	}
 
 	public void setAddressTypeId(Integer addressTypeId) {
@@ -111,7 +109,7 @@ public class Address {
 	}
 
 	public Integer getAddressLevel() {
-		return addressLevel;
+		return this.addressLevel;
 	}
 
 	public void setAddressLevel(Integer addressLevel) {
@@ -119,7 +117,7 @@ public class Address {
 	}
 
 	public Long getParentId() {
-		return parentId;
+		return this.parentId;
 	}
 
 	public void setParentId(Long parentId) {
@@ -127,7 +125,7 @@ public class Address {
 	}
 
 	public Date getCreationTime() {
-		return creationTime;
+		return this.creationTime;
 	}
 
 	public void setCreationTime(Date creationTime) {
@@ -135,7 +133,7 @@ public class Address {
 	}
 
 	public String getPath() {
-		return path;
+		return this.path;
 	}
 
 	public void setPath(String path) {
@@ -143,7 +141,7 @@ public class Address {
 	}
 
 	public Boolean getIndexed() {
-		return indexed;
+		return this.indexed;
 	}
 
 	public void setIndexed(Boolean indexed) {
@@ -151,7 +149,7 @@ public class Address {
 	}
 
 	public Set<DeliveryStationRule> getDeliveryStationRules() {
-		return deliveryStationRules;
+		return this.deliveryStationRules;
 	}
 
 	public void setDeliveryStationRules(Set<DeliveryStationRule> deliveryStationRules) {
@@ -159,7 +157,7 @@ public class Address {
 	}
 
 	public Set<DelivererRule> getDelivererRules() {
-		return delivererRules;
+		return this.delivererRules;
 	}
 
 	public void setDelivererRules(Set<DelivererRule> delivererRules) {
@@ -170,30 +168,42 @@ public class Address {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Address [");
-		if (id != null)
-			builder.append("id=").append(id).append(", ");
-		if (name != null)
-			builder.append("name=").append(name).append(", ");
-		if (oldName != null)
-			builder.append("oldName=").append(oldName).append(", ");
-		if (status != null)
-			builder.append("status=").append(status).append(", ");
-		if (addressTypeId != null)
-			builder.append("addressTypeId=").append(addressTypeId).append(", ");
-		if (addressLevel != null)
-			builder.append("addressLevel=").append(addressLevel).append(", ");
-		if (parentId != null)
-			builder.append("parentId=").append(parentId).append(", ");
-		if (path != null)
-			builder.append("path=").append(path).append(", ");
-		if (indexed != null)
-			builder.append("indexed=").append(indexed).append(", ");
-		if (creationTime != null)
-			builder.append("creationTime=").append(creationTime).append(", ");
-		if (deliveryStationRules != null)
-			builder.append("deliveryStationRules=").append(deliveryStationRules).append(", ");
-		if (delivererRules != null)
-			builder.append("delivererRules=").append(delivererRules);
+		if (this.id != null) {
+			builder.append("id=").append(this.id).append(", ");
+		}
+		if (this.name != null) {
+			builder.append("name=").append(this.name).append(", ");
+		}
+		if (this.oldName != null) {
+			builder.append("oldName=").append(this.oldName).append(", ");
+		}
+		if (this.status != null) {
+			builder.append("status=").append(this.status).append(", ");
+		}
+		if (this.addressTypeId != null) {
+			builder.append("addressTypeId=").append(this.addressTypeId).append(", ");
+		}
+		if (this.addressLevel != null) {
+			builder.append("addressLevel=").append(this.addressLevel).append(", ");
+		}
+		if (this.parentId != null) {
+			builder.append("parentId=").append(this.parentId).append(", ");
+		}
+		if (this.path != null) {
+			builder.append("path=").append(this.path).append(", ");
+		}
+		if (this.indexed != null) {
+			builder.append("indexed=").append(this.indexed).append(", ");
+		}
+		if (this.creationTime != null) {
+			builder.append("creationTime=").append(this.creationTime).append(", ");
+		}
+		if (this.deliveryStationRules != null) {
+			builder.append("deliveryStationRules=").append(this.deliveryStationRules).append(", ");
+		}
+		if (this.delivererRules != null) {
+			builder.append("delivererRules=").append(this.delivererRules);
+		}
 		builder.append("]");
 		return builder.toString();
 	}

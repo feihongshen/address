@@ -34,7 +34,7 @@ public class ExplinkIKConfig implements Configuration {
 
 	// 配置属性——扩展停止词典
 	private static final String EXT_STOP = "ext_stopwords";
-	
+
 	private Properties props;
 
 	/*
@@ -44,7 +44,7 @@ public class ExplinkIKConfig implements Configuration {
 
 	/**
 	 * 返回单例
-	 * 
+	 *
 	 * @return Configuration单例
 	 */
 	public static ExplinkIKConfig getInstance() {
@@ -55,12 +55,12 @@ public class ExplinkIKConfig implements Configuration {
 	 * 初始化配置文件
 	 */
 	private ExplinkIKConfig() {
-		props = new Properties();
+		this.props = new Properties();
 
-		InputStream input = this.getClass().getClassLoader().getResourceAsStream(FILE_NAME);
+		InputStream input = this.getClass().getClassLoader().getResourceAsStream(ExplinkIKConfig.FILE_NAME);
 		if (input != null) {
 			try {
-				props.loadFromXML(input);
+				this.props.loadFromXML(input);
 			} catch (InvalidPropertiesFormatException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -71,54 +71,59 @@ public class ExplinkIKConfig implements Configuration {
 
 	/**
 	 * 返回useSmart标志位 useSmart =true ，分词器使用智能切分策略， =false则使用细粒度切分
-	 * 
+	 *
 	 * @return useSmart
 	 */
+	@Override
 	public boolean useSmart() {
-		return useSmart;
+		return this.useSmart;
 	}
 
 	/**
 	 * 设置useSmart标志位 useSmart =true ，分词器使用智能切分策略， =false则使用细粒度切分
-	 * 
+	 *
 	 * @param useSmart
 	 */
+	@Override
 	public void setUseSmart(boolean useSmart) {
 		this.useSmart = useSmart;
 	}
 
 	/**
 	 * 获取主词典路径
-	 * 
+	 *
 	 * @return String 主词典路径
 	 */
+	@Override
 	public String getMainDictionary() {
-		return PATH_DIC_MAIN;
+		return ExplinkIKConfig.PATH_DIC_MAIN;
 	}
 
 	/**
 	 * 获取量词词典路径
-	 * 
+	 *
 	 * @return String 量词词典路径
 	 */
+	@Override
 	public String getQuantifierDicionary() {
-		return PATH_DIC_QUANTIFIER;
+		return ExplinkIKConfig.PATH_DIC_QUANTIFIER;
 	}
 
 	/**
 	 * 获取扩展字典配置路径
-	 * 
+	 *
 	 * @return List<String> 相对类加载器的路径
 	 */
+	@Override
 	public List<String> getExtDictionarys() {
 		List<String> extDictFiles = new ArrayList<String>(2);
-		String extDictCfg = props.getProperty(EXT_DICT);
+		String extDictCfg = this.props.getProperty(ExplinkIKConfig.EXT_DICT);
 		if (extDictCfg != null) {
 			// 使用;分割多个扩展字典配置
 			String[] filePaths = extDictCfg.split(";");
 			if (filePaths != null) {
 				for (String filePath : filePaths) {
-					if (filePath != null && !"".equals(filePath.trim())) {
+					if ((filePath != null) && !"".equals(filePath.trim())) {
 						extDictFiles.add(filePath.trim());
 					}
 				}
@@ -129,18 +134,19 @@ public class ExplinkIKConfig implements Configuration {
 
 	/**
 	 * 获取扩展停止词典配置路径
-	 * 
+	 *
 	 * @return List<String> 相对类加载器的路径
 	 */
+	@Override
 	public List<String> getExtStopWordDictionarys() {
 		List<String> extStopWordDictFiles = new ArrayList<String>(2);
-		String extStopWordDictCfg = props.getProperty(EXT_STOP);
+		String extStopWordDictCfg = this.props.getProperty(ExplinkIKConfig.EXT_STOP);
 		if (extStopWordDictCfg != null) {
 			// 使用;分割多个扩展字典配置
 			String[] filePaths = extStopWordDictCfg.split(";");
 			if (filePaths != null) {
 				for (String filePath : filePaths) {
-					if (filePath != null && !"".equals(filePath.trim())) {
+					if ((filePath != null) && !"".equals(filePath.trim())) {
 						extStopWordDictFiles.add(filePath.trim());
 					}
 				}

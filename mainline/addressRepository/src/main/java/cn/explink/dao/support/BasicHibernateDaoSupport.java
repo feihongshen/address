@@ -1,10 +1,8 @@
 package cn.explink.dao.support;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,24 +34,24 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 	protected Class<Entity> persistentClass;
 
 	public BasicHibernateDaoSupport(Class<Entity> clz) {
-		persistentClass = clz;
+		this.persistentClass = clz;
 	}
 
 	@SuppressWarnings("unchecked")
 	public Entity get(ID id) {
-		Session session = getSession();
-		return (Entity) session.get(persistentClass, id);
+		Session session = this.getSession();
+		return (Entity) session.get(this.persistentClass, id);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Entity load(ID id) {
-		Session session = getSession();
-		return (Entity) session.load(persistentClass, id);
+		Session session = this.getSession();
+		return (Entity) session.load(this.persistentClass, id);
 	}
 
 	public List<Entity> findByExample(Entity exampleInstance, String[] excludeProperty) {
-		Session session = getSession();
-		Criteria criteria = session.createCriteria(persistentClass);
+		Session session = this.getSession();
+		Criteria criteria = session.createCriteria(this.persistentClass);
 
 		Example example = Example.create(exampleInstance);
 		for (int i = 0; i < excludeProperty.length; i++) {
@@ -64,31 +62,31 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 	}
 
 	public Entity save(Entity entity) {
-		Session session = getSession();
+		Session session = this.getSession();
 		session.saveOrUpdate(entity);
 		return entity;
 	}
 
 	public void delete(Entity entity) {
-		getSession().delete(entity);
+		this.getSession().delete(entity);
 	}
 
 	public void beginTransaction() {
-		getSession().beginTransaction();
+		this.getSession().beginTransaction();
 	}
 
 	public void commitTransaction() {
-		getSession().getTransaction().commit();
+		this.getSession().getTransaction().commit();
 	}
 
 	public void insert(Collection<Entity> items) {
-		if (items != null && items.size() > 0) {
-			Session session = getSession();
+		if ((items != null) && (items.size() > 0)) {
+			Session session = this.getSession();
 			int count = 0;
 			for (Entity t : items) {
 				session.save(t);
 				count++;
-				if (count % BATCH_SIZE == 0) {
+				if ((count % this.BATCH_SIZE) == 0) {
 					session.flush();
 					session.clear();
 				}
@@ -97,13 +95,13 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 	}
 
 	public void insert(Entity[] items) {
-		if (items != null && items.length > 0) {
-			Session session = getSession();
+		if ((items != null) && (items.length > 0)) {
+			Session session = this.getSession();
 			int count = 0;
 			for (Entity t : items) {
 				session.save(t);
-				count ++;
-				if (count % BATCH_SIZE == 0) {
+				count++;
+				if ((count % this.BATCH_SIZE) == 0) {
 					session.flush();
 					session.clear();
 				}
@@ -113,13 +111,13 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 
 	/**
 	 * lock an entity
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	protected Entity lock(ID id) {
-		Session session = getSession();
+		Session session = this.getSession();
 		Entity entity = null;
 		try {
 			// 设置超时时间为较小的值，如果此资源已经被其他事物加锁，则迅速失败当前查询
@@ -129,10 +127,10 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 				Query query = session.createSQLQuery("set innodb_lock_wait_timeout = 1");
 				query.executeUpdate();
 			} catch (Exception e) {
-				logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage());
+				BasicHibernateDaoSupport.logger.warn("can't update innodb_lock_wait_timeout. ", e.getMessage());
 			}
 
-			entity = (Entity) session.load(persistentClass, id, LockOptions.UPGRADE);
+			entity = (Entity) session.load(this.persistentClass, id, LockOptions.UPGRADE);
 		} finally {
 			try {
 				Query query = session.createSQLQuery("show global variables like 'innodb_lock_wait_timeout'");
@@ -141,7 +139,7 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 				query = session.createSQLQuery("set innodb_lock_wait_timeout = " + globalValue[1]);
 				query.executeUpdate();
 			} catch (Exception e) {
-				// ignore 
+				// ignore
 			}
 		}
 
@@ -149,57 +147,62 @@ public abstract class BasicHibernateDaoSupport<Entity, ID extends Serializable> 
 	}
 
 	protected Session getSession() {
-		return sessionFactory.getCurrentSession();
+		return this.sessionFactory.getCurrentSession();
 	}
-	
+
 	public BigInteger getCount(String tableName) {
-		Session session = getSession();
-		Query query =session.createSQLQuery("select count(1) from "+tableName);
+		Session session = this.getSession();
+		Query query = session.createSQLQuery("select count(1) from " + tableName);
 		return (BigInteger) query.uniqueResult();
 	}
+
 	public List<Entity> findListbySql(final String sql) {
-		Query querys = getSession().createSQLQuery(sql);
+		Query querys = this.getSession().createSQLQuery(sql);
 		return querys.list();
 	}
+
 	public <Entity> List<Entity> loadAll(final Class<Entity> entityClass) {
-		Criteria criteria = createCriteria(entityClass);
+		Criteria criteria = this.createCriteria(entityClass);
 		return criteria.list();
 	}
+
 	private <T> Criteria createCriteria(Class<T> entityClass) {
-		Criteria criteria = getSession().createCriteria(entityClass);
+		Criteria criteria = this.getSession().createCriteria(entityClass);
 		return criteria;
 	}
-	public  DataInfo  findByHql(String hql,String hqlCount,Integer page,Integer pageSize,Map<String,Object> param){
-		DataInfo  d = new DataInfo ();
-	    if(page==null||page<=0){
-	    	page=1;
-	    }
-	    if(pageSize==null||pageSize<=0){
-	    	pageSize=100;
-	    }
-	    Query querys = getSession().createQuery(hql);
-	    Query queryCount = getSession().createQuery(hqlCount);
-	    if(param!=null){
-	    	for(String k :param.keySet()){
-	    			querys.setParameter(k,  param.get(k));
-	    			queryCount.setParameter(k,  param.get(k));
-	        }
-	    }
-	    List l = querys.setFirstResult((page-1)*pageSize ).setMaxResults(pageSize).list();
-	    Integer count = ((Long) queryCount.uniqueResult()).intValue();
-	    d.setResult(l);
-	    d.setTotalCount(count);
-	    d.setPage(page);
-	    d.setPageSize(pageSize);
-	    d.setPageCount(maxPageSize(count,pageSize)	);
+
+	public DataInfo findByHql(String hql, String hqlCount, Integer page, Integer pageSize, Map<String, Object> param) {
+		DataInfo d = new DataInfo();
+		if ((page == null) || (page <= 0)) {
+			page = 1;
+		}
+		if ((pageSize == null) || (pageSize <= 0)) {
+			pageSize = 100;
+		}
+		Query querys = this.getSession().createQuery(hql);
+		Query queryCount = this.getSession().createQuery(hqlCount);
+		if (param != null) {
+			for (String k : param.keySet()) {
+				querys.setParameter(k, param.get(k));
+				queryCount.setParameter(k, param.get(k));
+			}
+		}
+		List l = querys.setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).list();
+		Integer count = ((Long) queryCount.uniqueResult()).intValue();
+		d.setResult(l);
+		d.setTotalCount(count);
+		d.setPage(page);
+		d.setPageSize(pageSize);
+		d.setPageCount(this.maxPageSize(count, pageSize));
 		return d;
 	}
-	public int maxPageSize(int count,int pageSize){
-		if(pageSize>0){
-			if((count%pageSize)!=0){
-				return (count/pageSize)+1;
-			}else{
-				return (count/pageSize);
+
+	public int maxPageSize(int count, int pageSize) {
+		if (pageSize > 0) {
+			if ((count % pageSize) != 0) {
+				return (count / pageSize) + 1;
+			} else {
+				return (count / pageSize);
 			}
 		}
 		return 0;
