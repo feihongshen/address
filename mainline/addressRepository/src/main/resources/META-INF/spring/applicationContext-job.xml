@@ -36,7 +36,7 @@
 				<prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
 				<prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</prop>
 				<prop key="org.quartz.jobStore.tablePrefix">QTZ_</prop>
-				<prop key="org.quartz.jobStore.maxMisfiresToHandleAtATime">20</prop>
+				<prop key="org.quartz.jobStore.maxMisfiresToHandleAtATime">25</prop>
 				<prop key="org.quartz.jobStore.isClustered">true</prop>
 				<prop key="org.quartz.threadPool.threadCount">30</prop>
 				<prop key="org.quartz.plugin.triggHistory.class">org.quartz.plugins.history.LoggingJobHistoryPlugin

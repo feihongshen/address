@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 @Entity
 @Table(name = "DELIVERY_STATION_RULES")
 public class DeliveryStationRule {
@@ -30,7 +28,7 @@ public class DeliveryStationRule {
 
 	@Column(name = "RULE_TYPE", nullable = false)
 	private Integer ruleType;
-	@JsonIgnore
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ADDRESS_ID")
 	private Address address;
@@ -43,7 +41,7 @@ public class DeliveryStationRule {
 	private Date creationTime;
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -51,7 +49,7 @@ public class DeliveryStationRule {
 	}
 
 	public String getRule() {
-		return rule;
+		return this.rule;
 	}
 
 	public void setRule(String rule) {
@@ -59,7 +57,7 @@ public class DeliveryStationRule {
 	}
 
 	public Address getAddress() {
-		return address;
+		return this.address;
 	}
 
 	public void setAddress(Address address) {
@@ -67,7 +65,7 @@ public class DeliveryStationRule {
 	}
 
 	public Date getCreationTime() {
-		return creationTime;
+		return this.creationTime;
 	}
 
 	public void setCreationTime(Date creationTime) {
@@ -75,7 +73,7 @@ public class DeliveryStationRule {
 	}
 
 	public Integer getRuleType() {
-		return ruleType;
+		return this.ruleType;
 	}
 
 	public void setRuleType(Integer ruleType) {
@@ -83,7 +81,7 @@ public class DeliveryStationRule {
 	}
 
 	public DeliveryStation getDeliveryStation() {
-		return deliveryStation;
+		return this.deliveryStation;
 	}
 
 	public void setDeliveryStation(DeliveryStation deliveryStation) {
@@ -91,7 +89,7 @@ public class DeliveryStationRule {
 	}
 
 	public String getRuleExpression() {
-		return ruleExpression;
+		return this.ruleExpression;
 	}
 
 	public void setRuleExpression(String ruleExpression) {

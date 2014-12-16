@@ -19,7 +19,6 @@ import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Customer;
-import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Vendor;
@@ -56,13 +55,13 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId, String rule) {
 		// 解析规则
-		RuleExpression ruleExpression = parseRule(rule);
+		RuleExpression ruleExpression = this.parseRule(rule);
 
-		Address address = addressDao.get(addressId);
-		DeliveryStation deliveryStation = deliveryStationDao.get(deliveryStationId);
+		Address address = this.addressDao.get(addressId);
+		DeliveryStation deliveryStation = this.deliveryStationDao.get(deliveryStationId);
 		// 判断是否与已有规则冲突
-		Set<DeliveryStationRule> filterdRules = filter(customerId, address.getDeliveryStationRules());
-		DeliveryStationRule confilctingRule = findConflictingRule(ruleExpression, filterdRules);
+		Set<DeliveryStationRule> filterdRules = this.filter(customerId, address.getDeliveryStationRules());
+		DeliveryStationRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
 		if (confilctingRule != null) {
 			String message = "无效规则";
 			if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
@@ -85,7 +84,7 @@ public class DeliveryStationRuleService extends RuleService {
 			deliveryStationRule.setRule(rule);
 			deliveryStationRule.setRuleExpression(JsonUtil.translateToJson(ruleExpression));
 		}
-		deliveryStationRuleDao.save(deliveryStationRule);
+		this.deliveryStationRuleDao.save(deliveryStationRule);
 
 		return deliveryStationRule;
 	}
@@ -102,10 +101,10 @@ public class DeliveryStationRuleService extends RuleService {
 		}
 		return filteredRules;
 	}
-	
+
 	/**
 	 * 查找冲突的规则
-	 * 
+	 *
 	 * @param ruleExpression
 	 * @param deliveryStationRules
 	 * @return
@@ -115,7 +114,7 @@ public class DeliveryStationRuleService extends RuleService {
 			return null;
 		}
 		for (DeliveryStationRule existingRule : deliveryStationRules) {
-			if (isConflict(ruleExpression, existingRule)) {
+			if (this.isConflict(ruleExpression, existingRule)) {
 				return existingRule;
 			}
 		}
@@ -124,28 +123,28 @@ public class DeliveryStationRuleService extends RuleService {
 
 	/**
 	 * 判断规则是否冲突
-	 * 
+	 *
 	 * @param ruleExpression
 	 * @param existingRule
 	 * @return
 	 */
 	private boolean isConflict(RuleExpression ruleExpression, DeliveryStationRule existingRule) {
-		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+		if ((ruleExpression == null) && (DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue())) {
 			return true;
 		}
-		if (ruleExpression != null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+		if ((ruleExpression != null) && (DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue())) {
 			return false;
 		}
-		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() != existingRule.getRuleType().intValue()) {
+		if ((ruleExpression == null) && (DeliveryStationRuleTypeEnum.fallback.getValue() != existingRule.getRuleType().intValue())) {
 			return false;
 		}
 		RuleExpression existingRuleExpression = JsonUtil.readValue(existingRule.getRuleExpression(), RuleExpression.class);
-		return isConflict(ruleExpression, existingRuleExpression);
+		return this.isConflict(ruleExpression, existingRuleExpression);
 	}
 
 	/**
 	 * 根据地址搜索匹配的站点规则
-	 * 
+	 *
 	 * @param addressList
 	 * @param orderVo
 	 * @return
@@ -162,13 +161,14 @@ public class DeliveryStationRuleService extends RuleService {
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
 			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
 			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
-			List<DeliveryStationRule> list=getByCustormerAndAdressId(orderVo.getCustomerId(),address.getId());
+			// TODO:此处待优化.
+			List<DeliveryStationRule> list = this.getByCustormerAndAdressId(orderVo.getCustomerId(), address.getId());
 			for (DeliveryStationRule rule : list) {
 				if (DeliveryStationRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
 					defaultRule = rule;
 				} else {
 					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
-					boolean isMapping = isMapping(addressLine, ruleExpression);
+					boolean isMapping = this.isMapping(addressLine, ruleExpression);
 					if (isMapping) {
 						mappingRule = rule;
 					}
@@ -188,37 +188,36 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public DataGridReturn getDataGridReturnView(String addressId) {
 
-		Query query = getSession()
-				.createQuery(
-						"select new cn.explink.web.vo.DeliveryStationRuleVo(dsr.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id =:addressId");
+		Query query = this.getSession().createQuery(
+				"select new cn.explink.web.vo.DeliveryStationRuleVo(dsr.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.address.id =:addressId");
 		query.setLong("addressId", Long.parseLong(addressId));
 		List<DeliveryStation> list = query.list();
 		return new DataGridReturn(list.size(), list);
 	}
 
 	public List<Long> getAddressIds(Long parentId, Long customerId) {
-		return deliveryStationRuleDao.getAddressIds(parentId, customerId);
+		return this.deliveryStationRuleDao.getAddressIds(parentId, customerId);
 	}
 
 	public void addRule(DeliveryStationRule dsr, Long customerId) {
-		List list = deliveryStationRuleDao.getByAddressAndStation(dsr.getAddress().getId(), dsr.getDeliveryStation().getId(), customerId);
-		if (list != null && !list.isEmpty()) {
+		List list = this.deliveryStationRuleDao.getByAddressAndStation(dsr.getAddress().getId(), dsr.getDeliveryStation().getId(), customerId);
+		if ((list != null) && !list.isEmpty()) {
 			throw new ExplinkRuntimeException("该关键字已绑定默认站点");
 		}
-		deliveryStationRuleDao.save(dsr);
+		this.deliveryStationRuleDao.save(dsr);
 	}
 
 	public List<BeanVo> getStationAddressTree(Long customerId, String inIds) {
-		Query query = getSession()
-				.createQuery(
-						"select new cn.explink.ws.vo.BeanVo(dsr.address.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id in("
-								+ inIds + ") and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
+		Query query = this.getSession().createQuery(
+				"select new cn.explink.ws.vo.BeanVo(dsr.address.id, dsr.deliveryStation.name) from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id in(" + inIds
+						+ ") and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
-	
+
 	public List<DeliveryStationRule> getByCustormerAndAdressId(Long customerId, Long aId) {
-		Query query = getSession()
+		Query query = this
+				.getSession()
 				.createQuery(
 						"select dsr from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id =:aId and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
@@ -227,7 +226,8 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 
 	public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
-		Query query = getSession()
+		Query query = this
+				.getSession()
 				.createQuery(
 						"select new cn.explink.tree.ZTreeNode( dsr.address.name,dsr.address.id,dsr.address.parentId,dsr.address.addressLevel,dsr.address.path ) from DeliveryStationRule dsr where  dsr.deliveryStation.id=:stationId and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
 		query.setLong("customerId", customerId);
@@ -236,23 +236,25 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 
 	public int removeAddressRule(Long addressId, Long stationId) {
-		return deliveryStationRuleDao.removeAddressRule( addressId,  stationId);
-		
+		return this.deliveryStationRuleDao.removeAddressRule(addressId, stationId);
+
 	}
-	public int removeAddressRule(Long addressId,Long oldStationId, Long stationId) {
-		 return deliveryStationRuleDao.removeAddressRule( addressId,oldStationId,  stationId);
+
+	public int removeAddressRule(Long addressId, Long oldStationId, Long stationId) {
+		return this.deliveryStationRuleDao.removeAddressRule(addressId, oldStationId, stationId);
 	}
+
 	public void changeStationRelation(Long sourceStationId, Long targetStationId, String sourceAddressId, String targetAddressId) {
 		if (StringUtils.isNotBlank(sourceAddressId)) {
-			String sourceSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`=" + sourceStationId + " WHERE `DELIVERY_STATION_ID`="
-					+ targetStationId + " and `ADDRESS_ID` in (" + sourceAddressId + ");";
-			Query sourceQuery = getSession().createSQLQuery(sourceSql);
+			String sourceSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`=" + sourceStationId + " WHERE `DELIVERY_STATION_ID`=" + targetStationId + " and `ADDRESS_ID` in ("
+					+ sourceAddressId + ");";
+			Query sourceQuery = this.getSession().createSQLQuery(sourceSql);
 			sourceQuery.executeUpdate();
 		}
 		if (StringUtils.isNotBlank(targetAddressId)) {
-			String targetSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`=" + targetStationId + " WHERE `DELIVERY_STATION_ID`="
-					+ sourceStationId + " and `ADDRESS_ID` in (" + targetAddressId + ");";
-			Query targetQuery = getSession().createSQLQuery(targetSql);
+			String targetSql = "UPDATE `DELIVERY_STATION_RULES` SET `DELIVERY_STATION_ID`=" + targetStationId + " WHERE `DELIVERY_STATION_ID`=" + sourceStationId + " and `ADDRESS_ID` in ("
+					+ targetAddressId + ");";
+			Query targetQuery = this.getSession().createSQLQuery(targetSql);
 			targetQuery.executeUpdate();
 		}
 	}
@@ -260,14 +262,14 @@ public class DeliveryStationRuleService extends RuleService {
 	public List<DeliveryStationRuleVo> getAllStationRule(String addressId, Long custmerId) {
 		String sql = "SELECT DSR.ID id,S.NAME deliveryStationName   ,DSR.RULE rule,DSR.RULE_TYPE ruleType ,DSR.RULE_EXPRESSION ruleExpression  FROM DELIVERY_STATION_RULES DSR ,DELIVERY_STATIONS S WHERE DSR.ADDRESS_ID=:addressId"
 				+ "  AND S.CUSTOMER_ID=:customerId AND S.ID=DSR.DELIVERY_STATION_ID";
-		Query query = getSession().createSQLQuery(sql).setResultTransformer(Transformers.aliasToBean(DeliveryStationRuleVo.class));
+		Query query = this.getSession().createSQLQuery(sql).setResultTransformer(Transformers.aliasToBean(DeliveryStationRuleVo.class));
 		query.setLong("addressId", Long.parseLong(addressId));
 		query.setLong("customerId", custmerId);
 		return query.list();
 	}
 
 	public List<VendorsAging> getAllVendorAging(String addressId, Long custmerId) {
-		Query query = getSession().createQuery("from VendorsAging where address.id=:addressId and customer.id=:custmerId ");
+		Query query = this.getSession().createQuery("from VendorsAging where address.id=:addressId and customer.id=:custmerId ");
 		query.setLong("custmerId", custmerId);
 		query.setLong("addressId", Long.parseLong(addressId));
 		return query.list();
@@ -275,8 +277,8 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public void createVendorAge(Long addressId, Long vendorId, Long customerId, String aging) {
 
-		List existingVendorAgingList = vendorsAgingDao.getVendorAging(addressId, vendorId, customerId);
-		if (existingVendorAgingList != null && !existingVendorAgingList.isEmpty()) {
+		List existingVendorAgingList = this.vendorsAgingDao.getVendorAging(addressId, vendorId, customerId);
+		if ((existingVendorAgingList != null) && !existingVendorAgingList.isEmpty()) {
 			throw new ExplinkRuntimeException("同地址同一个供应商不能设置两个时效！");
 		} else {
 			VendorsAging va = new VendorsAging();
@@ -297,19 +299,19 @@ public class DeliveryStationRuleService extends RuleService {
 
 	public void saveVendorAge(List<VendorsAgingVo> list, Long customerId) {
 		for (VendorsAgingVo r : list) {
-			createVendorAge(r.getAddressId(), r.getVendorId(), customerId, r.getAging());
+			this.createVendorAge(r.getAddressId(), r.getVendorId(), customerId, r.getAging());
 		}
 	}
 
 	public void deleteVendorAge(Long id) {
-		VendorsAging va = (VendorsAging) getSession().load(VendorsAging.class, id);
-		getSession().delete(va);
+		VendorsAging va = (VendorsAging) this.getSession().load(VendorsAging.class, id);
+		this.getSession().delete(va);
 
 	}
 
 	public void createDeliveryStationRuleList(List<DeliveryStationRuleVo> list, Long customerId) {
 		for (DeliveryStationRuleVo r : list) {
-			createDeliveryStationRule(r.getAddressId(), r.getStationId(), customerId, r.getRule());
+			this.createDeliveryStationRule(r.getAddressId(), r.getStationId(), customerId, r.getRule());
 		}
 	}
 

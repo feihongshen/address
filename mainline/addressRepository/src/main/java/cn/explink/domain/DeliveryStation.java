@@ -17,7 +17,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "DELIVERY_STATIONS")
-@JsonIgnoreProperties(value = { "customer" })  
+@JsonIgnoreProperties(value = { "customer" })
 public class DeliveryStation {
 
 	@Id
@@ -41,7 +41,7 @@ public class DeliveryStation {
 	private Date creationTime;
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -49,7 +49,7 @@ public class DeliveryStation {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -57,7 +57,7 @@ public class DeliveryStation {
 	}
 
 	public Integer getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(Integer status) {
@@ -65,7 +65,7 @@ public class DeliveryStation {
 	}
 
 	public Long getExternalId() {
-		return externalId;
+		return this.externalId;
 	}
 
 	public void setExternalId(Long externalId) {
@@ -73,7 +73,7 @@ public class DeliveryStation {
 	}
 
 	public Customer getCustomer() {
-		return customer;
+		return this.customer;
 	}
 
 	public void setCustomer(Customer customer) {
@@ -81,11 +81,34 @@ public class DeliveryStation {
 	}
 
 	public Date getCreationTime() {
-		return creationTime;
+		return this.creationTime;
 	}
 
 	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		if (this == o) {
+			return true;
+		}
+		if (this.getClass() != o.getClass()) {
+			return false;
+		}
+		DeliveryStation oStat = (DeliveryStation) o;
+
+		return this.getId().equals(oStat.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		if (this.getId() == null) {
+			return super.hashCode();
+		}
+		return this.getId().hashCode();
+	}
 }

@@ -1,6 +1,7 @@
 package cn.explink.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -14,7 +15,7 @@ public class AddressUtil {
 
 	/**
 	 * 判断two是否one路径上的一个节点 即one是two的子节点或孙子节点等
-	 * 
+	 *
 	 * @param one
 	 * @param two
 	 * @return
@@ -36,7 +37,7 @@ public class AddressUtil {
 		}
 		List<AddressVo> addressVoList = new ArrayList<AddressVo>(addressList.size());
 		for (Address address : addressList) {
-			AddressVo addressVo = cloneToAddressVo(address);
+			AddressVo addressVo = AddressUtil.cloneToAddressVo(address);
 			addressVoList.add(addressVo);
 		}
 		return addressVoList;
@@ -57,7 +58,7 @@ public class AddressUtil {
 		}
 		List<DelivererRuleVo> delivererRuleVoList = new ArrayList<DelivererRuleVo>(delivererRuleList.size());
 		for (DelivererRule delivererRule : delivererRuleList) {
-			DelivererRuleVo delivererRuleVo = cloneToDelivererRuleVo(delivererRule);
+			DelivererRuleVo delivererRuleVo = AddressUtil.cloneToDelivererRuleVo(delivererRule);
 			delivererRuleVoList.add(delivererRuleVo);
 		}
 		return delivererRuleVoList;
@@ -74,4 +75,18 @@ public class AddressUtil {
 		return delivererRuleVo;
 	}
 
+	public static <T extends Number> String getInPara(Collection<T> collection) {
+		if ((collection == null) || collection.isEmpty()) {
+			return null;
+		}
+		StringBuilder str = new StringBuilder();
+		for (T t : collection) {
+			if (t == null) {
+				continue;
+			}
+			str.append(t.toString());
+			str.append(" , ");
+		}
+		return str.substring(0, str.length() - 2);
+	}
 }
