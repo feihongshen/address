@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +29,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wltea.analyzer.dic.Dictionary;
@@ -40,16 +38,12 @@ import cn.explink.dao.AliasDao;
 import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Alias;
-import cn.explink.domain.Order;
 import cn.explink.lucene.AddressFilter;
 import cn.explink.lucene.Constants;
 import cn.explink.lucene.DictChange;
 import cn.explink.lucene.ExplinkIKConfig;
 import cn.explink.lucene.LuceneEnvironment;
-import cn.explink.lucene.ScoreFilter;
 import cn.explink.util.StringUtil;
-import cn.explink.ws.vo.OrderVo;
-import cn.explink.ws.vo.OrderAddressMappingResult;
 
 @Service
 public class LuceneService {
@@ -79,30 +73,30 @@ public class LuceneService {
 				if (!dictDirectory.exists()) {
 					try {
 						if (dictDirectory.mkdirs()) {
-							logger.info("create ik dict path success.");
+							LuceneService.logger.info("create ik dict path success.");
 						} else {
 							String message = "create ik dict path failure.";
-							logger.error(message);
+							LuceneService.logger.error(message);
 							throw new RuntimeException(message);
 						}
-						initIndex();
+						this.initIndex();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {
 					// 分词词典目录已经存在
-					readAnalyzerDicts(dictDirectory);
+					this.readAnalyzerDicts(dictDirectory);
 				}
 			}
 		} else {
 			// 分词词典目录已经存在
-			readAnalyzerDicts(dictDirectory);
+			this.readAnalyzerDicts(dictDirectory);
 		}
 	}
 
 	/**
 	 * 读取词典目录下的所有词典
-	 * 
+	 *
 	 * @param dictDirectory
 	 */
 	private void readAnalyzerDicts(File dictDirectory) {
@@ -132,12 +126,12 @@ public class LuceneService {
 				}
 			}
 		}
-		logger.info("read dict time = {}", (System.currentTimeMillis() - startTime));
+		LuceneService.logger.info("read dict time = {}", (System.currentTimeMillis() - startTime));
 	}
 
 	/**
 	 * 初始化分词器词典目录和lucene索引，只在系统第一次启动时会被调用
-	 * 
+	 *
 	 * @param indexWriter
 	 * @param dictDirectory
 	 * @throws IOException
@@ -148,22 +142,22 @@ public class LuceneService {
 		while (true) {
 			start = end;
 			end = start + pageSize;
-			List<Address> addressList = addressDao.getBaseAddress(start, end);
-			if (addressList != null && addressList.size() > 0) {
-				refreshDictAndIndex(addressList, null);
+			List<Address> addressList = this.addressDao.getBaseAddress(start, end);
+			if ((addressList != null) && (addressList.size() > 0)) {
+				this.refreshDictAndIndex(addressList, null);
 			}
-			if (addressList == null || addressList.size() < pageSize) {
+			if ((addressList == null) || (addressList.size() < pageSize)) {
 				break;
 			}
 		}
 		long analyzerTime = System.currentTimeMillis() - beginTime;
-		logger.info("init IK analyzer time = {}", analyzerTime);
-		addressDao.baseAddressIndexed();
+		LuceneService.logger.info("init IK analyzer time = {}", analyzerTime);
+		this.addressDao.baseAddressIndexed();
 	}
 
 	/**
 	 * 刷新词典和索引
-	 * 
+	 *
 	 * @param addressList
 	 * @throws IOException
 	 */
@@ -199,26 +193,26 @@ public class LuceneService {
 
 		for (Long dictId : dictChangeMap.keySet()) {
 			DictChange dictChange = dictChangeMap.get(dictId);
-			refreshDictChange(dictChange, dictDirectory);
+			this.refreshDictChange(dictChange, dictDirectory);
 		}
 
 		// 刷新索引
-		refreshIndex(addressList, aliasList);
+		this.refreshIndex(addressList, aliasList);
 	}
 
 	/**
 	 * 刷新词典改动
-	 * 
+	 *
 	 * @param dictChange
 	 * @param dictDirectory
 	 * @throws IOException
 	 */
 	private void refreshDictChange(DictChange dictChange, File dictDirectory) throws IOException {
-//		Set<String> removeSet = dictChange.getRemoveSet();
+		// Set<String> removeSet = dictChange.getRemoveSet();
 		Set<String> addSet = dictChange.getAddSet();
 		Dictionary dictinonary = Dictionary.getSingleton();
-//		TODO 删除词典可能导致同名地址无法正常拆分
-//		dictinonary.disableWords(removeSet);
+		// TODO 删除词典可能导致同名地址无法正常拆分
+		// dictinonary.disableWords(removeSet);
 		dictinonary.addWords(addSet);
 
 		File dict = new File(dictDirectory, dictChange.getDictName());
@@ -227,10 +221,10 @@ public class LuceneService {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dict)));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-//				TODO 删除词典可能导致同名地址无法正常拆分
-//				if (!removeSet.contains(line)) {
-					existingSet.add(line);
-//				}
+				// TODO 删除词典可能导致同名地址无法正常拆分
+				// if (!removeSet.contains(line)) {
+				existingSet.add(line);
+				// }
 			}
 			br.close();
 		}
@@ -252,15 +246,15 @@ public class LuceneService {
 			for (Address address : addressList) {
 				query = new TermQuery(new Term("addressId", String.valueOf(address.getId())));
 				indexWriter.deleteDocuments(query);
-				indexWriter.addDocument(createDocument(address));
-				addressDao.updateAddressIndex(address.getId());
+				indexWriter.addDocument(this.createDocument(address));
+				this.addressDao.updateAddressIndex(address.getId());
 			}
 		}
 		if (aliasList != null) {
 			for (Alias alias : aliasList) {
 				query = new TermQuery(new Term("aliasId", String.valueOf(alias.getId())));
 				indexWriter.deleteDocuments(query);
-				indexWriter.addDocument(createDocument(alias));
+				indexWriter.addDocument(this.createDocument(alias));
 			}
 		}
 		indexWriter.commit();
@@ -273,7 +267,7 @@ public class LuceneService {
 		doc.add(new StringField("name", address.getName(), Field.Store.YES));
 		return doc;
 	}
-	
+
 	private Document createDocument(Alias alias) {
 		Document doc = new Document();
 		doc.add(new StringField("aliasId", String.valueOf(alias.getId()), Field.Store.YES));
@@ -284,25 +278,27 @@ public class LuceneService {
 
 	/**
 	 * 更新索引入口
+	 * 
 	 * @param addressIdList
 	 * @param aliasIdList
 	 * @throws IOException
 	 */
 	public void updateIndex(List<Long> addressIdList, List<Long> aliasIdList) throws IOException {
-		List<Address> addressList = addressDao.getAddressByIdList(addressIdList);
-		List<Alias> aliasList = aliasDao.getAliasByIdList(aliasIdList);
-		refreshDictAndIndex(addressList, aliasList);
+		List<Address> addressList = this.addressDao.getAddressByIdList(addressIdList);
+		List<Alias> aliasList = this.aliasDao.getAliasByIdList(aliasIdList);
+		this.refreshDictAndIndex(addressList, aliasList);
 	}
 
 	/**
 	 * 单个地址搜索入口
+	 * 
 	 * @param addressLine
 	 * @return
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	public List<Address> search(String addressLine, Long customerId) throws IOException, ParseException {
-		logger.info("search for {}", addressLine);
+		LuceneService.logger.info("search for {}", addressLine);
 		List<Address> addressList = new ArrayList<Address>();
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
@@ -315,25 +311,25 @@ public class LuceneService {
 				Document document = searcher.doc(doc.doc);
 				IndexableField addressIdField = document.getField("addressId");
 				IndexableField aliasIdField = document.getField("aliasId");
-				logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
+				LuceneService.logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
 				if (aliasIdField != null) {
 					String aliasId = aliasIdField.stringValue();
 					if (aliasId != null) {
-						Alias alias = aliasDao.get(Long.parseLong(aliasId));
-						if (alias!=null&&alias.getCustomerId() != null && customerId.longValue() != alias.getCustomerId().longValue()) {
+						Alias alias = this.aliasDao.get(Long.parseLong(aliasId));
+						if ((alias != null) && (alias.getCustomerId() != null) && (customerId.longValue() != alias.getCustomerId().longValue())) {
 							continue;
 						}
 					}
 				}
 				addressIdList.add(Long.parseLong(addressIdField.stringValue()));
 			}
-			
+
 			// 相关的地址
-			if(addressIdList!=null&&!addressIdList.isEmpty()){
-				List<Address> relatedAddressList = addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
-				logger.info("relatedAddressList = " + relatedAddressList);
+			if ((addressIdList != null) && !addressIdList.isEmpty()) {
+				List<Address> relatedAddressList = this.addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
+				LuceneService.logger.info("relatedAddressList = " + relatedAddressList);
 				// 得分评估，过滤掉不符合条件的地址
-				addressList = AddressFilter.filter(relatedAddressList);
+				addressList = AddressFilter.filter(addressLine, relatedAddressList);
 			}
 		}
 

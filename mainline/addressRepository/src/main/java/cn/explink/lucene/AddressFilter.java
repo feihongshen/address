@@ -1,65 +1,238 @@
 package cn.explink.lucene;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.explink.domain.Address;
 
+/**
+ * 地址过滤逻辑.
+ *
+ *
+ * @author zhaoshb
+ * @since AR1.0
+ * @Time 2014年12月17日 下午1:29:01
+ */
 public class AddressFilter {
-	/**
-	 * 从索引匹配的地址中过滤出符合条件的地址 1. 每个地址和剩余地址匹配，判别1：是否在路径上 2：是否包含过省市区关键字 2.
-	 * 返回：不再路径上，包含过省市区关键字的地址列表
-	 *
-	 * @param sourceAddressList
-	 * @return
-	 */
-	public static List<Address> filter(List<Address> sourceAddressList) {
-		if (sourceAddressList.isEmpty()) {
-			return sourceAddressList;
-		}
-		List<Address> lvMtThrAddrList = AddressFilter.getLevelMoreThanThree(sourceAddressList);
-		if (lvMtThrAddrList.isEmpty() || (lvMtThrAddrList.size() == 1)) {
-			return lvMtThrAddrList;
-		}
-		AddressFilter.removePathAddr(lvMtThrAddrList);
 
-		return lvMtThrAddrList;
+	public static List<Address> filter(String strAddr, List<Address> addrList) {
+		if (addrList.isEmpty()) {
+			return addrList;
+		}
+		AddressForest forest = new AddressForest(strAddr, addrList);
+		MatchResult matchResult = forest.getMatchResult();
+
+		return matchResult.getAddress();
 	}
 
-	private static void removePathAddr(List<Address> lvMtThrAddrList) {
-		List<Address> removeList = new ArrayList<Address>();
-		int size = lvMtThrAddrList.size();
-		for (int i = 0; i < (size - 1); i++) {
-			for (int j = i + 1; j < size; j++) {
-				Address rmAddr = AddressFilter.getRemoveAddress(lvMtThrAddrList.get(i), lvMtThrAddrList.get(j));
-				if (rmAddr == null) {
-					continue;
+	private static class AddressForest {
+
+		private List<AddressTree> treeList = null;
+
+		private String fullAddr = null;
+
+		public AddressForest(String fullAddr, List<Address> addrList) {
+			this.fullAddr = fullAddr;
+			// 将地址按照路径长度排序.
+			this.sortAddrByLevel(addrList);
+			for (Address addr : addrList) {
+				this.addAddress(addr);
+			}
+		}
+
+		public void addAddress(Address addr) {
+			AddressTreeNode addrTreeNode = this.createAddrTreeNode(addr);
+			if (this.getTreeList().isEmpty()) {
+				this.getTreeList().add(this.createAddressTree(addrTreeNode));
+			} else {
+				boolean added = false;
+				for (AddressTree tree : this.getTreeList()) {
+					added |= tree.addAddrTreeNode(addrTreeNode);
 				}
-				removeList.add(rmAddr);
+				if (!added) {
+					this.getTreeList().add(this.createAddressTree(addrTreeNode));
+				}
 			}
 		}
-		lvMtThrAddrList.removeAll(removeList);
-	}
 
-	private static Address getRemoveAddress(Address addr1, Address addr2) {
-		if (addr1.getPath().contains(addr2.getPath())) {
-			return addr2;
-		}
-		if (addr2.getPath().contains(addr1.getPath())) {
-			return addr1;
-		}
-		return null;
-	}
-
-	private static List<Address> getLevelMoreThanThree(List<Address> sourceAddressList) {
-		List<Address> lvMtThrAddrList = new ArrayList<Address>();
-		for (Address address : sourceAddressList) {
-			if (address.getAddressLevel().intValue() < 3) {
-				continue;
+		public MatchResult getMatchResult() {
+			MatchResult matchResult = new MatchResult();
+			for (AddressTree tree : this.getTreeList()) {
+				tree.match(matchResult);
 			}
-			lvMtThrAddrList.add(address);
+			return matchResult;
 		}
-		return lvMtThrAddrList;
+
+		private void sortAddrByLevel(List<Address> addrList) {
+			Collections.sort(addrList, new Comparator<Address>() {
+
+				@Override
+				public int compare(Address o1, Address o2) {
+
+					return o1.getAddressLevel() - o2.getAddressLevel();
+				}
+			});
+		}
+
+		private List<AddressTree> getTreeList() {
+			if (this.treeList == null) {
+				this.treeList = new ArrayList<AddressTree>();
+			}
+			return this.treeList;
+		}
+
+		private AddressTree createAddressTree(AddressTreeNode addrTreeNode) {
+			return new AddressTree(addrTreeNode);
+		}
+
+		private AddressTreeNode createAddrTreeNode(Address addr) {
+			return new AddressTreeNode(addr, this.getFullAddr());
+		}
+
+		public String getFullAddr() {
+			return this.fullAddr;
+		}
+
 	}
 
+	private static class AddressTree {
+
+		private AddressTreeNode rootNode = null;
+
+		public AddressTree(AddressTreeNode rootNode) {
+			this.rootNode = rootNode;
+		}
+
+		public boolean addAddrTreeNode(AddressTreeNode newNode) {
+			return this.getRootNode().addAddressTreeNode(newNode);
+		}
+
+		public void match(MatchResult result) {
+			this.findMaxWeightNode(this.getRootNode(), result);
+		}
+
+		public void findMaxWeightNode(AddressTreeNode node, MatchResult result) {
+			if (node.hasChild()) {
+				for (AddressTreeNode childNode : node.getChildNodeList()) {
+					this.findMaxWeightNode(childNode, result);
+				}
+			} else {
+				result.compare(node);
+			}
+		}
+
+		private AddressTreeNode getRootNode() {
+			return this.rootNode;
+		}
+
+	}
+
+	private static class AddressTreeNode {
+		private Address address = null;
+
+		private List<AddressTreeNode> childNodeList = null;
+
+		// 权重，初始化时仅为Address名称和全地址的匹配字符数.
+		// 在加入父节点后权重修改父权重+当前权重.
+		private int weight = 0;
+
+		public AddressTreeNode(Address addr, String fullAddr) {
+			this.address = addr;
+			this.weight = this.getMatchScore(addr, fullAddr);
+		}
+
+		public boolean addAddressTreeNode(AddressTreeNode treeNode) {
+			boolean contains = treeNode.getPath().contains(this.getPath());
+			if (!contains) {
+				return false;
+			}
+			if (this.getChildNodeList().isEmpty()) {
+				treeNode.addWeight(this.getWeight());
+				this.getChildNodeList().add(treeNode);
+			} else {
+				boolean childAdded = false;
+				for (AddressTreeNode childNode : this.getChildNodeList()) {
+					childAdded |= childNode.addAddressTreeNode(treeNode);
+				}
+				if (!childAdded) {
+					treeNode.addWeight(this.getWeight());
+					this.getChildNodeList().add(treeNode);
+				}
+			}
+			return contains;
+		}
+
+		public String getPath() {
+			return this.getAddress().getPath();
+		}
+
+		public int getWeight() {
+			return this.weight;
+		}
+
+		public void addWeight(int weight) {
+			this.weight += weight;
+		}
+
+		public boolean hasChild() {
+			return !this.getChildNodeList().isEmpty();
+		}
+
+		private Address getAddress() {
+			return this.address;
+		}
+
+		private List<AddressTreeNode> getChildNodeList() {
+			if (this.childNodeList == null) {
+				this.childNodeList = new ArrayList<AddressTreeNode>();
+			}
+			return this.childNodeList;
+		}
+
+		private int getMatchScore(Address address, String fullAddr) {
+			String partAddr = address.getName();
+			int length = partAddr.length();
+			while (length > 0) {
+				if (fullAddr.contains(partAddr.substring(0, length))) {
+					return length;
+				}
+				length--;
+			}
+			return length;
+		}
+	}
+
+	private static class MatchResult {
+		private int weight = 0;
+
+		private List<Address> address = null;
+
+		public int getWeight() {
+			return this.weight;
+		}
+
+		public List<Address> getAddress() {
+			if (this.address == null) {
+				this.address = new ArrayList<Address>();
+			}
+			return this.address;
+		}
+
+		public void compare(AddressTreeNode treeNode) {
+			if (this.getWeight() < treeNode.getWeight()) {
+				this.getAddress().clear();
+				this.getAddress().add(treeNode.getAddress());
+				this.setWeight(treeNode.getWeight());
+			} else if (this.getWeight() == treeNode.getWeight()) {
+				this.getAddress().add(treeNode.getAddress());
+			} else {
+			}
+		}
+
+		private void setWeight(int weight) {
+			this.weight = weight;
+		}
+	}
 }
