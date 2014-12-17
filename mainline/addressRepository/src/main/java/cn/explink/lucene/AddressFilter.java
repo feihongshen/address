@@ -9,11 +9,14 @@ import cn.explink.domain.Address;
 
 /**
  * 地址过滤逻辑.
- *
+ * <p>
+ * 1.加入了地址名称在全地址中的匹配权重.
+ * <p>
+ * 2.考虑匹配节点的权重加入地址层级关系(weigth= parentWeigth + level*matchWeight).
  *
  * @author zhaoshb
  * @since AR1.0
- * @Time 2014年12月17日 下午1:29:01
+ *
  */
 public class AddressFilter {
 
@@ -35,7 +38,7 @@ public class AddressFilter {
 
 		public AddressForest(String fullAddr, List<Address> addrList) {
 			this.fullAddr = fullAddr;
-			// 将地址按照路径长度排序.
+			// 将地址按照层级递增排序.
 			this.sortAddrByLevel(addrList);
 			for (Address addr : addrList) {
 				this.addAddress(addr);
