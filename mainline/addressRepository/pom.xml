@@ -528,9 +528,9 @@
 				<tomcat.password>123qwe</tomcat.password>
 				<tomcat.path>/address</tomcat.path>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.222:3306/ar_gxpx?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
-				<jdbc.user>root</jdbc.user>
-				<jdbc.password>root</jdbc.password>
+				<jdbc.url>jdbc:mysql://localhost:3306/ar_gxpx?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>ar</jdbc.user>
+				<jdbc.password>ar</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
