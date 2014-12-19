@@ -43,6 +43,8 @@ import cn.explink.lucene.Constants;
 import cn.explink.lucene.DictChange;
 import cn.explink.lucene.ExplinkIKConfig;
 import cn.explink.lucene.LuceneEnvironment;
+import cn.explink.modle.KeywordMatchedResult;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.StringUtil;
 
 @Service
@@ -278,7 +280,7 @@ public class LuceneService {
 
 	/**
 	 * 更新索引入口
-	 * 
+	 *
 	 * @param addressIdList
 	 * @param aliasIdList
 	 * @throws IOException
@@ -291,49 +293,125 @@ public class LuceneService {
 
 	/**
 	 * 单个地址搜索入口
-	 * 
+	 *
 	 * @param addressLine
 	 * @return
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	public List<Address> search(String addressLine, Long customerId) throws IOException, ParseException {
+		List<Address> matchAddrList = this.getLuceneMatchAddrList(addressLine, customerId);
+		// 得分评估，过滤掉不符合条件的地址
+		List<Address> afterFilerAddrList = AddressFilter.filter(addressLine, matchAddrList);
+
+		return afterFilerAddrList;
+	}
+
+	public KeywordMatchedResult getKeyWordMatchResult(String addressLine, Long customerId) throws IOException, ParseException {
+		KeywordMatchedResult result = new KeywordMatchedResult();
+		List<Address> matchAddrList = this.getLuceneMatchAddrList(addressLine, customerId);
+		if ((matchAddrList == null) || matchAddrList.isEmpty()) {
+			return result;
+		}
+		this.fillKeyWord(result, matchAddrList);
+		this.fillTreeNode(result, matchAddrList);
+
+		return result;
+	}
+
+	private void fillKeyWord(KeywordMatchedResult result, List<Address> matchAddrList) {
+		List<String> keyWordList = new ArrayList<String>();
+		for (Address address : matchAddrList) {
+			keyWordList.add(address.getName());
+		}
+		result.setKeywordList(keyWordList);
+	}
+
+	private void fillTreeNode(KeywordMatchedResult result, List<Address> matchAddrList) {
+		Set<Long> addrFullPathIdSet = this.getAddrFullPathIdSet(matchAddrList);
+		List<Address> addrList = this.addressDao.getAddressByIdList(new ArrayList<Long>(addrFullPathIdSet));
+		List<ZTreeNode> nodeList = this.getZTreeNodeList(addrList);
+		result.setzTreeNodeList(nodeList);
+	}
+
+	private List<ZTreeNode> getZTreeNodeList(List<Address> addrList) {
+		List<ZTreeNode> nodeList = new ArrayList<ZTreeNode>();
+		for (Address addr : addrList) {
+			nodeList.add(this.transfer(addr));
+		}
+		return nodeList;
+	}
+
+	private ZTreeNode transfer(Address addr) {
+		return new ZTreeNode(addr.getName(), addr.getId(), addr.getParentId(), addr.getAddressLevel());
+	}
+
+	private Set<Long> getAddrFullPathIdSet(List<Address> matchAddrList) {
+		Set<Long> addrIdSet = new HashSet<Long>();
+		for (Address address : matchAddrList) {
+			addrIdSet.addAll(this.getAddrFullPathIdSet(address));
+		}
+		return addrIdSet;
+	}
+
+	private Set<Long> getAddrFullPathIdSet(Address address) {
+		Set<Long> addrIdSet = new HashSet<Long>();
+		addrIdSet.add(address.getId());
+
+		String path = address.getPath();
+		if ((path == null) || path.isEmpty()) {
+			return addrIdSet;
+		}
+		String[] strIds = path.split("-");
+		for (String strId : strIds) {
+			addrIdSet.add(Long.valueOf(strId));
+		}
+		return addrIdSet;
+	}
+
+	private List<Address> getLuceneMatchAddrList(String addressLine, Long customerId) throws ParseException, IOException {
+		List<Long> addressIdList = new ArrayList<Long>();
+		List<Document> docList = this.getLuceneMatchDocList(addressLine);
+		for (Document doc : docList) {
+			IndexableField addressIdField = doc.getField("addressId");
+			IndexableField aliasIdField = doc.getField("aliasId");
+			LuceneService.logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
+			if (aliasIdField != null) {
+				String aliasId = aliasIdField.stringValue();
+				if (aliasId != null) {
+					Alias alias = this.aliasDao.get(Long.parseLong(aliasId));
+					if ((alias != null) && (alias.getCustomerId() != null) && (customerId.longValue() != alias.getCustomerId().longValue())) {
+						continue;
+					}
+				}
+			}
+			addressIdList.add(Long.parseLong(addressIdField.stringValue()));
+		}
+		// 相关的地址
+		if ((addressIdList != null) && !addressIdList.isEmpty()) {
+			List<Address> relatedAddressList = this.addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
+			LuceneService.logger.info("relatedAddressList = " + relatedAddressList);
+			return relatedAddressList;
+		}
+		return new ArrayList<Address>();
+	}
+
+	private List<Document> getLuceneMatchDocList(String addressLine) throws IOException, ParseException {
 		LuceneService.logger.info("search for {}", addressLine);
-		List<Address> addressList = new ArrayList<Address>();
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();
 		Query query = parser.parse(StringUtil.filterQureyStr(addressLine));
 		TopDocs topDocs = searcher.search(query, LuceneEnvironment.DEFAULT_MAX_RESULT_COUNT);
-		if (topDocs.scoreDocs != null) {
-			List<Long> addressIdList = new ArrayList<Long>();
-			for (ScoreDoc doc : topDocs.scoreDocs) {
-				Document document = searcher.doc(doc.doc);
-				IndexableField addressIdField = document.getField("addressId");
-				IndexableField aliasIdField = document.getField("aliasId");
-				LuceneService.logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
-				if (aliasIdField != null) {
-					String aliasId = aliasIdField.stringValue();
-					if (aliasId != null) {
-						Alias alias = this.aliasDao.get(Long.parseLong(aliasId));
-						if ((alias != null) && (alias.getCustomerId() != null) && (customerId.longValue() != alias.getCustomerId().longValue())) {
-							continue;
-						}
-					}
-				}
-				addressIdList.add(Long.parseLong(addressIdField.stringValue()));
-			}
-
-			// 相关的地址
-			if ((addressIdList != null) && !addressIdList.isEmpty()) {
-				List<Address> relatedAddressList = this.addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
-				LuceneService.logger.info("relatedAddressList = " + relatedAddressList);
-				// 得分评估，过滤掉不符合条件的地址
-				addressList = AddressFilter.filter(addressLine, relatedAddressList);
-			}
+		List<Document> docList = new ArrayList<Document>();
+		if (topDocs.scoreDocs == null) {
+			return docList;
 		}
+		for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+			docList.add(searcher.doc(scoreDoc.doc));
 
-		return addressList;
+		}
+		return docList;
 	}
 
 }

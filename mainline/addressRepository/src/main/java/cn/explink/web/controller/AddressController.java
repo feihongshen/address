@@ -60,8 +60,7 @@ import cn.explink.ws.vo.OrderVo;
 @Controller
 public class AddressController extends BaseController {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(AddressController.class);
+	private static Logger logger = LoggerFactory.getLogger(AddressController.class);
 	@Autowired
 	private LuceneService luceneService;
 
@@ -85,8 +84,7 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getAddress")
-	public String getAddress(Model model,
-			@RequestParam(value = "addressId", required = false) Long addressId) {
+	public String getAddress(Model model, @RequestParam(value = "addressId", required = false) Long addressId) {
 		if (addressId != null) {
 		}
 		return "/address/getAddress";
@@ -94,81 +92,66 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/saveAddress")
 	public String saveAddress(Model model, Address address) {
-		addressService.createAndBindAddress(address, null, getCustomerId());
+		this.addressService.createAndBindAddress(address, null, this.getCustomerId());
 		model.addAttribute("address", address);
 		return "/address/getAddress";
 	}
 
 	@RequestMapping("/searchAddress")
-	public String searchAddress(
-			Model model,
-			@RequestParam(value = "addressLine", required = false) String addressLine)
-			throws IOException, ParseException {
+	public String searchAddress(Model model, @RequestParam(value = "addressLine", required = false) String addressLine) throws IOException, ParseException {
 		if (!StringUtil.isEmpty(addressLine)) {
-			List<Address> addressList = luceneService.search(addressLine,
-					getCustomerId());
+			List<Address> addressList = this.luceneService.search(addressLine, this.getCustomerId());
 			System.out.println("search result = " + addressList);
 		}
 		return "/address/getAddress";
 	}
 
 	@RequestMapping("/createAlias")
-	public String createAlias(Model model, Alias alias) throws IOException,
-			ParseException {
+	public String createAlias(Model model, Alias alias) throws IOException, ParseException {
 		if (alias != null) {
-			addressService.createAlias(alias);
+			this.addressService.createAlias(alias);
 		}
 		return "/address/getAddress";
 	}
 
 	@RequestMapping("/getAddressTree")
-	public @ResponseBody List<ZTreeNode> getAddressTree(
-			@RequestParam(value = "id", required = false) Long parentId,
-			@RequestParam(value = "ids", required = false) String ids,
-			@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
-		Long customerId = getCustomerId();
-		List<ZTreeNode> list = addressService.getAsyncAddressPage(customerId,
-				parentId, ids, page, pageSize);
+	public @ResponseBody List<ZTreeNode> getAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "ids", required = false) String ids,
+			@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+		Long customerId = this.getCustomerId();
+		List<ZTreeNode> list = this.addressService.getAsyncAddressPage(customerId, parentId, ids, page, pageSize);
 		if (StringUtils.isNotBlank(ids)) {
-			addressService.appendStation(customerId, list);
+			this.addressService.appendStation(customerId, list);
 		}
 		return list;
 	}
 
 	@RequestMapping("/getStationAddressTree")
-	public @ResponseBody List<ZTreeNode> getStationAddressTree(
-			@RequestParam(value = "id", required = false) Long parentId,
-			@RequestParam(value = "level", required = false) Long level) {
-		Long customerId = getCustomerId();
-		return addressService.getStationAddressTree(customerId, parentId);
+	public @ResponseBody List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "level", required = false) Long level) {
+		Long customerId = this.getCustomerId();
+		return this.addressService.getStationAddressTree(customerId, parentId);
 	}
 
 	@RequestMapping("/getStationAddressTreePage")
-	public @ResponseBody List<ZTreeNode> getStationAddressTree(
-			@RequestParam(value = "id", required = false) Long parentId,
-			@RequestParam(value = "level", required = false) Long level,
-			@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
-		Long customerId = getCustomerId();
-		return addressService.getStationAddressTreePage(customerId, parentId,
-				page, pageSize);
+	public @ResponseBody List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "level", required = false) Long level,
+			@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+		Long customerId = this.getCustomerId();
+		return this.addressService.getStationAddressTreePage(customerId, parentId, page, pageSize);
 	}
 
 	@RequestMapping("/getZTree")
 	public @ResponseBody List<ZTreeNode> getZTree(String name, Integer band) {
-		Long customerId = getCustomerId();
-		return addressService.getZAddress(customerId, name, band);
+		Long customerId = this.getCustomerId();
+		return this.addressService.getZAddress(customerId, name, band);
 	}
 
 	@RequestMapping("/getAdressByStation")
 	public @ResponseBody List<ZTreeNode> getAdressByStation(String stationId) {
-		Long customerId = getCustomerId();
-		return addressService.getAdressByStation(customerId, stationId);
+		Long customerId = this.getCustomerId();
+		return this.addressService.getAdressByStation(customerId, stationId);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param model
 	 * @param parentId
 	 * @return
@@ -199,8 +182,7 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/downloadAddressTemplate")
-	public String downloadAddressTemplate(Model model,
-			HttpServletRequest request, HttpServletResponse response) {
+	public String downloadAddressTemplate(Model model, HttpServletRequest request, HttpServletResponse response) {
 		List<String> headerNameList = new ArrayList<String>();
 		headerNameList.add("省/直辖市");
 		headerNameList.add("市");
@@ -210,10 +192,9 @@ public class AddressController extends BaseController {
 		headerNameList.add("地址3");
 		headerNameList.add("站点");
 		headerNameList.add("配送员");
-		XSSFWorkbook wb = addressImportService
-				.createAddressTemplate(headerNameList);
+		XSSFWorkbook wb = this.addressImportService.createAddressTemplate(headerNameList);
 		String fileName = "地址导入模板.xlsx";
-		setDownloadFileName(response, fileName);
+		this.setDownloadFileName(response, fileName);
 		try {
 			// response.setHeader("Content-Disposition", "attachment;filename="
 			// + URLEncoder.encode("地址导入模板.xlsx", "UTF-8"));
@@ -228,7 +209,7 @@ public class AddressController extends BaseController {
 
 	/**
 	 * Excel导入关键字
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param file
@@ -237,9 +218,7 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/importAddress")
-	public @ResponseBody AjaxJson importAddress(HttpServletRequest request,
-			HttpServletResponse response, MultipartFile file,
-			Integer importType, Long stationId) {
+	public @ResponseBody AjaxJson importAddress(HttpServletRequest request, HttpServletResponse response, MultipartFile file, Integer importType, Long stationId) {
 		if (importType == null) {
 			importType = AddressImportTypeEnum.init.getValue();
 		}
@@ -247,8 +226,7 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		try {
 			in = file.getInputStream();
-			AddressImportResult addressImportResult = importAddress(in,
-					getLogginedUser(), importType, stationId, request);
+			AddressImportResult addressImportResult = this.importAddress(in, this.getLogginedUser(), importType, stationId, request);
 			if (null == addressImportResult) {
 				aj.setSuccess(false);
 				aj.setMsg("数据异常");
@@ -257,18 +235,15 @@ public class AddressController extends BaseController {
 			aj.setSuccess(true);
 			aj.setMsg(addressImportResult.getId() + "");
 			if (addressImportResult.getAddressImportDetails() != null) {
-				for (AddressImportDetail a : addressImportResult
-						.getAddressImportDetails()) {
+				for (AddressImportDetail a : addressImportResult.getAddressImportDetails()) {
 					a.setAddressImportResult(null);
 				}
 			}
-			request.getSession().setAttribute("list",
-					addressImportResult.getAddressImportDetails());
-			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount()
-					+ "个；导入失败：" + addressImportResult.getFailureCount() + "个");
+			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
+			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info(e.getMessage());
+			AddressController.logger.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo("导入文件异常！");
 		}
@@ -277,7 +252,7 @@ public class AddressController extends BaseController {
 
 	/**
 	 * Excel导入关键字
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param file
@@ -286,14 +261,12 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/moveAddress")
-	public @ResponseBody AjaxJson moveAddress(HttpServletRequest request,
-			HttpServletResponse response, MultipartFile file) {
+	public @ResponseBody AjaxJson moveAddress(HttpServletRequest request, HttpServletResponse response, MultipartFile file) {
 		InputStream in = null;
 		AjaxJson aj = new AjaxJson();
 		try {
 			in = file.getInputStream();
-			AddressImportResult addressImportResult = moveAddress(in,
-					getLogginedUser());
+			AddressImportResult addressImportResult = this.moveAddress(in, this.getLogginedUser());
 			if (null == addressImportResult) {
 				aj.setSuccess(false);
 				aj.setMsg("数据异常");
@@ -301,13 +274,11 @@ public class AddressController extends BaseController {
 			}
 			aj.setSuccess(true);
 			aj.setMsg(addressImportResult.getId() + "");
-			request.getSession().setAttribute("list",
-					addressImportResult.getAddressImportDetails());
-			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount()
-					+ "个；导入失败：" + addressImportResult.getFailureCount() + "个");
+			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
+			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info(e.getMessage());
+			AddressController.logger.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo(e.getMessage());
 		}
@@ -315,24 +286,20 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getPromtInfo")
-	public @ResponseBody AjaxJson getPromtInfo(HttpServletRequest request,
-			HttpServletResponse response) {
+	public @ResponseBody AjaxJson getPromtInfo(HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
-		Long customerId = getCustomerId();
-		Map map = addressService.getAdressPromtInfo(customerId);
+		Long customerId = this.getCustomerId();
+		Map map = this.addressService.getAdressPromtInfo(customerId);
 		aj.setAttributes(map);
 		aj.setSuccess(true);
 		return aj;
 	}
 
 	@RequestMapping("/getImportDetail")
-	public @ResponseBody List<AddressImportDetail> getImportDetail(
-			HttpServletRequest request, HttpServletResponse response) {
-		Set<AddressImportDetail> set = (HashSet<AddressImportDetail>) request
-				.getSession().getAttribute("list");
+	public @ResponseBody List<AddressImportDetail> getImportDetail(HttpServletRequest request, HttpServletResponse response) {
+		Set<AddressImportDetail> set = (HashSet<AddressImportDetail>) request.getSession().getAttribute("list");
 		if (set != null) {
-			return new ArrayList<AddressImportDetail>((HashSet) request
-					.getSession().getAttribute("list"));
+			return new ArrayList<AddressImportDetail>((HashSet) request.getSession().getAttribute("list"));
 		} else {
 			return new ArrayList<AddressImportDetail>();
 		}
@@ -340,17 +307,15 @@ public class AddressController extends BaseController {
 
 	/**
 	 * 获取导入进度
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/getImportProc")
-	public @ResponseBody ImportProcessJson getImportProc(
-			HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody ImportProcessJson getImportProc(HttpServletRequest request, HttpServletResponse response) {
 		if (request.getSession().getAttribute("proc") != null) {
-			ImportProcessJson pr = (ImportProcessJson) request.getSession()
-					.getAttribute("proc");
+			ImportProcessJson pr = (ImportProcessJson) request.getSession().getAttribute("proc");
 			pr.cal();
 			if (pr.isFinish()) {
 				request.getSession().removeAttribute("proc");
@@ -363,41 +328,30 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/deleteImportAddressResult")
-	public @ResponseBody AjaxJson deleteImportAddressResult(Model model,
-			@RequestParam(value = "id", required = false) Long id) {
+	public @ResponseBody AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id) {
 		AjaxJson aj = new AjaxJson();
-		addressImportService.deleteImportAddressResult(id, getCustomerId());
+		this.addressImportService.deleteImportAddressResult(id, this.getCustomerId());
 		aj.setSuccess(true);
 		return aj;
 	}
 
 	@RequestMapping("/datagrid")
-	public @ResponseBody DataGridReturn datagrid(
-			AddressImportDetail addressImportDetail,
-			HttpServletRequest request, HttpServletResponse response,
-			DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class,
-				dataGrid);
+	public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);
 		AddressImportResult addressImportResult = new AddressImportResult();
-		addressImportResult.setId(Long.parseLong(request
-				.getParameter("resultId")));
+		addressImportResult.setId(Long.parseLong(request.getParameter("resultId")));
 		addressImportDetail.setAddressImportResult(addressImportResult);
-		HqlGenerateUtil.installHql(cq, addressImportDetail,
-				request.getParameterMap());
+		HqlGenerateUtil.installHql(cq, addressImportDetail, request.getParameterMap());
 		return this.addressImportService.getDataGridReturn(cq, true);
 	}
 
 	@RequestMapping("/subdatagrid")
-	public @ResponseBody DataGridReturn subdatagrid(
-			AddressImportResult addressImportResult,
-			HttpServletRequest request, HttpServletResponse response,
-			DataGrid dataGrid) {
+	public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		if (StringUtils.isBlank(dataGrid.getSort())) {
 			dataGrid.setSort("importDate");
 		}
 
-		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class,
-				dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(AddressImportResult.class, dataGrid);
 		String begin = request.getParameter("importDate_begin");
 		String end = request.getParameter("importDate_end");
 		try {
@@ -410,32 +364,28 @@ public class AddressController extends BaseController {
 				cq.le("importDate", endDate);
 			}
 		} catch (java.text.ParseException e) {
-			logger.error(e.getMessage());
+			AddressController.logger.error(e.getMessage());
 		}
-		addressImportResult.setUserId(getCustomerId());
-		HqlGenerateUtil.installHql(cq, addressImportResult,
-				request.getParameterMap());
+		addressImportResult.setUserId(this.getCustomerId());
+		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
 		return this.addressImportResultService.getDataGridReturn(cq, true);
 
 	}
 
 	@RequestMapping("/del")
-	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult,
-			HttpServletRequest request, HttpServletResponse response,
-			DataGrid dataGrid) {
+	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		AjaxJson aj = new AjaxJson();
-		addressImportResultService.delete(addressImportResult.getId());
+		this.addressImportResultService.delete(addressImportResult.getId());
 		aj.setSuccess(true);
 		return aj;
 
 	}
 
 	@RequestMapping("/parseAdress")
-	public @ResponseBody AjaxJson parseAdress(String needMatched,
-			HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody AjaxJson parseAdress(String needMatched, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
 		// TODO GET CUSTOMER FROM USER
-		Long customerId = getCustomerId();
+		Long customerId = this.getCustomerId();
 		List<OrderVo> list = new ArrayList<OrderVo>();
 		for (String addressLine : needMatched.split("\n")) {
 			if (addressLine.trim().length() == 0) {
@@ -447,8 +397,7 @@ public class AddressController extends BaseController {
 			list.add(order);
 		}
 		try {
-			Map<String, Object> attributes = addressService.txNoneMatch(
-					customerId, list);
+			Map<String, Object> attributes = this.addressService.txNoneMatch(customerId, list);
 			attributes.put("insum", list.size());
 			aj.setAttributes(attributes);
 
@@ -463,23 +412,16 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/matchKeyword")
-	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched,
-			HttpServletRequest request, HttpServletResponse response) {
-		KeywordMatchedResult keywordMatchedResult = new KeywordMatchedResult();
-		List<ZTreeNode> zTreeNodeList = addressService.getAdressByStation((long) 4, "78");
-		keywordMatchedResult.setzTreeNodeList(zTreeNodeList);
-		List<String> keywordList=new ArrayList<String>();
-		keywordList.add("共和路");
-		keywordList.add("电信天翼广场");
-		keywordList.add("工商银行");
-		keywordList.add("工商哈哈哈");
-		keywordMatchedResult.setKeywordList(keywordList);
-		return keywordMatchedResult;
+	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+		Long customerId = this.getCustomerId();
+		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
+
+		return result;
 	}
 
 	/**
 	 * 地址库维护
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -490,7 +432,7 @@ public class AddressController extends BaseController {
 
 	/**
 	 * 站点关键词导入
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -500,24 +442,20 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/add")
-	public @ResponseBody AjaxJson add(
-			@RequestParam(value = "stationId") Long stationId,
-			@RequestParam(value = "parentId", required = false) Long parentId,
+	public @ResponseBody AjaxJson add(@RequestParam(value = "stationId") Long stationId, @RequestParam(value = "parentId", required = false) Long parentId,
 			@RequestParam(value = "addresses", required = false) String addresses) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
-		Long customerId = getCustomerId();
+		Long customerId = this.getCustomerId();
 		List<Address> list = null;
 		List<ZTreeNode> zList = null;
 		try {
 			if (stationId != null) {
-				list = addressService.addAddressWithStation(parentId,
-						addresses, stationId, customerId);
+				list = this.addressService.addAddressWithStation(parentId, addresses, stationId, customerId);
 			} else {
-				list = addressService.addAddress(parentId, addresses,
-						customerId);
+				list = this.addressService.addAddress(parentId, addresses, customerId);
 			}
-			zList = transAddress(list);
+			zList = this.transAddress(list);
 		} catch (Exception e) {
 			aj.setSuccess(false);
 			aj.setMsg(e.getMessage());
@@ -530,8 +468,7 @@ public class AddressController extends BaseController {
 		List<ZTreeNode> nlist = new ArrayList<ZTreeNode>();
 		if (list != null) {
 			for (Address a : list) {
-				ZTreeNode node = new ZTreeNode(a.getName(), a.getId(),
-						a.getParentId(), a.getAddressLevel());
+				ZTreeNode node = new ZTreeNode(a.getName(), a.getId(), a.getParentId(), a.getAddressLevel());
 				nlist.add(node);
 			}
 		}
@@ -540,40 +477,37 @@ public class AddressController extends BaseController {
 
 	/**
 	 * 添加别名
-	 * 
+	 *
 	 * @param addressId
 	 * @param alias
 	 * @return
 	 */
 	@RequestMapping("/addAlias")
-	public @ResponseBody AjaxJson addAlias(
-			@RequestParam(value = "addressId") Long addressId,
-			@RequestParam(value = "alias", required = false) String alias) {
+	public @ResponseBody AjaxJson addAlias(@RequestParam(value = "addressId") Long addressId, @RequestParam(value = "alias", required = false) String alias) {
 		AjaxJson aj = null;
 		Long customerId = this.getCustomerId();
-		if (alias != null && addressId != null) {
-			aj = addressService.addAlias(addressId, alias, customerId);
+		if ((alias != null) && (addressId != null)) {
+			aj = this.addressService.addAlias(addressId, alias, customerId);
 		}
 		return aj;
 	}
 
 	/**
 	 * 获取别名
-	 * 
+	 *
 	 * @param addressId
 	 * @param alias
 	 * @return
 	 */
 	@RequestMapping("/getAlias")
-	public @ResponseBody List<Alias> getAlias(
-			@RequestParam(value = "addressId") Long addressId) {
+	public @ResponseBody List<Alias> getAlias(@RequestParam(value = "addressId") Long addressId) {
 		Long customerId = this.getCustomerId();
-		return addressService.getAliasByAddressId(addressId, customerId);
+		return this.addressService.getAliasByAddressId(addressId, customerId);
 	}
 
 	/**
 	 * 删除别名
-	 * 
+	 *
 	 * @param addressId
 	 * @return
 	 */
@@ -581,13 +515,13 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson delAlias(@RequestParam(value = "id") Long id) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
-		addressService.deleteAlias(id);
+		this.addressService.deleteAlias(id);
 		return aj;
 	}
 
 	/**
 	 * 删除别名
-	 * 
+	 *
 	 * @param addressId
 	 * @return
 	 */
@@ -596,7 +530,7 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		try {
-			addressService.deleteAddress(addressId, this.getCustomerId());
+			this.addressService.deleteAddress(addressId, this.getCustomerId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			aj.setSuccess(false);
@@ -605,14 +539,12 @@ public class AddressController extends BaseController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param in
 	 * @return
 	 * @throws IOException
 	 */
-	public AddressImportResult importAddress(InputStream in, User user,
-			Integer importType, Long stationId, HttpServletRequest req)
-			throws Exception {
+	public AddressImportResult importAddress(InputStream in, User user, Integer importType, Long stationId, HttpServletRequest req) throws Exception {
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
@@ -633,29 +565,21 @@ public class AddressController extends BaseController {
 				break;
 			}
 			rowNum++;
-			String province = row.getCell(0) == null ? null : row.getCell(0)
-					.getStringCellValue();
-			String city = row.getCell(1) == null ? null : row.getCell(1)
-					.getStringCellValue();
-			String district = row.getCell(2) == null ? null : row.getCell(2)
-					.getStringCellValue();
-			String address1 = row.getCell(3) == null ? null : row.getCell(3)
-					.getStringCellValue();
-			String address2 = row.getCell(4) == null ? null : row.getCell(4)
-					.getStringCellValue();
-			String address3 = row.getCell(5) == null ? null : row.getCell(5)
-					.getStringCellValue();
-			String deliveryStationName = row.getCell(6) == null ? null : row
-					.getCell(6).getStringCellValue();
-			String delivererName = row.getCell(7) == null ? null : row.getCell(
-					7).getStringCellValue();
+			String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
+			String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
+			String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
+			String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
+			String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
+			String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
+			String deliveryStationName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
+			String delivererName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
 
-			addressImportService.addNonNullValue(adminNames, province);
-			addressImportService.addNonNullValue(adminNames, city);
-			addressImportService.addNonNullValue(adminNames, district);
-			addressImportService.addNonNullValue(addressNames, address1);
-			addressImportService.addNonNullValue(addressNames, address2);
-			addressImportService.addNonNullValue(addressNames, address3);
+			this.addressImportService.addNonNullValue(adminNames, province);
+			this.addressImportService.addNonNullValue(adminNames, city);
+			this.addressImportService.addNonNullValue(adminNames, district);
+			this.addressImportService.addNonNullValue(addressNames, address1);
+			this.addressImportService.addNonNullValue(addressNames, address2);
+			this.addressImportService.addNonNullValue(addressNames, address3);
 
 			AddressImportDetail detail = new AddressImportDetail();
 			detail.setProvince(province);
@@ -671,17 +595,15 @@ public class AddressController extends BaseController {
 		}
 
 		// 查找关键词并构造addressMap
-		List<Address> addressList = addressService
-				.getAddressByNames(addressNames);
-		if (addressList != null && !addressList.isEmpty()) {
+		List<Address> addressList = this.addressService.getAddressByNames(addressNames);
+		if ((addressList != null) && !addressList.isEmpty()) {
 			for (Address a : addressList) {
 				addressMap.put(a.getParentId() + "-" + a.getName(), a);
 			}
 		}
 		// 查找所有行政关键词并构造map
-		List<Address> list = addressService.getAdministrationAddress(
-				adminNames, customerId);
-		if (list != null && !list.isEmpty()) {
+		List<Address> list = this.addressService.getAdministrationAddress(adminNames, customerId);
+		if ((list != null) && !list.isEmpty()) {
 			Map<String, String> m = new HashMap<String, String>();
 			for (Address a : list) {
 				m.put(a.getId() + "", a.getName());
@@ -690,24 +612,22 @@ public class AddressController extends BaseController {
 				if (new Integer(3).equals(a.getAddressLevel())) {
 					String path = a.getPath();
 					String[] ids = path.split("-");
-					map.put(m.get(ids[1]) + "-" + m.get(ids[2]) + "-"
-							+ a.getName(), a);
+					map.put(m.get(ids[1]) + "-" + m.get(ids[2]) + "-" + a.getName(), a);
 				}
 			}
 		}
 		// 构造所有站点Map
-		List<DeliveryStation> stationList = deliveryStationService
-				.listAll(customerId);
-		if (stationList != null && !stationList.isEmpty()) {
+		List<DeliveryStation> stationList = this.deliveryStationService.listAll(customerId);
+		if ((stationList != null) && !stationList.isEmpty()) {
 			for (DeliveryStation ds : stationList) {
 				stationMap.put(customerId + "-" + ds.getName(), ds);
 			}
 		}
 
 		// 构造所有小件员Map
-		List<Deliverer> delivererList = delivererService.listAll(customerId);
+		List<Deliverer> delivererList = this.delivererService.listAll(customerId);
 
-		if (delivererList != null && !delivererList.isEmpty()) {
+		if ((delivererList != null) && !delivererList.isEmpty()) {
 			for (Deliverer d : delivererList) {
 				delivererMap.put(customerId + "-" + d.getName(), d);
 			}
@@ -724,11 +644,8 @@ public class AddressController extends BaseController {
 		proc.setTotal(details.size());
 		for (AddressImportDetail detail : details) {
 			try {
-				addressImportService.txNewImportDetail(map, detail, addressMap,
-						stationMap, delivererMap, bindMap, customerId,
-						importType, stationId);
-				if (new Integer(AddressImportDetailStatsEnum.failure.getValue())
-						.equals(detail.getStatus())) {
+				this.addressImportService.txNewImportDetail(map, detail, addressMap, stationMap, delivererMap, bindMap, customerId, importType, stationId);
+				if (new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())) {
 					proc.setFailure(proc.getFailure() + 1);
 				} else {
 					proc.setSuccess(proc.getSuccess() + 1);
@@ -736,10 +653,9 @@ public class AddressController extends BaseController {
 				proc.setProcessed(proc.getProcessed() + 1);
 
 			} catch (Exception e) {
-				detail.setStatus(AddressImportDetailStatsEnum.failure
-						.getValue());
+				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 				detail.setMessage(e.getMessage());
-				logger.info(e.getMessage());
+				AddressController.logger.info(e.getMessage());
 				proc.setFailure(proc.getFailure() + 1);
 				proc.setProcessed(proc.getProcessed() + 1);
 			}
@@ -751,9 +667,7 @@ public class AddressController extends BaseController {
 		int successCount = 0;
 		int failureCount = 0;
 		for (AddressImportDetail detail : details) {
-			if (detail.getStatus() != null
-					&& detail.getStatus().intValue() == AddressImportDetailStatsEnum.success
-							.getValue()) {
+			if ((detail.getStatus() != null) && (detail.getStatus().intValue() == AddressImportDetailStatsEnum.success.getValue())) {
 				successCount++;
 			} else {
 				failureCount++;
@@ -764,13 +678,12 @@ public class AddressController extends BaseController {
 		result.setImportDate(new Date());
 		result.setUserId(user.getId());
 		if (importType == AddressImportTypeEnum.init.getValue()) {
-			addressImportResultService.save(result);
+			this.addressImportResultService.save(result);
 		}
 		return result;
 	}
 
-	public AddressImportResult moveAddress(InputStream in, User user)
-			throws Exception {
+	public AddressImportResult moveAddress(InputStream in, User user) throws Exception {
 		Long customerId = user.getCustomer().getId();
 		AddressImportResult result = new AddressImportResult();
 		List<AddressImportDetail> details = new ArrayList<AddressImportDetail>();
@@ -790,29 +703,21 @@ public class AddressController extends BaseController {
 				break;
 			}
 			rowNum++;
-			String province = row.getCell(0) == null ? null : row.getCell(0)
-					.getStringCellValue();
-			String city = row.getCell(1) == null ? null : row.getCell(1)
-					.getStringCellValue();
-			String district = row.getCell(2) == null ? null : row.getCell(2)
-					.getStringCellValue();
-			String address1 = row.getCell(3) == null ? null : row.getCell(3)
-					.getStringCellValue();
-			String address2 = row.getCell(4) == null ? null : row.getCell(4)
-					.getStringCellValue();
-			String address3 = row.getCell(5) == null ? null : row.getCell(5)
-					.getStringCellValue();
-			String deliveryStationOldName = row.getCell(6) == null ? null : row
-					.getCell(6).getStringCellValue();
-			String deliveryStationName = row.getCell(7) == null ? null : row
-					.getCell(7).getStringCellValue();
+			String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
+			String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
+			String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
+			String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
+			String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
+			String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
+			String deliveryStationOldName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
+			String deliveryStationName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
 
-			addressImportService.addNonNullValue(adminNames, province);
-			addressImportService.addNonNullValue(adminNames, city);
-			addressImportService.addNonNullValue(adminNames, district);
-			addressImportService.addNonNullValue(addressNames, address1);
-			addressImportService.addNonNullValue(addressNames, address2);
-			addressImportService.addNonNullValue(addressNames, address3);
+			this.addressImportService.addNonNullValue(adminNames, province);
+			this.addressImportService.addNonNullValue(adminNames, city);
+			this.addressImportService.addNonNullValue(adminNames, district);
+			this.addressImportService.addNonNullValue(addressNames, address1);
+			this.addressImportService.addNonNullValue(addressNames, address2);
+			this.addressImportService.addNonNullValue(addressNames, address3);
 
 			AddressImportDetail detail = new AddressImportDetail();
 			detail.setProvince(province);
@@ -828,17 +733,15 @@ public class AddressController extends BaseController {
 		}
 
 		// 查找客户已有关键词并构造addressMap
-		List<Address> addressList = addressService
-				.getAddressByNames(addressNames);
-		if (addressList != null && !addressList.isEmpty()) {
+		List<Address> addressList = this.addressService.getAddressByNames(addressNames);
+		if ((addressList != null) && !addressList.isEmpty()) {
 			for (Address a : addressList) {
 				addressMap.put(a.getParentId() + "-" + a.getName(), a);
 			}
 		}
 		// 查找所有行政关键词并构造map
-		List<Address> list = addressService.getAdministrationAddress(
-				adminNames, customerId);
-		if (list != null && !list.isEmpty()) {
+		List<Address> list = this.addressService.getAdministrationAddress(adminNames, customerId);
+		if ((list != null) && !list.isEmpty()) {
 			Map<String, String> m = new HashMap<String, String>();
 			for (Address a : list) {
 				m.put(a.getId() + "", a.getName());
@@ -847,15 +750,13 @@ public class AddressController extends BaseController {
 				if (new Integer(3).equals(a.getAddressLevel())) {
 					String path = a.getPath();
 					String[] ids = path.split("-");
-					map.put(m.get(ids[1]) + "-" + m.get(ids[2]) + "-"
-							+ a.getName(), a);
+					map.put(m.get(ids[1]) + "-" + m.get(ids[2]) + "-" + a.getName(), a);
 				}
 			}
 		}
 		// 构造所有站点Map
-		List<DeliveryStation> stationList = deliveryStationService
-				.listAll(customerId);
-		if (stationList != null && !stationList.isEmpty()) {
+		List<DeliveryStation> stationList = this.deliveryStationService.listAll(customerId);
+		if ((stationList != null) && !stationList.isEmpty()) {
 			for (DeliveryStation ds : stationList) {
 				stationMap.put(customerId + "-" + ds.getName(), ds);
 			}
@@ -870,13 +771,11 @@ public class AddressController extends BaseController {
 		}
 		for (AddressImportDetail detail : details) {
 			try {
-				addressImportService.txNewMoveDetail(map, detail, addressMap,
-						stationMap, delivererMap, bindMap, customerId);
+				this.addressImportService.txNewMoveDetail(map, detail, addressMap, stationMap, delivererMap, bindMap, customerId);
 			} catch (Exception e) {
-				detail.setStatus(AddressImportDetailStatsEnum.failure
-						.getValue());
+				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 				detail.setMessage(e.getMessage());
-				logger.info(e.getMessage());
+				AddressController.logger.info(e.getMessage());
 			}
 		}
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();
@@ -885,9 +784,7 @@ public class AddressController extends BaseController {
 		int successCount = 0;
 		int failureCount = 0;
 		for (AddressImportDetail detail : details) {
-			if (detail.getStatus() != null
-					&& detail.getStatus().intValue() == AddressImportDetailStatsEnum.success
-							.getValue()) {
+			if ((detail.getStatus() != null) && (detail.getStatus().intValue() == AddressImportDetailStatsEnum.success.getValue())) {
 				successCount++;
 			} else {
 				failureCount++;
