@@ -550,9 +550,9 @@
 			<properties>
 				<tomcat.manager.url></tomcat.manager.url>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://localhost:3306/address_repository?characterEncoding=utf8</jdbc.url>
+				<jdbc.url>jdbc:mysql://localhost:3306/ar_gxpx?characterEncoding=utf8</jdbc.url>
 				<jdbc.user>root</jdbc.user>
-				<jdbc.password>root</jdbc.password>
+				<jdbc.password></jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
@@ -574,12 +574,12 @@
 			<id>test</id>
 			<properties>
 				<!-- tomcat port:10180, shutdown port:10181, jmxremote port: 10182 -->
-				<tomcat.manager.url>http://192.0.170.109:10180/manager</tomcat.manager.url>
+				<tomcat.manager.url>http://192.168.0.222:9528/manager</tomcat.manager.url>
 				<tomcat.path>/address</tomcat.path>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.0.170.55:3306/addressRepository_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.0.222:3306/ar_gxpx?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
-				<jdbc.password></jdbc.password>
+				<jdbc.password>root</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
