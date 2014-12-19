@@ -320,11 +320,11 @@ public class LuceneService {
 	}
 
 	private void fillKeyWord(KeywordMatchedResult result, List<Address> matchAddrList) {
-		List<String> keyWordList = new ArrayList<String>();
+		Set<String> keyWordSet = new HashSet<String>();
 		for (Address address : matchAddrList) {
-			keyWordList.add(address.getName());
+			keyWordSet.add(address.getName());
 		}
-		result.setKeywordList(keyWordList);
+		result.setKeywordList(new ArrayList<String>(keyWordSet));
 	}
 
 	private void fillTreeNode(KeywordMatchedResult result, List<Address> matchAddrList) {
