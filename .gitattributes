@@ -96,6 +96,7 @@ mainline/addressRepository/src/main/java/cn/explink/modle/ComboTree.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/DataGrid.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/DataGridReturn.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/ImportProcessJson.java -text
+mainline/addressRepository/src/main/java/cn/explink/modle/KeywordMatchedResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/SortDirection.java -text
 mainline/addressRepository/src/main/java/cn/explink/modle/SortInfo.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/CriteriaQuery.java -text
@@ -227,6 +228,7 @@ mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/import.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importDatagrid.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/importStationAddress.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/index.jsp -text
+mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/keywordMapping.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/stationAdressRelation.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/global.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/common/include-base-styles.jsp -text
