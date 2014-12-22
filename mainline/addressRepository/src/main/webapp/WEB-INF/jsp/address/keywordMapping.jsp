@@ -10,10 +10,8 @@
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <style type="text/css">
 .keyword{
-	overflow-y: scroll;height: 444px;width:50%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-}
-.legend{
-	width: 100%;font-size:12px;font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif
+	overflow-y: scroll;height: 600px;width:48%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+border:1px solid #999;padding:3px;
 }
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
@@ -97,7 +95,7 @@ function getNeedMatchedWords(){
 </script>
 </head>
 <body>
-<textarea name="needMatched" id="needMatched" class="textbox" style="height:20px; width:50% ;resize: none" data-options="multiline:false"></textarea>
+<textarea name="needMatched" id="needMatched" class="textbox" style="height:20px; width:48% ;resize: none" data-options="multiline:false"></textarea>
 <a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a>
 
 <div id="keywordDiv" class="keyword"> 
@@ -105,12 +103,10 @@ function getNeedMatchedWords(){
 
   <div style="overflow-y: scroll;width:50%;float:right">
     <td bgcolor="#FFFFFF" style="vertical-align: top;">
-    <div style="overflow-y: scroll;height: 444px">
+    <div style="overflow-y: scroll;height: 600px;border:1px solid #999;padding:3px;">
          <ul  class="ztree" id="resultTree" > </ul>
     </div>
     </td>
  </div>
- 
- <div class="legend">图例:<font color="blue">匹配</font></div>
 </body>
 </html>
