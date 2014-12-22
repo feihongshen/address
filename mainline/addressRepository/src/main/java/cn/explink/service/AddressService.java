@@ -612,9 +612,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public Map getAdressPromtInfo(Long customerId) {
 		Map<String, BigInteger> map = new HashMap<String, BigInteger>();
-		String keysql = " select count(1)  from ADDRESS_PERMISSIONS p left join ADDRESS a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID=" + customerId;
+		String keysql = " select count(1)  from ADDRESS_PERMISSIONS p inner join ADDRESS a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID=" + customerId;
 		BigInteger keys = (BigInteger) this.getSession().createSQLQuery(keysql).uniqueResult();
-		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r left join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID="
+		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r inner join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID="
 				+ customerId;
 		BigInteger binds = (BigInteger) this.getSession().createSQLQuery(bindSql).uniqueResult();
 		map.put("keys", keys);

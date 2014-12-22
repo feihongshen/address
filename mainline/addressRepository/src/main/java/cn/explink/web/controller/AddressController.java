@@ -411,6 +411,16 @@ public class AddressController extends BaseController {
 
 	}
 
+	/**
+	 * 关键字匹配.
+	 *
+	 * @param needMatched
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	@RequestMapping("/matchKeyword")
 	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
 		Long customerId = this.getCustomerId();
@@ -536,7 +546,7 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/delAddress")
-	public @ResponseBody AjaxJson Address(Long addressId) {
+	public @ResponseBody AjaxJson delAddress(Long addressId) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		try {
