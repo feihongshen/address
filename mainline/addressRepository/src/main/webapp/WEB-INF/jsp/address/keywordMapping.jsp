@@ -9,7 +9,12 @@
 <title>关键词匹配</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <style type="text/css">
-
+.keyword{
+	overflow-y: scroll;height: 444px;width:50%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+}
+.legend{
+	width: 100%;font-size:12px;font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif
+}
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
 <script type="text/javascript">
@@ -42,11 +47,15 @@ $(function(){
 		$.ajax({
 		 type: "POST",
 			url:"<%=request.getContextPath()%>/address/matchKeyword",
-			data:{needMatched:$("#needMatched").val()},
+			data:{needMatched:getNeedMatchedWords()},
 			success:function(optionData){
 				zNodes=optionData['zTreeNodeList'];
 				keywords=optionData['keywordList'];
-				setKeywords(keywords);
+				setKeywords();
+				if(zNodes==undefined||zNodes==null||zNodes.length==0){
+					$("#resultTree").html("");
+					return;
+				}
 				
 				zTreeObj1 = $.fn.zTree.init($("#resultTree"), setting, zNodes);
 			}
@@ -64,7 +73,11 @@ function setFontCss(treeId, treeNode) {
 	return color;
 };
 
-function setKeywords(keywords){
+function setKeywords(){
+	if(keywords==undefined||keywords==null||keywords.length==0){
+		$("#keywordDiv").html("");
+		return;
+	}
 	keywordsTable="<table>";
 	for (var i=0;i<keywords.length;i++){
 		keywordsTable=keywordsTable+"<tr><td>"+keywords[i]+"</td></tr>";
@@ -72,16 +85,24 @@ function setKeywords(keywords){
 	keywordsTable=keywordsTable+"</table>";
 	$("#keywordDiv").html(keywordsTable);
 }
+function getNeedMatchedWords(){
+	var needMatched= $("#needMatched").val();
+	if(needMatched==undefined||needMatched==null||needMatched.length==0){
+		alert("请输入要匹配的关键词");
+	}else{
+		return needMatched;
+	}
+}
 
 </script>
 </head>
 <body>
-
-<textarea name="needMatched" id="needMatched" class="textbox" style="height:50px; width:50%" data-options="multiline:true"></textarea>
+<textarea name="needMatched" id="needMatched" class="textbox" style="height:20px; width:50% ;resize: none" data-options="multiline:false"></textarea>
 <a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a>
 
-<div id="keywordDiv" style="width:50%;float:left;color: blue"> 
+<div id="keywordDiv" class="keyword"> 
 </div>
+
   <div style="overflow-y: scroll;width:50%;float:right">
     <td bgcolor="#FFFFFF" style="vertical-align: top;">
     <div style="overflow-y: scroll;height: 444px">
@@ -89,5 +110,7 @@ function setKeywords(keywords){
     </div>
     </td>
  </div>
+ 
+ <div class="legend">图例:<font color="blue">匹配</font></div>
 </body>
 </html>

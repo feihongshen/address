@@ -414,8 +414,10 @@ public class AddressController extends BaseController {
 	@RequestMapping("/matchKeyword")
 	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
 		Long customerId = this.getCustomerId();
+		if (StringUtil.isEmpty(needMatched)) {
+			return null;
+		}
 		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
-
 		return result;
 	}
 
