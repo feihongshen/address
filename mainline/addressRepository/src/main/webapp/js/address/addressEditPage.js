@@ -33,7 +33,8 @@ var stationList=[];
 		//刷新
 		 
 		 $("#refreshAllBtn").click(function(){
-			var  ids=getAllNodes();
+			//var  ids=getAllNodes();
+			var  ids;
 			 getAll(ids);
 		 });
 		  

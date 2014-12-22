@@ -421,6 +421,14 @@ public class AddressController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping("/getUnbindInfo")
+	public @ResponseBody KeywordMatchedResult getUnbindInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+		Long customerId = this.getCustomerId();
+
+		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult("人民医院", customerId);
+		return result;
+	}
+
 	/**
 	 * 地址库维护
 	 *
