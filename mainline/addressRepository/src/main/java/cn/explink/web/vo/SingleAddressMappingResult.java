@@ -31,7 +31,7 @@ public class SingleAddressMappingResult {
 	private List<Integer> timeLimitList;
 
 	public AddressMappingResultEnum getResult() {
-		return result;
+		return this.result;
 	}
 
 	public void setResult(AddressMappingResultEnum result) {
@@ -39,7 +39,7 @@ public class SingleAddressMappingResult {
 	}
 
 	public String getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public void setMessage(String message) {
@@ -47,7 +47,7 @@ public class SingleAddressMappingResult {
 	}
 
 	public List<Address> getRelatedAddressList() {
-		return relatedAddressList;
+		return this.relatedAddressList;
 	}
 
 	public void setRelatedAddressList(List<Address> relatedAddressList) {
@@ -55,7 +55,7 @@ public class SingleAddressMappingResult {
 	}
 
 	public List<DeliveryStation> getDeliveryStationList() {
-		return deliveryStationList;
+		return this.deliveryStationList;
 	}
 
 	public void setDeliveryStationList(List<DeliveryStation> deliveryStationList) {
@@ -63,7 +63,7 @@ public class SingleAddressMappingResult {
 	}
 
 	public List<Deliverer> getDelivererList() {
-		return delivererList;
+		return this.delivererList;
 	}
 
 	public void setDelivererList(List<Deliverer> delivererList) {
@@ -71,7 +71,7 @@ public class SingleAddressMappingResult {
 	}
 
 	public List<Integer> getTimeLimitList() {
-		return timeLimitList;
+		return this.timeLimitList;
 	}
 
 	public void setTimeLimitList(List<Integer> timeLimitList) {
@@ -82,18 +82,24 @@ public class SingleAddressMappingResult {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SingleAddressMappingResult [");
-		if (result != null)
-			builder.append("result=").append(result).append(", ");
-		if (message != null)
-			builder.append("message=").append(message).append(", ");
-		if (relatedAddressList != null)
-			builder.append("relatedAddressList=").append(relatedAddressList).append(", ");
-		if (deliveryStationList != null)
-			builder.append("deliveryStationList=").append(deliveryStationList).append(", ");
-		if (delivererList != null)
-			builder.append("delivererList=").append(delivererList).append(", ");
-		if (timeLimitList != null)
-			builder.append("timeLimitList=").append(timeLimitList);
+		if (this.result != null) {
+			builder.append("result=").append(this.result).append(", ");
+		}
+		if (this.message != null) {
+			builder.append("message=").append(this.message).append(", ");
+		}
+		if (this.relatedAddressList != null) {
+			builder.append("relatedAddressList=").append(this.relatedAddressList).append(", ");
+		}
+		if (this.deliveryStationList != null) {
+			builder.append("deliveryStationList=").append(this.deliveryStationList).append(", ");
+		}
+		if (this.delivererList != null) {
+			builder.append("delivererList=").append(this.delivererList).append(", ");
+		}
+		if (this.timeLimitList != null) {
+			builder.append("timeLimitList=").append(this.timeLimitList);
+		}
 		builder.append("]");
 		return builder.toString();
 	}
