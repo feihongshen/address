@@ -1,145 +1,152 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 	<changeSet id="xushiju-2014-07-21-01" author="xushiju">
-		<sqlFile path="address_init_table.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="address_init_table.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<changeSet id="xushiju-2014-07-21-02" author="xushiju">
-		<sqlFile path="address_init_data.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="address_init_data.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 	<changeSet id="xushiju-2014-07-21-03" author="xushiju">
-		<sqlFile path="quartz_init.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="quartz_init.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 	<changeSet id="xushiju-2014-07-21-04" author="xushiju">
 		<sql>
 			create table `SCHEDULED_TASKS` (
-				`ID` int(22) primary key not null auto_increment comment 'id',
-				`TASK_TYPE` varchar(50) not null,
-				`STATUS` int(2) not null,
-				`REFERENCE_TYPE` varchar(50),
-				`REFERENCE_ID` varchar(32),
-				`FIRE_TIME` DATETIME,
-				`COMPLETED_TIME` DATETIME,
-				`CREATED_AT` DATETIME,
-				`TRY_COUNT` int (10)
+			`ID` int(22) primary key not null auto_increment comment
+			'id',
+			`TASK_TYPE` varchar(50) not null,
+			`STATUS` int(2) not null,
+			`REFERENCE_TYPE` varchar(50),
+			`REFERENCE_ID` varchar(32),
+			`FIRE_TIME` DATETIME,
+			`COMPLETED_TIME` DATETIME,
+			`CREATED_AT` DATETIME,
+			`TRY_COUNT` int (10)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-			-- create index IDX_TASKS_STATUS_FIRE_TIME
+			-- create index
+			IDX_TASKS_STATUS_FIRE_TIME
 			CREATE INDEX `IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
 			(
-				`STATUS`,
-				`FIRE_TIME`
+			`STATUS`,
+			`FIRE_TIME`
 			);
 
 			-- create index IDX_TASKS_STATUS_FIRE_TIME
-			CREATE INDEX `IDX_TASKS_STATUS_TYPE_FIRE_TIME` ON `SCHEDULED_TASKS`
+			CREATE INDEX
+			`IDX_TASKS_STATUS_TYPE_FIRE_TIME` ON
+			`SCHEDULED_TASKS`
 			(
-				`STATUS`,
-				`TASK_TYPE`,
-				`FIRE_TIME`
+			`STATUS`,
+			`TASK_TYPE`,
+			`FIRE_TIME`
 			);
 
-			-- create index IDX_TASKS_REFERENCE_ID
-			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON `SCHEDULED_TASKS`
+			-- create
+			index IDX_TASKS_REFERENCE_ID
+			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON
+			`SCHEDULED_TASKS`
 			(
-				`REFERENCE_ID`
+			`REFERENCE_ID`
 			);
 		</sql>
 	</changeSet>
-	
+
 	<!-- 创建易普联科客户 -->
 	<changeSet id="xushiju-2014-09-04-01" author="xushiju">
-		<sqlFile path="customer_init_explink.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_explink.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 	<!-- 创建更新索引和词典的定时任务 -->
 	<changeSet id="xushiju-2014-09-04-02" author="xushiju">
 		<sql>
-			INSERT INTO SCHEDULED_TASKS (task_type, STATUS, fire_time, created_at) VALUES ('updateIndexTask', 0, NOW(), NOW());
+			INSERT INTO SCHEDULED_TASKS (task_type, STATUS, fire_time, created_at) VALUES
+			('updateIndexTask', 0, NOW(), NOW());
 		</sql>
 	</changeSet>
-	
+
 	<!-- 创建电商时效 -->
 	<changeSet id="xushiju-2014-09-17-01" author="yinyu">
 		<sql>
 			CREATE TABLE VENDORS_AGING (
 			`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-			`CUSTOMER_ID` INT (12) NOT NULL,
+			`CUSTOMER_ID`
+			INT (12) NOT NULL,
 			`ADDRESS_ID` INT (12) NOT NULL,
 			`VENDORS_ID` INT (12) NOT NULL,
-			`AGING` VARCHAR (20)
-		) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
+			`AGING` VARCHAR
+			(20)
+			) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
 		</sql>
 	</changeSet>
-	
+
 	<!-- 创建电商时效 -->
 	<changeSet id="chenlisheng-2014-09-23-01" author="chenlisheng">
 		<sql>
 			CREATE TABLE ADDRESS_ORDER (
-				`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-				`EXTERNAL_ORDER_ID` VARCHAR(100),
-				`CUSTOMER_ID` INT (12) NOT NULL,
-				`ADDRESS_LINE` VARCHAR (200),
-				`DELIVERY_STATION_IDS` VARCHAR(100),
-				`DELIVERER_IDS` VARCHAR(100),
-				`CREATION_DATE` DATETIME
-			) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
+			`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+			`EXTERNAL_ORDER_ID` VARCHAR(100),
+			`CUSTOMER_ID` INT (12) NOT NULL,
+			`ADDRESS_LINE` VARCHAR (200),
+			`DELIVERY_STATION_IDS` VARCHAR(100),
+			`DELIVERER_IDS` VARCHAR(100),
+			`CREATION_DATE` DATETIME
+			) ENGINE
+			= INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
 		</sql>
 	</changeSet>
 	<!-- 为中国创建PARENT_ID -->
 	<changeSet id="yinyu-2014-09-24-01" author="yinyu">
 		<sql>
-			 UPDATE ADDRESS SET PARENT_ID = -1 where ADDRESS_LEVEL=0 ;  
+			UPDATE ADDRESS SET PARENT_ID = -1 where ADDRESS_LEVEL=0 ;
 		</sql>
 	</changeSet>
-	
+
 	<!-- 创建贵州品信客户 -->
 	<changeSet id="xushiju-2014-09-30-01" author="xushiju">
-		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<!-- 创建新京报客户 -->
 	<changeSet id="xushiju-2014-10-09-01" author="xushiju">
-		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<!-- 新增系统参数（树分页大小） -->
 	<changeSet id="chris-2014-10-17-01" author="chris">
-		<sqlFile path="config_init.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="config_init.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<!-- 创建广西品信客户 -->
 	<changeSet id="xushiju-2014-11-04-01" author="xushiju">
-		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<!-- 创建重庆华宇客户 -->
 	<changeSet id="xushiju-2014-11-13-01" author="xushiju">
-		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<changeSet id="xushiju-2014-11-17-01" author="xushiju">
 		<sql>
-			 UPDATE `SYSTEM_CONFIG` SET VALUE = '1000' where id = 1;  
+			UPDATE `SYSTEM_CONFIG` SET VALUE = '1000' where id = 1;
 		</sql>
 	</changeSet>
-	
+
 	<!-- 创建广州通路客户 -->
 	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
-		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8"
-			relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+
+	<!-- 在ADDRESS_PERMISSIONS中加入地址是否绑定字段. -->
+	<changeSet id="zhaoshb2014-12-23" author="zhaoshb">
+		<sql>
+			UPDATE `SYSTEM_CONFIG` SET VALUE = '1000' where id = 1;
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>

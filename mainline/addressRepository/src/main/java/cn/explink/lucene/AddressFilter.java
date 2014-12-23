@@ -168,7 +168,7 @@ public class AddressFilter {
 		}
 
 		public String getPath() {
-			return this.getAddress().getPath();
+			return this.getAddress().getPath() + "-" + this.getAddress().getId();
 		}
 
 		public int getWeight() {
