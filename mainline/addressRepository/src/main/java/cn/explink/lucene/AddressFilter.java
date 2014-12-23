@@ -135,6 +135,8 @@ public class AddressFilter {
 	private static class AddressTreeNode {
 		private Address address = null;
 
+		private String path = null;
+
 		private List<AddressTreeNode> childNodeList = null;
 
 		// 权重，初始化时仅为Address名称和全地址的匹配字符数.
@@ -144,6 +146,7 @@ public class AddressFilter {
 		public AddressTreeNode(Address addr, String fullAddr) {
 			this.address = addr;
 			this.weight = this.getMatchScore(addr, fullAddr);
+			this.initPath();
 		}
 
 		public boolean addAddressTreeNode(AddressTreeNode treeNode) {
@@ -168,7 +171,7 @@ public class AddressFilter {
 		}
 
 		public String getPath() {
-			return this.getAddress().getPath() + "-" + this.getAddress().getId();
+			return this.path;
 		}
 
 		public int getWeight() {
@@ -181,6 +184,15 @@ public class AddressFilter {
 
 		public boolean hasChild() {
 			return !this.getChildNodeList().isEmpty();
+		}
+
+		private void initPath() {
+			String addrPath = this.getAddress().getPath();
+			if ((addrPath == null) || addrPath.isEmpty()) {
+				this.path = Long.toString(this.getAddress().getId());
+			} else {
+				this.path = this.getAddress().getPath() + "-" + this.getAddress().getId();
+			}
 		}
 
 		private Address getAddress() {
