@@ -395,7 +395,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			result.setMessage(e.getMessage());
 		}
 		if (saveable) {
-			this.orderDao.save(order);
+			// this.orderDao.save(order);
 		}
 		return result;
 	}

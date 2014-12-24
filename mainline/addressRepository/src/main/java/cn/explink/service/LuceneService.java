@@ -301,10 +301,54 @@ public class LuceneService {
 	 */
 	public List<Address> search(String addressLine, Long customerId) throws IOException, ParseException {
 		List<Address> matchAddrList = this.getLuceneMatchAddrList(addressLine, customerId);
+		List<Address> allPathAddrList = this.getAllPathAddress(matchAddrList);
 		// 得分评估，过滤掉不符合条件的地址
-		List<Address> afterFilerAddrList = AddressFilter.filter(addressLine, matchAddrList);
+		List<Address> afterFilerAddrList = AddressFilter.filter(addressLine, allPathAddrList);
 
 		return afterFilerAddrList;
+	}
+
+	private List<Address> getAllPathAddress(List<Address> matchAddrList) {
+		List<Address> allAddrList = new ArrayList<Address>();
+		allAddrList.addAll(matchAddrList);
+
+		Set<Long> pathSet = this.getPathSet(matchAddrList);
+		List<Address> pathAddrList = this.addressDao.getAddressByIdSet(pathSet);
+		allAddrList.addAll(pathAddrList);
+
+		return allAddrList;
+	}
+
+	private Set<Long> getPathSet(List<Address> matchAddrList) {
+		Set<Long> existAddrIdSet = new HashSet<Long>();
+		for (Address addr : matchAddrList) {
+			existAddrIdSet.add(addr.getId());
+		}
+		Set<Long> pathSet = new HashSet<Long>();
+		for (Address addr : matchAddrList) {
+			this.addPathToSet(pathSet, addr);
+		}
+		pathSet.removeAll(existAddrIdSet);
+
+		return pathSet;
+	}
+
+	private void addPathToSet(Set<Long> pathSet, Address address) {
+		String[] path = this.getAddressPath(address);
+		if (path.length == 0) {
+			return;
+		}
+		for (String part : path) {
+			pathSet.add(Long.valueOf(part));
+		}
+	}
+
+	private String[] getAddressPath(Address address) {
+		String path = address.getPath();
+		if ((path == null) || path.isEmpty()) {
+			return new String[0];
+		}
+		return path.split("-");
 	}
 
 	public KeywordMatchedResult getKeyWordMatchResult(String addressLine, Long customerId) throws IOException, ParseException {

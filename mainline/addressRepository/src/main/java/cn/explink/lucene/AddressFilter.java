@@ -145,7 +145,7 @@ public class AddressFilter {
 
 		public AddressTreeNode(Address addr, String fullAddr) {
 			this.address = addr;
-			this.weight = this.getMatchScore(addr, fullAddr);
+			this.weight = this.getMatchScore(addr, fullAddr) * this.getAddress().getAddressLevel().intValue();
 			this.initPath();
 		}
 
@@ -209,13 +209,19 @@ public class AddressFilter {
 		private int getMatchScore(Address address, String fullAddr) {
 			String partAddr = address.getName();
 			int length = partAddr.length();
+			int index = -1;
 			while (length > 0) {
-				if (fullAddr.contains(partAddr.substring(0, length))) {
-					return length;
+				index = fullAddr.indexOf(partAddr.substring(0, length));
+				if (index != -1) {
+					break;
 				}
 				length--;
 			}
-			return length;
+			if (length == 0) {
+				return -1;
+			}
+			// 关键词越靠后权重越高.
+			return length + index;
 		}
 	}
 

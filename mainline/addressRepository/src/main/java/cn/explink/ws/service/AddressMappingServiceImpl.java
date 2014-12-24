@@ -13,21 +13,21 @@ import cn.explink.service.AddressService;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.ws.vo.AddressMappingResult;
 import cn.explink.ws.vo.ApplicationVo;
+import cn.explink.ws.vo.OrderAddressMappingResult;
 import cn.explink.ws.vo.OrderVo;
 import cn.explink.ws.vo.ResultCodeEnum;
-import cn.explink.ws.vo.OrderAddressMappingResult;
 
 @WebService(endpointInterface = "cn.explink.ws.service.AddressMappingService")
 public class AddressMappingServiceImpl extends BaseWebserviceImpl implements AddressMappingService {
 
 	private static Logger logger = LoggerFactory.getLogger(AddressMappingServiceImpl.class);
-	
+
 	@Override
 	public AddressMappingResult mappingAddress(ApplicationVo applicationVo, List<OrderVo> orderList) {
 		AddressMappingResult result = new AddressMappingResult();
 		ClientApplication clientApplication = null;
 		try {
-			clientApplication = validateApplication(applicationVo);
+			clientApplication = this.validateApplication(applicationVo);
 		} catch (Exception e) {
 			result.setResultCode(ResultCodeEnum.failure);
 			result.setMessage(e.getMessage());
@@ -39,7 +39,7 @@ public class AddressMappingServiceImpl extends BaseWebserviceImpl implements Add
 			result.setResultMap(resultMap);
 			result.setResultCode(ResultCodeEnum.success);
 		} catch (Exception e) {
-			logger.error("mappingAddress failed for customerId = {}", clientApplication.getCustomerId(), e);
+			AddressMappingServiceImpl.logger.error("mappingAddress failed for customerId = {}", clientApplication.getCustomerId(), e);
 			result.setResultCode(ResultCodeEnum.failure);
 			result.setMessage(e.getMessage());
 		}

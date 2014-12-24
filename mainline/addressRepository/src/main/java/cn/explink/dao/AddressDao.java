@@ -57,6 +57,10 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		}
 	}
 
+	public List<Address> getAddressByIdSet(Set<Long> idSet) {
+		return this.getAddressByIdList(new ArrayList<Long>(idSet));
+	}
+
 	public List<Address> getChildAddress(Long customerId, Long parentId, Long deliveryStationId) {
 		Address parent = this.get(parentId);
 		if ((parent != null) && (parent.getAddressLevel() > 2)) {
