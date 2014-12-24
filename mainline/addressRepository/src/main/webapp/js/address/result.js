@@ -27,7 +27,7 @@ var resultRow=
 				{
 					field : 'opt',
 					title : '操作',
-					width : 10,
+					width : 15,
 					formatter : function(value, rec, index) {
 						if (!rec.id) {
 							return '';
@@ -36,9 +36,15 @@ var resultRow=
 						href += "[<a href='#' onclick=delObj('deleteImportAddressResult?id="
 								+ rec.id + "','address')>";
 						href += "删除</a>]";
-						return href;
+						
+						var href1 = '';
+						href1 += "[<a href='#' onclick=getImportDetailInfo('datagrid?resultId="
+							+ rec.id + "','address')>";
+					    href1 += "明细</a>]";
+						return href+"&nbsp;&nbsp;&nbsp;&nbsp;"+href1;
 					}
-				},  {
+				},  
+				{
 					field : 'successCount',
 					title : '导入关键词数量',
 					width : 50,

@@ -28,7 +28,9 @@
           </td>
         </tr>
         <tr>
-          <td colspan=2><div id="promtInfo" ></div><a id="unbind" href="#" onclick="getUnbindInfo();return false;" ></a>个<ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul></td>
+          <td colspan=2><div id="promtInfo" style="float:left"></div><a id="unbind" href="#" onclick="getUnbindInfo();return false;" ></a>个
+          <ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul>
+          </td>
         </tr>
       </table>
       </div>

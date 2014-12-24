@@ -655,5 +655,4 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public List<ZTreeNode> getAsyncAddressPage(Long customerId, Long parentId, String ids, Integer page, Integer pageSize) {
 		return this.addressDao.getAsyncAddressPage(customerId, parentId, ids, page, pageSize);
 	}
-
 }
