@@ -145,7 +145,7 @@ public class AddressFilter {
 
 		public AddressTreeNode(Address addr, String fullAddr) {
 			this.address = addr;
-			this.weight = this.getMatchScore(addr, fullAddr) * this.getAddress().getAddressLevel().intValue();
+			this.weight = this.getMatchScore(addr, fullAddr);
 			this.initPath();
 		}
 
@@ -191,7 +191,7 @@ public class AddressFilter {
 			if ((addrPath == null) || addrPath.isEmpty()) {
 				this.path = Long.toString(this.getAddress().getId());
 			} else {
-				this.path = this.getAddress().getPath() + "-" + this.getAddress().getId();
+				this.path = this.getAddress().getPath() + "-" + this.getAddress().getId() + "-";
 			}
 		}
 

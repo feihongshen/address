@@ -445,7 +445,8 @@ public class LuceneService {
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();
-		Query query = parser.parse(StringUtil.filterQureyStr(addressLine));
+		String filterString = StringUtil.filterQureyStr(addressLine);
+		Query query = parser.parse(filterString);
 		TopDocs topDocs = searcher.search(query, LuceneEnvironment.DEFAULT_MAX_RESULT_COUNT);
 		List<Document> docList = new ArrayList<Document>();
 		if (topDocs.scoreDocs == null) {
@@ -457,5 +458,4 @@ public class LuceneService {
 		}
 		return docList;
 	}
-
 }
