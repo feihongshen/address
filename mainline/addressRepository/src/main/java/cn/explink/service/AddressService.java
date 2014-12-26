@@ -104,6 +104,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		System.out.println(addressList);
 	}
 
+	public List<ZTreeNode> getAllAddress(Long customerId) {
+		return this.addressDao.getZTree(customerId, null, null);
+	}
+
 	/**
 	 * 创建或更新地址
 	 *

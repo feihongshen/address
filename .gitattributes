@@ -557,6 +557,7 @@ mainline/addressRepository/src/main/webapp/css/zTree/zTreeStyle/img/zTreeStandar
 mainline/addressRepository/src/main/webapp/css/zTree/zTreeStyle/img/zTreeStandard.png -text
 mainline/addressRepository/src/main/webapp/css/zTree/zTreeStyle/zTreeStyle.css -text
 mainline/addressRepository/src/main/webapp/images/bt_bg.gif -text
+mainline/addressRepository/src/main/webapp/images/loading_small.gif -text
 mainline/addressRepository/src/main/webapp/images/login.css -text
 mainline/addressRepository/src/main/webapp/images/login_03.gif -text
 mainline/addressRepository/src/main/webapp/images/login_05.gif -text

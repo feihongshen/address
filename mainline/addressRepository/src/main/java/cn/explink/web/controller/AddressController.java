@@ -144,6 +144,12 @@ public class AddressController extends BaseController {
 		return this.addressService.getZAddress(customerId, name, band);
 	}
 
+	@RequestMapping("/getAllAddress")
+	public @ResponseBody List<ZTreeNode> getAllAddress() {
+		Long customerId = this.getCustomerId();
+		return this.addressService.getAllAddress(customerId);
+	}
+
 	@RequestMapping("/getAdressByStation")
 	public @ResponseBody List<ZTreeNode> getAdressByStation(String stationId) {
 		Long customerId = this.getCustomerId();

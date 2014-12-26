@@ -10,7 +10,7 @@
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <style type="text/css">
 .keyword{
-	overflow-y: scroll;height: 600px;width:48%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+	overflow-y: scroll;height: 600px;width:47%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
 border:1px solid #999;padding:3px;
 }
 </style>
@@ -95,13 +95,13 @@ function getNeedMatchedWords(){
 </script>
 </head>
 <body>
-<textarea name="needMatched" id="needMatched" class="textbox" style="height:20px; width:48% ;resize: none" data-options="multiline:false"></textarea>
+<textarea name="needMatched" id="needMatched" class="textbox" style="height:40px; width:47% ;resize: none" data-options="multiline:false"></textarea>
 <a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a>
 
 <div id="keywordDiv" class="keyword"> 
 </div>
 
-  <div style="overflow-y: scroll;width:50%;float:right">
+  <div style="overflow-y: scroll;width:52%;float:right">
     <td bgcolor="#FFFFFF" style="vertical-align: top;">
     <div style="overflow-y: scroll;height: 600px;border:1px solid #999;padding:3px;">
          <ul  class="ztree" id="resultTree" > </ul>
