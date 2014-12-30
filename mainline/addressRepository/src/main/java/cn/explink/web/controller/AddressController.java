@@ -608,14 +608,14 @@ public class AddressController extends BaseController {
 				this.addressImportService.addNonNullValue(addressNames, address3);
 
 				AddressImportDetail detail = new AddressImportDetail();
-				detail.setProvince(province);
-				detail.setCity(city);
-				detail.setDistrict(district);
-				detail.setAddress1(address1);
-				detail.setAddress2(address2);
-				detail.setAddress3(address3);
-				detail.setDeliveryStationName(deliveryStationName);
-				detail.setDelivererName(delivererName);
+				detail.setProvince(StringUtils.trim(province));
+				detail.setCity(StringUtils.trim(city));
+				detail.setDistrict(StringUtils.trim(district));
+				detail.setAddress1(StringUtils.trim(address1));
+				detail.setAddress2(StringUtils.trim(address2));
+				detail.setAddress3(StringUtils.trim(address3));
+				detail.setDeliveryStationName(StringUtils.trim(deliveryStationName));
+				detail.setDelivererName(StringUtils.trim(delivererName));
 				detail.setAddressImportResult(result);
 				details.add(detail);
 			}
