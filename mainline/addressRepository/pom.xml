@@ -617,8 +617,8 @@
 				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
-				<luceneIndexPath>/home/appusr/address/lucene/index</luceneIndexPath>
-				<luceneDictPath>/home/appusr/address/lucene/dict</luceneDictPath>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
 				<label>prod</label>
 			</properties>
 		</profile>
