@@ -34,7 +34,6 @@ var setting = {
             }
         },
         callback: {
-            //onClick : menuOnClick
         }
     };
 var zNodes;
