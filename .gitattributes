@@ -1112,6 +1112,7 @@ mainline/addressRepository/src/test/java/cn/explink/service/AddressServiceTest.j
 mainline/addressRepository/src/test/java/cn/explink/service/DelivererRuleServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/DeliveryStationRuleServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/DeliveryStationServiceTest.java -text
+mainline/addressRepository/src/test/java/cn/explink/service/ImportAddressFromExcelTool.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/LuceneServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/addressImportTest.xlsx -text
 mainline/addressRepository/src/test/java/cn/explink/test/support/BaseTestCase.java -text
