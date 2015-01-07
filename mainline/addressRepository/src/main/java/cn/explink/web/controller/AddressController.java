@@ -147,7 +147,9 @@ public class AddressController extends BaseController {
 	@RequestMapping("/getAllAddress")
 	public @ResponseBody List<ZTreeNode> getAllAddress() {
 		Long customerId = this.getCustomerId();
-		return this.addressService.getAllAddress(customerId);
+		List<ZTreeNode> result = this.addressService.getAllAddress(customerId);
+		this.addressService.appendStation(customerId, result);
+		return result;
 	}
 
 	@RequestMapping("/getAdressByStation")
@@ -434,6 +436,7 @@ public class AddressController extends BaseController {
 			return null;
 		}
 		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
+		this.addressService.appendStation(customerId, result.getzTreeNodeList());
 		return result;
 	}
 
