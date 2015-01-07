@@ -3526,8 +3526,7 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3515, 6);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3516, 6);
 
 
-
-
+-- 广州通路预置数据 added by songkaojun 2015-01-07
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254546', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254547', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254548', '6');
@@ -3639,3 +3638,71 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254653', '6'
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254654', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254655', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2254656', '6');
+
+
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255043', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255044', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255045', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255046', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255047', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255048', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255049', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255050', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255051', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255052', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255053', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255054', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255055', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255056', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255057', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255058', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255059', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255060', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255061', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255062', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255063', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255064', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255065', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255066', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255067', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255068', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255069', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255070', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255071', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255072', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255073', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255074', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255075', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255076', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255077', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255078', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255079', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255080', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255081', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255082', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255083', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255084', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255085', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255086', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255087', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255088', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255089', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255090', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255091', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255092', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255093', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255094', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255095', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255096', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255097', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255098', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255099', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255100', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255101', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255102', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255103', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255104', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255105', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255106', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255107', '6');
+

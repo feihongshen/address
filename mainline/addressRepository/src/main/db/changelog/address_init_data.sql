@@ -3517,6 +3517,7 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (358, '蒲县', 1, 3, 343, '1-235-343', now());
 
 
+-- 广州通路预置数据 added by songkaojun 2015-01-07
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2254546', '中堂镇', '1', '3', '2276', '1-2135-2276', now());
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2254547', '仲恺高新区', '1', '3', '2229', '1-2135-2229', now());
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2254548', '址山镇', '1', '3', '2191', '1-2135-2191', now());
@@ -3629,6 +3630,72 @@ INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2254655', '西区', '1', '3', '2277', '1-2135-2277', now());
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2254656', '东区', '1', '3', '2277', '1-2135-2277', now());
 
+
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255043', '开平', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255044', '四会', '1', '3', '2219', '1-2135-2219', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255045', '乳源瑶族自治', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255046', '陆丰', '1', '3', '2246', '1-2135-2246', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255047', '清城', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255048', '中堂', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255049', '横琴', '1', '3', '2170', '1-2135-2170', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255050', '曲江', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255051', '潮州', '1', '3', '2278', '1-2135-2278', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255052', '兴宁', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255053', '五华', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255054', '陆河', '1', '3', '2246', '1-2135-2246', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255055', '蕉岭', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255056', '丰顺', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255057', '南雄', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255058', '吴川', '1', '3', '2200', '1-2135-2200', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255059', '英德', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255060', '鹤山', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255061', '南澳', '1', '3', '2175', '1-2135-2175', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255062', '流沙', '1', '3', '2283', '1-2135-2283', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255063', '揭西', '1', '3', '2283', '1-2135-2283', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255064', '乐昌', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255065', '普宁', '1', '3', '2283', '1-2135-2283', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255066', '阳西', '1', '3', '2260', '1-2135-2260', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255067', '饶平', '1', '3', '2278', '1-2135-2278', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255068', '大旺', '1', '3', '2219', '1-2135-2219', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255069', '连山', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255070', '洪梅', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255071', '始兴', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255072', '电白', '1', '3', '2211', '1-2135-2211', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255073', '黄冈', '1', '3', '2278', '1-2135-2278', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255074', '沙田', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255075', '寮步', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255076', '红海湾', '1', '3', '2246', '1-2135-2246', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255077', '揭东', '1', '3', '2283', '1-2135-2283', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255078', '陈江', '1', '3', '2229', '1-2135-2229', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255079', '大鳌', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255080', '台山', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255081', '清新', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255082', '坡头', '1', '3', '2200', '1-2135-2200', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255083', '仁化', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255084', '翁源', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255085', '连州', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255086', '阳山', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255087', '大岭山', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255088', '新丰', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255089', '大埔', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255090', '武江', '1', '3', '2150', '1-2135-2150', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255091', '梅录', '1', '3', '2200', '1-2135-2200', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255092', '斗门', '1', '3', '2170', '1-2135-2170', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255093', '平远', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255094', '三埠', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255095', '连南', '1', '3', '2266', '1-2135-2266', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255096', '址山', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255097', '兴城', '1', '3', '2236', '1-2135-2236', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255098', '海丰', '1', '3', '2246', '1-2135-2246', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255099', '望牛墩', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255100', '化州', '1', '3', '2211', '1-2135-2211', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255101', '黄坡', '1', '3', '2200', '1-2135-2200', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255102', '寮歩', '1', '3', '2276', '1-2135-2276', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255103', '金鼎', '1', '3', '2170', '1-2135-2170', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255104', '三水', '1', '3', '2184', '1-2135-2184', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255105', '上川', '1', '3', '2191', '1-2135-2191', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255106', '坦州', '1', '3', '2277', '1-2135-2277', now());
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255107', '下川', '1', '3', '2191', '1-2135-2191', now());
 
 
 
