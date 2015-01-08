@@ -81,7 +81,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 创建导入模板
-	 * 
+	 *
 	 * @param headerNameList
 	 * @return
 	 */
@@ -102,7 +102,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	 * 导入单行记录（新事务处理） 地址格式是否正确（ - -大望路）否-->失败 ：上级地址不存在 三级地址是否存在（北京-市辖区-朝阳区）
 	 * 否-->失败：上级地址不存在 四、伍、六级地址是否存在（不存在：创建 [如果是最后一级，]，存在：添加至地址MAP）
 	 * 站点非空（绑定判别-抛异常站点不存在） 配送员非空（绑定判别-为空抛异常配送员不存在）
-	 * 
+	 *
 	 * @param map
 	 *            名称-Address
 	 * @param detail
@@ -246,7 +246,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 	 * 导入单行记录（新事务处理） 地址格式是否正确（ - -大望路）否-->失败 ：上级地址不存在 三级地址是否存在（北京-市辖区-朝阳区）
 	 * 否-->失败：上级地址不存在 四、伍、六级地址是否存在（不存在：创建 [如果是最后一级，]，存在：添加至地址MAP）
 	 * 站点非空（绑定判别-抛异常站点不存在） 配送员非空（绑定判别-为空抛异常配送员不存在）
-	 * 
+	 *
 	 * @param map
 	 *            名称-Address
 	 * @param detail
@@ -379,7 +379,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 创建地址并绑定客户ID
-	 * 
+	 *
 	 * @param parent
 	 * @param name
 	 * @param customerId
@@ -424,7 +424,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 绑定站点、收件人和地址联系
-	 * 
+	 *
 	 * @param detail
 	 * @param customerId
 	 */
@@ -473,7 +473,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 迁移站点和地址联系绑定关系
-	 * 
+	 *
 	 * @param detail
 	 * @param customerId
 	 */
@@ -491,7 +491,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 导入地址，同时判定是否同一个站点
-	 * 
+	 *
 	 * @param detail
 	 * @param customerId
 	 * @param stationId
@@ -680,7 +680,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 查询导入结果列表
-	 * 
+	 *
 	 * @param startDate
 	 * @param endDate
 	 * @return
@@ -691,7 +691,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 
 	/**
 	 * 删除导入结果
-	 * 
+	 *
 	 * @param resultId
 	 */
 	public void deleteImportAddressResult(Long resultId, Long customerId) {

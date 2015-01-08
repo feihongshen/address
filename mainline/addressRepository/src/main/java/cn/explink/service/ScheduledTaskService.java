@@ -3,7 +3,6 @@ package cn.explink.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
@@ -30,44 +29,44 @@ public class ScheduledTaskService {
 	private Map<String, Worker> cachedWorkers;
 
 	public void processUpdateIndexTasks() {
-		scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
+		this.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
 	}
 
 	/**
 	 * process all task for given taskType
-	 * 
+	 *
 	 * @param taskType
 	 */
 	public void scheduleTasks(String taskType) {
-		List<Long> taskIds = scheduledTaskDao.listAllTasksByType(taskType);
-		scheduleTasks(taskType, taskIds);
+		List<Long> taskIds = this.scheduledTaskDao.listAllTasksByType(taskType);
+		this.scheduleTasks(taskType, taskIds);
 	}
 
 	/**
 	 * schedule tasks
-	 * 
+	 *
 	 * @param taskType
 	 * @param taskIds
 	 */
 	public void scheduleTasks(String taskType, List<Long> taskIds) {
 		for (Long taskId : taskIds) {
-			scheduleTask(taskType, taskId);
+			this.scheduleTask(taskType, taskId);
 		}
 	}
 
 	/**
 	 * schedule task
-	 * 
+	 *
 	 * @param taskType
 	 * @param taskId
 	 */
 	public void scheduleTask(String taskType, Long taskId) {
 		Task task = new Task();
 		task.setTaskId(taskId);
-		task.setWorker(cachedWorkers.get(taskType));
+		task.setWorker(this.cachedWorkers.get(taskType));
 
-		ExecutorService executorService = findExecutorService(taskType);
-		logger.debug("putting task to thread pool for taskId = {}", taskId);
+		ExecutorService executorService = this.findExecutorService(taskType);
+		ScheduledTaskService.logger.debug("putting task to thread pool for taskId = {}", taskId);
 		executorService.submit(task);
 	}
 
@@ -82,7 +81,7 @@ public class ScheduledTaskService {
 
 	/**
 	 * 根据任务内容项创建任务
-	 * 
+	 *
 	 * @param taskType
 	 *            任务类型
 	 * @param refType
@@ -92,12 +91,12 @@ public class ScheduledTaskService {
 	 * @return 任务对象
 	 */
 	public ScheduledTask createScheduledTask(String taskType, String refType, String refId) {
-		return createScheduledTask(taskType, refType, refId, false);
+		return this.createScheduledTask(taskType, refType, refId, false);
 	}
 
 	/**
 	 * 根据任务内容项创建任务
-	 * 
+	 *
 	 * @param taskType
 	 *            任务类型
 	 * @param refType
@@ -117,16 +116,16 @@ public class ScheduledTaskService {
 		newTask.setFireTime(new Date());
 		newTask.setCreatedAt(new Date());
 		newTask.setTryCount(0);
-		scheduledTaskDao.save(newTask);
+		this.scheduledTaskDao.save(newTask);
 
 		if (immediately) {
-			scheduleTask(taskType, newTask.getId());
+			this.scheduleTask(taskType, newTask.getId());
 		}
 		return newTask;
 	}
 
 	public Map<String, Worker> getCachedWorkers() {
-		return cachedWorkers;
+		return this.cachedWorkers;
 	}
 
 	public void setCachedWorkers(Map<String, Worker> cachedWorkers) {
@@ -134,7 +133,7 @@ public class ScheduledTaskService {
 	}
 
 	public ScheduledTaskDao getScheduledTaskDAO() {
-		return scheduledTaskDao;
+		return this.scheduledTaskDao;
 	}
 
 	public void setScheduledTaskDAO(ScheduledTaskDao scheduledTaskDao) {
