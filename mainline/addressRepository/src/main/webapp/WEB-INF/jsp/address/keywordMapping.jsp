@@ -62,8 +62,9 @@ $(function(){
 
 function setFontCss(treeId, treeNode) {
 	var color;
+	var treeNodeName = treeNode.name.split(" -- ");
 	for (var i=0;i<keywords.length;i++){
-		if(keywords[i]==treeNode.name){
+		if(keywords[i]==treeNodeName[0]){
 			color = { color: "blue" };
 		}
 	}
