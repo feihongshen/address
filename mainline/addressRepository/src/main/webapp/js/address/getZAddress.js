@@ -280,9 +280,9 @@ function getPromtInfo(){
 	 			var keys=temp['keys'];
 	 			var binds=temp['binds'];
 	 			var unbids=keys*1-binds*1;
-	 			var info="关键词共有"+keys+"个，已经绑定站点"+binds+"个，未绑定";
+	 			var info="关键词共有"+keys+"个，已经绑定站点"+binds+"个，未绑定"+unbids+"个";
 	 			$("#promtInfo").text(info);
-	 			$("#unbind").text(unbids);
+//	 			$("#unbind").text(unbids);
 	 		}
 	 	});
 }

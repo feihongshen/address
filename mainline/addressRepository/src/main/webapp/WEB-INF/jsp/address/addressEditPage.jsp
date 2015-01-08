@@ -31,7 +31,9 @@
           </td>
         </tr>
         <tr>
-          <td colspan=2><div id="promtInfo" style="float:left"></div><a id="unbind" href="#" onclick="getUnbindInfo();return false;" ></a>个
+          <td colspan=2><div id="promtInfo"></div>
+<!--         上面div样式   style="float:left" -->
+<!--           <a id="unbind" href="#" onclick="getUnbindInfo();return false;" ></a>个 -->
           <ul id="tree" class="ztree" style="width:auto;height:auto; overflow:auto;"></ul>
           </td>
         </tr>
