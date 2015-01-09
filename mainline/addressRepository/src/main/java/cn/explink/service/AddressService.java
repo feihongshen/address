@@ -134,7 +134,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		if (customerId != null) {
 			this.bindAddress(address, customerId);
 		}
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(address.getId()), true);
+		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(address.getId()));
+		// 立即更新索引
+		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
 		return address;
 	}
 
@@ -154,7 +156,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 
 		this.aliasDao.save(alias);
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()), true);
+		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()));
+		// 立即更新索引
+		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
 	}
 
 	public List<Alias> getAliasByIdList(List<Long> aliasIdList) {
@@ -549,7 +553,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public void deleteAlias(Long id) {
 		Alias a = this.aliasDao.get(id);
 		this.aliasDao.delete(a);
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()), true);
+		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
+		// 立即更新索引
+		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
 	}
 
 	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {
