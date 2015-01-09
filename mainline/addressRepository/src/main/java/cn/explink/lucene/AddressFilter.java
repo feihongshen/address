@@ -210,7 +210,8 @@ public class AddressFilter {
 			String partAddr = address.getName();
 			int length = partAddr.length();
 			int index = -1;
-			while (length > 0) {
+			// 关键词数量大于1.
+			while (length > 1) {
 				index = fullAddr.indexOf(partAddr.substring(0, length));
 				if (index != -1) {
 					break;
