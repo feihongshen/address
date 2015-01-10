@@ -1,5 +1,6 @@
 package cn.explink.service;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,6 @@ import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
-import cn.explink.schedule.Constants;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.AddressUtil;
 import cn.explink.util.StringUtil;
@@ -134,10 +134,30 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		if (customerId != null) {
 			this.bindAddress(address, customerId);
 		}
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ADDRESS_ID, String.valueOf(address.getId()));
-		// 立即更新索引
-		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
+
+		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
+		// Constants.REFERENCE_TYPE_ADDRESS_ID,
+		// String.valueOf(address.getId()));
+
+		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
+		try {
+			this.updateIndexRightNow(address.getId(), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return address;
+	}
+
+	private void updateIndexRightNow(Long addressId, Long aliasId) throws IOException {
+		List<Long> addressIdList = new ArrayList<Long>();
+		List<Long> aliasIdList = new ArrayList<Long>();
+		if (null != addressId) {
+			addressIdList.add(addressId);
+		}
+		if (null != aliasId) {
+			aliasIdList.add(aliasId);
+		}
+		this.luceneService.updateIndex(addressIdList, aliasIdList);
 	}
 
 	/**
@@ -156,9 +176,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 
 		this.aliasDao.save(alias);
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()));
-		// 立即更新索引
-		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
+		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
+		// Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()));
+		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
+		try {
+			this.updateIndexRightNow(null, alias.getId());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Alias> getAliasByIdList(List<Long> aliasIdList) {
@@ -553,9 +578,15 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public void deleteAlias(Long id) {
 		Alias a = this.aliasDao.get(id);
 		this.aliasDao.delete(a);
-		this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX, Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
-		// 立即更新索引
-		this.scheduledTaskService.scheduleTasks(Constants.TASK_TYPE_UPDATE_INDEX);
+		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
+		// Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
+		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
+		try {
+			this.updateIndexRightNow(null, a.getId());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public List<ZTreeNode> getStationAddressTree(Long customerId, Long parentId) {

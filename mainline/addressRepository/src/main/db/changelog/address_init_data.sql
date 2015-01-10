@@ -3697,6 +3697,11 @@ INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255106', '坦州', '1', '3', '2277', '1-2135-2277', now());
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values ('2255107', '下川', '1', '3', '2191', '1-2135-2191', now());
 
+-- 重庆华宇预置数据 added by songkaojun 2015-01-09
+
+INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) VALUES ('2254543', '万盛区','1', '2', '2467', '1-2466-2467', now());
+
+
 
 
 

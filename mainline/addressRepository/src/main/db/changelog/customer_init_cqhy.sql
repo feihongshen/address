@@ -3524,3 +3524,7 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3513, 5);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3514, 5);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3515, 5);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3516, 5);
+
+-- 重庆华宇预置数据 added by songkaojun 2015-01-09
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2254543, 5);
+
