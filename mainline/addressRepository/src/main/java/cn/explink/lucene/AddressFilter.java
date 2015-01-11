@@ -207,27 +207,29 @@ public class AddressFilter {
 		}
 
 		private int getMatchScore(Address address, String fullAddr) {
-			String partAddr = address.getName();
-			int length = partAddr.length();
-			int index = -1;
-			// 关键词数量大于1.
-			while (length > 1) {
-				index = fullAddr.indexOf(partAddr.substring(0, length));
-				if (index != -1) {
-					break;
-				}
-				length--;
-			}
-			if (length == 0) {
-				return -1;
-			}
-			// 关键词越靠后权重越高.
-			return length + index;
+			// String partAddr = address.getName();
+			// int length = partAddr.length();
+			// int index = -1;
+			// // 关键词数量大于1.
+			// while (length > 1) {
+			// index = fullAddr.indexOf(partAddr.substring(0, length));
+			// if (index != -1) {
+			// break;
+			// }
+			// length--;
+			// }
+			// if (length == 0) {
+			// return -1;
+			// }
+			// // 关键词越靠后权重越高.
+			// return length + index;
+			// 改为全词匹配逻辑.
+			return fullAddr.contains(address.getName()) ? 1 : -1;
 		}
 	}
 
 	private static class MatchResult {
-		private int weight = 0;
+		private int weight = -1000;
 
 		private List<Address> address = null;
 
