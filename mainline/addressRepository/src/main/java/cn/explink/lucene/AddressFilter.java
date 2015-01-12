@@ -223,8 +223,8 @@ public class AddressFilter {
 			// }
 			// // 关键词越靠后权重越高.
 			// return length + index;
-			// 改为全词匹配逻辑.
-			return fullAddr.contains(address.getName()) ? address.getName().length() : -1;
+			int length = address.getName().length();
+			return fullAddr.contains(address.getName()) ? length : -length;
 		}
 	}
 
