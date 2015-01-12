@@ -223,8 +223,11 @@ public class AddressFilter {
 			// }
 			// // 关键词越靠后权重越高.
 			// return length + index;
+			String lowerAddr = address.getName().toLowerCase();
+			String lowerFullAddr = fullAddr.toLowerCase();
 			int length = address.getName().length();
-			return fullAddr.contains(address.getName()) ? length : -length;
+
+			return lowerFullAddr.contains(lowerAddr) ? length : -length;
 		}
 	}
 
