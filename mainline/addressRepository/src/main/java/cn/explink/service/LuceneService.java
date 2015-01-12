@@ -266,7 +266,7 @@ public class LuceneService {
 	private Document createDocument(Address address) throws IOException {
 		Document doc = new Document();
 		doc.add(new StringField("addressId", String.valueOf(address.getId()), Field.Store.YES));
-		doc.add(new StringField("name", address.getName(), Field.Store.YES));
+		doc.add(new StringField("name", address.getName().toLowerCase(), Field.Store.YES));
 		return doc;
 	}
 
@@ -274,7 +274,7 @@ public class LuceneService {
 		Document doc = new Document();
 		doc.add(new StringField("aliasId", String.valueOf(alias.getId()), Field.Store.YES));
 		doc.add(new StringField("addressId", String.valueOf(alias.getAddressId()), Field.Store.YES));
-		doc.add(new StringField("name", alias.getName(), Field.Store.YES));
+		doc.add(new StringField("name", alias.getName().toLowerCase(), Field.Store.YES));
 		return doc;
 	}
 

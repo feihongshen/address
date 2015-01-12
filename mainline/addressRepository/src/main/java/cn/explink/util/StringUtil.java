@@ -28,6 +28,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.HTMLWriter;
 import org.dom4j.io.OutputFormat;
+
 public class StringUtil {
 	private static Pattern numericPattern = Pattern.compile("^[0-9\\-]+$");
 	private static Pattern numericStringPattern = Pattern.compile("^[0-9\\-\\-]+$");
@@ -35,21 +36,22 @@ public class StringUtil {
 	private static Pattern abcPattern = Pattern.compile("^[a-z|A-Z]+$");
 	public static final String splitStrPattern = ",|，|;|；|、|\\.|。|-|_|\\(|\\)|\\[|\\]|\\{|\\}|\\\\|/| |　|\"";
 	private static Log logger = LogFactory.getLog(StringUtil.class);
-	private static String specialCharacter ="+-&&||!(){}[]^\"~*?:\\/";
+	private static String specialCharacter = ".。+-&&||!(){}[]^\"~*?:\\/";
+
 	public static boolean isEmpty(String string) {
-		return string == null || string.trim().isEmpty();
+		return (string == null) || string.trim().isEmpty();
 	}
 
 	/**
 	 * 从前到后逐个截取，找到能匹配上指定patten的第一个最小字串
-	 * 
+	 *
 	 * @param str
 	 * @param patten
 	 * @return
 	 */
 	public static String substring(String str, String patten) {
 		while (true) {
-			if (match(str, patten)) {
+			if (StringUtil.match(str, patten)) {
 				break;
 			}
 			str = str.substring(1, str.length());
@@ -62,7 +64,7 @@ public class StringUtil {
 
 	/**
 	 * 判断是否匹配指定的正则表达式
-	 * 
+	 *
 	 * @param str
 	 * @param pattenString
 	 * @return
@@ -76,8 +78,9 @@ public class StringUtil {
 	public static boolean isNumeric(String str) {
 		for (int i = str.length(); --i >= 0;) {
 			int chr = str.charAt(i);
-			if (chr < 48 || chr > 57)
+			if ((chr < 48) || (chr > 57)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -85,14 +88,14 @@ public class StringUtil {
 	/**
 	 * 取第一个最大数字<br/>
 	 * 如：133xxx，返回133
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */
 	public static int startNumeric(String string) {
 		int numericLength = 0;
 		for (int i = 0; i < string.length(); i++) {
-			if (isNumeric(string.charAt(i))) {
+			if (StringUtil.isNumeric(string.charAt(i))) {
 				numericLength++;
 			} else {
 				break;
@@ -102,7 +105,7 @@ public class StringUtil {
 	}
 
 	private static boolean isNumeric(char charAt) {
-		if (charAt < 48 || charAt > 57) {
+		if ((charAt < 48) || (charAt > 57)) {
 			return false;
 		}
 		return true;
@@ -110,15 +113,15 @@ public class StringUtil {
 
 	/**
 	 * 判断是否纯字母组合
-	 * 
+	 *
 	 * @param src
 	 *            源字符串
 	 * @return 是否纯字母组合的标志
 	 */
 	public static boolean isABC(String src) {
 		boolean return_value = false;
-		if (src != null && src.length() > 0) {
-			Matcher m = abcPattern.matcher(src);
+		if ((src != null) && (src.length() > 0)) {
+			Matcher m = StringUtil.abcPattern.matcher(src);
 			if (m.find()) {
 				return_value = true;
 			}
@@ -128,15 +131,15 @@ public class StringUtil {
 
 	/**
 	 * 判断是否浮点数字表示
-	 * 
+	 *
 	 * @param src
 	 *            源字符串
 	 * @return 是否数字的标志
 	 */
 	public static boolean isFloatNumeric(String src) {
 		boolean return_value = false;
-		if (src != null && src.length() > 0) {
-			Matcher m = floatNumericPattern.matcher(src);
+		if ((src != null) && (src.length() > 0)) {
+			Matcher m = StringUtil.floatNumericPattern.matcher(src);
 			if (m.find()) {
 				return_value = true;
 			}
@@ -146,7 +149,7 @@ public class StringUtil {
 
 	/**
 	 * 把string array or list用给定的符号symbol连接成一个字符串
-	 * 
+	 *
 	 * @param array
 	 * @param symbol
 	 * @return
@@ -156,25 +159,27 @@ public class StringUtil {
 		if (array != null) {
 			for (int i = 0; i < array.size(); i++) {
 				String temp = array.get(i).toString();
-				if (temp != null && temp.trim().length() > 0)
+				if ((temp != null) && (temp.trim().length() > 0)) {
 					result += (temp + symbol);
+				}
 			}
-			if (result.length() > 1)
+			if (result.length() > 1) {
 				result = result.substring(0, result.length() - 1);
+			}
 		}
 		return result;
 	}
 
 	public static String subStringNotEncode(String subject, int size) {
-		if (subject != null && subject.length() > size) {
+		if ((subject != null) && (subject.length() > size)) {
 			subject = subject.substring(0, size) + "...";
 		}
 		return subject;
 	}
 
 	/**
-	 * 截取字符串　超出的字符用symbol代替 　　
-	 * 
+	 * 截取字符串　超出的字符用symbol代替
+	 *
 	 * @param len
 	 *            　字符串长度　长度计量单位为一个GBK汉字　　两个英文字母计算为一个单位长度
 	 * @param str
@@ -196,7 +201,7 @@ public class StringUtil {
 						counterOfDoubleByte++;
 					}
 				}
-				if (counterOfDoubleByte % 2 == 0) {
+				if ((counterOfDoubleByte % 2) == 0) {
 					strRet = new String(b, 0, iLen, "GBK") + symbol;
 					return strRet;
 				} else {
@@ -214,8 +219,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * 截取字符串　超出的字符用symbol代替 　　
-	 * 
+	 * 截取字符串　超出的字符用symbol代替
+	 *
 	 * @param len
 	 *            　字符串长度　长度计量单位为一个GBK汉字　　两个英文字母计算为一个单位长度
 	 * @param str
@@ -223,13 +228,13 @@ public class StringUtil {
 	 * @return12
 	 */
 	public static String getLimitLengthString(String str, int len) {
-		return getLimitLengthString(str, len, "...");
+		return StringUtil.getLimitLengthString(str, len, "...");
 	}
 
 	/**
-	 * 
+	 *
 	 * 截取字符，不转码
-	 * 
+	 *
 	 * @param subject
 	 * @param size
 	 * @return
@@ -243,7 +248,7 @@ public class StringUtil {
 
 	/**
 	 * 把string array or list用给定的符号symbol连接成一个字符串
-	 * 
+	 *
 	 * @param array
 	 * @param symbol
 	 * @return
@@ -253,18 +258,20 @@ public class StringUtil {
 		if (array != null) {
 			for (int i = 0; i < array.length; i++) {
 				String temp = array[i];
-				if (temp != null && temp.trim().length() > 0)
+				if ((temp != null) && (temp.trim().length() > 0)) {
 					result += (temp + symbol);
+				}
 			}
-			if (result.length() > 1)
+			if (result.length() > 1) {
 				result = result.substring(0, result.length() - 1);
+			}
 		}
 		return result;
 	}
 
 	/**
 	 * 取得字符串的实际长度（考虑了汉字的情况）
-	 * 
+	 *
 	 * @param SrcStr
 	 *            源字符串
 	 * @return 字符串的实际长度
@@ -282,18 +289,20 @@ public class StringUtil {
 
 	/**
 	 * 检查数据串中是否包含非法字符集
-	 * 
+	 *
 	 * @param str
 	 * @return [true]|[false] 包含|不包含
 	 */
 	public static boolean check(String str) {
 		String sIllegal = "'\"";
 		int len = sIllegal.length();
-		if (null == str)
+		if (null == str) {
 			return false;
+		}
 		for (int i = 0; i < len; i++) {
-			if (str.indexOf(sIllegal.charAt(i)) != -1)
+			if (str.indexOf(sIllegal.charAt(i)) != -1) {
 				return true;
+			}
 		}
 
 		return false;
@@ -301,7 +310,7 @@ public class StringUtil {
 
 	/***************************************************************************
 	 * getHideEmailPrefix - 隐藏邮件地址前缀。
-	 * 
+	 *
 	 * @param email
 	 *            - EMail邮箱地址 例如: linwenguo@koubei.com 等等...
 	 * @return 返回已隐藏前缀邮件地址, 如 *********@koubei.com.
@@ -311,7 +320,7 @@ public class StringUtil {
 		if (null != email) {
 			int index = email.lastIndexOf('@');
 			if (index > 0) {
-				email = repeat("*", index).concat(email.substring(index));
+				email = StringUtil.repeat("*", index).concat(email.substring(index));
 			}
 		}
 		return email;
@@ -319,7 +328,7 @@ public class StringUtil {
 
 	/***************************************************************************
 	 * repeat - 通过源字符串重复生成N次组成新的字符串。
-	 * 
+	 *
 	 * @param src
 	 *            - 源字符串 例如: 空格(" "), 星号("*"), "浙江" 等等...
 	 * @param num
@@ -328,21 +337,23 @@ public class StringUtil {
 	 **************************************************************************/
 	public static String repeat(String src, int num) {
 		StringBuffer s = new StringBuffer();
-		for (int i = 0; i < num; i++)
+		for (int i = 0; i < num; i++) {
 			s.append(src);
+		}
 		return s.toString();
 	}
 
 	/**
 	 * 根据指定的字符把源字符串分割成一个数组
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
 	public static List<String> parseString2ListByCustomerPattern(String pattern, String src) {
 
-		if (src == null)
+		if (src == null) {
 			return null;
+		}
 		List<String> list = new ArrayList<String>();
 		String[] result = src.split(pattern);
 		for (int i = 0; i < result.length; i++) {
@@ -353,18 +364,18 @@ public class StringUtil {
 
 	/**
 	 * 根据指定的字符把源字符串分割成一个数组
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
 	public static List<String> parseString2ListByPattern(String src) {
 		String pattern = "，|,|、|。";
-		return parseString2ListByCustomerPattern(pattern, src);
+		return StringUtil.parseString2ListByCustomerPattern(pattern, src);
 	}
 
 	/**
 	 * 格式化一个float
-	 * 
+	 *
 	 * @param format
 	 *            要格式化成的格式 such as #.00, #.#
 	 */
@@ -374,12 +385,12 @@ public class StringUtil {
 		return df.format(f);
 	}
 
-
 	/**
-	 * 自定义的分隔字符串函数 例如: 1,2,3 =>[1,2,3] 3个元素 ,2,3=>[,2,3] 3个元素 ,2,3,=>[,2,3,] 4个元素 ,,,=>[,,,] 4个元素
-	 * 
+	 * 自定义的分隔字符串函数 例如: 1,2,3 =>[1,2,3] 3个元素 ,2,3=>[,2,3] 3个元素 ,2,3,=>[,2,3,]
+	 * 4个元素 ,,,=>[,,,] 4个元素
+	 *
 	 * 5.22算法修改，为提高速度不用正则表达式 两个间隔符,,返回""元素
-	 * 
+	 *
 	 * @param split
 	 *            分割字符 默认,
 	 * @param src
@@ -390,13 +401,13 @@ public class StringUtil {
 	public static List<String> splitToList(String split, String src) {
 		// 默认,
 		String sp = ",";
-		if (split != null && split.length() == 1) {
+		if ((split != null) && (split.length() == 1)) {
 			sp = split;
 		}
 		List<String> r = new ArrayList<String>();
 		int lastIndex = -1;
 		int index = src.indexOf(sp);
-		if (-1 == index && src != null) {
+		if ((-1 == index) && (src != null)) {
 			r.add(src);
 			return r;
 		}
@@ -418,17 +429,17 @@ public class StringUtil {
 
 	/**
 	 * 把 名=值 参数表转换成字符串 (a=1,b=2 =>a=1&b=2)
-	 * 
+	 *
 	 * @param map
 	 * @return
 	 */
 	public static String linkedHashMapToString(LinkedHashMap<String, String> map) {
-		if (map != null && map.size() > 0) {
+		if ((map != null) && (map.size() > 0)) {
 			String result = "";
 			Iterator it = map.keySet().iterator();
 			while (it.hasNext()) {
 				String name = (String) it.next();
-				String value = (String) map.get(name);
+				String value = map.get(name);
 				result += (result.equals("")) ? "" : "&";
 				result += String.format("%s=%s", name, value);
 			}
@@ -439,14 +450,14 @@ public class StringUtil {
 
 	/**
 	 * 解析字符串返回 名称=值的参数表 (a=1&b=2 => a=1,b=2)
-	 * 
+	 *
 	 * @see test.koubei.util.StringUtilTest#testParseStr()
 	 * @param str
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public static LinkedHashMap<String, String> toLinkedHashMap(String str) {
-		if (str != null && !str.equals("") && str.indexOf("=") > 0) {
+		if ((str != null) && !str.equals("") && (str.indexOf("=") > 0)) {
 			LinkedHashMap result = new LinkedHashMap();
 
 			String name = null;
@@ -459,7 +470,7 @@ public class StringUtil {
 					value = "";
 					break;
 				case 38: // &
-					if (name != null && value != null && !name.equals("")) {
+					if ((name != null) && (value != null) && !name.equals("")) {
 						result.put(name, value);
 					}
 					name = null;
@@ -476,7 +487,7 @@ public class StringUtil {
 
 			}
 
-			if (name != null && value != null && !name.equals("")) {
+			if ((name != null) && (value != null) && !name.equals("")) {
 				result.put(name, value);
 			}
 
@@ -488,7 +499,7 @@ public class StringUtil {
 
 	/**
 	 * 根据输入的多个解释和下标返回一个值
-	 * 
+	 *
 	 * @param captions
 	 *            例如:"无,爱干净,一般,比较乱"
 	 * @param index
@@ -496,9 +507,9 @@ public class StringUtil {
 	 * @return 一般
 	 */
 	public static String getCaption(String captions, int index) {
-		if (index > 0 && captions != null && !captions.equals("")) {
+		if ((index > 0) && (captions != null) && !captions.equals("")) {
 			String[] ss = captions.split(",");
-			if (ss != null && ss.length > 0 && index < ss.length) {
+			if ((ss != null) && (ss.length > 0) && (index < ss.length)) {
 				return ss[index];
 			}
 		}
@@ -507,20 +518,20 @@ public class StringUtil {
 
 	/**
 	 * 数字转字符串,如果num<=0 则输出"";
-	 * 
+	 *
 	 * @param num
 	 * @return
 	 */
 	public static String numberToString(Object num) {
 		if (num == null) {
 			return null;
-		} else if (num instanceof Integer && (Integer) num > 0) {
+		} else if ((num instanceof Integer) && ((Integer) num > 0)) {
 			return Integer.toString((Integer) num);
-		} else if (num instanceof Long && (Long) num > 0) {
+		} else if ((num instanceof Long) && ((Long) num > 0)) {
 			return Long.toString((Long) num);
-		} else if (num instanceof Float && (Float) num > 0) {
+		} else if ((num instanceof Float) && ((Float) num > 0)) {
 			return Float.toString((Float) num);
-		} else if (num instanceof Double && (Double) num > 0) {
+		} else if ((num instanceof Double) && ((Double) num > 0)) {
 			return Double.toString((Double) num);
 		} else {
 			return "";
@@ -529,7 +540,7 @@ public class StringUtil {
 
 	/**
 	 * 货币转字符串
-	 * 
+	 *
 	 * @param money
 	 * @param style
 	 *            样式 [default]要格式化成的格式 such as #.00, #.#
@@ -537,7 +548,7 @@ public class StringUtil {
 	 */
 
 	public static String moneyToString(Object money, String style) {
-		if (money != null && style != null && (money instanceof Double || money instanceof Float)) {
+		if ((money != null) && (style != null) && ((money instanceof Double) || (money instanceof Float))) {
 			Double num = (Double) money;
 
 			if (style.equalsIgnoreCase("default")) {
@@ -545,9 +556,9 @@ public class StringUtil {
 				if (num == 0) {
 					// 不输出0
 					return "";
-				} else if ((num * 10 % 10) == 0) {
+				} else if (((num * 10) % 10) == 0) {
 					// 没有小数
-					return Integer.toString((int) num.intValue());
+					return Integer.toString(num.intValue());
 				} else {
 					// 有小数
 					return num.toString();
@@ -563,39 +574,41 @@ public class StringUtil {
 
 	/**
 	 * 在sou中是否存在finds 如果指定的finds字符串有一个在sou中找到,返回true;
-	 * 
+	 *
 	 * @param sou
 	 * @param find
 	 * @return
 	 */
 	public static boolean strPos(String sou, String... finds) {
-		if (sou != null && finds != null && finds.length > 0) {
+		if ((sou != null) && (finds != null) && (finds.length > 0)) {
 			for (int i = 0; i < finds.length; i++) {
-				if (sou.indexOf(finds[i]) > -1)
+				if (sou.indexOf(finds[i]) > -1) {
 					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	public static boolean strPos(String sou, List<String> finds) {
-		if (sou != null && finds != null && finds.size() > 0) {
+		if ((sou != null) && (finds != null) && (finds.size() > 0)) {
 			for (String s : finds) {
-				if (sou.indexOf(s) > -1)
+				if (sou.indexOf(s) > -1) {
 					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	public static boolean strPos(String sou, String finds) {
-		List<String> t = splitToList(",", finds);
-		return strPos(sou, t);
+		List<String> t = StringUtil.splitToList(",", finds);
+		return StringUtil.strPos(sou, t);
 	}
 
 	/**
 	 * 判断两个字符串是否相等 如果都为null则判断为相等,一个为null另一个not null则判断不相等 否则如果s1=s2则相等
-	 * 
+	 *
 	 * @param s1
 	 * @param s2
 	 * @return
@@ -610,7 +623,7 @@ public class StringUtil {
 	}
 
 	public static int toInt(String s) {
-		if (s != null && !"".equals(s.trim())) {
+		if ((s != null) && !"".equals(s.trim())) {
 			try {
 				return Integer.parseInt(s);
 			} catch (Exception e) {
@@ -621,7 +634,7 @@ public class StringUtil {
 	}
 
 	public static double toDouble(String s) {
-		if (s != null && !"".equals(s.trim())) {
+		if ((s != null) && !"".equals(s.trim())) {
 			return Double.parseDouble(s);
 		}
 		return 0;
@@ -629,7 +642,7 @@ public class StringUtil {
 
 	/**
 	 * 把xml 转为object
-	 * 
+	 *
 	 * @param xml
 	 * @return
 	 */
@@ -646,15 +659,16 @@ public class StringUtil {
 
 	public static long toLong(String s) {
 		try {
-			if (s != null && !"".equals(s.trim()))
+			if ((s != null) && !"".equals(s.trim())) {
 				return Long.parseLong(s);
+			}
 		} catch (Exception exception) {
 		}
 		return 0L;
 	}
 
 	public static String simpleEncrypt(String str) {
-		if (str != null && str.length() > 0) {
+		if ((str != null) && (str.length() > 0)) {
 			// str = str.replaceAll("0","a");
 			str = str.replaceAll("1", "b");
 			// str = str.replaceAll("2","c");
@@ -671,22 +685,24 @@ public class StringUtil {
 	}
 
 	/**
-	 * 过滤用户输入的URL地址（防治用户广告） 目前只针对以http或www开头的URL地址 本方法调用的正则表达式，不建议用在对性能严格的地方例如:循环及list页面等
-	 * 
+	 * 过滤用户输入的URL地址（防治用户广告） 目前只针对以http或www开头的URL地址
+	 * 本方法调用的正则表达式，不建议用在对性能严格的地方例如:循环及list页面等
+	 *
 	 * @author fengliang
 	 * @param str
 	 *            需要处理的字符串
 	 * @return 返回处理后的字符串
 	 */
 	public static String removeURL(String str) {
-		if (str != null)
+		if (str != null) {
 			str = str.toLowerCase().replaceAll("(http|www|com|cn|org|\\.)+", "");
+		}
 		return str;
 	}
 
 	/**
 	 * 随即生成指定位数的含数字验证码字符串
-	 * 
+	 *
 	 * @author Peltason
 	 * @date 2007-5-9
 	 * @param bit
@@ -694,8 +710,9 @@ public class StringUtil {
 	 * @return String
 	 */
 	public static String numRandom(int bit) {
-		if (bit == 0)
+		if (bit == 0) {
 			bit = 6; // 默认6位
+		}
 		String str = "";
 		str = "0123456789";// 初始化种子
 		return RandomStringUtils.random(bit, str);// 返回6位的字符串
@@ -703,17 +720,18 @@ public class StringUtil {
 
 	/**
 	 * 随即生成指定位数的含验证码字符串
-	 * 
+	 *
 	 * @author Peltason
-	 * 
+	 *
 	 * @date 2007-5-9
 	 * @param bit
 	 *            指定生成验证码位数
 	 * @return String
 	 */
 	public static String random(int bit) {
-		if (bit == 0)
+		if (bit == 0) {
 			bit = 6; // 默认6位
+		}
 		// 因为o和0,l和1很难区分,所以,去掉大小写的o和l
 		String str = "";
 		str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz";// 初始化种子
@@ -722,7 +740,7 @@ public class StringUtil {
 
 	/**
 	 * Wap页面的非法字符检查
-	 * 
+	 *
 	 * @author hugh115
 	 * @date 2007-06-29
 	 * @param str
@@ -751,7 +769,7 @@ public class StringUtil {
 
 	/**
 	 * 字符串转float 如果异常返回0.00
-	 * 
+	 *
 	 * @param s
 	 *            输入的字符串
 	 * @return 转换后的float
@@ -766,7 +784,7 @@ public class StringUtil {
 
 	/**
 	 * 页面中去除字符串中的空格、回车、换行符、制表符
-	 * 
+	 *
 	 * @author shazao
 	 * @date 2007-08-17
 	 * @param str
@@ -783,7 +801,7 @@ public class StringUtil {
 
 	/**
 	 * 全角生成半角
-	 * 
+	 *
 	 * @author bailong
 	 * @date 2007-08-29
 	 * @param str
@@ -798,8 +816,8 @@ public class StringUtil {
 				Tstr = QJstr.substring(i, i + 1);
 				b = Tstr.getBytes("unicode");
 			} catch (java.io.UnsupportedEncodingException e) {
-				if (logger.isErrorEnabled()) {
-					logger.error(e);
+				if (StringUtil.logger.isErrorEnabled()) {
+					StringUtil.logger.error(e);
 				}
 			}
 			if (b[3] == -1) {
@@ -808,8 +826,8 @@ public class StringUtil {
 				try {
 					outStr = outStr + new String(b, "unicode");
 				} catch (java.io.UnsupportedEncodingException ex) {
-					if (logger.isErrorEnabled()) {
-						logger.error(ex);
+					if (StringUtil.logger.isErrorEnabled()) {
+						StringUtil.logger.error(ex);
 					}
 				}
 			} else {
@@ -820,9 +838,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * 转换编码
-	 * 
+	 *
 	 * @param s
 	 *            源字符串
 	 * @param fencode
@@ -848,54 +866,55 @@ public class StringUtil {
 	/**
 	 * @param str
 	 * @return
-	 ************************************************************************* 
+	 *************************************************************************
 	 */
 	public static String removeHTMLLableExe(String str) {
-		str = stringReplace(str, ">\\s*<", "><");
-		str = stringReplace(str, "&nbsp;", " ");// 替换空格
-		str = stringReplace(str, "<br ?/?>", "\n");// 去<br><br />
-		str = stringReplace(str, "<([^<>]+)>", "");// 去掉<>内的字符
-		str = stringReplace(str, "\\s\\s\\s*", " ");// 将多个空白变成一个空格
-		str = stringReplace(str, "^\\s*", "");// 去掉头的空白
-		str = stringReplace(str, "\\s*$", "");// 去掉尾的空白
-		str = stringReplace(str, " +", " ");
+		str = StringUtil.stringReplace(str, ">\\s*<", "><");
+		str = StringUtil.stringReplace(str, "&nbsp;", " ");// 替换空格
+		str = StringUtil.stringReplace(str, "<br ?/?>", "\n");// 去<br><br />
+		str = StringUtil.stringReplace(str, "<([^<>]+)>", "");// 去掉<>内的字符
+		str = StringUtil.stringReplace(str, "\\s\\s\\s*", " ");// 将多个空白变成一个空格
+		str = StringUtil.stringReplace(str, "^\\s*", "");// 去掉头的空白
+		str = StringUtil.stringReplace(str, "\\s*$", "");// 去掉尾的空白
+		str = StringUtil.stringReplace(str, " +", " ");
 		return str;
 	}
 
 	/**
 	 * 除去html标签
-	 * 
+	 *
 	 * @param str
 	 *            源字符串
 	 * @return 目标字符串
 	 */
 	public static String removeHTMLLable(String str) {
-		str = stringReplace(str, "\\s", "");// 去掉页面上看不到的字符
-		str = stringReplace(str, "<br ?/?>", "\n");// 去<br><br />
-		str = stringReplace(str, "<([^<>]+)>", "");// 去掉<>内的字符
-		str = stringReplace(str, "&nbsp;", " ");// 替换空格
-		str = stringReplace(str, "&(\\S)(\\S?)(\\S?)(\\S?);", "");// 去<br><br />
+		str = StringUtil.stringReplace(str, "\\s", "");// 去掉页面上看不到的字符
+		str = StringUtil.stringReplace(str, "<br ?/?>", "\n");// 去<br><br />
+		str = StringUtil.stringReplace(str, "<([^<>]+)>", "");// 去掉<>内的字符
+		str = StringUtil.stringReplace(str, "&nbsp;", " ");// 替换空格
+		str = StringUtil.stringReplace(str, "&(\\S)(\\S?)(\\S?)(\\S?);", "");// 去<br><br
+																				// />
 		return str;
 	}
 
 	/**
 	 * 去掉HTML标签之外的字符串
-	 * 
+	 *
 	 * @param str
 	 *            源字符串
 	 * @return 目标字符串
 	 */
 	public static String removeOutHTMLLable(String str) {
-		str = stringReplace(str, ">([^<>]+)<", "><");
-		str = stringReplace(str, "^([^<>]+)<", "<");
-		str = stringReplace(str, ">([^<>]+)$", ">");
+		str = StringUtil.stringReplace(str, ">([^<>]+)<", "><");
+		str = StringUtil.stringReplace(str, "^([^<>]+)<", "<");
+		str = StringUtil.stringReplace(str, ">([^<>]+)$", ">");
 		return str;
 	}
 
 	/**
-	 * 
+	 *
 	 * 字符串替换
-	 * 
+	 *
 	 * @param str
 	 *            源字符串
 	 * @param sr
@@ -913,9 +932,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * 将html的省略写法替换成非省略写法
-	 * 
+	 *
 	 * @param str
 	 *            html字符串
 	 * @param pt
@@ -945,9 +964,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * 得到字符串的子串位置序列
-	 * 
+	 *
 	 * @param str
 	 *            字符串
 	 * @param sub
@@ -961,12 +980,12 @@ public class StringUtil {
 		// , "" ).length())/sub.length())).intValue()] ;
 		String[] sp = null;
 		int l = sub.length();
-		sp = splitString(str, sub);
+		sp = StringUtil.splitString(str, sub);
 		if (sp == null) {
 			return null;
 		}
 		int[] ip = new int[sp.length - 1];
-		for (int i = 0; i < sp.length - 1; i++) {
+		for (int i = 0; i < (sp.length - 1); i++) {
 			ip[i] = sp[i].length() + l;
 			if (i != 0) {
 				ip[i] += ip[i - 1];
@@ -981,9 +1000,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * 根据正则表达式分割字符串
-	 * 
+	 *
 	 * @param str
 	 *            源字符串
 	 * @param ms
@@ -999,12 +1018,12 @@ public class StringUtil {
 
 	/**
 	 * 根据正则表达式提取字符串,相同的字符串只返回一个
-	 * 
+	 *
 	 * @param str源字符串
 	 * @param pattern
 	 *            正则表达式
 	 * @return 目标字符串数据组
-	 ************************************************************************* 
+	 *************************************************************************
 	 */
 
 	// ★传入一个字符串，把符合pattern格式的字符串放入字符串数组
@@ -1034,7 +1053,7 @@ public class StringUtil {
 
 	/**
 	 * 得到第一个b,e之间的字符串,并返回e后的子串
-	 * 
+	 *
 	 * @param s
 	 *            源字符串
 	 * @param b
@@ -1045,17 +1064,22 @@ public class StringUtil {
 	 */
 
 	/*
-	 * String aaa="abcdefghijklmn"; String[] bbb=StringProcessor.midString(aaa, "b","l"); System.out.println("bbb[0]:"+bbb[0]);//cdefghijk System.out.println("bbb[1]:"+bbb[1]);//lmn ★这个方法是得到第二个参数和第三个参数之间的字符串,赋给元素0;然后把元素0代表的字符串之后的,赋给元素1
+	 * String aaa="abcdefghijklmn"; String[] bbb=StringProcessor.midString(aaa,
+	 * "b","l"); System.out.println("bbb[0]:"+bbb[0]);//cdefghijk
+	 * System.out.println("bbb[1]:"+bbb[1]);//lmn
+	 * ★这个方法是得到第二个参数和第三个参数之间的字符串,赋给元素0;然后把元素0代表的字符串之后的,赋给元素1
 	 */
 
 	/*
-	 * String aaa="abcdefgllhijklmn5465"; String[] bbb=StringProcessor.midString(aaa, "b","l"); //ab cdefg llhijklmn5465 // 元素0 元素1
+	 * String aaa="abcdefgllhijklmn5465"; String[]
+	 * bbb=StringProcessor.midString(aaa, "b","l"); //ab cdefg llhijklmn5465 //
+	 * 元素0 元素1
 	 */
 	public static String[] midString(String s, String b, String e) {
 		int i = s.indexOf(b) + b.length();
 		int j = s.indexOf(e, i);
 		String[] sa = new String[2];
-		if (i < b.length() || j < i + 1 || i > j) {
+		if ((i < b.length()) || (j < (i + 1)) || (i > j)) {
 			sa[1] = s;
 			sa[0] = null;
 			return sa;
@@ -1068,7 +1092,7 @@ public class StringUtil {
 
 	/**
 	 * 带有前一次替代序列的正则表达式替代
-	 * 
+	 *
 	 * @param s
 	 * @param pf
 	 * @param pb
@@ -1094,7 +1118,7 @@ public class StringUtil {
 				sf2 = pb;
 				for (int i = 1; i <= gc; i++) {
 					sf3 = "\\" + i;
-					sf2 = replaceAll(sf2, sf3, matcher_hand.group(i));
+					sf2 = StringUtil.replaceAll(sf2, sf3, matcher_hand.group(i));
 				}
 				strr += sf2;
 			} else {
@@ -1107,7 +1131,7 @@ public class StringUtil {
 
 	/**
 	 * 存文本替换
-	 * 
+	 *
 	 * @param s
 	 *            源字符串
 	 * @param sf
@@ -1143,7 +1167,7 @@ public class StringUtil {
 
 	/**
 	 * 判断是否与给定字符串样式匹配
-	 * 
+	 *
 	 * @param str
 	 *            字符串
 	 * @param pattern
@@ -1159,7 +1183,7 @@ public class StringUtil {
 
 	/**
 	 * 截取字符串
-	 * 
+	 *
 	 * @param s
 	 *            源字符串
 	 * @param jmp
@@ -1171,22 +1195,22 @@ public class StringUtil {
 	 * @return 之间的字符串
 	 */
 	public static String subStringExe(String s, String jmp, String sb, String se) {
-		if (isEmpty(s)) {
+		if (StringUtil.isEmpty(s)) {
 			return "";
 		}
 		int i = s.indexOf(jmp);
-		if (i >= 0 && i < s.length()) {
+		if ((i >= 0) && (i < s.length())) {
 			s = s.substring(i + 1);
 		}
 		i = s.indexOf(sb);
-		if (i >= 0 && i < s.length()) {
+		if ((i >= 0) && (i < s.length())) {
 			s = s.substring(i + 1);
 		}
 		if (se == "") {
 			return s;
 		} else {
 			i = s.indexOf(se);
-			if (i >= 0 && i < s.length()) {
+			if ((i >= 0) && (i < s.length())) {
 				s = s.substring(i + 1);
 			}
 			return s;
@@ -1194,11 +1218,12 @@ public class StringUtil {
 	}
 
 	/**
-	 * ************************************************************************* 用要通过URL传输的内容进行编码
-	 * 
+	 * *************************************************************************
+	 * 用要通过URL传输的内容进行编码
+	 *
 	 * @param 源字符串
 	 * @return 经过编码的内容
-	 ************************************************************************* 
+	 *************************************************************************
 	 */
 	public static String URLEncode(String src) {
 		String return_value = "";
@@ -1217,16 +1242,17 @@ public class StringUtil {
 
 	/**
 	 * *************************************************************************
-	 * 
+	 *
 	 * @author 李锋 2007.4.18
 	 * @param 传入
-	 *            &#31119;test&#29031;&#27004;&#65288;&#21271;&#22823;&#38376;&# 24635 ;&#24215;&#65289;&#31119;
+	 *            &#31119;test&#29031;&#27004;&#65288;&#21271;&#22823;&#38376;&#
+	 *            24635 ;&#24215;&#65289;&#31119;
 	 * @return 经过解码的内容
-	 ************************************************************************* 
+	 *************************************************************************
 	 */
 	public static String getGBK(String str) {
 
-		return transfer(str);
+		return StringUtil.transfer(str);
 	}
 
 	public static String transfer(String str) {
@@ -1234,7 +1260,7 @@ public class StringUtil {
 		Matcher m = p.matcher(str);
 		while (m.find()) {
 			String old = m.group();
-			str = str.replaceAll(old, getChar(old));
+			str = str.replaceAll(old, StringUtil.getChar(old));
 		}
 		return str;
 	}
@@ -1247,7 +1273,7 @@ public class StringUtil {
 
 	/**
 	 * yahoo首页中切割字符串.
-	 * 
+	 *
 	 * @author yxg
 	 * @date 2007-09-17
 	 * @param str
@@ -1264,8 +1290,10 @@ public class StringUtil {
 	}
 
 	/**
-	 * 泛型方法(通用)，把list转换成以“,”相隔的字符串 调用时注意类型初始化（申明类型） 如：List<Integer> intList = new ArrayList<Integer>(); 调用方法：StringUtil.listTtoString(intList); 效率：list中4条信息，1000000次调用时间为850ms左右
-	 * 
+	 * 泛型方法(通用)，把list转换成以“,”相隔的字符串 调用时注意类型初始化（申明类型） 如：List<Integer> intList =
+	 * new ArrayList<Integer>(); 调用方法：StringUtil.listTtoString(intList);
+	 * 效率：list中4条信息，1000000次调用时间为850ms左右
+	 *
 	 * @author fengliang
 	 * @serialData 2008-01-09
 	 * @param <T>
@@ -1275,24 +1303,27 @@ public class StringUtil {
 	 * @return 以“,”相隔的字符串
 	 */
 	public static <T> String listTtoString(List<T> list) {
-		if (list == null || list.size() < 1)
+		if ((list == null) || (list.size() < 1)) {
 			return "";
+		}
 		Iterator<T> i = list.iterator();
-		if (!i.hasNext())
+		if (!i.hasNext()) {
 			return "";
+		}
 		StringBuilder sb = new StringBuilder();
 		for (;;) {
 			T e = i.next();
 			sb.append(e);
-			if (!i.hasNext())
+			if (!i.hasNext()) {
 				return sb.toString();
+			}
 			sb.append(",");
 		}
 	}
 
 	/**
 	 * 把整形数组转换成以“,”相隔的字符串
-	 * 
+	 *
 	 * @author fengliang
 	 * @serialData 2008-01-08
 	 * @param a
@@ -1300,23 +1331,26 @@ public class StringUtil {
 	 * @return 以“,”相隔的字符串
 	 */
 	public static String intArraytoString(int[] a) {
-		if (a == null)
+		if (a == null) {
 			return "";
+		}
 		int iMax = a.length - 1;
-		if (iMax == -1)
+		if (iMax == -1) {
 			return "";
+		}
 		StringBuilder b = new StringBuilder();
 		for (int i = 0;; i++) {
 			b.append(a[i]);
-			if (i == iMax)
+			if (i == iMax) {
 				return b.toString();
+			}
 			b.append(",");
 		}
 	}
 
 	/**
 	 * 判断文字内容重复
-	 * 
+	 *
 	 * @author 沙枣
 	 * @Date 2008-04-17
 	 */
@@ -1329,30 +1363,34 @@ public class StringUtil {
 		String nextStr = "";
 		boolean result = false;
 		float endNum = (float) 0.0;
-		if (content != null && content.length() > 0) {
-			if (content.length() % 1000 > 0)
+		if ((content != null) && (content.length() > 0)) {
+			if ((content.length() % 1000) > 0) {
 				thousandNum = (int) Math.floor(content.length() / 1000) + 1;
-			else
+			} else {
 				thousandNum = (int) Math.floor(content.length() / 1000);
-			if (thousandNum < 3)
+			}
+			if (thousandNum < 3) {
 				subNum = 100 * thousandNum;
-			else if (thousandNum < 6)
+			} else if (thousandNum < 6) {
 				subNum = 200 * thousandNum;
-			else if (thousandNum < 9)
+			} else if (thousandNum < 9) {
 				subNum = 300 * thousandNum;
-			else
+			} else {
 				subNum = 3000;
+			}
 			for (int j = 1; j < subNum; j++) {
-				if (content.length() % j > 0)
+				if ((content.length() % j) > 0) {
 					forNum = (int) Math.floor(content.length() / j) + 1;
-				else
+				} else {
 					forNum = (int) Math.floor(content.length() / j);
-				if (result || j >= content.length())
+				}
+				if (result || (j >= content.length())) {
 					break;
-				else {
+				} else {
 					for (int m = 0; m < forNum; m++) {
-						if (m * j > content.length() || (m + 1) * j > content.length() || (m + 2) * j > content.length())
+						if (((m * j) > content.length()) || (((m + 1) * j) > content.length()) || (((m + 2) * j) > content.length())) {
 							break;
+						}
 						startStr = content.substring(m * j, (m + 1) * j);
 						nextStr = content.substring((m + 1) * j, (m + 2) * j);
 						if (startStr.equals(nextStr)) {
@@ -1362,8 +1400,9 @@ public class StringUtil {
 								result = true;
 								break;
 							}
-						} else
+						} else {
 							similarNum = 0;
+						}
 					}
 				}
 			}
@@ -1373,12 +1412,12 @@ public class StringUtil {
 
 	/**
 	 * 判断是否是空字符串 null和"" null返回result,否则返回字符串
-	 * 
+	 *
 	 * @param s
 	 * @return
 	 */
 	public static String isEmpty(String s, String result) {
-		if (s != null && !s.equals("")) {
+		if ((s != null) && !s.equals("")) {
 			return s;
 		}
 		return result;
@@ -1386,13 +1425,13 @@ public class StringUtil {
 
 	/**
 	 * 判断对象是否为空
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static boolean isNotEmpty(Object str) {
 		boolean flag = true;
-		if (str != null && !str.equals("")) {
+		if ((str != null) && !str.equals("")) {
 			if (str.toString().length() > 0) {
 				flag = true;
 			}
@@ -1404,24 +1443,26 @@ public class StringUtil {
 
 	/**
 	 * 全角字符变半角字符
-	 * 
+	 *
 	 * @author shazao
 	 * @date 2008-04-03
 	 * @param str
 	 * @return
 	 */
 	public static String full2Half(String str) {
-		if (str == null || "".equals(str))
+		if ((str == null) || "".equals(str)) {
 			return "";
+		}
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < str.length(); i++) {
 			char c = str.charAt(i);
 
-			if (c >= 65281 && c < 65373)
+			if ((c >= 65281) && (c < 65373)) {
 				sb.append((char) (c - 65248));
-			else
+			} else {
 				sb.append(str.charAt(i));
+			}
 		}
 
 		return sb.toString();
@@ -1430,14 +1471,14 @@ public class StringUtil {
 
 	/**
 	 * 全角括号转为半角
-	 * 
+	 *
 	 * @author shazao
 	 * @date 2007-11-29
 	 * @param str
 	 * @return
 	 */
 	public static String replaceBracketStr(String str) {
-		if (str != null && str.length() > 0) {
+		if ((str != null) && (str.length() > 0)) {
 			str = str.replaceAll("（", "(");
 			str = str.replaceAll("）", ")");
 		}
@@ -1446,7 +1487,7 @@ public class StringUtil {
 
 	/**
 	 * 解析字符串返回map键值对(例：a=1&b=2 => a=1,b=2)
-	 * 
+	 *
 	 * @param query
 	 *            源参数字符串
 	 * @param split1
@@ -1454,13 +1495,14 @@ public class StringUtil {
 	 * @param split2
 	 *            key与value之间的分隔符（例：=）
 	 * @param dupLink
-	 *            重复参数名的参数值之间的连接符，连接后的字符串作为该参数的参数值，可为null null：不允许重复参数名出现，则靠后的参数值会覆盖掉靠前的参数值。
+	 *            重复参数名的参数值之间的连接符，连接后的字符串作为该参数的参数值，可为null
+	 *            null：不允许重复参数名出现，则靠后的参数值会覆盖掉靠前的参数值。
 	 * @return map
 	 * @author sky
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> parseQuery(String query, char split1, char split2, String dupLink) {
-		if (!isEmpty(query) && query.indexOf(split2) > 0) {
+		if (!StringUtil.isEmpty(query) && (query.indexOf(split2) > 0)) {
 			Map<String, String> result = new HashMap();
 
 			String name = null;
@@ -1472,7 +1514,7 @@ public class StringUtil {
 				if (c == split2) {
 					value = "";
 				} else if (c == split1) {
-					if (!isEmpty(name) && value != null) {
+					if (!StringUtil.isEmpty(name) && (value != null)) {
 						if (dupLink != null) {
 							tempValue = result.get(name);
 							if (tempValue != null) {
@@ -1490,7 +1532,7 @@ public class StringUtil {
 				}
 			}
 
-			if (!isEmpty(name) && value != null) {
+			if (!StringUtil.isEmpty(name) && (value != null)) {
 				if (dupLink != null) {
 					tempValue = result.get(name);
 					if (tempValue != null) {
@@ -1507,7 +1549,7 @@ public class StringUtil {
 
 	/**
 	 * 将list 用传入的分隔符组装为String
-	 * 
+	 *
 	 * @param list
 	 * @param slipStr
 	 * @return String
@@ -1515,20 +1557,21 @@ public class StringUtil {
 	@SuppressWarnings("unchecked")
 	public static String listToStringSlipStr(List list, String slipStr) {
 		StringBuffer returnStr = new StringBuffer();
-		if (list != null && list.size() > 0) {
+		if ((list != null) && (list.size() > 0)) {
 			for (int i = 0; i < list.size(); i++) {
 				returnStr.append(list.get(i)).append(slipStr);
 			}
 		}
-		if (returnStr.toString().length() > 0)
+		if (returnStr.toString().length() > 0) {
 			return returnStr.toString().substring(0, returnStr.toString().lastIndexOf(slipStr));
-		else
+		} else {
 			return "";
+		}
 	}
 
 	/**
 	 * 获取从start开始用*替换len个长度后的字符串
-	 * 
+	 *
 	 * @param str
 	 *            要替换的字符串
 	 * @param start
@@ -1550,7 +1593,7 @@ public class StringUtil {
 
 		// 获取最多能打的*个数
 		int strLen = str.length();
-		if (strLen < start + len) {
+		if (strLen < (start + len)) {
 			len = strLen - start;
 		}
 
@@ -1560,7 +1603,7 @@ public class StringUtil {
 		}
 
 		// 加上*之后的字符串
-		if (strLen > start + len) {
+		if (strLen > (start + len)) {
 			ret += str.substring(start + len);
 		}
 
@@ -1569,7 +1612,7 @@ public class StringUtil {
 
 	/**
 	 * 根据传入的分割符号,把传入的字符串分割为List字符串
-	 * 
+	 *
 	 * @param slipStr
 	 *            分隔的字符串
 	 * @param src
@@ -1578,8 +1621,9 @@ public class StringUtil {
 	 */
 	public static List<String> stringToStringListBySlipStr(String slipStr, String src) {
 
-		if (src == null)
+		if (src == null) {
 			return null;
+		}
 		List<String> list = new ArrayList<String>();
 		String[] result = src.split(slipStr);
 		for (int i = 0; i < result.length; i++) {
@@ -1590,7 +1634,7 @@ public class StringUtil {
 
 	/**
 	 * 截取字符串
-	 * 
+	 *
 	 * @param str
 	 *            原始字符串
 	 * @param len
@@ -1600,7 +1644,7 @@ public class StringUtil {
 	 * @return 截取后的字符串
 	 */
 	public static String getHtmlSubString(String str, int len, String tail) {
-		if (str == null || str.length() <= len) {
+		if ((str == null) || (str.length() <= len)) {
 			return str;
 		}
 		int length = str.length();
@@ -1612,7 +1656,7 @@ public class StringUtil {
 		boolean isTag = false;
 		List<String> tags = new ArrayList<String>();
 		int i = 0;
-		for (int end = 0, spanEnd = 0; i < length && len > 0; i++) {
+		for (int end = 0, spanEnd = 0; (i < length) && (len > 0); i++) {
 			c = str.charAt(i);
 			if (c == '<') {
 				end = str.indexOf('>', i);
@@ -1628,7 +1672,7 @@ public class StringUtil {
 					name = tag.substring(2, end - i);
 					size = tags.size() - 1;
 					// 堆栈取出html开始标签
-					if (size >= 0 && name.equals(tags.get(size))) {
+					if ((size >= 0) && name.equals(tags.get(size))) {
 						isTag = true;
 						tags.remove(size);
 					}
@@ -1683,14 +1727,14 @@ public class StringUtil {
 
 	/**
 	 * 解析前台encodeURIComponent编码后的参数
-	 * 
+	 *
 	 * @param encodeURIComponent
 	 *            (encodeURIComponent(no))
 	 * @return
 	 */
 	public static String getEncodePra(String property) {
 		String trem = "";
-		if (isNotEmpty(property)) {
+		if (StringUtil.isNotEmpty(property)) {
 			try {
 				trem = URLDecoder.decode(property, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
@@ -1703,7 +1747,7 @@ public class StringUtil {
 	// 判断一个字符串是否都为数字
 	public boolean isDigit(String strNum) {
 		Pattern pattern = Pattern.compile("[0-9]{1,}");
-		Matcher matcher = pattern.matcher((CharSequence) strNum);
+		Matcher matcher = pattern.matcher(strNum);
 		return matcher.matches();
 	}
 
@@ -1729,7 +1773,7 @@ public class StringUtil {
 
 	/**
 	 * 判断某个字符串是否存在于数组中
-	 * 
+	 *
 	 * @param stringArray
 	 *            原数组
 	 * @param source
@@ -1750,6 +1794,7 @@ public class StringUtil {
 
 	/**
 	 * html 必须是格式良好的
+	 *
 	 * @param str
 	 * @return
 	 * @throws Exception
@@ -1768,38 +1813,40 @@ public class StringUtil {
 		htmlWriter.close();
 		return writer.toString();
 	}
-	
+
 	/**
 	 * 首字母大写
+	 *
 	 * @param realName
 	 * @return
 	 */
 	public static String firstUpperCase(String realName) {
-		return StringUtils.replaceChars(realName, realName.substring(0, 1),realName.substring(0, 1).toUpperCase());
+		return StringUtils.replaceChars(realName, realName.substring(0, 1), realName.substring(0, 1).toUpperCase());
 	}
 
 	/**
 	 * 首字母小写
+	 *
 	 * @param realName
 	 * @return
 	 */
 	public static String firstLowerCase(String realName) {
-		return StringUtils.replaceChars(realName, realName.substring(0, 1),realName.substring(0, 1).toLowerCase());
+		return StringUtils.replaceChars(realName, realName.substring(0, 1), realName.substring(0, 1).toLowerCase());
 	}
+
 	/**
 	 * 判断这个类是不是java自带的类
+	 *
 	 * @param clazz
 	 * @return
 	 */
 	public static boolean isJavaClass(Class<?> clazz) {
 		boolean isBaseClass = false;
-		if(clazz.isArray()){
+		if (clazz.isArray()) {
 			isBaseClass = false;
-		}else if (clazz.isPrimitive()||clazz.getPackage()==null
-				|| clazz.getPackage().getName().equals("java.lang")
-				|| clazz.getPackage().getName().equals("java.math")
+		} else if (clazz.isPrimitive() || (clazz.getPackage() == null) || clazz.getPackage().getName().equals("java.lang") || clazz.getPackage().getName().equals("java.math")
 				|| clazz.getPackage().getName().equals("java.util")) {
-			isBaseClass =  true;
+			isBaseClass = true;
 		}
 		return isBaseClass;
 	}
@@ -1807,22 +1854,23 @@ public class StringUtil {
 	public static int length(String str) {
 		return str == null ? 0 : str.length();
 	}
-	
-	public static String filterQureyStr(String str){
-		if(StringUtils.isNotBlank(str)){
-		
-			for(int i =0;i<specialCharacter.length();i++){
-				char c = specialCharacter.charAt(i);
-				str = str.replace(c+"", "");
+
+	public static String filterQureyStr(String str) {
+		if (StringUtils.isNotBlank(str)) {
+
+			for (int i = 0; i < StringUtil.specialCharacter.length(); i++) {
+				char c = StringUtil.specialCharacter.charAt(i);
+				str = str.replace(c + "", "");
 			}
 			return str;
-		}else{
+		} else {
 			return "";
 		}
 	}
-	public static void main(String [] args){
+
+	public static void main(String[] args) {
 		String str = "abcdefg|afilterQureyStr +-&&||!(){}[]^\"~*?:\\/";
 		System.out.println(str);
-		System.out.println(filterQureyStr(str));
+		System.out.println(StringUtil.filterQureyStr(str));
 	}
 }
