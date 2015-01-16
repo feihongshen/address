@@ -158,9 +158,14 @@ public class DeliveryStationRuleService extends RuleService {
 			// 默认规则
 			DeliveryStationRule defaultRule = null;
 			DeliveryStationRule mappingRule = null;
+			// 存在别名时匹配报错[zhaoshb+]2015-01-16.
+			String addressLine = null;
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
-			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
-			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
+			if (index < 0) {
+				addressLine = orderVo.getAddressLine();
+			} else {
+				addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
+			}
 			// TODO:此处待优化.
 			List<DeliveryStationRule> list = this.getByCustormerAndAdressId(orderVo.getCustomerId(), address.getId());
 			for (DeliveryStationRule rule : list) {

@@ -18,7 +18,6 @@ import cn.explink.dao.DelivererRuleDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
-import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
@@ -46,17 +45,19 @@ public class DelivererRuleService extends RuleService {
 
 	/**
 	 * 批量创建配送员规则
+	 *
 	 * @param customerId
 	 * @param delivererRuleVoList
 	 */
 	public void createDelivererRule(Long customerId, List<DelivererRuleVo> delivererRuleVoList) {
 		for (DelivererRuleVo ruleVo : delivererRuleVoList) {
-			createDelivererRule(customerId, ruleVo.getAddressId(), ruleVo.getDelivererId(), ruleVo.getRule());
+			this.createDelivererRule(customerId, ruleVo.getAddressId(), ruleVo.getDelivererId(), ruleVo.getRule());
 		}
 	}
-	
+
 	/**
 	 * 创建配送员规则
+	 *
 	 * @param addressId
 	 * @param delivererId
 	 * @param customerId
@@ -64,16 +65,14 @@ public class DelivererRuleService extends RuleService {
 	 * @return
 	 */
 	public DelivererRule createDelivererRule(Long customerId, Long addressId, Long delivererId, String rule) {
-		logger.info("createDelivererRule for customer: {}, addressId: {}, delivererId: {}, rule: {}", new Object[]{
-				customerId, addressId, delivererId, rule
-		});
+		DelivererRuleService.logger.info("createDelivererRule for customer: {}, addressId: {}, delivererId: {}, rule: {}", new Object[] { customerId, addressId, delivererId, rule });
 		// 解析规则
-		RuleExpression ruleExpression = parseRule(rule);
-		Address address = addressDao.get(addressId);
-		Deliverer deliverer = delivererDao.getDeliverer(customerId,delivererId);
+		RuleExpression ruleExpression = this.parseRule(rule);
+		Address address = this.addressDao.get(addressId);
+		Deliverer deliverer = this.delivererDao.getDeliverer(customerId, delivererId);
 		// 判断是否与已有规则冲突
-		Set<DelivererRule> filterdRules = filter(customerId, address.getDelivererRules());
-		DelivererRule confilctingRule = findConflictingRule(ruleExpression, filterdRules);
+		Set<DelivererRule> filterdRules = this.filter(customerId, address.getDelivererRules());
+		DelivererRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
 		if (confilctingRule != null) {
 			String message = null;
 			if (DelivererRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
@@ -95,10 +94,10 @@ public class DelivererRuleService extends RuleService {
 			delivererRule.setRule(rule);
 			delivererRule.setRuleExpression(JsonUtil.translateToJson(ruleExpression));
 		}
-		delivererRuleDao.save(delivererRule);
+		this.delivererRuleDao.save(delivererRule);
 		return delivererRule;
 	}
-	
+
 	private Set<DelivererRule> filter(Long customerId, Set<DelivererRule> delivererRules) {
 		if (delivererRules == null) {
 			return null;
@@ -116,7 +115,7 @@ public class DelivererRuleService extends RuleService {
 		if (addressId == null) {
 			return null;
 		}
-		List<DelivererRule> ruleList = delivererRuleDao.getDelivererRuleList(customerId, addressId);
+		List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRuleList(customerId, addressId);
 		List<DelivererRule> resultList = new ArrayList<DelivererRule>();
 		for (DelivererRule rule : ruleList) {
 			if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
@@ -128,7 +127,7 @@ public class DelivererRuleService extends RuleService {
 
 	/**
 	 * 查找冲突的规则
-	 * 
+	 *
 	 * @param ruleExpression
 	 * @param delivererRules
 	 * @return
@@ -138,7 +137,7 @@ public class DelivererRuleService extends RuleService {
 			return null;
 		}
 		for (DelivererRule existingRule : delivererRules) {
-			if (isConflict(ruleExpression, existingRule)) {
+			if (this.isConflict(ruleExpression, existingRule)) {
 				return existingRule;
 			}
 		}
@@ -147,28 +146,28 @@ public class DelivererRuleService extends RuleService {
 
 	/**
 	 * 判断规则是否冲突
-	 * 
+	 *
 	 * @param ruleExpression
 	 * @param existingRule
 	 * @return
 	 */
 	private boolean isConflict(RuleExpression ruleExpression, DelivererRule existingRule) {
-		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+		if ((ruleExpression == null) && (DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue())) {
 			return true;
 		}
-		if (ruleExpression != null && DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue()) {
+		if ((ruleExpression != null) && (DeliveryStationRuleTypeEnum.fallback.getValue() == existingRule.getRuleType().intValue())) {
 			return false;
 		}
-		if (ruleExpression == null && DeliveryStationRuleTypeEnum.fallback.getValue() != existingRule.getRuleType().intValue()) {
+		if ((ruleExpression == null) && (DeliveryStationRuleTypeEnum.fallback.getValue() != existingRule.getRuleType().intValue())) {
 			return false;
 		}
 		RuleExpression existingRuleExpression = JsonUtil.readValue(existingRule.getRuleExpression(), RuleExpression.class);
-		return isConflict(ruleExpression, existingRuleExpression);
+		return this.isConflict(ruleExpression, existingRuleExpression);
 	}
 
 	/**
 	 * 根据地址搜索匹配的站点规则
-	 * 
+	 *
 	 * @param addressList
 	 * @param orderVo
 	 * @return
@@ -182,61 +181,65 @@ public class DelivererRuleService extends RuleService {
 			// 默认规则
 			DelivererRule defaultRule = null;
 			DelivererRule mappingRule = null;
+			// 存在别名匹配时报错2015-01-16[zhaoshb+].
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
+			String addressLine = null;
+			if (index < 0) {
+				addressLine = orderVo.getAddressLine();
+			} else {
+				addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
+			}
 			// 从匹配的关键字的下一个字开始匹配规则，可提高匹配效率
-			String addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
-            if(address.getDelivererRules()!=null){
-            	for (DelivererRule rule : address.getDelivererRules()) {
-    				if (DelivererRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
-    					defaultRule = rule;
-    				} else {
-    					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
-    					boolean isMapping = isMapping(addressLine, ruleExpression);
-    					if (isMapping) {
-    						mappingRule = rule; 
-    					}
-    				}
-    			}
-            }
+			if (address.getDelivererRules() != null) {
+				for (DelivererRule rule : address.getDelivererRules()) {
+					if (DelivererRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
+						defaultRule = rule;
+					} else {
+						RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
+						boolean isMapping = this.isMapping(addressLine, ruleExpression);
+						if (isMapping) {
+							mappingRule = rule;
+						}
+					}
+				}
+			}
 
 			if (mappingRule == null) {
 				// 针对每一个address，没有匹配上任何客户化规则时，则匹配到默认规则
 				mappingRule = defaultRule;
 			}
-			if(mappingRule!=null){
+			if (mappingRule != null) {
 				ruleList.add(mappingRule);
 			}
 		}
 		return ruleList;
 	}
 
-	public void addRule(DelivererRule dr,Long customerId) {
-		List list = delivererRuleDao.getByAddressAndDeliverer(dr.getAddress().getId(),dr.getDeliverer().getId(),customerId);
-		if(list!=null&&!list.isEmpty()){
-			  throw new ExplinkRuntimeException("配送站点已绑定默认小件员");
+	public void addRule(DelivererRule dr, Long customerId) {
+		List list = this.delivererRuleDao.getByAddressAndDeliverer(dr.getAddress().getId(), dr.getDeliverer().getId(), customerId);
+		if ((list != null) && !list.isEmpty()) {
+			throw new ExplinkRuntimeException("配送站点已绑定默认小件员");
 		}
-		delivererRuleDao.save(dr);
+		this.delivererRuleDao.save(dr);
 	}
 
 	public DelivererRule getById(Long ruleId) {
-		return delivererRuleDao.get(ruleId);
+		return this.delivererRuleDao.get(ruleId);
 	}
 
 	@Override
 	public void delete(Long id) {
-		DelivererRule r = (DelivererRule) getSession().load(DelivererRule.class, id);
-		getSession().delete(r);
+		DelivererRule r = (DelivererRule) this.getSession().load(DelivererRule.class, id);
+		this.getSession().delete(r);
 	}
 
 	public void deleteRuleByIds(List<Long> addressIdList, Long customerId) {
 		String sql = "SELECT R.ID FROM DELIVERER_RULES  R ,DELIVERERS S  WHERE R.ADDRESS_ID IN :idList AND S.CUSTOMER_ID =:customerId AND S.ID=R.DELIVERER_ID";
-		List<Integer> list = getSession().createSQLQuery(sql)
-			.setParameterList("idList", addressIdList)
-			.setLong("customerId", customerId).list();
-		for(Integer l:list){
-			this.delete(Long.parseLong(l+""));
+		List<Integer> list = this.getSession().createSQLQuery(sql).setParameterList("idList", addressIdList).setLong("customerId", customerId).list();
+		for (Integer l : list) {
+			this.delete(Long.parseLong(l + ""));
 		}
-		
+
 	}
 
 }
