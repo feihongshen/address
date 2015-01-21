@@ -3706,3 +3706,11 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255105', '6'
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255106', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2255107', '6');
 
+-- 广州通路预置数据 added by songkaojun 2015-01-21
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357675', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357676', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357677', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357678', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357679', '6');
+
+
