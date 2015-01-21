@@ -14,9 +14,52 @@ var setting = {
             }
         },
         callback: {
+        	onClick : myClick,
             //onClick : menuOnClick
         }
     };
+
+//TODO addressEditPage.js 公共函数抽取
+function myClick(event, treeId, treeNode, clickFlag) {
+	$("#tips").html(treeNode.name);
+	$('#panelAlias').panel('setTitle','别名管理-'+treeNode.name) ;
+	$("#addressId").val(treeNode.id);
+	$("#aliasTips").val(treeNode.name);
+	$("#parentId").val(treeNode.id);
+	$("#level").val(treeNode.level);
+	 $("#aliasUl").html("");
+	 addressId=treeNode.id;
+	 $.ajax({
+		 	type: "POST",
+			url:ctx+"/address/getAlias",
+			data:{addressId:treeNode.id},
+			async:false,
+			success : function(resp) {
+				if(resp.length>0){
+					for(var i = 0 ;i<resp.length;i++){
+						var btn = $("<a href='javascript:void(0)' aid='"+resp[i].id+"'>"+resp[i].name+"</a></li>");
+						var li = $("<li></li>").append(btn);
+						li.appendTo($("#aliasUl"));
+						btn.linkbutton({    
+						    iconCls:'icon-remove',
+						    iconAlign:'right'
+						});  
+					}
+				} 
+			}
+		});
+	if(treeNode.level<3){
+		$('#stationId').val("");
+		$("input[name='stationId']").val("");
+		$('#stationId').attr('disabled',true);
+		//$('#stationId').combobox('disable');
+		$('#addresses').attr('disabled',true);
+	}else{
+		$('#stationId').attr('disabled',false);
+		$('#addresses').attr('disabled',false);
+	}
+	
+}
 
 
 var addressId;
