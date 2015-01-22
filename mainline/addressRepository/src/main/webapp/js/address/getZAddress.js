@@ -14,52 +14,10 @@ var setting = {
             }
         },
         callback: {
-        	onClick : myClick,
+//        	onClick : myClick
             //onClick : menuOnClick
         }
     };
-
-//TODO addressEditPage.js 公共函数抽取
-function myClick(event, treeId, treeNode, clickFlag) {
-	$("#tips").html(treeNode.name);
-	$('#panelAlias').panel('setTitle','别名管理-'+treeNode.name) ;
-	$("#addressId").val(treeNode.id);
-	$("#aliasTips").val(treeNode.name);
-	$("#parentId").val(treeNode.id);
-	$("#level").val(treeNode.level);
-	 $("#aliasUl").html("");
-	 addressId=treeNode.id;
-	 $.ajax({
-		 	type: "POST",
-			url:ctx+"/address/getAlias",
-			data:{addressId:treeNode.id},
-			async:false,
-			success : function(resp) {
-				if(resp.length>0){
-					for(var i = 0 ;i<resp.length;i++){
-						var btn = $("<a href='javascript:void(0)' aid='"+resp[i].id+"'>"+resp[i].name+"</a></li>");
-						var li = $("<li></li>").append(btn);
-						li.appendTo($("#aliasUl"));
-						btn.linkbutton({    
-						    iconCls:'icon-remove',
-						    iconAlign:'right'
-						});  
-					}
-				} 
-			}
-		});
-	if(treeNode.level<3){
-		$('#stationId').val("");
-		$("input[name='stationId']").val("");
-		$('#stationId').attr('disabled',true);
-		//$('#stationId').combobox('disable');
-		$('#addresses').attr('disabled',true);
-	}else{
-		$('#stationId').attr('disabled',false);
-		$('#addresses').attr('disabled',false);
-	}
-	
-}
 
 
 var addressId;
@@ -173,67 +131,43 @@ function expandNode(e) {
 	}
 }
 
-
-var allNodes;
 function searchVal(valName,treeName){
-	    $("#loadingImage").show();
-		if (event.keyCode!=13) return;  //回车键的键值为13
-		event.stopPropagation();
-		
-		//var target = $.fn.zTree.getZTreeObj(treeName);
-		//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
-        //var nodes = target.transformToArray(target.getNodes()[0].children);
+	if (event.keyCode!=13) return;  //回车键的键值为13
+	event.stopPropagation();
+	var target = $.fn.zTree.getZTreeObj(treeName);
+	//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
+    var nodes = target.transformToArray(target.getNodes()[0].children);
+    var key=$("#"+valName).val();
+    //空格回车符 不做查询 直接显示全部
+    if(/^\s*$/.test(key)){
+     //updateNodes(false); 
+     target.showNodes(nodes);
+     return;
+    }
+    //首先隐藏
+    target.hideNodes(nodes);
+    nodeList=target.getNodesByParamFuzzy("name", key); //模糊匹配
+  
+    var filterNodes=[];
+    for(var i=0;i<nodeList.length;i++){
+       filterNodes.push(nodeList[i]);
+    }
+    target.showNodes(filterNodes);
+    for(var i=0;i<filterNodes.length;i++){
+       toggle(target,filterNodes[i].getParentNode());
+    }
 
-		//到后台获取所有的节点
-		getAllAddress();
-	    var	target = $.fn.zTree.init($("#tree"), setting, allNodes);
-		
-	    var nodes = target.transformToArray(target.getNodes());
-	    
-	    var key=$("#"+valName).val();
-	    //空格回车符 不做查询 直接显示全部
-	    if(/^\s*$/.test(key)){
-	     //updateNodes(false); 
-	     target.showNodes(nodes);
-	     return;
-	    }
-	    //首先隐藏
-	    target.hideNodes(nodes);
-
-	    nodeList=target.getNodesByParamFuzzy("name", key); //模糊匹配
-	  
-	    var filterNodes=[];
-	    for(var i=0;i<nodeList.length;i++){
-	       filterNodes.push(nodeList[i]);
-	    }
-	    target.showNodes(filterNodes);
-	    for(var i=0;i<filterNodes.length;i++){
-	     toggle(target,filterNodes[i].getParentNode());
-	    }
-	    $("#loadingImage").hide();
 }
-
-function getAllAddress(){
-	 $.ajax({
-	 	 type: "POST",
-	 	 async:false,
-	 	 url:ctx+"/address/getAllAddress",
-	 	 data:{},
-	 	 success:function(optionData){
-	 		allNodes=optionData;
-	 	}
-	 	});
-}
-
 
 function toggle(target,node){
 	target.expandNode(node, true, false, false);
 	target.showNode(node);
 	var parentNode = node.getParentNode();
 	if(parentNode){
-		 toggle(target,parentNode);
+		toggle(target,parentNode);
 	}
 }
+
 
 
 function searchTree(valName,treeName){

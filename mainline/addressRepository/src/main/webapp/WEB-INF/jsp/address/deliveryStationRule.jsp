@@ -18,6 +18,7 @@ var cxt='<%=request.getContextPath()%>';
 	src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/getZAddress.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/deliveryStationRule.js"></script>
+
 <script type="text/javascript">
 var setting = {
 		async: {
@@ -78,10 +79,7 @@ var backNode;
 	        $("#stationList").datagrid(detailRow);
 
     });
-		 
-		 
-		 
-		
+
 </script>
 
 </head>
@@ -92,7 +90,8 @@ var backNode;
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td><input style="width:150px" id="searchA">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('searchA','tree')">查询</a></td>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('searchA','tree')">查询</a>
+            </td>
         </tr>
         <tr>
           <td><a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">全部折叠</a>&nbsp;
