@@ -722,6 +722,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 			}
 		}
 		this.addressImportResultDao.delete(addressImportResult);
+		AddressImportService.logger.info("delete import AddressResult resultId = {}", resultId);
 	}
 
 	public List<AddressImportDetail> getAllDetail() {
