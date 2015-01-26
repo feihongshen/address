@@ -3704,8 +3704,39 @@ INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) VALUES ('2357678', '惠来县', '1',  '3', '2175', '1-2135-2175', now());
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) VALUES ('2357679', '大沥镇', '1',  '3', '2184', '1-2135-2184', now());
 
+-- 广州通路预置数据 added by songkaojun 2015-01-24
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360590, '白沙县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360591, '保亭县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360592, '昌江县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360593, '昌江黎族苗族自治县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360594, '博敖镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360595, '大致坡镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360596, '定安县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360597, '定城镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360598, '清澜镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360599, '琼中县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360600, '嘉积镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360601, '老城经济开发区', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360602, '乐东县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360603, '临城镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360604, '陵水县', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360605, '屯城镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360606, '洋浦经济开发区', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360607, '椰林镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360608, '凤凰镇', 1, 3, 2443, '1-2436-2443', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360609, '河东区', 1, 3, 2443, '1-2436-2443', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360610, '河西区', 1, 3, 2443, '1-2436-2443', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360611, '吉阳镇', 1, 3, 2443, '1-2436-2443', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360612, '田独镇', 1, 3, 2443, '1-2436-2443', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2360613, '桂林洋经济开发区', 1, 3, 2437, '1-2436-2437', now());
 
 
+-- 广州通路预置数据 added by songkaojun 2015-01-25
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362562, '长流镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362563, '黄流镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362564, '万城镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362565, '文城镇', 1, 3, 2449, '1-2436-2449', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362566, '老城镇', 1, 3, 2449, '1-2436-2449', now());
 -- 重庆华宇预置数据 added by songkaojun 2015-01-09
 
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) VALUES ('2254543', '万盛区','1', '2', '2467', '1-2466-2467', now());

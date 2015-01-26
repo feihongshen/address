@@ -3713,4 +3713,37 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357677', '6'
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357678', '6');
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2357679', '6');
 
+-- 广州通路预置数据 added by songkaojun 2015-01-24
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360590', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360591', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360592', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360593', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360594', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360595', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360596', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360597', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360598', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360599', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360600', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360601', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360602', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360603', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360604', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360605', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360606', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360607', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360608', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360609', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360610', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360611', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360612', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360613', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2360614', '6');
+
+-- 广州通路预置数据 added by songkaojun 2015-01-25
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2362562', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2362563', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2362564', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2362565', '6');
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES ('2362566', '6');
 

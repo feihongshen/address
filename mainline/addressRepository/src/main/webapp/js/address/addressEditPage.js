@@ -250,23 +250,17 @@ var stationList=[];
 	}
 	
 	
-	var allNodes;
+	var matchedNodes;
 	function searchVal(valName,treeName){
-		    $("#loadingImage").show();
 			if (event.keyCode!=13) return;  //回车键的键值为13
 			event.stopPropagation();
-			
-			//var target = $.fn.zTree.getZTreeObj(treeName);
-			//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
-	        //var nodes = target.transformToArray(target.getNodes()[0].children);
-
-			//到后台获取所有的节点
-			getAllAddress();
-		    var	target = $.fn.zTree.init($("#tree"), mySettings, allNodes);
+			var key=$("#"+valName).val();
+			//到后台进行搜索
+			searchAddress(key);
+		    var	target = $.fn.zTree.init($("#tree"), mySettings, matchedNodes);
 			
 		    var nodes = target.transformToArray(target.getNodes());
 		    
-		    var key=$("#"+valName).val();
 		    //空格回车符 不做查询 直接显示全部
 		    if(/^\s*$/.test(key)){
 		     //updateNodes(false); 
@@ -284,9 +278,9 @@ var stationList=[];
 		    }
 		    target.showNodes(filterNodes);
 		    for(var i=0;i<filterNodes.length;i++){
-		     toggle(target,filterNodes[i].getParentNode());
+		      toggle(target,filterNodes[i].getParentNode());
 		    }
-		    $("#loadingImage").hide();
+//		    $("#loadingImage").hide();
 	}
 	function toggle(target,node){
 		target.expandNode(node, true, false, false);
@@ -298,15 +292,16 @@ var stationList=[];
 	}
 
 
-	function getAllAddress(){
+	function searchAddress(needMatched){
 		 $.ajax({
 		 	 type: "POST",
 		 	 async:false,
-		 	 url:ctx+"/address/getAllAddress",
-		 	 data:{},
+		 	 url:ctx+"/address/matchKeyword",
+		 	 data:{needMatched:needMatched},
 		 	 success:function(optionData){
-		 		allNodes=optionData;
+		 		matchedNodes=optionData['zTreeNodeList'];
 		 	}
 		 	});
 	}
+	
 	
