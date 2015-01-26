@@ -407,20 +407,21 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		try {
 			// 找到地址
 			List<Address> addrList = this.luceneService.search(orderVO.getAddressLine(), orderVO.getCustomerId());
-			if ((addrList == null) || (addrList.size() == 0)) {
-				result.setResult(AddressMappingResultEnum.zeroResult);
-			} else if (addrList.size() == 1) {
-				result.setResult(AddressMappingResultEnum.singleResult);
-			} else {
-				result.setResult(AddressMappingResultEnum.multipleResult);
-			}
-			result.setRelatedAddressList(addrList);
 			// 执行站点匹配.
 			this.matchDeliveryStation(result, addrList, order, orderVO);
 			// 执行小件员匹配.
 			this.matchDeliver(result, addrList, order, orderVO);
 			// 执行供应商匹配.
 			this.matchVender(result, addrList, order, orderVO);
+
+			if ((addrList == null) || (addrList.size() == 0)) {
+				result.setResult(AddressMappingResultEnum.zeroResult);
+			} else if ((addrList.size() == 1) || (result.getDeliveryStationList().size() == 1)) {
+				result.setResult(AddressMappingResultEnum.singleResult);
+			} else {
+				result.setResult(AddressMappingResultEnum.multipleResult);
+			}
+			result.setRelatedAddressList(addrList);
 
 		} catch (Exception e) {
 			AddressService.logger.error("search address failed due to {}", e.getMessage(), e);
