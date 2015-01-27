@@ -221,10 +221,9 @@ public class DeliveryStationRuleService extends RuleService {
 	}
 
 	public List<DeliveryStationRule> getByCustormerAndAdressId(Long customerId, Long aId) {
-		Query query = this
-				.getSession()
-				.createQuery(
-						"select dsr from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id =:aId and dsr.deliveryStation.customer.id=:customerId group by dsr.deliveryStation,dsr.address");
+		Query query = this.getSession().createQuery(
+				"select dsr from DeliveryStationRule dsr where dsr.deliveryStation.status=1 and dsr.address.id =:aId and dsr.deliveryStation.customer.id=:customerId ");
+		// group by dsr.deliveryStation,dsr.address
 		query.setLong("customerId", customerId);
 		query.setLong("aId", aId);
 		return query.list();
