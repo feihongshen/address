@@ -109,6 +109,10 @@ mainline/addressRepository/src/main/java/cn/explink/qbc/HqlQuery.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/PageList.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/Pager.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/PagerUtil.java -text
+mainline/addressRepository/src/main/java/cn/explink/quick/AddressStationPair.java -text
+mainline/addressRepository/src/main/java/cn/explink/quick/FullAddrStationPair.java -text
+mainline/addressRepository/src/main/java/cn/explink/quick/QuickController.java -text
+mainline/addressRepository/src/main/java/cn/explink/quick/QuickSerivce.java -text
 mainline/addressRepository/src/main/java/cn/explink/schedule/Constants.java -text
 mainline/addressRepository/src/main/java/cn/explink/schedule/ExecutorManager.java -text
 mainline/addressRepository/src/main/java/cn/explink/schedule/ScheduledWorker.java -text
@@ -220,6 +224,7 @@ mainline/addressRepository/src/main/resources/META-INF/spring/applicationContext
 mainline/addressRepository/src/main/resources/address.dic -text
 mainline/addressRepository/src/main/resources/address.properties -text
 mainline/addressRepository/src/main/resources/logback.xml -text
+mainline/addressRepository/src/main/resources/rebel.xml -text
 mainline/addressRepository/src/main/resources/stopword.dic -text
 mainline/addressRepository/src/main/webapp/META-INF/MANIFEST.MF -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/addressEditPage.jsp -text

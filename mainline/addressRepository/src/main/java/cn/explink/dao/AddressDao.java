@@ -16,6 +16,7 @@ import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.dao.support.DataInfo;
 import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStationRule;
+import cn.explink.quick.AddressStationPair;
 import cn.explink.tree.ZTreeNode;
 
 @Repository
@@ -189,6 +190,85 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		query.setParameterList("addressIdList", addressIdList);
 		query.setLong("customerId", customerId);
 		return query.list();
+	}
+
+	/**
+	 * 快捷工具接口(广州通路).
+	 *
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public List<AddressStationPair> getPageAddressList(int page, int pageSize) {
+		String sql = "select address_id , deliver_station_id delivery_station_rules";
+		Query query = this.getSession().createSQLQuery(sql);
+		query.setFirstResult((page - 1) * pageSize);
+		query.setMaxResults(pageSize);
+		List<Object> data = query.list();
+
+		return this.getAddrStatPairList(data);
+	}
+
+	public List<Address> getFullPathAddrList(List<AddressStationPair> pairList) {
+		Set<Long> addrIdSet = this.getAddressIdSet(pairList);
+		List<Address> addrList = this.getAddressList(addrIdSet);
+		List<Address> pathAddrList = this.getPathAddrList(addrList);
+
+		addrList.addAll(pathAddrList);
+
+		return addrList;
+	}
+
+	private List<Address> getPathAddrList(List<Address> addrList) {
+		Set<Long> pathAddrIdSet = new HashSet<Long>();
+		for (Address addr : addrList) {
+			this.fillAddrPathIdSet(pathAddrIdSet, addr);
+		}
+		return this.getAddressList(pathAddrIdSet);
+	}
+
+	private void fillAddrPathIdSet(Set<Long> pathIdSet, Address addr) {
+		String path = addr.getPath();
+		if ((path == null) || path.isEmpty()) {
+			return;
+		}
+		String[] parts = path.split("-");
+		for (String part : parts) {
+			pathIdSet.add(Long.valueOf(part));
+		}
+	}
+
+	private List<Address> getAddressList(Set<Long> addrIdSet) {
+		String hql = "from Address a where a.id in(:ids)";
+		Query query = this.getSession().createQuery(hql);
+		query.setParameterList("ids", addrIdSet);
+
+		return query.list();
+	}
+
+	private Set<Long> getAddressIdSet(List<AddressStationPair> pairList) {
+		Set<Long> addrIdSet = new HashSet<Long>();
+		for (AddressStationPair tmp : pairList) {
+			addrIdSet.add(tmp.getAddressId());
+		}
+		return addrIdSet;
+	}
+
+	private List<AddressStationPair> getAddrStatPairList(List<Object> data) {
+		List<AddressStationPair> pairList = new ArrayList<AddressStationPair>();
+		for (Object tmp : data) {
+			pairList.add(this.createAddrStatPair(tmp));
+		}
+		return pairList;
+	}
+
+	private AddressStationPair createAddrStatPair(Object tmp) {
+		Object[] parts = (Object[]) tmp;
+		AddressStationPair pair = new AddressStationPair();
+		pair.setAddressId((Long) parts[0]);
+		pair.setStationId((Long) parts[1]);
+
+		return pair;
 	}
 
 	/**

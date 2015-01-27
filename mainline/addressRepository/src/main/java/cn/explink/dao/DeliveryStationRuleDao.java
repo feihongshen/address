@@ -61,4 +61,11 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		return query.executeUpdate();
 	}
 
+	public void updateAddressStation(Long addressId, Long stationId) {
+		Query query = this.getSession().createSQLQuery("UPDATE DELIVERY_STATION_RULES SET  DELIVERY_STATION_ID = :stationId WHERE ADDRESS_ID=:addressId");
+		query.setParameter("stationId", stationId);
+		query.setParameter("addressId", addressId);
+
+		query.executeUpdate();
+	}
 }
