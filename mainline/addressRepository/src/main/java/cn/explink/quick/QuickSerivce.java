@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.DeliveryStationDao;
@@ -28,6 +29,7 @@ public class QuickSerivce {
 	@Autowired
 	private DeliveryStationRuleDao deliverStationRuleDAO = null;
 
+	@Transactional
 	public List<FullAddrStationPair> getFullAddrStationPair(int page, int pageSize) {
 		List<AddressStationPair> pairList = this.getAddressDAO().getPageAddressList(page, pageSize);
 		List<Address> fullPathAddrList = this.getAddressDAO().getFullPathAddrList(pairList);
@@ -36,10 +38,12 @@ public class QuickSerivce {
 		return this.getFullPairList(pairList, fullPathAddrList, delStatList);
 	}
 
+	@Transactional
 	public List<DeliveryStation> getAllDeliverStation() {
 		return this.getDeliverStationDAO().getAllDeliverStation();
 	}
 
+	@Transactional
 	public void updateAddressStation(Long addressId, Long stationId) {
 		this.getDeliverStationRuleDAO().updateAddressStation(addressId, stationId);
 	}
