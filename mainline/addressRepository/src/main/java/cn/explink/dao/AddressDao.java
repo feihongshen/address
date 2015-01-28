@@ -200,7 +200,10 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	 * @return
 	 */
 	public List<AddressStationPair> getPageAddressList(int page, int pageSize) {
-		String sql = "select address_id , deliver_station_id delivery_station_rules";
+		String sql = "select address_id , delivery_station_id from delivery_station_rules";
+		// String sql =
+		// "select address_id , deliver_station_id from DeliveryStationRule ";
+
 		Query query = this.getSession().createSQLQuery(sql);
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
@@ -265,8 +268,8 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	private AddressStationPair createAddrStatPair(Object tmp) {
 		Object[] parts = (Object[]) tmp;
 		AddressStationPair pair = new AddressStationPair();
-		pair.setAddressId((Long) parts[0]);
-		pair.setStationId((Long) parts[1]);
+		pair.setAddressId((Integer) parts[0]);
+		pair.setStationId((Integer) parts[1]);
 
 		return pair;
 	}

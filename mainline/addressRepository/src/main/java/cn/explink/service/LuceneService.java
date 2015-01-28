@@ -416,6 +416,9 @@ public class LuceneService {
 	private List<Address> getLuceneMatchAddrList(String addressLine, Long customerId) throws ParseException, IOException {
 		List<Long> addressIdList = new ArrayList<Long>();
 		List<Document> docList = this.getLuceneMatchDocList(addressLine);
+
+		// added by songkaojun 2015-01-28 添加别名权重
+		Map<Long, List<Alias>> addressAliasMap = new HashMap<Long, List<Alias>>();
 		for (Document doc : docList) {
 			IndexableField addressIdField = doc.getField("addressId");
 			IndexableField aliasIdField = doc.getField("aliasId");
@@ -424,8 +427,17 @@ public class LuceneService {
 				String aliasId = aliasIdField.stringValue();
 				if (aliasId != null) {
 					Alias alias = this.aliasDao.get(Long.parseLong(aliasId));
+
 					if ((alias != null) && (alias.getCustomerId() != null) && (customerId.longValue() != alias.getCustomerId().longValue())) {
 						continue;
+					}
+					Long addressId = Long.parseLong(addressIdField.stringValue());
+					if (!addressAliasMap.containsKey(addressId)) {
+						List<Alias> aliasList = new ArrayList<Alias>();
+						aliasList.add(alias);
+						addressAliasMap.put(addressId, aliasList);
+					} else {
+						addressAliasMap.get(addressId).add(alias);
 					}
 				}
 			}
@@ -434,6 +446,14 @@ public class LuceneService {
 		// 相关的地址
 		if ((addressIdList != null) && !addressIdList.isEmpty()) {
 			List<Address> relatedAddressList = this.addressDao.getAddressByIdListAndCustomerId(addressIdList, customerId);
+			Set<Long> addressIdSet = addressAliasMap.keySet();
+			for (Address relatedAddress : relatedAddressList) {
+				for (Long addressId : addressIdSet) {
+					if (relatedAddress.getId().equals(addressId)) {
+						relatedAddress.setAliasList(addressAliasMap.get(addressId));
+					}
+				}
+			}
 			LuceneService.logger.info("relatedAddressList = " + relatedAddressList);
 			return relatedAddressList;
 		}

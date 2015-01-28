@@ -2,6 +2,7 @@ package cn.explink.domain;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ADDRESS")
@@ -21,7 +23,6 @@ public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
 	@Column(name = "NAME", length = 50, nullable = false)
 	private String name;
 
@@ -54,6 +55,10 @@ public class Address {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "address")
 	private Set<DelivererRule> delivererRules = new HashSet<DelivererRule>();
+
+	// added by songkaojun 2015-01-28 添加别名权重
+	@Transient
+	private List<Alias> aliasList;
 
 	public Address() {
 		super();
@@ -164,6 +169,14 @@ public class Address {
 		this.delivererRules = delivererRules;
 	}
 
+	public List<Alias> getAliasList() {
+		return this.aliasList;
+	}
+
+	public void setAliasList(List<Alias> aliasList) {
+		this.aliasList = aliasList;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -203,6 +216,9 @@ public class Address {
 		}
 		if (this.delivererRules != null) {
 			builder.append("delivererRules=").append(this.delivererRules);
+		}
+		if (this.aliasList != null) {
+			builder.append("aliasList=").append(this.aliasList);
 		}
 		builder.append("]");
 		return builder.toString();

@@ -14,6 +14,7 @@
 		<intercept-url pattern="/service/**" access="permitAll" />
 		<intercept-url pattern="/quick/**" access="permitAll" />
 		<intercept-url pattern="/login" access="permitAll" />
+		<intercept-url pattern="/quick/**" access="permitAll" />
 		<intercept-url pattern="/**" access="isAuthenticated()" />
 		<custom-filter before="FORM_LOGIN_FILTER" ref="loginFilter" />
 		<session-management session-authentication-strategy-ref="sas" />

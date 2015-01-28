@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import cn.explink.domain.Address;
+import cn.explink.domain.Alias;
 
 /**
  * 地址过滤逻辑.
@@ -223,9 +224,27 @@ public class AddressFilter {
 			// }
 			// // 关键词越靠后权重越高.
 			// return length + index;
-			String lowerAddr = address.getName().toLowerCase();
+
+			// added by songkaojun 2015-01-28 添加别名权重
+			List<Alias> aliasList = address.getAliasList();
+			if ((null != aliasList) && (aliasList.size() > 0)) {
+				int score = this.getScore(address.getName(), fullAddr);
+				for (Alias alias : aliasList) {
+					String name = alias.getName();
+					int tempScore = this.getScore(name, fullAddr);
+					if (tempScore > score) {
+						score = tempScore;
+					}
+				}
+				return score;
+			}
+			return this.getScore(address.getName(), fullAddr);
+		}
+
+		private int getScore(String address, String fullAddr) {
+			String lowerAddr = address.toLowerCase();
 			String lowerFullAddr = fullAddr.toLowerCase();
-			int length = address.getName().length();
+			int length = address.length();
 
 			return lowerFullAddr.contains(lowerAddr) ? length : -length;
 		}
