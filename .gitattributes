@@ -109,6 +109,7 @@ mainline/addressRepository/src/main/java/cn/explink/qbc/HqlQuery.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/PageList.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/Pager.java -text
 mainline/addressRepository/src/main/java/cn/explink/qbc/PagerUtil.java -text
+mainline/addressRepository/src/main/java/cn/explink/quick/AddressQuickVO.java -text
 mainline/addressRepository/src/main/java/cn/explink/quick/AddressStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/quick/FullAddrStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/quick/QuickController.java -text

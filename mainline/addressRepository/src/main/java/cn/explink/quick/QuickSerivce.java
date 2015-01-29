@@ -60,7 +60,13 @@ public class QuickSerivce {
 
 	private FullAddrStationPair createFullAddrStationPair(Map<Long, Address> addrMap, Map<Long, DeliveryStation> delStatMap, AddressStationPair pair) {
 		FullAddrStationPair fullPair = new FullAddrStationPair();
-		fullPair.setAddrList(this.getFullPathAddrList(pair, addrMap));
+		List<Address> fullPathAddrList = this.getFullPathAddrList(pair, addrMap);
+		List<AddressQuickVO> addressQuickVOList = new ArrayList<AddressQuickVO>();
+		for (Address address : fullPathAddrList) {
+			AddressQuickVO addressQuickVO = new AddressQuickVO(address.getId(), address.getName());
+			addressQuickVOList.add(addressQuickVO);
+		}
+		fullPair.setAddrList(addressQuickVOList);
 		fullPair.setDelStat(this.getDeliverStation(pair, delStatMap));
 
 		return fullPair;

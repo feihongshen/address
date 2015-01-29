@@ -110,7 +110,7 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 	private Set<Long> getDeliverStationIdSet(List<AddressStationPair> pairList) {
 		Set<Long> delStatIdSet = new HashSet<Long>();
 		for (AddressStationPair pair : pairList) {
-			delStatIdSet.add(pair.getAddressId());
+			delStatIdSet.add(pair.getStationId());
 		}
 		return delStatIdSet;
 	}

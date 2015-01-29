@@ -201,9 +201,6 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	 */
 	public List<AddressStationPair> getPageAddressList(int page, int pageSize) {
 		String sql = "select address_id , delivery_station_id from delivery_station_rules";
-		// String sql =
-		// "select address_id , deliver_station_id from DeliveryStationRule ";
-
 		Query query = this.getSession().createSQLQuery(sql);
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);

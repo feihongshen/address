@@ -2,7 +2,6 @@ package cn.explink.quick;
 
 import java.util.List;
 
-import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
 
 /**
@@ -13,15 +12,15 @@ import cn.explink.domain.DeliveryStation;
  */
 public class FullAddrStationPair {
 
-	private List<Address> addrList = null;
+	private List<AddressQuickVO> addrList = null;
 
 	private DeliveryStation delStat = null;
 
-	public List<Address> getAddrList() {
+	public List<AddressQuickVO> getAddrList() {
 		return this.addrList;
 	}
 
-	public void setAddrList(List<Address> addrList) {
+	public void setAddrList(List<AddressQuickVO> addrList) {
 		this.addrList = addrList;
 	}
 
