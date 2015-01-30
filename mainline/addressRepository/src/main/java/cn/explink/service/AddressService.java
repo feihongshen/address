@@ -414,7 +414,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			// 执行供应商匹配.
 			this.matchVender(result, addrList, order, orderVO);
 
-			if ((addrList == null) || (addrList.size() == 0)) {
+			if ((addrList == null) || (addrList.size() == 0) || (result.getDeliveryStationList().size() == 0)) {
 				result.setResult(AddressMappingResultEnum.zeroResult);
 			} else if ((addrList.size() == 1) || (result.getDeliveryStationList().size() == 1)) {
 				result.setResult(AddressMappingResultEnum.singleResult);
