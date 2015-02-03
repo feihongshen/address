@@ -45,7 +45,6 @@ import cn.explink.lucene.ExplinkIKConfig;
 import cn.explink.lucene.LuceneEnvironment;
 import cn.explink.modle.KeywordMatchedResult;
 import cn.explink.tree.ZTreeNode;
-import cn.explink.util.StringUtil;
 
 @Service
 public class LuceneService {
@@ -468,7 +467,7 @@ public class LuceneService {
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();
-		String filterString = StringUtil.filterQureyStr(addressLine);
+		String filterString = addressLine;// StringUtil.filterQureyStr(addressLine);
 		Query query = parser.parse(filterString);
 		TopDocs topDocs = searcher.search(query, LuceneEnvironment.DEFAULT_MAX_RESULT_COUNT);
 		List<Document> docList = new ArrayList<Document>();

@@ -343,6 +343,32 @@ public class AddressController extends BaseController {
 		return aj;
 	}
 
+	@RequestMapping("/downloadFailureMsg")
+	public String downloadFailureMsg(@RequestParam(value = "resultId", required = false) Long resultId, HttpServletRequest request, HttpServletResponse response) {
+		List<String> headerNameList = new ArrayList<String>();
+		headerNameList.add("信息");
+		headerNameList.add("省/直辖市");
+		headerNameList.add("市");
+		headerNameList.add("区");
+		headerNameList.add("地址1");
+		headerNameList.add("地址2");
+		headerNameList.add("地址3");
+		headerNameList.add("站点");
+
+		List<List<String>> importResultList = this.addressImportResultService.getImportDetailByResultId(resultId);
+		XSSFWorkbook wb = this.addressImportResultService.createAddressImportResultFile(headerNameList, importResultList);
+		String fileName = "导入错误信息.xlsx";
+		this.setDownloadFileName(response, fileName);
+		try {
+			ServletOutputStream out = response.getOutputStream();
+			wb.write(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@RequestMapping("/datagrid")
 	public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);

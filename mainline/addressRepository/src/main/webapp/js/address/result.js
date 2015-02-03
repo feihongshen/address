@@ -27,7 +27,7 @@ var resultRow=
 				{
 					field : 'opt',
 					title : '操作',
-					width : 15,
+					width : 25,
 					formatter : function(value, rec, index) {
 						if (!rec.id) {
 							return '';
@@ -41,7 +41,11 @@ var resultRow=
 						href1 += "[<a href='#' onclick=getImportDetailInfo('datagrid?resultId="
 							+ rec.id + "','address')>";
 					    href1 += "明细</a>]";
-						return href+"&nbsp;&nbsp;&nbsp;&nbsp;"+href1;
+						
+					    var href2 = '';
+					    href2 += "[<a href='"+ctx+"/address/downloadFailureMsg?resultId=" + rec.id+ "'>导出错误信息</a>]";
+					    
+						return href+"&nbsp;&nbsp;&nbsp;&nbsp;"+href1+"&nbsp;&nbsp;&nbsp;&nbsp;"+href2;
 					}
 				},  
 				{

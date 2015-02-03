@@ -20,6 +20,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/comm.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/result.js"></script>
 <script type="text/javascript">
+var ctx = '<%=request.getContextPath() %>';
+
 var process = {};
 var t ;
 var hasIniUI=false;
@@ -60,6 +62,16 @@ var hasIniUI=false;
 		} catch (ex) {
 		}
 	}
+	
+// 	function downloadFailureMsg(url){
+// 		$.ajax({
+// 			 type: "POST",
+// 				url:url,
+// 				data:{},
+// 				success:function(optionData){
+// 				}
+// 			});
+// 	}
 	
 	function getImportDetailInfo(url,name){
 		$.ajax({
