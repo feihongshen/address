@@ -36,7 +36,7 @@ public class StringUtil {
 	private static Pattern abcPattern = Pattern.compile("^[a-z|A-Z]+$");
 	public static final String splitStrPattern = ",|，|;|；|、|\\.|。|-|_|\\(|\\)|\\[|\\]|\\{|\\}|\\\\|/| |　|\"";
 	private static Log logger = LogFactory.getLog(StringUtil.class);
-	private static String specialCharacter = ".。+-&&||!(){}[]【】^\"~*?:\\/";
+	private static String specialCharacter = ".。+&&||!(){}[]【】^\"~*?:\\/";
 
 	public static boolean isEmpty(String string) {
 		return (string == null) || string.trim().isEmpty();

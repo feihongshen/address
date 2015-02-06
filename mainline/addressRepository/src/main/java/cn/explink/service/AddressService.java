@@ -597,6 +597,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	}
 
 	public void appendStation(Long customerId, List<ZTreeNode> list) {
+		if (null == list) {
+			return;
+		}
 		StringBuffer ids = new StringBuffer();
 		for (ZTreeNode zTreeNode : list) {
 			ids.append(zTreeNode.getId() + ",");
