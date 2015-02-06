@@ -159,12 +159,11 @@ public class DeliveryStationRuleService extends RuleService {
 			DeliveryStationRule defaultRule = null;
 			DeliveryStationRule mappingRule = null;
 			// 存在别名时匹配报错[zhaoshb+]2015-01-16.
-			String addressLine = null;
+
+			String addressLine = StringUtil.full2Half(orderVo.getAddressLine());
 			int index = orderVo.getAddressLine().lastIndexOf(address.getName());
-			if (index < 0) {
-				addressLine = orderVo.getAddressLine();
-			} else {
-				addressLine = orderVo.getAddressLine().substring(index + address.getName().length());
+			if (index >= 0) {
+				addressLine = addressLine.substring(index + address.getName().length());
 			}
 			// TODO:此处待优化.
 			List<DeliveryStationRule> list = this.getByCustormerAndAdressId(orderVo.getCustomerId(), address.getId());

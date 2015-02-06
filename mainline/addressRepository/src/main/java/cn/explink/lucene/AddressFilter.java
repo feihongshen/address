@@ -238,7 +238,7 @@ public class AddressFilter {
 				}
 				return score;
 			}
-			return this.getScore(address.getName(), fullAddr);
+			return this.getScore(address, fullAddr);
 		}
 
 		private int getScore(String address, String fullAddr) {
@@ -247,6 +247,26 @@ public class AddressFilter {
 			int length = address.length();
 
 			return lowerFullAddr.contains(lowerAddr) ? length : -length;
+		}
+
+		private int getScore(Address address, String fullAddr) {
+			int score = 0;
+			int factor = 3;
+			Integer addressLevel = address.getAddressLevel();
+			// 区写错（最常见），或者一路跨两区，地址库中只在一个区下挂这条路
+			// 这种情况系数是其他层级的三分之一
+			if (Integer.valueOf(3).equals(addressLevel)) {
+				factor = 1;
+			}
+			String lowerAddr = address.getName().toLowerCase();
+			String lowerFullAddr = fullAddr.toLowerCase();
+			int length = address.getName().length();
+			if (lowerFullAddr.contains(lowerAddr)) {
+				score = length * factor;
+			} else {
+				score = -length * factor;
+			}
+			return score;
 		}
 	}
 
