@@ -300,10 +300,12 @@ public class LuceneService {
 	 * @throws ParseException
 	 */
 	public List<Address> search(String addressLine, Long customerId) throws IOException, ParseException {
-		List<Address> matchAddrList = this.getLuceneMatchAddrList(addressLine, customerId);
+		String filterString = StringUtil.filterQureyStr(StringUtil.full2Half(addressLine));
+
+		List<Address> matchAddrList = this.getLuceneMatchAddrList(filterString, customerId);
 		List<Address> allPathAddrList = this.getAllPathAddress(matchAddrList);
 		// 得分评估，过滤掉不符合条件的地址
-		List<Address> afterFilerAddrList = AddressFilter.filter(addressLine, allPathAddrList);
+		List<Address> afterFilerAddrList = AddressFilter.filter(filterString, allPathAddrList);
 
 		return afterFilerAddrList;
 	}
