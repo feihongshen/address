@@ -11,7 +11,6 @@ import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.util.StringUtil;
 
-
 public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 
 	public RuleService() {
@@ -27,18 +26,15 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 				// 过滤条件相同
 				if (numberExpression.getFilter() == exisintNumberExpression.getFilter()) {
 					// 范围包含已存在规则的最小值
-					if (numberExpression.getMinNumber() <= exisintNumberExpression.getMinNumber()
-							&& numberExpression.getMaxNumber() >= exisintNumberExpression.getMinNumber()) {
+					if ((numberExpression.getMinNumber() <= exisintNumberExpression.getMinNumber()) && (numberExpression.getMaxNumber() >= exisintNumberExpression.getMinNumber())) {
 						return true;
 					}
 					// 范围包含已存在规则的最大值
-					if (numberExpression.getMinNumber() <= exisintNumberExpression.getMaxNumber()
-							&& numberExpression.getMaxNumber() >= exisintNumberExpression.getMaxNumber()) {
+					if ((numberExpression.getMinNumber() <= exisintNumberExpression.getMaxNumber()) && (numberExpression.getMaxNumber() >= exisintNumberExpression.getMaxNumber())) {
 						return true;
 					}
 					// 范围被已存在规则完全包含，新规则是旧规则的子集
-					if (numberExpression.getMinNumber() >= exisintNumberExpression.getMinNumber()
-							&& numberExpression.getMaxNumber() <= exisintNumberExpression.getMaxNumber()) {
+					if ((numberExpression.getMinNumber() >= exisintNumberExpression.getMinNumber()) && (numberExpression.getMaxNumber() <= exisintNumberExpression.getMaxNumber())) {
 						return true;
 					}
 				}
@@ -46,7 +42,7 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 		}
 		return false;
 	}
-	
+
 	protected RuleExpression parseRule(String rule) {
 		if (StringUtils.isBlank(rule)) {
 			return null;
@@ -90,19 +86,22 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 
 		return ruleExpression;
 	}
-	
+
 	/**
 	 * 判断给定的地址串是否匹配指定的规则
+	 *
 	 * @param addressLine
 	 * @param ruleExpression
 	 * @return
 	 */
 	protected boolean isMapping(String addressLine, RuleExpression ruleExpression) {
-		String fuzzyPatten = ruleExpression.getFuzzyPatten();
+		// String fuzzyPatten = ruleExpression.getFuzzyPatten();
 		String strictPatten = ruleExpression.getStrictPatten();
 		// 关键数字
 		int number = -1;
-		if (StringUtil.match(addressLine, fuzzyPatten)) {
+		// if(StringUtil.match(addressLine, strictPatten))
+		// modified by songkaojun 2015-02-13 只用匹配到关键字“紧跟”着的数字才是该关键字的规则
+		if (StringUtil.match(addressLine, strictPatten)) {
 			addressLine = StringUtil.substring(addressLine, strictPatten);
 			number = StringUtil.startNumeric(addressLine);
 			System.out.println("number = " + number);
@@ -111,11 +110,10 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 		}
 		for (NumberExpression numberExpression : ruleExpression.getNumberExpressionList()) {
 			// 关键数字在最小值和最大值之间
-			if (number >= numberExpression.getMinNumber() && number <= numberExpression.getMaxNumber()) {
+			if ((number >= numberExpression.getMinNumber()) && (number <= numberExpression.getMaxNumber())) {
 				// 并且单双过滤符合
-				if (NumberExpression.NO_FILTER == numberExpression.getFilter()
-						|| (NumberExpression.FILTER_ODD == numberExpression.getFilter() && number % 2 == 1)
-						|| (NumberExpression.FILTER_EVEN == numberExpression.getFilter() && number % 2 == 0)) {
+				if ((NumberExpression.NO_FILTER == numberExpression.getFilter()) || ((NumberExpression.FILTER_ODD == numberExpression.getFilter()) && ((number % 2) == 1))
+						|| ((NumberExpression.FILTER_EVEN == numberExpression.getFilter()) && ((number % 2) == 0))) {
 					return true;
 				}
 			}
