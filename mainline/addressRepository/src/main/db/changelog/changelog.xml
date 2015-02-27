@@ -140,4 +140,21 @@
 		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 	
+	<!-- 创建宁夏品信客户 -->
+	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun">
+		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建武汉飞远客户 -->
+	<changeSet id="songkaojun-2015-02-27-02" author="songkaojun">
+		<sqlFile path="customer_init_whfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建福建飞远客户 -->
+	<changeSet id="songkaojun-2015-02-27-03" author="songkaojun">
+		<sqlFile path="customer_init_fjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建安徽品骏客户 -->
+	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun">
+		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	
 </databaseChangeLog>
