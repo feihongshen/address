@@ -3737,10 +3737,14 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362564, '万城镇', 1, 3, 2449, '1-2436-2449', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362565, '文城镇', 1, 3, 2449, '1-2436-2449', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362566, '老城镇', 1, 3, 2449, '1-2436-2449', now());
--- 重庆华宇预置数据 added by songkaojun 2015-01-09
 
+-- 重庆华宇预置数据 added by songkaojun 2015-01-09
 INSERT INTO ADDRESS (id, name, status, address_level, parent_id, path, creation_time) VALUES ('2254543', '万盛区','1', '2', '2467', '1-2466-2467', now());
 
+-- 安徽品骏预置数据 added by songkaojun 2015-03-05
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362567, '经济开发区', 1, 3, 1123, '1-1122-1123', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362568, '高新区', 1, 3, 1123, '1-1122-1123', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362569, '政务新区', 1, 3, 1123, '1-1122-1123', now());
 
 
 

@@ -29,6 +29,11 @@
 			<name>Spring Maven Release Repository</name>
 			<url>http://maven.springframework.org/release</url>
 		</repository>
+		<repository>
+			<id>explink</id>
+			<name>explink Repository</name>
+			<url>http://192.168.0.217:8081/nexus/content/repositories/</url>
+		</repository>
 		<!-- <repository> <id>spring-maven-milestone</id> <name>Spring Maven Milestone Repository</name> <url>http://maven.springframework.org/milestone</url> 
 			</repository> <repository> <id>momoplan-maven-release</id> <name>momoplan maven release</name> <url>https://raw.github.com/momoplan/maven-repository/master/releases</url> 
 			</repository> -->
@@ -624,6 +629,30 @@
 		</profile>
 		<profile>
 			<id>NXPJ</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://192.168.70.37:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password>explinkvipshop</jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>prod</label>
+			</properties>
+		</profile>
+		<profile>
+			<id>HNYT</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
 				<jdbc.url>jdbc:mysql://192.168.70.37:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>

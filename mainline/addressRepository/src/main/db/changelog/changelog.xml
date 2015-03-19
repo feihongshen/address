@@ -156,5 +156,9 @@
 	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun">
 		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+		<!-- 创建河南豫铁客户 -->
+	<changeSet id="songkaojun-2015-03-18-01" author="songkaojun">
+		<sqlFile path="customer_init_hnyt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 	
 </databaseChangeLog>
