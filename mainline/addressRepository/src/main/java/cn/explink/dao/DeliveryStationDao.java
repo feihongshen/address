@@ -86,12 +86,29 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 	 * @param delStatIdSet
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<DeliveryStation> getDeliverStation(Set<Long> delStatIdSet) {
 		String hql = "from DeliveryStation where  id in (:ids)";
 		Query query = this.getSession().createQuery(hql);
 		query.setParameterList("ids", delStatIdSet);
 
 		return query.list();
+	}
+
+	public DeliveryStation getDeliveryStationByUid(String uid) {
+		String hql = "from DeliveryStation where  uid = :uid";
+		Query query = this.getSession().createQuery(hql);
+		query.setParameter("uid", uid);
+
+		return (DeliveryStation) query.uniqueResult();
+	}
+
+	public DeliveryStation getDeliveryStationById(Long id) {
+		String hql = "from DeliveryStation where  id = :id";
+		Query query = this.getSession().createQuery(hql);
+		query.setParameter("id", id);
+
+		return (DeliveryStation) query.uniqueResult();
 	}
 
 	public List<DeliveryStation> getAllDeliverStation() {

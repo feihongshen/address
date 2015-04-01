@@ -552,6 +552,7 @@ mainline/addressRepository/src/main/webapp/css/smoothness/images/ui-icons_454545
 mainline/addressRepository/src/main/webapp/css/smoothness/images/ui-icons_888888_256x240.png -text
 mainline/addressRepository/src/main/webapp/css/smoothness/images/ui-icons_cd0a0a_256x240.png -text
 mainline/addressRepository/src/main/webapp/css/smoothness/jquery-ui-1.8.18.custom.css -text
+mainline/addressRepository/src/main/webapp/css/spectrum.css -text
 mainline/addressRepository/src/main/webapp/css/zTree/demo.css -text
 mainline/addressRepository/src/main/webapp/css/zTree/zTreeStyle/img/diy/1_close.png -text
 mainline/addressRepository/src/main/webapp/css/zTree/zTreeStyle/img/diy/1_open.png -text
@@ -682,6 +683,7 @@ mainline/addressRepository/src/main/webapp/js/address/importStationAddress.js -t
 mainline/addressRepository/src/main/webapp/js/address/mutitleTree.js -text
 mainline/addressRepository/src/main/webapp/js/address/result.js -text
 mainline/addressRepository/src/main/webapp/js/address/stationAdressRelation.js -text
+mainline/addressRepository/src/main/webapp/js/address/stationGIS.js -text
 mainline/addressRepository/src/main/webapp/js/ajaxfileupload.js -text
 mainline/addressRepository/src/main/webapp/js/comm.js -text
 mainline/addressRepository/src/main/webapp/js/crudutil.js -text
@@ -948,6 +950,18 @@ mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/search.png -te
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/sum.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/tip.png -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/icons/undo.png -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/extend/layer.ext.js -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/layer.min.js -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/icon_ext.png -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/textbg.png -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_ico0.png -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_loading0.gif -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_loading1.gif -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_loading2.gif -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_loading3.gif -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/default/xubox_title0.png -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/layer.css -text
+mainline/addressRepository/src/main/webapp/js/easyui/themes/layer/skin/layer.ext.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/accordion.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/calendar.css -text
 mainline/addressRepository/src/main/webapp/js/easyui/themes/metro/combo.css -text
@@ -1089,6 +1103,9 @@ mainline/addressRepository/src/main/webapp/js/lhgDialog/skins/igreen/igreen_s2.p
 mainline/addressRepository/src/main/webapp/js/lhgDialog/skins/jtop.css -text
 mainline/addressRepository/src/main/webapp/js/lhgDialog/skins/mac.css -text
 mainline/addressRepository/src/main/webapp/js/lhgdialog.min.js -text
+mainline/addressRepository/src/main/webapp/js/map/map.js -text
+mainline/addressRepository/src/main/webapp/js/map/spectrum.js -text
+mainline/addressRepository/src/main/webapp/js/tools.js -text
 mainline/addressRepository/src/main/webapp/js/zTree/css/demo.css -text
 mainline/addressRepository/src/main/webapp/js/zTree/css/zTreeStyle/img/diy/1_close.png -text
 mainline/addressRepository/src/main/webapp/js/zTree/css/zTreeStyle/img/diy/1_open.png -text

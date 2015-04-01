@@ -1,5 +1,6 @@
 package cn.explink.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,6 +27,18 @@ public class DeliveryStation {
 
 	@Column(name = "NAME", length = 50, nullable = false)
 	private String name;
+
+	@Column(name = "COORDINATE")
+	private String coordinate;
+
+	@Column(name = "MAPCENTER_LNG")
+	private BigDecimal mapcenterLng;
+
+	@Column(name = "MAPCENTER_LAT")
+	private BigDecimal mapcenterLat;
+
+	@Column(name = "UID")
+	private String uid;
 
 	@Column(name = "STATUS", nullable = false)
 	private Integer status;
@@ -54,6 +67,38 @@ public class DeliveryStation {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCoordinate() {
+		return this.coordinate;
+	}
+
+	public void setCoordinate(String coordinate) {
+		this.coordinate = coordinate;
+	}
+
+	public BigDecimal getMapcenterLng() {
+		return this.mapcenterLng;
+	}
+
+	public void setMapcenterLng(BigDecimal mapcenterLng) {
+		this.mapcenterLng = mapcenterLng;
+	}
+
+	public BigDecimal getMapcenterLat() {
+		return this.mapcenterLat;
+	}
+
+	public void setMapcenterLat(BigDecimal mapcenterLat) {
+		this.mapcenterLat = mapcenterLat;
+	}
+
+	public String getUid() {
+		return this.uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public Integer getStatus() {

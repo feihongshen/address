@@ -16,6 +16,7 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/css/easyui/themes/icon.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/css/zTree/zTreeStyle/zTreeStyle.css"/>
 <script type="text/javascript" src="${ctx}/js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/easyui/themes/layer/layer.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/zTree/js/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/zTree/js/jquery.ztree.exhide-3.5.js"></script>
