@@ -3746,6 +3746,12 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362568, '高新区', 1, 3, 1123, '1-1122-1123', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2362569, '政务新区', 1, 3, 1123, '1-1122-1123', now());
 
+-- 河南豫铁预置数据 added by songkaojun 2015-03-30
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2367189, '经开区', 1, 3, 1661, '1-1660-1661', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2367190, '郑东新区', 1, 3, 1661, '1-1660-1661', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2367191, '高新区', 1, 3, 1661, '1-1660-1661', now());
+
+
 
 
 

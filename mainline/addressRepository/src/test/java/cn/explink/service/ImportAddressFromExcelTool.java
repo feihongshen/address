@@ -60,7 +60,7 @@ public class ImportAddressFromExcelTool extends BaseTestCase {
 	}
 
 	private void readExcel() throws FileNotFoundException, IOException {
-		File file = new File("d://data.xls");
+		File file = new File("d://data11.xls");
 
 		String[][] result = this.getData(file);
 
@@ -120,7 +120,11 @@ public class ImportAddressFromExcelTool extends BaseTestCase {
 		// // Long.valueOf(6));
 		// }
 
-		this.addressDao.insert(addressList);
+		try {
+			this.addressDao.insert(addressList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

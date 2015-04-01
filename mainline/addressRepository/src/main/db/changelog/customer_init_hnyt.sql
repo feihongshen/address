@@ -3525,6 +3525,12 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3514, 11);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3515, 11);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3516, 11);
 
+-- 河南豫铁预置数据 added by songkaojun 2015-03-30
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2367189, 11);
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2367190, 11);
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2367191, 11);
+
+
 
 
 
