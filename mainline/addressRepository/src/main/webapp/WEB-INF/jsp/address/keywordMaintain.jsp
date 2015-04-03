@@ -83,88 +83,57 @@
 		</table>
 
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_query" iconCls="icon-search">查询</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="station_add_panel_btn_reset"
-			iconCls="icon-edit">修改</a> <a href="javascript:void(0)" class="easyui-linkbutton"
-			id="station_add_panel_btn_reset" iconCls="icon-ok">提交</a> <a href="javascript:void(0)"
-			class="easyui-linkbutton" id="station_add_panel_btn_reset" iconCls="">后缀维护</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_edit" iconCls="icon-edit">修改</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit"
+			iconCls="icon-ok">提交</a> 
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+			id="station_add_panel_btn_reset" iconCls="">后缀维护</a>
 </body>
 
 </div>
-<div id="dop_deliveryman_add_panel">
+<div id="keyword_edit_panel">
 	<table
-		class="table table-striped table-hover table-condensed dop-table-deliveryman dop-table-deliveryman-panel">
+		class="">
 		<tr>
-			<th>业务员：</th>
+			<th>省/直辖市：</th>
 			<td><div>
-					<input id="delName">
+					<input id="province" readonly="readonly">
 				</div></td>
-			<th>证件编号：</th>
+			<th>市：</th>
 			<td><div>
-					<input id="delCertificates">
+					<input id="city" readonly="readonly">
 				</div></td>
-			<th>照片：</th>
+			<th>区/县：</th>
 			<td><div>
-					<input id="delPortrait" type="file">
+					<input id="district" readonly="readonly">
 				</div></td>
 		</tr>
 		<tr>
-			<th>电话：</th>
+			<th>关键字1：</th>
 			<td><div>
-					<input id="delTeliPhone">
+					<input id="address1">
 				</div></td>
-			<th>每日最大送餐量：</th>
+			<th>关键字2：</th>
 			<td><div>
-					<input id="delMaxmum">
+					<input id="address2">
 				</div></td>
-			<th>对应用户：</th>
+			<th>关键字3：</th>
 			<td><div>
-					<select id="sUser"></select>
+					<input id="address3">
 				</div></td>
 		</tr>
 		<tr>
-			<th>业务员描述：</th>
-			<td colspan="5"><div>
-					<textarea id="delIntroduction"></textarea>
+			<th>站点名称：</th>
+			<td><div>
+					<input id="deliveryStationName">
 				</div></td>
 		</tr>
 	</table>
-	<div class="pull-right" style="margin: 5px 10px 0 0;">
-		<div class="btn btn-default" id="dop_deliveryman_add_panel_ok">
-			<i class="icon-ok"></i>确定
-		</div>
-		<div class="btn btn-default" id="dop_deliveryman_add_panel_cancel">
-			<i class="icon-remove"></i>取消
-		</div>
+	<div class="pull-right" align="right" style="margin: 5px 10px 0 0;">
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_ok" iconCls="icon-ok">提交</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
 	</div>
 </div>
-<div id="dop_deliveryman_assign_panel">
-	<table
-		class="table table-striped table-hover table-condensed dop-table-deliveryman dop-table-deliveryman-panel">
-		<tr>
-			<th width="30%">区域：</th>
-			<td><div style="width: 30%">
-					<select id="area" multiple="multiple">
-					</select>
-				</div></td>
-		</tr>
-	</table>
-	<div class="pull-right" style="margin: 5px 200px 0 0;">
-		<div class="btn btn-default" id="dop_deliveryman_assign_panel_ok">
-			<i class="icon-ok"></i>确定
-		</div>
-		<div class="btn btn-default" id="dop_deliveryman_assign_panel_cancel">
-			<i class="icon-remove"></i>取消
-		</div>
-	</div>
-</div>
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script> --%>
-<!-- <script type="text/javascript" -->
-<%-- 	src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script> --%>
-<!-- <script type="text/javascript" -->
-<%-- 	src="${pageContext.request.contextPath}/js/easyui/easyui-lang-zh_CN.js"></script> --%>
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script> --%>
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/crudutil.js"></script> --%>
-<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/js/lhgDialog/lhgdialog.min.js"></script> --%>
 <script type="text/javascript" src="${ctx}/js/tools.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/address/keywordMaintain.js"></script>

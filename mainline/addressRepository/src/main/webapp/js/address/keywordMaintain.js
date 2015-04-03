@@ -1,8 +1,5 @@
-// add map area panelId
-var dopBtndeliverymanAdd = "";
-var dopBtndeliverymanAssign = "";
-var mapManager = null;
-var isModify = false;
+var keywordEditLayer = "";
+
 $("#datagrid_keyword").datagrid({
 	url : "",
 	height : 350,
@@ -27,7 +24,7 @@ $("#datagrid_keyword").datagrid({
 	}, {
 		field : 'province',
 		width : 150,
-		title : '省',
+		title : '省/直辖市',
 		sortable : true
 	}, {
 		field : 'city',
@@ -37,7 +34,7 @@ $("#datagrid_keyword").datagrid({
 	}, {
 		field : 'district',
 		width : 150,
-		title : '区、县',
+		title : '区/县',
 		sortable : false
 	}, {
 		field : 'address1',
@@ -57,7 +54,7 @@ $("#datagrid_keyword").datagrid({
 	}, {
 		field : 'deliveryStationName',
 		width : 150,
-		title : '站点',
+		title : '站点名称',
 		sortable : true
 	}]]
 });
@@ -66,181 +63,173 @@ init();
 
 // click pagination
 var p = $("#datagrid_keyword").datagrid('getPager');
-$(p).pagination(
-		{
-			onSelectPage : function(pageNumber, pageSize) {
-				var params = $.extend({
-					pageNum : pageNumber,
-					pageSize : pageSize
-				}, getQueryParams());
-				Tools.doAction("deliveryManController.do?queryList", params,
-						false, function(data) {
-							$("#dop_datagrid_deliveryman").datagrid('loadData',
-									{
-										"rows" : data.list,
-										"total" : data.count
-									} || {});
-						});
-			}
+$(p).pagination({
+	onSelectPage : function(pageNumber, pageSize) {
+		var params = $.extend({
+			pageNum : pageNumber,
+			pageSize : pageSize
+		}, getQueryParams());
+		Tools.doAction(ctx + '/keyword/query', params, false, function(data) {
+			$("#datagrid_keyword").datagrid('loadData', {
+				"rows" : data.list,
+				"total" : data.count
+			} || {});
 		});
-
-// bind add event
-//$("#dop_btn_deliveryman_add")
-//		.click(
-//				function() {
-//					isModify = false;
-//					dopBtndeliverymanAdd = jQuery
-//							.layer({
-//								type : 1,
-//								title : '<div><span style="padding-left: 14px;line-height: 14px;">添加店面</span></div>',
-//								shadeClose : true,
-//								maxmin : false,
-//								fix : false,
-//								area : [1000, 250],
-//								page : {
-//									dom : '#dop_deliveryman_add_panel'
-//								}
-//							});
-//				});
+	}
+});
 
 // bind modify event
-//$("#dop_btn_deliveryman_modify").click(
-//		function() {
-//			var selections = $("#dop_datagrid_deliveryman").datagrid(
-//					"getSelections");
-//			if (selections && selections.length > 0) {
-//				if (selections.length > 1) {
-//					layer.tips('请选择一行数据', this, {
-//						guide : 2,
-//						time : 2
-//					});
-//				} else {
-//					// 显示地图div
-//					$("#dop_btn_deliveryman_add").click();
-//					// 获得此项记录的坐标字符串
-//					var delName = selections[0].delName;
-//					// 更新区域名称的显示
-//					$("input[id='delName']").val(delName);
-//					$("input[id='delCertificates']").val(
-//							selections[0].delCertificates);
-//					$("input[id='delTeliPhone']").val(
-//							selections[0].delTeliPhone);
-//					$("input[id='delMaxmum']").val(selections[0].delMaxmum);
-//					$("select[id='sUser']").val(selections[0].sUser);
-//					isModify = true;
-//				}
-//			} else
-//				layer.tips('请选择要修改行', this, {
-//					guide : 2,
-//					time : 2
-//				});
-//		});
+$("#keyword_edit")
+		.click(
+				function() {
+					var selections = $("#datagrid_keyword").datagrid(
+							"getSelections");
+					if (selections && selections.length > 0) {
+						if (selections.length > 1) {
+							layer.tips('请选择一行数据', this, {
+								guide : 2,
+								time : 2
+							});
+						} else {
+							keywordEditLayer = jQuery
+									.layer({
+										type : 1,
+										title : '<div><span style="padding-left: 14px;line-height:14px;">修改关键字</span></div>',
+										shadeClose : true,
+										maxmin : false,
+										fix : false,
+										area : [1000, 250],
+										page : {
+											dom : '#keyword_edit_panel'
+										}
+									});
+
+							var province = selections[0].province;
+							var city = selections[0].city;
+							var district = selections[0].district;
+							var address1 = selections[0].address1;
+							var address2 = selections[0].address2;
+							var address3 = selections[0].address3;
+							var deliveryStationName = selections[0].deliveryStationName;
+
+							$("input[id='province']").val(province);
+							$("input[id='city']").val(city);
+							$("input[id='district']").val(district);
+							$("input[id='address1']").val(address1);
+							$("input[id='address2']").val(address2);
+							$("input[id='address3']").val(address3);
+							$("input[id='deliveryStationName']").val(
+									deliveryStationName);
+							isModify = true;
+						}
+					} else
+						layer.tips('请选择要修改行', this, {
+							guide : 2,
+							time : 2
+						});
+				});
 
 // bind delete event
-//$("#dop_btn_deliveryman_delete").click(function() {
-//	var selections = $("#dop_datagrid_deliveryman").datagrid("getSelections");
-//	if (selections && selections.length > 0)
-//		layer.confirm('确定删除吗？', function() {
-//			Tools.doAction("deliveryManController.do?delete", {
-//				"rowList" : JSON.stringify(selections)
-//			}, false, function(data) {
-//				if (data.success) {
-//					Tip.msgOk("删除成功！");
-//					init();
-//				}
-//			});
-//		});
-//	else
-//		layer.tips('请选择要删除行', this, {
-//			guide : 2,
-//			time : 2
-//		});
-//});
+// $("#dop_btn_deliveryman_delete").click(function() {
+// var selections = $("#dop_datagrid_deliveryman").datagrid("getSelections");
+// if (selections && selections.length > 0)
+// layer.confirm('确定删除吗？', function() {
+// Tools.doAction("deliveryManController.do?delete", {
+// "rowList" : JSON.stringify(selections)
+// }, false, function(data) {
+// if (data.success) {
+// Tip.msgOk("删除成功！");
+// init();
+// }
+// });
+// });
+// else
+// layer.tips('请选择要删除行', this, {
+// guide : 2,
+// time : 2
+// });
+// });
 
-// 添加面板 确定按钮
-//$("#dop_deliveryman_add_panel_ok").click(
-//		function() {
-//			var delName = $("input[id='delName']").val();
-//			sUser = $("select[id='sUser']").val();
-//			if (!sUser) {
-//				layer.tips('请填对应用户信息', document.getElementById("sUser"), {
-//					guide : 2,
-//					time : 2
-//				});
-//				return;
-//			}
-//			if (delName)
-//				if (isModify)
-//					Tools.doAction("deliveryManController.do?modify", {
-//						delName : $("input[id='delName']").val(),
-//						delCertificates : $("input[id='delCertificates']")
-//								.val(),
-//						delPortrait : $("input[id='delPortrait']").val(),
-//						delTeliPhone : $("input[id='delTeliPhone']").val(),
-//						delMaxmum : $("input[id='delMaxmum']").val(),
-//						sUser : $("select[id='sUser']").val(),
-//						id : $("#dop_datagrid_deliveryman").datagrid(
-//								"getSelections")[0].id
-//					}, false, function(data) {
-//						layer.close(dopBtndeliverymanAdd);
-//						Tip.msgOk("修改成功");
-//						$("input[id='delName']").val("");
-//						$("input[id='delCertificates']").val("");
-//						$("input[id='delTeliPhone']").val("");
-//						$("input[id='delMaxmum']").val("");
-//						$("select[id='sUser']").val("");
-//						init();
-//					});
-//				else
-//					Tools.doAction("deliveryManController.do?create", {
-//						delName : $("input[id='delName']").val(),
-//						delCertificates : $("input[id='delCertificates']")
-//								.val(),
-//						delTeliPhone : $("input[id='delTeliPhone']").val(),
-//						delMaxmum : $("input[id='delMaxmum']").val(),
-//						sUser : $("select[id='sUser']").val()
-//					}, false, function(data) {
-//						layer.close(dopBtndeliverymanAdd);
-//						Tip.msgOk("添加成功");
-//						$("input[id='delName']").val("");
-//						$("input[id='delCertificates']").val("");
-//						$("input[id='delTeliPhone']").val("");
-//						$("input[id='delMaxmum']").val("");
-//						$("select[id='sUser']").val("");
-//						init();
-//					});
-//			else
-//				layer.tips('请填写店面名称', document.getElementById("delName"), {
-//					guide : 2,
-//					time : 2
-//				});
-//		});
-// 分配面板 确定按钮
-//$("#dop_deliveryman_assign_panel_ok").click(function() {
-//	var selectedAreaId = $("#area").val();
-//
-//	Tools.doAction("deliveryManController.do?assignArea", {
-//		id : $("#dop_datagrid_deliveryman").datagrid("getSelections")[0].id,
-//		areaIdList : selectedAreaId
-//	}, false, function(data) {
-//		layer.close(dopBtndeliverymanAssign);
-//		Tip.msgOk("分配成功");
-//		init();
-//	});
-//
-//});
+// 修改面板 提交按钮
+$("#keyword_ok").click(function() {
+	// TODO 校验
+	// var delName = $("input[id='delName']").val();
+	var addressDetailList = getSingleSaveParams();
+	Tools.doAction(ctx + '/keyword/save', {
+		addressDetailListJson : JSON.stringify(addressDetailList)
+	}, false, function(data) {
+		if (!data.success) {
+			Tip.msgError(data.msg);
+		} else {
+			layer.close(keywordEditLayer);
+			Tip.msgOk("提交成功！");
+			init();
+		}
+	});
+});
+
+// 提交按钮
+$("#keyword_submit").click(function() {
+	var selections = $("#datagrid_keyword").datagrid("getSelections");
+	if (selections && selections.length > 0) {
+		var addressDetailList = getMultipleSaveParams(selections);
+		Tools.doAction(ctx + '/keyword/save', {
+			addressDetailListJson : JSON.stringify(addressDetailList)
+		}, false, function(data) {
+			if (!data.success) {
+				Tip.alertError(data.msg);
+			} else {
+				layer.close(keywordEditLayer);
+				Tip.msgOk("提交成功！");
+				init();
+			}
+		});
+	} else
+		layer.tips('请选择要修改行', this, {
+			guide : 2,
+			time : 2
+		});
+
+});
+
+function getMultipleSaveParams(selections) {
+	var addressDetailList = new Array;
+
+	for (var i = 0; i < selections.length; i++) {
+		var addressDetail = {};
+
+		addressDetail.province = selections[i].province;
+		addressDetail.city = selections[i].city;
+		addressDetail.district = selections[i].district;
+		addressDetail.address1 = selections[i].address1;
+		addressDetail.address2 = selections[i].address2;
+		addressDetail.address3 = selections[i].address3;
+		addressDetail.deliveryStationName = selections[i].deliveryStationName;
+
+		addressDetailList.push(addressDetail);
+	}
+	return addressDetailList;
+}
+
+function getSingleSaveParams() {
+	var addressDetailList = new Array;
+	var addressDetail = {};
+	addressDetail.province = $("input[id='province']").val();
+	addressDetail.city = $("input[id='city']").val();
+	addressDetail.district = $("input[id='district']").val();
+	addressDetail.address1 = $("input[id='address1']").val();
+	addressDetail.address2 = $("input[id='address2']").val();
+	addressDetail.address3 = $("input[id='address3']").val();
+	addressDetail.deliveryStationName = $("input[id='deliveryStationName']")
+			.val();
+	addressDetailList.push(addressDetail);
+	return addressDetailList;
+}
 
 // 添加面板 取消按钮
-//$("#dop_deliveryman_add_panel_cancel").click(function() {
-//	layer.close(dopBtndeliverymanAdd);
-//});
-// 分配面板 取消按钮
-//$("#dop_deliveryman_assign_panel_cancel").click(function() {
-//	layer.close(dopBtndeliverymanAssign);
-//});
-
-
-
+$("#keyword_cancel").click(function() {
+	layer.close(keywordEditLayer);
+});
 
 // get params
 function getQueryParams() {
@@ -253,21 +242,20 @@ function getQueryParams() {
 // init
 function init() {
 	// init
-	var options = $("#datagrid_keyword").datagrid('getPager').data(
-			"pagination").options;
+	var options = $("#datagrid_keyword").datagrid('getPager')
+			.data("pagination").options;
 	var pageSize = options.pageSize;
 	var params = $.extend({
 		pageNum : 1,
 		pageSize : pageSize
 	}, getQueryParams());
-	
-	Tools.doAction(ctx+'/keyword/query', params, false,
-			function(data) {
-				$("#datagrid_keyword").datagrid('loadData', {
-					"rows" : data.list,
-					"total" : data.count
-				} || {});
-				var p = $("#datagrid_keyword").datagrid('getPager');
-				$("td:last", p).find("a").click();
-			});
+
+	Tools.doAction(ctx + '/keyword/query', params, false, function(data) {
+		$("#datagrid_keyword").datagrid('loadData', {
+			"rows" : data.list,
+			"total" : data.count
+		} || {});
+		var p = $("#datagrid_keyword").datagrid('getPager');
+		$("td:last", p).find("a").click();
+	});
 }

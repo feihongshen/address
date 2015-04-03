@@ -54,6 +54,10 @@ public class RawDeliveryStationDao extends BasicHibernateDaoSupport<RawDeliveryS
 
 	@SuppressWarnings("unchecked")
 	private List<RawDeliveryStation> getDeliverStation(Set<Long> delStatIdSet) {
+		if ((null == delStatIdSet) || (delStatIdSet.size() == 0)) {
+			return new ArrayList<RawDeliveryStation>();
+		}
+
 		String hql = "from RawDeliveryStation where  id in (:ids)";
 		Query query = this.getSession().createQuery(hql);
 		query.setParameterList("ids", delStatIdSet);

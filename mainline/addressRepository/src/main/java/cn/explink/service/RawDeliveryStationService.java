@@ -33,9 +33,7 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 
 	@SuppressWarnings("unchecked")
 	public void createDeliveryStation(List<String> deliveryStationNameList) {
-		// Long customerId = this.getCustomerId();
-		// TODO Junit
-		Long customerId = 4L;
+		Long customerId = this.getCustomerId();
 		for (String deliveryStationName : deliveryStationNameList) {
 			Customer customer = this.customerDao.get(customerId);
 			if (customer == null) {

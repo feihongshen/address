@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop
@@ -18,26 +17,31 @@
 		http://cxf.apache.org/schemas/jaxws.xsd">
 	<context:property-placeholder location="classpath:META-INF/spring/*.properties" />
 	<context:component-scan base-package="cn.explink">
-		<context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation" />
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
 	</context:component-scan>
 
 	<!-- ==================== 加载cxf配置文件 =================================== -->
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-	
+
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton" init-method="initLucene" />
+	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton"
+		init-method="initLucene" />
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-	<property name="messageConverters">  
-        <list>
-            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
-        </list>  
-    </property>
-</bean>
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
 	<!-- web service -->
-	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl" address="/AddressSyncService" />
-	<jaxws:endpoint id="addressMappingService" implementor="cn.explink.ws.service.AddressMappingServiceImpl" address="/AddressMappingService" />
-	<jaxws:endpoint id="addressQueryService" implementor="cn.explink.ws.service.AddressQueryServiceImpl" address="/AddressQueryService" />
+	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl"
+		address="/AddressSyncService" />
+	<jaxws:endpoint id="addressMappingService" implementor="cn.explink.ws.service.AddressMappingServiceImpl"
+		address="/AddressMappingService" />
+	<jaxws:endpoint id="addressQueryService" implementor="cn.explink.ws.service.AddressQueryServiceImpl"
+		address="/AddressQueryService" />
 </beans>

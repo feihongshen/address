@@ -120,6 +120,9 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 
 	@SuppressWarnings("unchecked")
 	private List<RawAddress> getAddressList(Set<Long> addrIdSet) {
+		if ((null == addrIdSet) || (addrIdSet.size() == 0)) {
+			return new ArrayList<RawAddress>();
+		}
 		String hql = "from RawAddress a where a.id in(:ids)";
 		Query query = this.getSession().createQuery(hql);
 		query.setParameterList("ids", addrIdSet);
