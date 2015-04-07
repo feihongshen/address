@@ -28,7 +28,8 @@
 			`TRY_COUNT` int (10)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-			-- create index IDX_TASKS_STATUS_FIRE_TIME
+			-- create index
+			IDX_TASKS_STATUS_FIRE_TIME
 			CREATE INDEX `IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
 			(
 			`STATUS`,
@@ -45,7 +46,8 @@
 			`FIRE_TIME`
 			);
 
-			-- create index IDX_TASKS_REFERENCE_ID
+			-- create
+			index IDX_TASKS_REFERENCE_ID
 			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON
 			`SCHEDULED_TASKS`
 			(
@@ -139,7 +141,7 @@
 	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
 		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 	<!-- 创建宁夏品信客户 -->
 	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun">
 		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
@@ -172,5 +174,128 @@
 	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
 		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
+	<!-- 添加数字地图功能 新增脚本 -->
+	<!-- 创建‘粗’地址表 -->
+	<changeSet id="songkaojun-2015-04-07-03" author="songkaojun">
+		<sql>
+			CREATE TABLE `raw_address` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`NAME` varchar(50) COLLATE
+			utf8_bin NOT NULL,
+			`OLD_NAME` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+			`STATUS` int(2) NOT NULL,
+			`ADDRESS_TYPE_ID` int(2) DEFAULT NULL,
+			`ADDRESS_LEVEL` int(2) DEFAULT NULL,
+			`PARENT_ID` int(12)
+			DEFAULT NULL,
+			`PATH` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+			`INDEXED` int(1) DEFAULT NULL,
+			`CREATION_TIME` datetime DEFAULT NULL,
+			PRIMARY KEY (`ID`),
+			KEY `IDX_ADDRESS_NAME` (`NAME`),
+			KEY
+			`IDX_ADDRESS_PARENT_ID` (`PARENT_ID`)
+			) ENGINE=InnoDB AUTO_INCREMENT=25596 DEFAULT CHARSET=utf8
+			COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+	<!-- 创建‘粗’地址权限表 -->
+	<changeSet id="songkaojun-2015-04-07-04" author="songkaojun">
+		<sql>
+			CREATE TABLE `raw_address_permissions` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`RAW_ADDRESS_ID` int(12) NOT NULL,
+			`CUSTOMER_ID` int(12) DEFAULT NULL,
+			PRIMARY KEY (`ID`),
+			KEY
+			`IDX_ADDRESS_PERMISSION_ADDRESS_ID` (`RAW_ADDRESS_ID`)
+			) ENGINE=InnoDB AUTO_INCREMENT=54190
+			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+	<!-- 创建‘粗’地址权限表 -->
+	<changeSet id="songkaojun-2015-04-07-05" author="songkaojun">
+		<sql>
+			CREATE TABLE `raw_address_permissions` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`RAW_ADDRESS_ID` int(12) NOT NULL,
+			`CUSTOMER_ID` int(12) DEFAULT NULL,
+			PRIMARY KEY (`ID`),
+			KEY
+			`IDX_ADDRESS_PERMISSION_ADDRESS_ID` (`RAW_ADDRESS_ID`)
+			) ENGINE=InnoDB AUTO_INCREMENT=54190
+			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+	<!-- 创建‘粗’配送站点表 -->
+	<changeSet id="songkaojun-2015-04-07-06" author="songkaojun">
+		<sql>
+			CREATE TABLE `raw_delivery_stations` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`NAME` varchar(20)
+			COLLATE utf8_bin NOT NULL,
+			`COORDINATE` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
+			`MAPCENTER_LNG` decimal(50,8) DEFAULT NULL,
+			`MAPCENTER_LAT` decimal(50,8) DEFAULT NULL,
+			`UID`
+			varchar(50) COLLATE utf8_bin DEFAULT NULL,
+			`EXTERNAL_ID` int(12) DEFAULT NULL,
+			`CUSTOMER_ID`
+			int(12) NOT NULL,
+			`STATUS` int(2) NOT NULL,
+			`CREATION_TIME` datetime DEFAULT NULL,
+			PRIMARY KEY
+			(`ID`),
+			UNIQUE KEY `IDX_DELIVERY_STATION_EXTERNAL_ID` (`EXTERNAL_ID`,`CUSTOMER_ID`)
+			) ENGINE=InnoDB
+			AUTO_INCREMENT=218 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+	<!-- 创建‘粗’配送站点规则表 -->
+	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
+		<sql>
+			CREATE TABLE `raw_delivery_station_rules` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`RULE`
+			varchar(100) COLLATE utf8_bin DEFAULT NULL,
+			`RULE_EXPRESSION` varchar(1000) COLLATE utf8_bin
+			DEFAULT NULL,
+			`RULE_TYPE` int(2) NOT NULL,
+			`RAW_ADDRESS_ID` int(12) NOT NULL,
+			`RAW_DELIVERY_STATION_ID` int(12) NOT NULL,
+			`CREATION_TIME` datetime DEFAULT NULL,
+			PRIMARY KEY
+			(`ID`),
+			KEY `IDX_DS_RULE_ADDRESS_ID` (`RAW_ADDRESS_ID`)
+			) ENGINE=InnoDB AUTO_INCREMENT=12691
+			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+	<!-- 为配送站点表添加“坐标”，“中心经度”，“中心维度”，“UID”字段，并修改EXTERNAL_ID字段为可空 -->
+	<changeSet id="songkaojun-2015-04-07-08" author="songkaojun">
+		<sql>
+			ALTER TABLE `delivery_stations` ADD COLUMN `COORDINATE` varchar(60000) NULL AFTER `NAME`;
+			ALTER TABLE `delivery_stations` ADD COLUMN `MAPCENTER_LNG` decimal(50,8) NULL DEFAULT NULL AFTER
+			`COORDINATE`;
+			ALTER TABLE `delivery_stations` ADD COLUMN `MAPCENTER_LAT` decimal(50,8) NULL DEFAULT NULL AFTER
+			`MAPCENTER_LNG`;
+			ALTER TABLE `delivery_stations` ADD COLUMN `UID` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NULL
+			DEFAULT NULL AFTER `MAPCENTER_LAT`;
+			
+			ALTER TABLE `delivery_stations` MODIFY COLUMN `EXTERNAL_ID`  int(12) NULL AFTER `COORDINATE`;
+		</sql>
+	</changeSet>
+
+	<!-- 添加粗地址预制数据 -->
+	<changeSet id="songkaojun-2015-04-07-09" author="songkaojun">
+		<sqlFile path="raw_address_init_data.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+
 </databaseChangeLog>
