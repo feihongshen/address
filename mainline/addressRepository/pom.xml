@@ -527,13 +527,13 @@
 		<profile>
 			<id>test</id>
 			<properties>
-				<!-- tomcat port:10180, shutdown port:10181, jmxremote port: 10182 -->
-				<tomcat.manager.url>http://192.168.0.222:9528/manager</tomcat.manager.url>
-				<tomcat.username>zhaoshb</tomcat.username>
-				<tomcat.password>123qwe</tomcat.password>
+				<!-- tomcat port:10120 -->
+				<tomcat.manager.url>http://192.168.0.217:10120/manager</tomcat.manager.url>
+				<tomcat.username>admin</tomcat.username>
+				<tomcat.password>admin</tomcat.password>
 				<tomcat.path>/address</tomcat.path>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_gxpx_0109?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_gis_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>eap</jdbc.user>
 				<jdbc.password>explink</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -548,8 +548,8 @@
 				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
-				<luceneIndexPath>/home/appusr/address/lucene/index</luceneIndexPath>
-				<luceneDictPath>/home/appusr/address/lucene/dict</luceneDictPath>
+				<luceneIndexPath>/home/appusr/address_gis_test/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/appusr/address_gis_test/lucene/dict</luceneDictPath>
 				<label>test</label>
 			</properties>
 		</profile>
