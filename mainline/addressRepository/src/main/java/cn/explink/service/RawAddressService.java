@@ -171,6 +171,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 
 	public void importAddress(List<AddressDetail> detailList) {
 		Long customerId = this.getCustomerId();
+
 		Map<String, RawAddress> map = new HashMap<String, RawAddress>();// 省市区地址MAP(Key:省-市-区)
 		Map<String, RawAddress> addressMap = new HashMap<String, RawAddress>();// 关键字MAP(Key:父ID-名称)
 		Map<String, RawDeliveryStation> stationMap = new HashMap<String, RawDeliveryStation>(); // 站点MAP(Key:客户ID-名称)
@@ -182,9 +183,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 			this.addNonNullValue(adminNames, detail.getProvince());
 			this.addNonNullValue(adminNames, detail.getCity());
 			this.addNonNullValue(adminNames, detail.getDistrict());
-			this.addNonNullValue(addressNames, detail.getAddress1());
-			this.addNonNullValue(addressNames, detail.getAddress2());
-			this.addNonNullValue(addressNames, detail.getAddress3());
+			this.addNonNullValue(addressNames, detail.getAddressName1());
+			this.addNonNullValue(addressNames, detail.getAddressName2());
+			this.addNonNullValue(addressNames, detail.getAddressName3());
 		}
 
 		// 查找关键词并构造addressMap
@@ -234,7 +235,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		if (this.validateDetail(detail)) {
 			RawAddress rawAddress = map.get(detail.getProvince() + "-" + detail.getCity() + "-" + detail.getDistrict());
 			if (rawAddress == null) {
-				throw new ExplinkRuntimeException("省/市/区地址不存在");
+				// throw new ExplinkRuntimeException("省/市/区地址不存在");
+				RawAddressService.logger.info("省/市/区地址不存在");
+				return;
 			} else {
 				RawAddress bindAddress = null;// 需要绑定站点或者配送员的地址（动态变化，取最后一级地址）
 				RawAddress a1 = null;
@@ -242,9 +245,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				RawAddress a3 = null;
 				boolean isSaved = false;// 一次导入只能保存一个关键字
 				// 处理第一关键字
-				a1 = addressMap.get(rawAddress.getId() + "-" + detail.getAddress1());
+				a1 = addressMap.get(rawAddress.getId() + "-" + detail.getAddressName1());
 				if (a1 == null) {// 为空则创建并绑定
-					a1 = this.createAndBind(rawAddress, detail.getAddress1(), customerId);
+					a1 = this.createAndBind(rawAddress, detail.getAddressName1(), customerId);
 					isSaved = true;
 				} else {
 					if (bindMap.get(a1.getId()) == null) {
@@ -255,13 +258,15 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				bindAddress = a1;
 
 				// 处理第二关键字
-				if (StringUtils.isNotBlank(detail.getAddress2())) {
+				if (StringUtils.isNotBlank(detail.getAddressName2())) {
 					if (isSaved) {
-						throw new ExplinkRuntimeException("父节点不存在");
+						// throw new ExplinkRuntimeException("父节点不存在");
+						RawAddressService.logger.info("父节点不存在");
+						return;
 					}
-					a2 = addressMap.get(a1.getId() + "-" + detail.getAddress2());
+					a2 = addressMap.get(a1.getId() + "-" + detail.getAddressName2());
 					if (a2 == null) {// 为空则创建并绑定
-						a2 = this.createAndBind(a1, detail.getAddress2(), customerId);
+						a2 = this.createAndBind(a1, detail.getAddressName2(), customerId);
 						isSaved = true;
 					} else {// 是否已经绑定
 						if (bindMap.get(a2.getId()) == null) {
@@ -273,13 +278,15 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				}
 
 				// 处理第三个关键字
-				if (StringUtils.isNotBlank(detail.getAddress3())) {
+				if (StringUtils.isNotBlank(detail.getAddressName3())) {
 					if (isSaved) {
-						throw new ExplinkRuntimeException("父节点不存在");
+						// throw new ExplinkRuntimeException("父节点不存在");
+						RawAddressService.logger.info("父节点不存在");
+						return;
 					}
-					a3 = addressMap.get(a2.getId() + "-" + detail.getAddress3());
+					a3 = addressMap.get(a2.getId() + "-" + detail.getAddressName3());
 					if (a3 == null) {// 为空则创建并绑定
-						a3 = this.createAndBind(a2, detail.getAddress3(), customerId);
+						a3 = this.createAndBind(a2, detail.getAddressName3(), customerId);
 						isSaved = true;
 					} else {
 						if (bindMap.get(a3.getId()) == null) {
@@ -293,7 +300,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				if (StringUtils.isNotBlank(detail.getDeliveryStationName())) {
 					RawDeliveryStation ds = stationMap.get(customerId + "-" + detail.getDeliveryStationName());
 					if (ds == null) {
-						throw new ExplinkRuntimeException("配送站点不存在");
+						// throw new ExplinkRuntimeException("配送站点不存在");
+						RawAddressService.logger.info("配送站点不存在");
+						return;
 					} else {
 						// if (!ds.getId().equals(stationId)) {
 						// throw new ExplinkRuntimeException("导入站点不匹配！");
@@ -311,7 +320,8 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				}
 
 				if (!isSaved) {
-					throw new ExplinkRuntimeException("数据重复！");
+					// throw new ExplinkRuntimeException("数据重复！");
+					RawAddressService.logger.info("数据重复！");
 				}
 				addressMap.put(bindAddress.getParentId() + "-" + bindAddress.getName(), bindAddress);
 				bindMap.put(bindAddress.getId(), bindAddress);
@@ -326,10 +336,10 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		if (StringUtils.isBlank(detail.getProvince()) || StringUtils.isBlank(detail.getCity()) || StringUtils.isBlank(detail.getDistrict())) {
 			return false;
 		} else {
-			if (StringUtils.isBlank(detail.getAddress1())) {
+			if (StringUtils.isBlank(detail.getAddressName1())) {
 				throw new ExplinkRuntimeException("关键字为空！");
 			} else {
-				if (StringUtils.isBlank(detail.getAddress2()) && StringUtils.isNotBlank(detail.getAddress3())) {
+				if (StringUtils.isBlank(detail.getAddressName2()) && StringUtils.isNotBlank(detail.getAddressName3())) {
 					flag = false;
 				}
 			}
@@ -368,7 +378,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 	private void addRule(RawDeliveryStationRule rawDeliveryStationRule, Long customerId) {
 		List<Long> idList = this.rawDeliveryStationRuleDao.getByAddressAndStation(rawDeliveryStationRule.getRawAddress().getId(), rawDeliveryStationRule.getRawDeliveryStation().getId(), customerId);
 		if ((idList != null) && !idList.isEmpty()) {
-			throw new ExplinkRuntimeException("该关键字已绑定默认站点");
+			// throw new ExplinkRuntimeException("该关键字已绑定默认站点");
+			RawAddressService.logger.info("该关键字已绑定默认站点");
+			return;
 		}
 		this.rawDeliveryStationRuleDao.save(rawDeliveryStationRule);
 	}

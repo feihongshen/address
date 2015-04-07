@@ -70,11 +70,12 @@
 		<table class="table table-striped table-hover table-condensed dop-table-deliveryman"
 			id="dop_table_deliveryman_query">
 			<tr>
-				<th>&nbsp;&nbsp;&nbsp;</th>
+				<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 				<th>地址：</th>
 				<td><div>
 						<input code="address_query">
 					</div></td>
+				<th>&nbsp;&nbsp;&nbsp;</th>
 				<th>站点：</th>
 				<td><div>
 						<input code="station_query">
@@ -84,16 +85,14 @@
 
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_query" iconCls="icon-search">查询</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_edit" iconCls="icon-edit">修改</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit"
-			iconCls="icon-ok">提交</a> 
-			<a href="javascript:void(0)" class="easyui-linkbutton"
-			id="station_add_panel_btn_reset" iconCls="">后缀维护</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_delete" iconCls="icon-remove">删除</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit" iconCls="icon-ok">提交</a>
+<!-- 		<a href="javascript:void(0)" class="easyui-linkbutton" id="station_add_panel_btn_reset" iconCls="">后缀维护</a> -->
 </body>
 
 </div>
 <div id="keyword_edit_panel">
-	<table
-		class="">
+	<table class="">
 		<tr>
 			<th>省/直辖市：</th>
 			<td><div>
@@ -109,17 +108,21 @@
 				</div></td>
 		</tr>
 		<tr>
+			<input id="addressId1" type="hidden" />
+			<input id="addressId2" type="hidden" />
+			<input id="addressId3" type="hidden" />
+
 			<th>关键字1：</th>
 			<td><div>
-					<input id="address1">
+					<input id="addressName1">
 				</div></td>
 			<th>关键字2：</th>
 			<td><div>
-					<input id="address2">
+					<input id="addressName2">
 				</div></td>
 			<th>关键字3：</th>
 			<td><div>
-					<input id="address3">
+					<input id="addressName3">
 				</div></td>
 		</tr>
 		<tr>
@@ -130,8 +133,8 @@
 		</tr>
 	</table>
 	<div class="pull-right" align="right" style="margin: 5px 10px 0 0;">
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_ok" iconCls="icon-ok">提交</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_ok" iconCls="icon-ok">提交</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
 	</div>
 </div>
 <script type="text/javascript" src="${ctx}/js/tools.js"></script>

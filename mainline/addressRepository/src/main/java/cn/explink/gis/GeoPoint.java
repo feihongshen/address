@@ -1,23 +1,23 @@
 package cn.explink.gis;
 
+import net.sf.json.JSONObject;
+
 /**
  * 地理 点对象
  * 
  * @author Administrator
  *
  */
-public class GeoPoint  {
+public class GeoPoint {
 
 	private double lng;
 	private double lat;
 
-	
-	public GeoPoint()
-	{
-		this.lng=0;
-		this.lat=0;
+	public GeoPoint() {
+		this.lng = 0;
+		this.lat = 0;
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -25,11 +25,30 @@ public class GeoPoint  {
 	 *            经度
 	 * @param lat
 	 *            纬度
-	 *            
-	*/
+	 * 
+	 */
 	public GeoPoint(double lng, double lat) {
 		this.lng = lng;
 		this.lat = lat;
+	}
+
+	/**
+	 * 构造函数
+	 * 
+	 * @param point
+	 *            point格式 ： {"lng":116.478513,"lat":39.916465} json字符串
+	 */
+	public GeoPoint(String point) {
+		try {
+			JSONObject jsonPoint = JSONObject.fromObject(point); 
+			this.lng = jsonPoint.getDouble("lng");
+			this.lat = jsonPoint.getDouble("lat");
+		} catch (Exception e) {
+			// TODO: handle exception
+			this.lng = 0;
+			this.lat = 0;
+		}
+
 	}
 
 	/**
@@ -70,33 +89,29 @@ public class GeoPoint  {
 		this.lat = lat;
 	}
 
-	
-    @Override
-    public boolean equals(Object obj) {
-    	
-    	if(obj==null)
-    	{
-    		return false;
-    	}
-    	
-    	if(getClass()!=obj.getClass())
-    	{
-    		return false;
-    	}
-    	
-    	double precision = 2e-10; // 浮点类型计算时候与0比较时候的容差
-    	
-    	GeoPoint pt=(GeoPoint)obj;
-    	
-    	// 相等
-    	if((Math.abs(pt.getLat()-this.getLat())<precision) && (Math.abs(pt.getLng()-this.getLng())<precision))
-    	{
-    		return true;
-    	}
-    	
-    	return false;
+	@Override
+	public boolean equals(Object obj) {
 
-    }
-	
-	
+		if (obj == null) {
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		double precision = 2e-10; // 浮点类型计算时候与0比较时候的容差
+
+		GeoPoint pt = (GeoPoint) obj;
+
+		// 相等
+		if ((Math.abs(pt.getLat() - this.getLat()) < precision)
+				&& (Math.abs(pt.getLng() - this.getLng()) < precision)) {
+			return true;
+		}
+
+		return false;
+
+	}
+
 }

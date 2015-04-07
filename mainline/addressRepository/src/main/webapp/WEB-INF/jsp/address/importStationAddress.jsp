@@ -76,7 +76,7 @@
 
 		<div class="pull-right" style="margin-top: 5px; margin-right: 10px;">
 			<b style="margin-left: 5px;">站点名称：</b><input name="station_add_panel_input_area"
-				id="station_add_panel_input_area">
+				id="station_add_panel_input_area" readonly="readonly">
 		</div>
 
 		<div id="station_add_panel_map" style="height: 450px"></div>

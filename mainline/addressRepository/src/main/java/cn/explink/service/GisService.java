@@ -22,6 +22,7 @@ import cn.explink.gis.GeoPoint;
 import cn.explink.gis.GeoUtility;
 import cn.explink.gis.POI;
 import cn.explink.gis.ReGeoCoderResult;
+import cn.explink.util.StringUtil;
 
 /**
  *
@@ -36,11 +37,8 @@ public class GisService {
 	private DeliveryStationDao deliveryStationDao;
 
 	public List<DeliveryStation> search(String addressLine, Long customerId) {
-
 		try {
-
 			GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
-
 			if (position == null) // 地理编码+POI检索失败
 			{
 				return null;
@@ -59,6 +57,12 @@ public class GisService {
 			for (DeliveryStation deliveryStation : allStations) {
 
 				String coorString = deliveryStation.getCoordinate();
+				if (StringUtil.isEmpty(coorString)) {
+					continue;
+				}
+				// TODO 格式可能变化
+				coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
+
 				if (coorString == null) {
 					// 站点配送范围获取失败
 					continue;

@@ -31,7 +31,6 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 	@Autowired
 	private CustomerDao customerDao;
 
-	@SuppressWarnings("unchecked")
 	public void createDeliveryStation(List<String> deliveryStationNameList) {
 		Long customerId = this.getCustomerId();
 		for (String deliveryStationName : deliveryStationNameList) {

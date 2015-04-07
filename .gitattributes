@@ -95,6 +95,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/fields/NumberExpressi
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/RuleExpression.java -text
 mainline/addressRepository/src/main/java/cn/explink/exception/ExplinkRuntimeException.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/AddressComponent.java -text
+mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV1RouteMatrix.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV2GeoCoder.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoCoder.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoPoint.java -text
@@ -102,6 +103,7 @@ mainline/addressRepository/src/main/java/cn/explink/gis/GeoRectangle.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoUtility.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/HttpUtility.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/IGeoCoder.java -text
+mainline/addressRepository/src/main/java/cn/explink/gis/IRouteMatrix.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/POI.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/Point.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/ReGeoCoderResult.java -text
@@ -155,6 +157,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationRuleS
 mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/GisService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/LuceneService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/RawAddressPermissionService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawAddressService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawDeliveryStationService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RuleService.java -text

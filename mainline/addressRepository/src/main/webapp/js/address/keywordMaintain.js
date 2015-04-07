@@ -37,17 +37,35 @@ $("#datagrid_keyword").datagrid({
 		title : '区/县',
 		sortable : false
 	}, {
-		field : 'address1',
+		field : 'addressId1',
+		width : 150,
+		title : '关键字1',
+		hidden : true,
+		sortable : true
+	}, {
+		field : 'addressName1',
 		width : 150,
 		title : '关键字1',
 		sortable : true
 	}, {
-		field : 'address2',
+		field : 'addressId2',
+		width : 150,
+		title : '关键字2',
+		hidden : true,
+		sortable : true
+	}, {
+		field : 'addressName2',
 		width : 150,
 		title : '关键字2',
 		sortable : true
 	}, {
-		field : 'address3',
+		field : 'addressId3',
+		width : 150,
+		title : '关键字3',
+		hidden : true,
+		sortable : true
+	}, {
+		field : 'addressName3',
 		width : 150,
 		title : '关键字3',
 		sortable : true
@@ -107,17 +125,24 @@ $("#keyword_edit")
 							var province = selections[0].province;
 							var city = selections[0].city;
 							var district = selections[0].district;
-							var address1 = selections[0].address1;
-							var address2 = selections[0].address2;
-							var address3 = selections[0].address3;
+							var addressId1 = selections[0].addressId1;
+							var addressName1 = selections[0].addressName1;
+							var addressId2 = selections[0].addressId2;
+							var addressName2 = selections[0].addressName2;
+							var addressId3 = selections[0].addressId3;
+							var addressName3 = selections[0].addressName3;
+
 							var deliveryStationName = selections[0].deliveryStationName;
 
 							$("input[id='province']").val(province);
 							$("input[id='city']").val(city);
 							$("input[id='district']").val(district);
-							$("input[id='address1']").val(address1);
-							$("input[id='address2']").val(address2);
-							$("input[id='address3']").val(address3);
+							$("input[id='addressId1']").val(addressId1);
+							$("input[id='addressName1']").val(addressName1);
+							$("input[id='addressId2']").val(addressId2);
+							$("input[id='addressName2']").val(addressName2);
+							$("input[id='addressId3']").val(addressId3);
+							$("input[id='addressName3']").val(addressName3);
 							$("input[id='deliveryStationName']").val(
 									deliveryStationName);
 							isModify = true;
@@ -130,30 +155,58 @@ $("#keyword_edit")
 				});
 
 // bind delete event
-// $("#dop_btn_deliveryman_delete").click(function() {
-// var selections = $("#dop_datagrid_deliveryman").datagrid("getSelections");
-// if (selections && selections.length > 0)
-// layer.confirm('确定删除吗？', function() {
-// Tools.doAction("deliveryManController.do?delete", {
-// "rowList" : JSON.stringify(selections)
-// }, false, function(data) {
-// if (data.success) {
-// Tip.msgOk("删除成功！");
-// init();
-// }
-// });
-// });
-// else
-// layer.tips('请选择要删除行', this, {
-// guide : 2,
-// time : 2
-// });
-// });
+$("#keyword_delete").click(function() {
+	var selections = $("#datagrid_keyword").datagrid("getSelections");
+	if (selections && selections.length > 0)
+		layer.confirm('确定删除吗？', function() {
+			Tools.doAction(ctx + '/keyword/delete', {
+				"rowList" : JSON.stringify(selections)
+			}, false, function(data) {
+				if (data.success) {
+					Tip.msgOk("删除成功！");
+					init();
+				}
+			});
+		});
+	else
+		layer.tips('请选择要删除行', this, {
+			guide : 2,
+			time : 2
+		});
+});
 
 // 修改面板 提交按钮
 $("#keyword_ok").click(function() {
-	// TODO 校验
-	// var delName = $("input[id='delName']").val();
+	var addressName1 = $("input[id='addressName1']").val();
+	var addressName2 = $("input[id='addressName2']").val();
+	var addressName3 = $("input[id='addressName3']").val();
+	var deliveryStationName = $("input[id='deliveryStationName']").val();
+
+	if (!$.trim(addressName3) == '') {
+		if ($.trim(addressName1) == '' && $.trim(addressName2) == '') {
+			Tip.alertError("关键字1、2不能为空！");
+			return;
+		}
+		if ($.trim(addressName1) == '') {
+			Tip.alertError("关键字1不能为空！");
+			return;
+		}
+		if ($.trim(addressName2) == '') {
+			Tip.alertError("关键字2不能为空！");
+			return;
+		}
+	} else if (!$.trim(addressName2) == '') {
+		if ($.trim(addressName1) == '') {
+			Tip.alertError("关键字1不能为空！");
+			return;
+		}
+	}
+	
+	if($.trim(addressName1) == ''){
+		Tip.alertError("关键字不能为空！");
+		return;
+	}
+
 	var addressDetailList = getSingleSaveParams();
 	Tools.doAction(ctx + '/keyword/save', {
 		addressDetailListJson : JSON.stringify(addressDetailList)
@@ -201,9 +254,12 @@ function getMultipleSaveParams(selections) {
 		addressDetail.province = selections[i].province;
 		addressDetail.city = selections[i].city;
 		addressDetail.district = selections[i].district;
-		addressDetail.address1 = selections[i].address1;
-		addressDetail.address2 = selections[i].address2;
-		addressDetail.address3 = selections[i].address3;
+		addressDetail.addressId1 = selections[i].addressId1;
+		addressDetail.addressName1 = selections[i].addressName1;
+		addressDetail.addressId2 = selections[i].addressId2;
+		addressDetail.addressName2 = selections[i].addressName2;
+		addressDetail.addressId3 = selections[i].addressId3;
+		addressDetail.addressName3 = selections[i].addressName3;
 		addressDetail.deliveryStationName = selections[i].deliveryStationName;
 
 		addressDetailList.push(addressDetail);
@@ -217,9 +273,12 @@ function getSingleSaveParams() {
 	addressDetail.province = $("input[id='province']").val();
 	addressDetail.city = $("input[id='city']").val();
 	addressDetail.district = $("input[id='district']").val();
-	addressDetail.address1 = $("input[id='address1']").val();
-	addressDetail.address2 = $("input[id='address2']").val();
-	addressDetail.address3 = $("input[id='address3']").val();
+	addressDetail.addressId1 = $("input[id='addressId1']").val();
+	addressDetail.addressName1 = $("input[id='addressName1']").val();
+	addressDetail.addressId2 = $("input[id='addressId2']").val();
+	addressDetail.addressName2 = $("input[id='addressName2']").val();
+	addressDetail.addressId3 = $("input[id='addressId3']").val();
+	addressDetail.addressName3 = $("input[id='addressName3']").val();
 	addressDetail.deliveryStationName = $("input[id='deliveryStationName']")
 			.val();
 	addressDetailList.push(addressDetail);

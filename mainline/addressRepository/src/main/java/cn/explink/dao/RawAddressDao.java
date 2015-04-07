@@ -55,7 +55,7 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 	}
 
 	public List<RawAddressStationPair> getPageAddressList(Long customerId, String address, String station, int page, int pageSize) {
-		String sql = "select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_delivery_stations d, raw_delivery_station_rules r where a.id=r.raw_address_id and d.id=r.raw_delivery_station_id and d.customer_id="
+		String sql = "select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id="
 				+ customerId;
 		if (StringUtil.isNotEmpty(address)) {
 			sql += " and a.name like '%" + address + "%'";

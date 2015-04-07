@@ -16,13 +16,15 @@ import cn.explink.util.StringUtil;
  */
 public class AddressSplitter {
 
-	public List<AddressDetail> split() {
-		// 1, 获取地址——站点
-		List<AddressStation> addressStationList = this.getAddressStation();
+	private List<AddressStation> addressStationList;
 
+	public AddressSplitter(List<AddressStation> addressStationList) {
+		this.addressStationList = addressStationList;
+	}
+
+	public List<AddressDetail> split() {
 		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
-		// 2, split
-		for (AddressStation addressStation : addressStationList) {
+		for (AddressStation addressStation : this.addressStationList) {
 			String addressLine = StringUtil.filterQureyStr(addressStation.getAddressLine());
 
 			AddressDetail addressDetail = new AddressDetail();
@@ -41,23 +43,23 @@ public class AddressSplitter {
 	private List<AddressDetail> splitMultiAddress(List<AddressDetail> addressDetailList) {
 		List<AddressDetail> splittedAddressList = new ArrayList<AddressDetail>();
 		for (AddressDetail addressDetail : addressDetailList) {
-			if (StringUtil.isEmpty(addressDetail.getAddress1())) {
+			if (StringUtil.isEmpty(addressDetail.getAddressName1())) {
 				continue;
 			}
-			if (!StringUtil.isEmpty(addressDetail.getAddress3())) {
-				AddressDetail ad1 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddress1(), "", "",
+			if (!StringUtil.isEmpty(addressDetail.getAddressName3())) {
+				AddressDetail ad1 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddressName1(), "", "",
 						addressDetail.getDeliveryStationName());
-				AddressDetail ad2 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddress1(), addressDetail.getAddress2(), "",
-						addressDetail.getDeliveryStationName());
+				AddressDetail ad2 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddressName1(),
+						addressDetail.getAddressName2(), "", addressDetail.getDeliveryStationName());
 				splittedAddressList.add(ad1);
 				splittedAddressList.add(ad2);
-			} else if (!StringUtil.isEmpty(addressDetail.getAddress2())) {
-				AddressDetail ad1 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddress1(), "", "",
+			} else if (!StringUtil.isEmpty(addressDetail.getAddressName2())) {
+				AddressDetail ad1 = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddressName1(), "", "",
 						addressDetail.getDeliveryStationName());
 				splittedAddressList.add(ad1);
 			}
-			AddressDetail ad = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddress1(), addressDetail.getAddress2(),
-					addressDetail.getAddress3(), addressDetail.getDeliveryStationName());
+			AddressDetail ad = new AddressDetail(addressDetail.getProvince(), addressDetail.getCity(), addressDetail.getDistrict(), addressDetail.getAddressName1(), addressDetail.getAddressName2(),
+					addressDetail.getAddressName3(), addressDetail.getDeliveryStationName());
 			splittedAddressList.add(ad);
 		}
 
@@ -105,12 +107,12 @@ public class AddressSplitter {
 		} else if (subAddress.endsWith("区") && this.exceptDistrict(subAddress) && !StringUtil.isEmpty(addressDetail.getProvince())) {
 			addressDetail.setCity("市辖区");
 			addressDetail.setDistrict(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getDistrict()) && StringUtil.isEmpty(addressDetail.getAddress1())) {
-			addressDetail.setAddress1(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getAddress1()) && StringUtil.isEmpty(addressDetail.getAddress2())) {
-			addressDetail.setAddress2(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getAddress2()) && StringUtil.isEmpty(addressDetail.getAddress3())) {
-			addressDetail.setAddress3(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getDistrict()) && StringUtil.isEmpty(addressDetail.getAddressName1())) {
+			addressDetail.setAddressName1(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getAddressName1()) && StringUtil.isEmpty(addressDetail.getAddressName2())) {
+			addressDetail.setAddressName2(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getAddressName2()) && StringUtil.isEmpty(addressDetail.getAddressName3())) {
+			addressDetail.setAddressName3(subAddress);
 		}
 
 		// "省", "自治区", "市", "区", "街道", "路", "小区"
@@ -125,14 +127,14 @@ public class AddressSplitter {
 			addressDetail.setProvince(subAddress);
 		} else if (subAddress.endsWith("市") && this.exceptCity(subAddress) && !StringUtil.isEmpty(addressDetail.getProvince())) {
 			addressDetail.setCity(subAddress);
-		} else if (subAddress.endsWith("区") && this.exceptDistrict(subAddress) && !StringUtil.isEmpty(addressDetail.getCity())) {
+		} else if (subAddress.endsWith("县") || (subAddress.endsWith("区") && this.exceptDistrict(subAddress) && !StringUtil.isEmpty(addressDetail.getCity()))) {
 			addressDetail.setDistrict(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getDistrict()) && StringUtil.isEmpty(addressDetail.getAddress1())) {
-			addressDetail.setAddress1(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getAddress1()) && StringUtil.isEmpty(addressDetail.getAddress2())) {
-			addressDetail.setAddress2(subAddress);
-		} else if (!StringUtil.isEmpty(addressDetail.getAddress2()) && StringUtil.isEmpty(addressDetail.getAddress3())) {
-			addressDetail.setAddress3(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getDistrict()) && StringUtil.isEmpty(addressDetail.getAddressName1())) {
+			addressDetail.setAddressName1(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getAddressName1()) && StringUtil.isEmpty(addressDetail.getAddressName2())) {
+			addressDetail.setAddressName2(subAddress);
+		} else if (!StringUtil.isEmpty(addressDetail.getAddressName2()) && StringUtil.isEmpty(addressDetail.getAddressName3())) {
+			addressDetail.setAddressName3(subAddress);
 		}
 
 		// "省", "自治区", "市", "区", "街道", "路", "小区"
@@ -150,20 +152,6 @@ public class AddressSplitter {
 				&& !subAddress.endsWith("交易区") && !subAddress.endsWith("厂区") && !subAddress.endsWith("度假区") && !subAddress.endsWith("生活区") && !subAddress.endsWith("军区");
 	}
 
-	private List<AddressStation> getAddressStation() {
-
-		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
-		addressStationList.add(new AddressStation("海南省三亚市河西区金鸡岭路309号丽苑花园小区A1栋", "琼东岸站"));
-		addressStationList.add(new AddressStation("海南省海口市琼山区龙昆南路15号 海南省妇幼保健院人事科", "琼国兴站"));
-		addressStationList.add(new AddressStation("海南省海口市秀英区海南省海秀中路120号顺发新村32栋302室", "琼龙华站"));
-		addressStationList.add(new AddressStation("海南省三亚市河西区金鸡岭路309号丽苑花园小区A1栋", "琼东岸站"));
-		addressStationList.add(new AddressStation("海南省三亚市河西区金鸡岭路309号丽苑花园小区A1栋", "琼东岸站"));
-		addressStationList.add(new AddressStation("海南省三亚市河西区金鸡岭路309号丽苑花园小区A1栋", "琼东岸站"));
-		addressStationList.add(new AddressStation("海南省三亚市河西区金鸡岭路309号丽苑花园小区A1栋", "琼东岸站"));
-
-		return addressStationList;
-	}
-
 	public List<String> getKeywordPostList() {
 		Set<String> commonKeyWordSet = CommonKeyWord.getKeyWordSet();
 
@@ -176,6 +164,14 @@ public class AddressSplitter {
 		// commonKeyWordSet.add(splitKeywordPostInfo.getKeywordPostName());
 		// }
 		return new ArrayList<String>(commonKeyWordSet);
+	}
+
+	public List<AddressStation> getAddressStationList() {
+		return this.addressStationList;
+	}
+
+	public void setAddressStationList(List<AddressStation> addressStationList) {
+		this.addressStationList = addressStationList;
 	}
 
 }

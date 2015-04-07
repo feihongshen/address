@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONArray;
+
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -36,10 +38,12 @@ import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationService;
+import cn.explink.service.RawAddressPermissionService;
 import cn.explink.service.RawAddressService;
 import cn.explink.spliter.vo.AddressDetail;
 import cn.explink.spliter.vo.FullRawAddressStationPair;
 import cn.explink.spliter.vo.RawAddressQuickVO;
+import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
 
 @RequestMapping("/keyword")
@@ -62,6 +66,9 @@ public class KeywordController extends BaseController {
 
 	@Autowired
 	private AddressImportResultService addressImportResultService;
+
+	@Autowired
+	private RawAddressPermissionService rawAddressPermissionService;
 
 	public final ObjectMapper mapper = new ObjectMapper();
 
@@ -99,13 +106,16 @@ public class KeywordController extends BaseController {
 			addressDetail.setCity(rawAddressList.get(2).getName());
 			addressDetail.setDistrict(rawAddressList.get(3).getName());
 			if ((rawAddressList.size() > 4) && (null != rawAddressList.get(4))) {
-				addressDetail.setAddress1(rawAddressList.get(4).getName());
+				addressDetail.setAddressId1(rawAddressList.get(4).getId());
+				addressDetail.setAddressName1(rawAddressList.get(4).getName());
 			}
 			if ((rawAddressList.size() > 5) && (null != rawAddressList.get(5))) {
-				addressDetail.setAddress2(rawAddressList.get(5).getName());
+				addressDetail.setAddressId2(rawAddressList.get(5).getId());
+				addressDetail.setAddressName2(rawAddressList.get(5).getName());
 			}
 			if ((rawAddressList.size() > 6) && (null != rawAddressList.get(6))) {
-				addressDetail.setAddress3(rawAddressList.get(6).getName());
+				addressDetail.setAddressId3(rawAddressList.get(6).getId());
+				addressDetail.setAddressName3(rawAddressList.get(6).getName());
 			}
 			addressDetail.setDeliveryStationName(fullRawASPair.getRawDeliveryStation().getName());
 
@@ -136,17 +146,19 @@ public class KeywordController extends BaseController {
 		}
 
 		List<AddressImportDetail> addressImportDetailList = new ArrayList<AddressImportDetail>();
-		for (AddressDetail addressDetail : addressDetailList) {
-			AddressImportDetail addressImportDetail = new AddressImportDetail();
-			addressImportDetail.setProvince(addressDetail.getProvince());
-			addressImportDetail.setCity(addressDetail.getCity());
-			addressImportDetail.setDistrict(addressDetail.getDistrict());
-			addressImportDetail.setAddress1(addressDetail.getAddress1());
-			addressImportDetail.setAddress2(addressDetail.getAddress2());
-			addressImportDetail.setAddress3(addressDetail.getAddress3());
-			addressImportDetail.setDeliveryStationName(addressDetail.getDeliveryStationName());
+		if (null != addressDetailList) {
+			for (AddressDetail addressDetail : addressDetailList) {
+				AddressImportDetail addressImportDetail = new AddressImportDetail();
+				addressImportDetail.setProvince(addressDetail.getProvince());
+				addressImportDetail.setCity(addressDetail.getCity());
+				addressImportDetail.setDistrict(addressDetail.getDistrict());
+				addressImportDetail.setAddress1(addressDetail.getAddressName1());
+				addressImportDetail.setAddress2(addressDetail.getAddressName2());
+				addressImportDetail.setAddress3(addressDetail.getAddressName3());
+				addressImportDetail.setDeliveryStationName(addressDetail.getDeliveryStationName());
 
-			addressImportDetailList.add(addressImportDetail);
+				addressImportDetailList.add(addressImportDetail);
+			}
 		}
 
 		try {
@@ -154,6 +166,8 @@ public class KeywordController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.unbindRawAddress(addressImportDetailList, addressDetailList);
+
 		Integer failureCount = addressImportResult.getFailureCount();
 		if (failureCount > 0) {
 			aj.setSuccess(false);
@@ -169,6 +183,33 @@ public class KeywordController extends BaseController {
 			aj.setMsg(sb.toString());
 		}
 		return aj;
+	}
+
+	private void unbindRawAddress(List<AddressImportDetail> addressImportDetailList, List<AddressDetail> addressDetailList) {
+		if (null == addressDetailList) {
+			return;
+		}
+		List<Long> rawAddressIdList = new ArrayList<Long>();
+		for (AddressImportDetail addressImportDetail : addressImportDetailList) {
+			if (addressImportDetail.getStatus() != AddressImportDetailStatsEnum.success.getValue()) {
+				continue;
+			}
+			for (AddressDetail addressDetail : addressDetailList) {
+				if ((addressDetail.getAddressId3() != null) && (addressDetail.getAddressId3() != 0)) {
+					rawAddressIdList.add(addressDetail.getAddressId3());
+				} else if ((addressDetail.getAddressId2() != null) && (addressDetail.getAddressId2() != 0)) {
+					rawAddressIdList.add(addressDetail.getAddressId2());
+				} else if ((addressDetail.getAddressId1() != null) && (addressDetail.getAddressId1() != 0)) {
+					rawAddressIdList.add(addressDetail.getAddressId1());
+				}
+			}
+
+		}
+
+		if (rawAddressIdList.size() > 0) {
+			this.rawAddressPermissionService.batchUnbindAddress(rawAddressIdList, this.getCustomerId());
+		}
+
 	}
 
 	/**
@@ -271,6 +312,45 @@ public class KeywordController extends BaseController {
 			this.addressImportResultService.save(result);
 		}
 		return result;
+	}
+
+	/**
+	 *
+	 * @param rowList
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/delete")
+	@ResponseBody
+	public AjaxJson deleteRows(String rowList, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
+		try {
+			JSONArray json = JSONArray.fromObject(rowList);
+			addressDetailList = JSONArray.toList(json, AddressDetail.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		List<Long> rawAddressIdList = new ArrayList<Long>();
+		for (AddressDetail addressDetail : addressDetailList) {
+			if (StringUtil.isNotEmpty(addressDetail.getAddressName3())) {
+				rawAddressIdList.add(addressDetail.getAddressId3());
+			} else if (StringUtil.isNotEmpty(addressDetail.getAddressName2())) {
+				rawAddressIdList.add(addressDetail.getAddressId2());
+			} else if (StringUtil.isNotEmpty(addressDetail.getAddressName1())) {
+				rawAddressIdList.add(addressDetail.getAddressId1());
+			}
+		}
+
+		if (rawAddressIdList.size() > 0) {
+			int unbindAddressCount = this.rawAddressPermissionService.batchUnbindAddress(rawAddressIdList, this.getCustomerId());
+			if (rawAddressIdList.size() == unbindAddressCount) {
+				j.setSuccess(true);
+			}
+		}
+
+		return j;
 	}
 
 }

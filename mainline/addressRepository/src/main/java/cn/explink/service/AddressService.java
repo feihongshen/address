@@ -38,6 +38,9 @@ import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
+import cn.explink.spliter.AddressSplitter;
+import cn.explink.spliter.vo.AddressDetail;
+import cn.explink.spliter.vo.AddressStation;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.AddressUtil;
 import cn.explink.util.StringUtil;
@@ -98,6 +101,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	@Autowired
 	private VendorsAgingDao vendorAgingService;
+
+	@Autowired
+	private GisService gisService;
+
+	@Autowired
+	private RawAddressService rawAddressService;
+	@Autowired
+	private RawDeliveryStationService rawDeliveryStationService;
 
 	public void listAddress() {
 		List<Address> addressList = this.addressDao.getAllAddresses();
@@ -295,6 +306,28 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = this.search(orderVo, true);
+
+			// *******GIS********
+			switch (singleResult.getResult()) {
+			case zeroResult:
+			case multipleResult:
+			case exceptionResult:
+				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+
+				if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
+					singleResult.setResult(AddressMappingResultEnum.singleResult);
+
+					try {
+						this.splitAndImportRawAddress(orderVo.getAddressLine(), deliveryStationList.get(0).getName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				singleResult.setRelatedAddressList(new ArrayList<Address>());
+				singleResult.setDeliveryStationList(deliveryStationList);
+			}
+			// *******GIS********
+
 			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
 
 			List<AddressVo> addressList = new ArrayList<AddressVo>();
@@ -337,6 +370,28 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return result;
 	}
 
+	private List<DeliveryStation> searchByGis(OrderVo orderVo) {
+		return this.gisService.search(orderVo.getAddressLine(), orderVo.getCustomerId());
+	}
+
+	private void splitAndImportRawAddress(String addressLine, String stationName) {
+		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
+		AddressStation addressStation = new AddressStation(addressLine, stationName);
+		addressStationList.add(addressStation);
+
+		AddressSplitter addressSplitter = new AddressSplitter(addressStationList);
+		List<AddressDetail> addressDetailList = addressSplitter.split();
+		if (addressDetailList.size() == 0) {
+			return;
+		}
+		List<String> deliveryStationNameList = new ArrayList<String>();
+		for (AddressDetail addressDetail : addressDetailList) {
+			deliveryStationNameList.add(addressDetail.getDeliveryStationName());
+		}
+		this.rawDeliveryStationService.createDeliveryStation(deliveryStationNameList);
+		this.rawAddressService.importAddress(addressDetailList);
+	}
+
 	/**
 	 * 匹配接口不做存储
 	 *
@@ -354,6 +409,31 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = this.search(orderVo, false);
+
+			// *******GIS********
+			switch (singleResult.getResult()) {
+			case zeroResult:
+			case multipleResult:
+			case exceptionResult:
+				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+
+				if ((deliveryStationList == null) || (0 == deliveryStationList.size())) {
+					singleResult.setResult(AddressMappingResultEnum.zeroResult);
+				} else if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
+					singleResult.setResult(AddressMappingResultEnum.singleResult);
+
+					try {
+						this.splitAndImportRawAddress(orderVo.getAddressLine(), deliveryStationList.get(0).getName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					singleResult.setResult(AddressMappingResultEnum.multipleResult);
+				}
+				singleResult.setDeliveryStationList(deliveryStationList);
+			}
+			// *******GIS********
+
 			BeanVo b = new BeanVo();
 			b.setKey(orderVo.getAddressLine());
 			switch (singleResult.getResult()) {

@@ -10,6 +10,7 @@ public class GeoCoder {
 
 	private static GeoCoder _instance=null;
 	private IGeoCoder _geoCoder=null;
+	private IRouteMatrix _routeMatrix=null;
 	
 	/**
 	 * 私有构造函数
@@ -17,6 +18,7 @@ public class GeoCoder {
 	private GeoCoder()
 	{
 		_geoCoder=new BaiduV2GeoCoder();
+		_routeMatrix=new BaiduV1RouteMatrix();
 	}
 	
 	/**
@@ -39,6 +41,15 @@ public class GeoCoder {
 	public IGeoCoder getGeoCoder()
 	{
 		return _geoCoder;
+	}
+	
+	/**
+	 * 路线规划，路线查询接口
+	 * @return
+	 */
+	public IRouteMatrix getRouteMatrix()
+	{
+		return _routeMatrix;
 	}
 	
 	
