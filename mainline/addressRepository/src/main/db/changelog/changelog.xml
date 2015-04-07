@@ -164,5 +164,13 @@
 	<changeSet id="songkaojun-2015-03-31-01" author="songkaojun">
 		<sqlFile path="customer_init_jxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建上海品骏客户 -->
+	<changeSet id="songkaojun-2015-04-07-01" author="songkaojun">
+		<sqlFile path="customer_init_shpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建吉林品骏客户 -->
+	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
+		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 	
 </databaseChangeLog>
