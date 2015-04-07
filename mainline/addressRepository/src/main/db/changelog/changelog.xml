@@ -28,15 +28,13 @@
 			`TRY_COUNT` int (10)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-			-- create index
-			IDX_TASKS_STATUS_FIRE_TIME
-			CREATE INDEX `IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
+			CREATE INDEX
+			`IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
 			(
 			`STATUS`,
 			`FIRE_TIME`
 			);
 
-			-- create index IDX_TASKS_STATUS_FIRE_TIME
 			CREATE INDEX
 			`IDX_TASKS_STATUS_TYPE_FIRE_TIME` ON
 			`SCHEDULED_TASKS`
@@ -46,9 +44,8 @@
 			`FIRE_TIME`
 			);
 
-			-- create
-			index IDX_TASKS_REFERENCE_ID
-			CREATE INDEX `IDX_TASKS_REFERENCE_ID` ON
+			CREATE
+			INDEX `IDX_TASKS_REFERENCE_ID` ON
 			`SCHEDULED_TASKS`
 			(
 			`REFERENCE_ID`
@@ -56,10 +53,7 @@
 		</sql>
 	</changeSet>
 
-	<!-- 创建易普联科客户 -->
-	<changeSet id="xushiju-2014-09-04-01" author="xushiju">
-		<sqlFile path="customer_init_explink.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+
 
 	<!-- 创建更新索引和词典的定时任务 -->
 	<changeSet id="xushiju-2014-09-04-02" author="xushiju">
@@ -106,30 +100,7 @@
 		</sql>
 	</changeSet>
 
-	<!-- 创建贵州品信客户 -->
-	<changeSet id="xushiju-2014-09-30-01" author="xushiju">
-		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
 
-	<!-- 创建新京报客户 -->
-	<changeSet id="xushiju-2014-10-09-01" author="xushiju">
-		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-
-	<!-- 新增系统参数（树分页大小） -->
-	<changeSet id="chris-2014-10-17-01" author="chris">
-		<sqlFile path="config_init.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-
-	<!-- 创建广西品信客户 -->
-	<changeSet id="xushiju-2014-11-04-01" author="xushiju">
-		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-
-	<!-- 创建重庆华宇客户 -->
-	<changeSet id="xushiju-2014-11-13-01" author="xushiju">
-		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
 
 	<changeSet id="xushiju-2014-11-17-01" author="xushiju">
 		<sql>
@@ -137,43 +108,12 @@
 		</sql>
 	</changeSet>
 
-	<!-- 创建广州通路客户 -->
-	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
-		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	<!-- 新增系统参数（树分页大小） -->
+	<changeSet id="chris-2014-10-17-01" author="chris">
+		<sqlFile path="config_init.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
-	<!-- 创建宁夏品信客户 -->
-	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun">
-		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建武汉飞远客户 -->
-	<changeSet id="songkaojun-2015-02-27-02" author="songkaojun">
-		<sqlFile path="customer_init_whfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建福建飞远客户 -->
-	<changeSet id="songkaojun-2015-02-27-03" author="songkaojun">
-		<sqlFile path="customer_init_fjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建安徽品骏客户 -->
-	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun">
-		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建河南豫铁客户 -->
-	<changeSet id="songkaojun-2015-03-18-01" author="songkaojun">
-		<sqlFile path="customer_init_hnyt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建江西飞远客户 -->
-	<changeSet id="songkaojun-2015-03-31-01" author="songkaojun">
-		<sqlFile path="customer_init_jxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建上海品骏客户 -->
-	<changeSet id="songkaojun-2015-04-07-01" author="songkaojun">
-		<sqlFile path="customer_init_shpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
-	<!-- 创建吉林品骏客户 -->
-	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
-		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+
 
 	<!-- 添加数字地图功能 新增脚本 -->
 	<!-- 创建‘粗’地址表 -->
@@ -216,29 +156,14 @@
 		</sql>
 	</changeSet>
 
-	<!-- 创建‘粗’地址权限表 -->
-	<changeSet id="songkaojun-2015-04-07-05" author="songkaojun">
-		<sql>
-			CREATE TABLE `raw_address_permissions` (
-			`ID` int(12) NOT NULL AUTO_INCREMENT,
-			`RAW_ADDRESS_ID` int(12) NOT NULL,
-			`CUSTOMER_ID` int(12) DEFAULT NULL,
-			PRIMARY KEY (`ID`),
-			KEY
-			`IDX_ADDRESS_PERMISSION_ADDRESS_ID` (`RAW_ADDRESS_ID`)
-			) ENGINE=InnoDB AUTO_INCREMENT=54190
-			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-		</sql>
-	</changeSet>
-
 	<!-- 创建‘粗’配送站点表 -->
-	<changeSet id="songkaojun-2015-04-07-06" author="songkaojun">
+	<changeSet id="songkaojun-2015-04-07-05" author="songkaojun">
 		<sql>
 			CREATE TABLE `raw_delivery_stations` (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`NAME` varchar(20)
 			COLLATE utf8_bin NOT NULL,
-			`COORDINATE` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
+			`COORDINATE` varchar(20000) COLLATE utf8_bin DEFAULT NULL,
 			`MAPCENTER_LNG` decimal(50,8) DEFAULT NULL,
 			`MAPCENTER_LAT` decimal(50,8) DEFAULT NULL,
 			`UID`
@@ -257,7 +182,7 @@
 	</changeSet>
 
 	<!-- 创建‘粗’配送站点规则表 -->
-	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
+	<changeSet id="songkaojun-2015-04-07-06" author="songkaojun">
 		<sql>
 			CREATE TABLE `raw_delivery_station_rules` (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
@@ -278,23 +203,89 @@
 	</changeSet>
 
 	<!-- 为配送站点表添加“坐标”，“中心经度”，“中心维度”，“UID”字段，并修改EXTERNAL_ID字段为可空 -->
-	<changeSet id="songkaojun-2015-04-07-08" author="songkaojun">
+	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
 		<sql>
-			ALTER TABLE `delivery_stations` ADD COLUMN `COORDINATE` varchar(60000) NULL AFTER `NAME`;
+			ALTER TABLE `delivery_stations` ADD COLUMN `COORDINATE` varchar(20000) NULL AFTER `NAME`;
 			ALTER TABLE `delivery_stations` ADD COLUMN `MAPCENTER_LNG` decimal(50,8) NULL DEFAULT NULL AFTER
 			`COORDINATE`;
-			ALTER TABLE `delivery_stations` ADD COLUMN `MAPCENTER_LAT` decimal(50,8) NULL DEFAULT NULL AFTER
+			ALTER TABLE `delivery_stations` ADD COLUMN `MAPCENTER_LAT` decimal(50,8) NULL
+			DEFAULT NULL AFTER
 			`MAPCENTER_LNG`;
-			ALTER TABLE `delivery_stations` ADD COLUMN `UID` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NULL
+			ALTER TABLE `delivery_stations` ADD COLUMN `UID` varchar(50)
+			CHARACTER SET utf8 COLLATE utf8_bin NULL
 			DEFAULT NULL AFTER `MAPCENTER_LAT`;
-			
-			ALTER TABLE `delivery_stations` MODIFY COLUMN `EXTERNAL_ID`  int(12) NULL AFTER `COORDINATE`;
+
+			ALTER TABLE
+			`delivery_stations` MODIFY COLUMN `EXTERNAL_ID` int(12) NULL AFTER `COORDINATE`;
 		</sql>
 	</changeSet>
 
 	<!-- 添加粗地址预制数据 -->
-	<changeSet id="songkaojun-2015-04-07-09" author="songkaojun">
+	<changeSet id="songkaojun-2015-04-07-08" author="songkaojun">
 		<sqlFile path="raw_address_init_data.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+
+	<!-- 创建易普联科客户 -->
+	<changeSet id="xushiju-2014-09-04-01" author="xushiju">
+		<sqlFile path="customer_init_explink.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+	<!-- 创建贵州品信客户 -->
+	<changeSet id="xushiju-2014-09-30-01" author="xushiju">
+		<sqlFile path="customer_init_gzpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+	<!-- 创建新京报客户 -->
+	<changeSet id="xushiju-2014-10-09-01" author="xushiju">
+		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+	<!-- 创建广西品信客户 -->
+	<changeSet id="xushiju-2014-11-04-01" author="xushiju">
+		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+	<!-- 创建重庆华宇客户 -->
+	<changeSet id="xushiju-2014-11-13-01" author="xushiju">
+		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建广州通路客户 -->
+	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
+		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+
+	<!-- 创建宁夏品信客户 -->
+	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun">
+		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建武汉飞远客户 -->
+	<changeSet id="songkaojun-2015-02-27-02" author="songkaojun">
+		<sqlFile path="customer_init_whfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建福建飞远客户 -->
+	<changeSet id="songkaojun-2015-02-27-03" author="songkaojun">
+		<sqlFile path="customer_init_fjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建安徽品骏客户 -->
+	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun">
+		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建河南豫铁客户 -->
+	<changeSet id="songkaojun-2015-03-18-01" author="songkaojun">
+		<sqlFile path="customer_init_hnyt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建江西飞远客户 -->
+	<changeSet id="songkaojun-2015-03-31-01" author="songkaojun">
+		<sqlFile path="customer_init_jxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建上海品骏客户 -->
+	<changeSet id="songkaojun-2015-04-07-01" author="songkaojun">
+		<sqlFile path="customer_init_shpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建吉林品骏客户 -->
+	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
+		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 

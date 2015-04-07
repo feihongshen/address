@@ -540,7 +540,7 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (499, '阿拉善右旗', 1, 3, 497, '1-377-497', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (975, '建湖县', 1, 3, 967, '1-882-967', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2922, '楚雄市', 1, 3, 2921, '1-2833-2921', now());
-insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (1, '中国', 1, 0, '', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (1, '中国', 1, 0, '-1','', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (101, '涉县', 1, 3, 91, '1-40-91', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (190, '宽城满族自治县', 1, 3, 179, '1-40-179', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (3217, '白银区', 1, 3, 3215, '1-3198-3215', now());
