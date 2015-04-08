@@ -3,7 +3,6 @@ package cn.explink.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +10,7 @@ import cn.explink.dao.CustomerDao;
 import cn.explink.dao.RawDeliveryStationDao;
 import cn.explink.domain.Customer;
 import cn.explink.domain.RawDeliveryStation;
-import cn.explink.domain.User;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
-import cn.explink.web.ExplinkUserDetail;
 
 @Service
 public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStation, Long> {
@@ -31,8 +28,7 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 	@Autowired
 	private CustomerDao customerDao;
 
-	public void createDeliveryStation(List<String> deliveryStationNameList) {
-		Long customerId = this.getCustomerId();
+	public void createDeliveryStation(Long customerId, List<String> deliveryStationNameList) {
 		for (String deliveryStationName : deliveryStationNameList) {
 			Customer customer = this.customerDao.get(customerId);
 			if (customer == null) {
@@ -47,14 +43,6 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 			rawDeliveryStation.setCustomer(customer);
 			this.rawDeliveryStationDao.save(rawDeliveryStation);
 		}
-	}
-
-	private Long getCustomerId() {
-		Authentication auth = this.securityContextHolderStrategy.getContext().getAuthentication();
-		ExplinkUserDetail userDetail = (ExplinkUserDetail) auth.getPrincipal();
-		User user = userDetail.getUser();
-
-		return user.getCustomer().getId();
 	}
 
 }

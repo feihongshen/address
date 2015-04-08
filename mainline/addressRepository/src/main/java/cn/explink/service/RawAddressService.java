@@ -169,9 +169,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		return addrMap;
 	}
 
-	public void importAddress(List<AddressDetail> detailList) {
-		Long customerId = this.getCustomerId();
-
+	public void importAddress(Long customerId, List<AddressDetail> detailList) {
 		Map<String, RawAddress> map = new HashMap<String, RawAddress>();// 省市区地址MAP(Key:省-市-区)
 		Map<String, RawAddress> addressMap = new HashMap<String, RawAddress>();// 关键字MAP(Key:父ID-名称)
 		Map<String, RawDeliveryStation> stationMap = new HashMap<String, RawDeliveryStation>(); // 站点MAP(Key:客户ID-名称)

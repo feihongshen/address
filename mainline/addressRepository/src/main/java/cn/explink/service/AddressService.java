@@ -318,7 +318,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
 					try {
-						this.splitAndImportRawAddress(orderVo.getAddressLine(), deliveryStationList.get(0).getName());
+						this.splitAndImportRawAddress(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -374,7 +374,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return this.gisService.search(orderVo.getAddressLine(), orderVo.getCustomerId());
 	}
 
-	private void splitAndImportRawAddress(String addressLine, String stationName) {
+	private void splitAndImportRawAddress(Long customerId, String addressLine, String stationName) {
 		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
 		AddressStation addressStation = new AddressStation(addressLine, stationName);
 		addressStationList.add(addressStation);
@@ -388,8 +388,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		for (AddressDetail addressDetail : addressDetailList) {
 			deliveryStationNameList.add(addressDetail.getDeliveryStationName());
 		}
-		this.rawDeliveryStationService.createDeliveryStation(deliveryStationNameList);
-		this.rawAddressService.importAddress(addressDetailList);
+		this.rawDeliveryStationService.createDeliveryStation(customerId, deliveryStationNameList);
+		this.rawAddressService.importAddress(customerId, addressDetailList);
 	}
 
 	/**
@@ -423,7 +423,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
 					try {
-						this.splitAndImportRawAddress(orderVo.getAddressLine(), deliveryStationList.get(0).getName());
+						this.splitAndImportRawAddress(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
