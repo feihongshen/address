@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.explink.domain.Address;
@@ -30,6 +31,7 @@ import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.KeywordSuffix;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.modle.AjaxJson;
@@ -37,6 +39,7 @@ import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationService;
+import cn.explink.service.KeywordSuffixService;
 import cn.explink.service.RawAddressPermissionService;
 import cn.explink.service.RawAddressService;
 import cn.explink.spliter.vo.AddressDetail;
@@ -68,6 +71,9 @@ public class KeywordController extends BaseController {
 
 	@Autowired
 	private RawAddressPermissionService rawAddressPermissionService;
+
+	@Autowired
+	private KeywordSuffixService keywordSuffixService;
 
 	public final ObjectMapper mapper = new ObjectMapper();
 
@@ -355,6 +361,30 @@ public class KeywordController extends BaseController {
 		}
 
 		return j;
+	}
+
+	@RequestMapping("/getKeywordSuffix")
+	public @ResponseBody List<KeywordSuffix> getKeywordSuffix() {
+		Long customerId = this.getCustomerId();
+		return this.keywordSuffixService.getKeywordSuffixByCustomerId(customerId);
+	}
+
+	@RequestMapping("/addKeywordSuffix")
+	public @ResponseBody AjaxJson addKeywordSuffix(@RequestParam(value = "keywordSuffix", required = false) String keywordSuffix) {
+		AjaxJson aj = null;
+		Long customerId = this.getCustomerId();
+		if (keywordSuffix != null) {
+			aj = this.keywordSuffixService.addKeywordSuffix(keywordSuffix, customerId);
+		}
+		return aj;
+	}
+
+	@RequestMapping("/deleteKeywordSuffix")
+	public @ResponseBody AjaxJson deleteKeywordSuffix(@RequestParam(value = "id") Long id) {
+		AjaxJson aj = new AjaxJson();
+		this.keywordSuffixService.deleteKeywordSuffix(id);
+		aj.setSuccess(true);
+		return aj;
 	}
 
 }

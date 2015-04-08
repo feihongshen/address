@@ -30,7 +30,7 @@ public class AddressSplitterTest extends BaseTestCase {
 		for (AddressDetail addressDetail : addressDetailList) {
 			deliveryStationNameList.add(addressDetail.getDeliveryStationName());
 		}
-		this.rawDeliveryStationService.createDeliveryStation(deliveryStationNameList);
-		// this.rawAddressService.importAddress(addressDetailList);
+		this.rawDeliveryStationService.createDeliveryStation(4L, deliveryStationNameList);
+		this.rawAddressService.importAddress(4L, addressDetailList);
 	}
 }

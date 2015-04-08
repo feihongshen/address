@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,6 @@ import cn.explink.domain.RawAddress;
 import cn.explink.domain.RawAddressPermission;
 import cn.explink.domain.RawDeliveryStation;
 import cn.explink.domain.RawDeliveryStationRule;
-import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
@@ -36,7 +34,6 @@ import cn.explink.spliter.vo.FullRawAddressStationPair;
 import cn.explink.spliter.vo.RawAddressQuickVO;
 import cn.explink.spliter.vo.RawAddressStationPair;
 import cn.explink.util.StringUtil;
-import cn.explink.web.ExplinkUserDetail;
 
 @Service
 public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
@@ -392,13 +389,4 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 			collection.add(element);
 		}
 	}
-
-	private Long getCustomerId() {
-		Authentication auth = this.securityContextHolderStrategy.getContext().getAuthentication();
-		ExplinkUserDetail userDetail = (ExplinkUserDetail) auth.getPrincipal();
-		User user = userDetail.getUser();
-
-		return user.getCustomer().getId();
-	}
-
 }

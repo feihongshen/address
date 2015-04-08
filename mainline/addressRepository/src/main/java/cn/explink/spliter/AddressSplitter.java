@@ -18,8 +18,17 @@ public class AddressSplitter {
 
 	private List<AddressStation> addressStationList;
 
+	private List<String> customKeywordSuffixList;
+
 	public AddressSplitter(List<AddressStation> addressStationList) {
+		super();
 		this.addressStationList = addressStationList;
+	}
+
+	public AddressSplitter(List<AddressStation> addressStationList, List<String> customKeywordSuffixList) {
+		super();
+		this.addressStationList = addressStationList;
+		this.customKeywordSuffixList = customKeywordSuffixList;
 	}
 
 	public List<AddressDetail> split() {
@@ -155,14 +164,9 @@ public class AddressSplitter {
 	public List<String> getKeywordPostList() {
 		Set<String> commonKeyWordSet = CommonKeyWord.getKeyWordSet();
 
-		// TODO 添加用户维护的关键词后缀
-		// XMLParser.getInstance().loadXMLFile();
-		// List<SplitKeywordPostInfo> splitKeywordPostList =
-		// SplitKeywordPostDataManager.getInstance().getAllSelectedInfo();
-		// for (SplitKeywordPostInfo splitKeywordPostInfo :
-		// splitKeywordPostList) {
-		// commonKeyWordSet.add(splitKeywordPostInfo.getKeywordPostName());
-		// }
+		for (String customKeywordSuffix : this.customKeywordSuffixList) {
+			commonKeyWordSet.add(customKeywordSuffix);
+		}
 		return new ArrayList<String>(commonKeyWordSet);
 	}
 
@@ -172,6 +176,14 @@ public class AddressSplitter {
 
 	public void setAddressStationList(List<AddressStation> addressStationList) {
 		this.addressStationList = addressStationList;
+	}
+
+	public List<String> getCustomKeywordSuffixList() {
+		return this.customKeywordSuffixList;
+	}
+
+	public void setCustomKeywordSuffixList(List<String> customKeywordSuffixList) {
+		this.customKeywordSuffixList = customKeywordSuffixList;
 	}
 
 }

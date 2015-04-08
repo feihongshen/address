@@ -50,6 +50,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/DelivererDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/DelivererRuleDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/DeliveryStationDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/DeliveryStationRuleDao.java -text
+mainline/addressRepository/src/main/java/cn/explink/dao/KeywordSuffixDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/OrderDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/RawAddressDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/RawAddressPermissionDao.java -text
@@ -75,6 +76,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/Deliverer.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/DelivererRule.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/DeliveryStation.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/DeliveryStationRule.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/KeywordSuffix.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Order.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/RawAddress.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/RawAddressPermission.java -text
@@ -158,6 +160,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/DelivererService.jav
 mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationRuleService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/GisService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/KeywordSuffixService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/LuceneService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawAddressPermissionService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawAddressService.java -text

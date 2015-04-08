@@ -32,6 +32,7 @@ import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
+import cn.explink.domain.KeywordSuffix;
 import cn.explink.domain.Order;
 import cn.explink.domain.VendorsAging;
 import cn.explink.domain.enums.AddressStatusEnum;
@@ -109,6 +110,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private RawAddressService rawAddressService;
 	@Autowired
 	private RawDeliveryStationService rawDeliveryStationService;
+	@Autowired
+	private KeywordSuffixService keywordSuffixService;
 
 	public void listAddress() {
 		List<Address> addressList = this.addressDao.getAllAddresses();
@@ -379,7 +382,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		AddressStation addressStation = new AddressStation(addressLine, stationName);
 		addressStationList.add(addressStation);
 
-		AddressSplitter addressSplitter = new AddressSplitter(addressStationList);
+		AddressSplitter addressSplitter = new AddressSplitter(addressStationList, this.getKeywordSuffixNameList(customerId));
 		List<AddressDetail> addressDetailList = addressSplitter.split();
 		if (addressDetailList.size() == 0) {
 			return;
@@ -390,6 +393,15 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 		this.rawDeliveryStationService.createDeliveryStation(customerId, deliveryStationNameList);
 		this.rawAddressService.importAddress(customerId, addressDetailList);
+	}
+
+	private List<String> getKeywordSuffixNameList(Long customerId) {
+		List<String> keywordSuffixNameList = new ArrayList<String>();
+		List<KeywordSuffix> keywordSuffixList = this.keywordSuffixService.getKeywordSuffixByCustomerId(customerId);
+		for (KeywordSuffix keywordSuffix : keywordSuffixList) {
+			keywordSuffixNameList.add(keywordSuffix.getName());
+		}
+		return keywordSuffixNameList;
 	}
 
 	/**

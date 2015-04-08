@@ -202,6 +202,19 @@
 		</sql>
 	</changeSet>
 
+	<!-- 创建关键词后缀表 -->
+	<changeSet id="songkaojun-2015-04-08-01" author="songkaojun">
+		<sql>
+			CREATE TABLE `keyword_suffix` (
+			`ID` int(12) NOT NULL AUTO_INCREMENT,
+			`CUSTOMER_ID` int(12) DEFAULT NULL,
+			`NAME` varchar(50) COLLATE utf8_bin NOT NULL,
+			PRIMARY KEY (`ID`)
+			) ENGINE=InnoDB AUTO_INCREMENT=241 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+		</sql>
+	</changeSet>
+
+
 	<!-- 为配送站点表添加“坐标”，“中心经度”，“中心维度”，“UID”字段，并修改EXTERNAL_ID字段为可空 -->
 	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
 		<sql>

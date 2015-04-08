@@ -1,8 +1,10 @@
 var keywordEditLayer = "";
+var keywordSuffixLayer = "";
 
 $("#datagrid_keyword").datagrid({
 	url : "",
-	height : 350,
+	height : 500,
+	loadMsg : '数据加载中...',
 	pagination : true,
 	fitColumns : false,
 	singleSelect : false,
@@ -112,7 +114,7 @@ $("#keyword_edit")
 							keywordEditLayer = jQuery
 									.layer({
 										type : 1,
-										title : '<div><span style="padding-left: 14px;line-height:14px;">修改关键字</span></div>',
+										title : '<div><span style="padding-left: 14px;line-height:14px;">关键字修改</span></div>',
 										shadeClose : true,
 										maxmin : false,
 										fix : false,
@@ -153,6 +155,95 @@ $("#keyword_edit")
 							time : 2
 						});
 				});
+
+// keyword_suffix_panel
+$("#keyword_suffix_maintain")
+		.click(
+				function() {
+					keywordSuffixLayer = jQuery
+							.layer({
+								type : 1,
+								title : '<div><span style="padding-left: 14px;line-height:14px;">关键字后缀维护</span></div>',
+								shadeClose : true,
+								maxmin : false,
+								fix : false,
+								area : [750, 500],
+								page : {
+									dom : '#keyword_suffix_panel'
+								}
+							});
+					// 查询关键词后缀
+					Tools
+							.doAction(
+									ctx + '/keyword/getKeywordSuffix',
+									{},
+									false,
+									function(data) {
+										$("#keywordSuffixUl").html("");
+										for (var i = 0; i < data.length; i++) {
+											var btn = $("<a href='javascript:void(0)' keywordSuffixId='"
+													+ data[i].id
+													+ "'>"
+													+ data[i].name
+													+ "</a></li>");
+											var li = $("<li></li>").append(btn);
+											li.appendTo($("#keywordSuffixUl"));
+											btn.linkbutton({
+												iconCls : 'icon-remove',
+												iconAlign : 'right'
+											});
+										}
+									});
+
+				});
+
+function addKeywordSuffix() {
+	var keywordSuffix = $("#keywordSuffix").val();
+	if (keywordSuffix == "") {
+		Tip.alertError("请输入关键词后缀！");
+		return false;
+	}
+
+	Tools.doAction(ctx + '/keyword/addKeywordSuffix', {
+		keywordSuffix : keywordSuffix
+	}, false, function(data) {
+		if (data.success) {
+			$("#keywordSuffix").val("");
+			var btn = $("<a href='javascript:void(0)' keywordSuffixId='"
+					+ data.obj.id + "'>" + data.obj.name + "</a></li>");
+			var li = $("<li></li>").append(btn);
+			li.appendTo($("#keywordSuffixUl"));
+			btn.linkbutton({
+				iconCls : 'icon-remove',
+				iconAlign : 'right'
+			});
+		} else {
+			Tip.alertError(data.msg);
+		}
+
+	});
+}
+
+$("a[keywordSuffixId]").live("click", function() {
+	var obj = $(this);
+	var id = obj.attr("keywordSuffixId");
+	layer.confirm('您确认想要删除【' + obj.text() + '】吗？', function() {
+		$.ajax({
+			type : "POST",
+			url : ctx + "/keyword/deleteKeywordSuffix",
+			data : {
+				id : id
+			},
+			async : false,
+			success : function(resp) {
+				if (resp.success) {
+					obj.parent().remove();
+					Tip.msgOk("删除成功！");
+				}
+			}
+		});
+	});
+});
 
 // bind delete event
 $("#keyword_delete").click(function() {
@@ -201,8 +292,8 @@ $("#keyword_ok").click(function() {
 			return;
 		}
 	}
-	
-	if($.trim(addressName1) == ''){
+
+	if ($.trim(addressName1) == '') {
 		Tip.alertError("关键字不能为空！");
 		return;
 	}

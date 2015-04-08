@@ -13,6 +13,16 @@
 <!-- <link rel="stylesheet" type="text/css" -->
 <%-- 	href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" /> --%>
 <style type="text/css">
+.keywordSuffix>li {
+	float: left;
+	margin: 10px 5px 10px 0px;
+}
+
+.keywordSuffix {
+	list-style: none;
+	padding: 2px;
+}
+
 .dop-table-deliveryman {
 	margin-left: -30px;
 	margin-bottom: 10px;
@@ -87,11 +97,11 @@
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_edit" iconCls="icon-edit">修改</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_delete" iconCls="icon-remove">删除</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit" iconCls="icon-ok">提交</a>
-<!-- 		<a href="javascript:void(0)" class="easyui-linkbutton" id="station_add_panel_btn_reset" iconCls="">后缀维护</a> -->
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_suffix_maintain" iconCls="">后缀维护</a>
 </body>
 
 </div>
-<div id="keyword_edit_panel">
+<div id="keyword_edit_panel" style="display:none;">
 	<table class="">
 		<tr>
 			<th>省/直辖市：</th>
@@ -137,6 +147,19 @@
 			href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
 	</div>
 </div>
+
+
+<div id="keyword_suffix_panel" title="关键词后缀维护">
+	<div style="height: 400px; width:750px; overflow-y: auto; paddding: 30px 0px;">
+		<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
+	</div>
+	<br />
+	<div style="float: right">
+		<input type="text" name="keywordSuffix" id="keywordSuffix" /><a
+			href="javascript:addKeywordSuffix();" id="addKeywordSuffix" class="easyui-linkbutton">添加关键词后缀</a>
+	</div>
+</div>
+
 <script type="text/javascript" src="${ctx}/js/tools.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/address/keywordMaintain.js"></script>
