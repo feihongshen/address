@@ -70,6 +70,10 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		return this.getFullPairList(pairList, fullPathAddrList, delStatList);
 	}
 
+	public int getRawAddressCount(Long customerId, String address, String station) {
+		return this.rawAddressDao.getRawAddressCount(customerId, address, station);
+	}
+
 	private List<FullRawAddressStationPair> getFullPairList(List<RawAddressStationPair> pairList, List<RawAddress> addrList, List<RawDeliveryStation> delStatList) {
 		List<FullRawAddressStationPair> fullPairList = new ArrayList<FullRawAddressStationPair>();
 		Map<Long, RawAddress> addrMap = this.getAddressMap(addrList);

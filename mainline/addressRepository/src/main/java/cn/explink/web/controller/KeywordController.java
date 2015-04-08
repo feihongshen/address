@@ -30,7 +30,6 @@ import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
-import cn.explink.domain.RawAddress;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.modle.AjaxJson;
@@ -79,25 +78,32 @@ public class KeywordController extends BaseController {
 
 	@RequestMapping("/loadData")
 	@ResponseBody
-	public List<RawAddress> loadData(int pageNum, int pageSize, HttpServletRequest request) {
-		// try {
-		// Map<String, Object> map = this.orderService.getListDataByPage(new
-		// OrderVO(), pageNum, pageSize);
-		// return (List<OrderVO>) map.get("list");
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// return new ArrayList<OrderVO>();
-		// }
-		return null;
+	public List<AddressDetail> loadData(int pageNum, int pageSize, HttpServletRequest request) {
+		try {
+			Long customerId = this.getCustomerId();
+			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, null, null, pageNum, pageSize);
+			List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
+			return addressDetailList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<AddressDetail>();
+		}
 	}
 
 	@RequestMapping("/query")
 	@ResponseBody
 	public Map<String, Object> queryByPage(String address, String station, int pageNum, int pageSize, HttpServletRequest request) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
 		Long customerId = this.getCustomerId();
 		List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, address, station, pageNum, pageSize);
+		List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
+		resultMap.put("count", this.rawAddressService.getRawAddressCount(customerId, address, station));
+		resultMap.put("list", addressDetailList);
+		return resultMap;
+	}
+
+	private List<AddressDetail> convertToAddressDetail(List<FullRawAddressStationPair> fullRawAddressStationPairList) {
+		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
 		for (FullRawAddressStationPair fullRawASPair : fullRawAddressStationPairList) {
 			AddressDetail addressDetail = new AddressDetail();
 			List<RawAddressQuickVO> rawAddressList = fullRawASPair.getAddrList();
@@ -121,9 +127,7 @@ public class KeywordController extends BaseController {
 
 			addressDetailList.add(addressDetail);
 		}
-		resultMap.put("count", addressDetailList.size());
-		resultMap.put("list", addressDetailList);
-		return resultMap;
+		return addressDetailList;
 	}
 
 	@SuppressWarnings("unchecked")

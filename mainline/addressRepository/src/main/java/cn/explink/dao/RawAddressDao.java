@@ -55,21 +55,34 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 	}
 
 	public List<RawAddressStationPair> getPageAddressList(Long customerId, String address, String station, int page, int pageSize) {
-		String sql = "select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id="
-				+ customerId;
-		if (StringUtil.isNotEmpty(address)) {
-			sql += " and a.name like '%" + address + "%'";
-		}
-		if (StringUtil.isNotEmpty(station)) {
-			sql += " and d.name like '%" + station + "%' ";
-		}
-		Query query = this.getSession().createSQLQuery(sql);
+		StringBuffer sql = new StringBuffer("select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
+		sql.append(this.getWhereSql(customerId, address, station));
+		Query query = this.getSession().createSQLQuery(sql.toString());
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
 		@SuppressWarnings("unchecked")
 		List<Object> data = query.list();
 
 		return this.getAddrStatPairList(data);
+	}
+
+	public int getRawAddressCount(Long customerId, String address, String station) {
+		StringBuffer sql = new StringBuffer("select count(r.raw_address_id) from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
+		sql.append(this.getWhereSql(customerId, address, station));
+		Query query = this.getSession().createSQLQuery(sql.toString());
+		return ((Number) query.uniqueResult()).intValue();
+	}
+
+	private StringBuffer getWhereSql(Long customerId, String address, String station) {
+		StringBuffer sql = new StringBuffer();
+		sql.append(" where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id=").append(customerId);
+		if (StringUtil.isNotEmpty(address)) {
+			sql.append(" and a.name like '%").append(address).append("%'");
+		}
+		if (StringUtil.isNotEmpty(station)) {
+			sql.append(" and d.name like '%").append(station).append("%' ");
+		}
+		return sql;
 	}
 
 	private List<RawAddressStationPair> getAddrStatPairList(List<Object> data) {
