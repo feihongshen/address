@@ -37,11 +37,11 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 			RawDeliveryStation rawDeliveryStation = this.rawDeliveryStationDao.getDeliveryStation(customerId, deliveryStationName);
 			if (rawDeliveryStation == null) {
 				rawDeliveryStation = new RawDeliveryStation();
+				rawDeliveryStation.setName(deliveryStationName);
+				rawDeliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
+				rawDeliveryStation.setCustomer(customer);
+				this.rawDeliveryStationDao.save(rawDeliveryStation);
 			}
-			rawDeliveryStation.setName(deliveryStationName);
-			rawDeliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
-			rawDeliveryStation.setCustomer(customer);
-			this.rawDeliveryStationDao.save(rawDeliveryStation);
 		}
 	}
 

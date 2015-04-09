@@ -229,7 +229,7 @@
 			DEFAULT NULL AFTER `MAPCENTER_LAT`;
 
 			ALTER TABLE
-			`delivery_stations` MODIFY COLUMN `EXTERNAL_ID` int(12) NULL AFTER `COORDINATE`;
+			`delivery_stations` MODIFY COLUMN `EXTERNAL_ID` int(12) NULL AFTER `UID`;
 		</sql>
 	</changeSet>
 
