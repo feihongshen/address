@@ -29,6 +29,7 @@ import cn.explink.modle.SortDirection;
 import cn.explink.qbc.CriteriaQuery;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.util.HqlGenerateUtil;
+import cn.explink.util.StringUtil;
 
 @RequestMapping("/station")
 @Controller
@@ -135,12 +136,16 @@ public class DeliveryStationController extends BaseController {
 
 	@RequestMapping("/modifyByUid")
 	@ResponseBody
-	public AjaxJson modifyByUid(String uid, String name, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
+	public AjaxJson modifyByUid(String uid, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
+
+		if (StringUtil.isEmpty(uid) || StringUtil.isEmpty(coordinate)) {
+			aj.setSuccess(false);
+			return aj;
+		}
 
 		DeliveryStation deliveryStation = new DeliveryStation();
 		deliveryStation.setUid(uid);
-		deliveryStation.setName(name);
 		deliveryStation.setCoordinate(coordinate);
 		deliveryStation.setMapcenterLat(mapcenterLat);
 		deliveryStation.setMapcenterLng(mapcenterLng);

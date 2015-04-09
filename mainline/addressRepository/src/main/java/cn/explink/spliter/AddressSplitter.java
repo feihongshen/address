@@ -3,6 +3,8 @@ package cn.explink.spliter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.explink.spliter.consts.CommonKeyWord;
 import cn.explink.spliter.vo.AddressDetail;
@@ -16,8 +18,14 @@ import cn.explink.util.StringUtil;
  */
 public class AddressSplitter {
 
+	/**
+	 * 待拆分的地址串--站点
+	 */
 	private List<AddressStation> addressStationList;
 
+	/**
+	 * 客户维护的关键词后缀
+	 */
 	private List<String> customKeywordSuffixList;
 
 	public AddressSplitter(List<AddressStation> addressStationList) {
@@ -31,10 +39,18 @@ public class AddressSplitter {
 		this.customKeywordSuffixList = customKeywordSuffixList;
 	}
 
+	/**
+	 * 拆分入口
+	 *
+	 * @return
+	 */
 	public List<AddressDetail> split() {
 		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
 		for (AddressStation addressStation : this.addressStationList) {
+			// 过滤掉特殊字符：.。+&&||!()（）{}[]【】^\"~*?:\\/
 			String addressLine = StringUtil.filterQureyStr(addressStation.getAddressLine());
+			// 过滤掉XXX号
+			addressLine = this.filtNumber(addressLine);
 
 			AddressDetail addressDetail = new AddressDetail();
 
@@ -161,7 +177,7 @@ public class AddressSplitter {
 				&& !subAddress.endsWith("交易区") && !subAddress.endsWith("厂区") && !subAddress.endsWith("度假区") && !subAddress.endsWith("生活区") && !subAddress.endsWith("军区");
 	}
 
-	public List<String> getKeywordPostList() {
+	private List<String> getKeywordPostList() {
 		Set<String> commonKeyWordSet = CommonKeyWord.getKeyWordSet();
 
 		for (String customKeywordSuffix : this.customKeywordSuffixList) {
@@ -170,20 +186,11 @@ public class AddressSplitter {
 		return new ArrayList<String>(commonKeyWordSet);
 	}
 
-	public List<AddressStation> getAddressStationList() {
-		return this.addressStationList;
-	}
-
-	public void setAddressStationList(List<AddressStation> addressStationList) {
-		this.addressStationList = addressStationList;
-	}
-
-	public List<String> getCustomKeywordSuffixList() {
-		return this.customKeywordSuffixList;
-	}
-
-	public void setCustomKeywordSuffixList(List<String> customKeywordSuffixList) {
-		this.customKeywordSuffixList = customKeywordSuffixList;
+	private String filtNumber(String str) {
+		String regEx = "[0-9]+号";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(str);
+		return m.replaceAll("").trim();
 	}
 
 }

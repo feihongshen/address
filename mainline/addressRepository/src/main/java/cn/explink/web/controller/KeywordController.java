@@ -188,11 +188,28 @@ public class KeywordController extends BaseController {
 			StringBuffer sb = new StringBuffer();
 			Set<AddressImportDetail> addressImportDetailSet = addressImportResult.getAddressImportDetails();
 			for (AddressImportDetail addressImportDetail : addressImportDetailSet) {
-				sb.append(addressImportDetail.getMessage() + "<br/>");
+				if (addressImportDetail.getStatus() == AddressImportDetailStatsEnum.success.getValue()) {
+					sb.append(this.getLastAddress(addressImportDetail) + "--" + "同步成功<br/>");
+				} else {
+					sb.append(this.getLastAddress(addressImportDetail) + "--" + addressImportDetail.getMessage() + "<br/>");
+				}
 			}
 			aj.setMsg(sb.toString());
 		}
 		return aj;
+	}
+
+	private String getLastAddress(AddressImportDetail addressImportDetail) {
+		String address3 = addressImportDetail.getAddress3();
+		String address2 = addressImportDetail.getAddress2();
+		String address1 = addressImportDetail.getAddress1();
+		if (StringUtil.isNotEmpty(address3)) {
+			return address3;
+		} else if (StringUtil.isNotEmpty(address2)) {
+			return address2;
+		} else {
+			return address1;
+		}
 	}
 
 	private void unbindRawAddress(List<AddressImportDetail> addressImportDetailList, List<AddressDetail> addressDetailList) {

@@ -9,8 +9,8 @@ $("#datagrid_keyword").datagrid({
 	fitColumns : false,
 	singleSelect : false,
 	fit : true,
-	pageSize : 10,
-	pageList : [10, 30, 50, 100],
+	pageSize : 20,
+	pageList : [20, 30, 50, 100],
 	sortOrder : 'desc',
 	rownumbers : true,
 	showFooter : true,
@@ -118,7 +118,7 @@ $("#keyword_edit")
 										shadeClose : true,
 										maxmin : false,
 										fix : false,
-										area : [1000, 250],
+										area : [800, 200],
 										page : {
 											dom : '#keyword_edit_panel'
 										}
@@ -325,8 +325,8 @@ $("#keyword_submit").click(function() {
 			} else {
 				layer.close(keywordEditLayer);
 				Tip.msgOk("提交成功！");
-				init();
 			}
+			init();
 		});
 	} else
 		layer.tips('请选择要修改行', this, {

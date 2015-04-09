@@ -218,6 +218,24 @@ AR.Utility.isObject = function (val)
     return type == 'object' && val != null || type == 'function';
 };
 
+
+/**
+* 将字符串转换成对象
+* 通过try/catch实现异常捕获，效率是最低的。
+* 默认JSON可用
+*/
+AR.Utility.parse = function (val)
+{
+    try
+    {
+        var result = JSON.parse(val);
+        return { status: true, result: result };
+    } catch (e)
+    {
+        return { status: false, result: null };
+    }
+}
+
 /**
  * 创建一个GUID
  */
@@ -656,6 +674,20 @@ AR.ExpdopMap.prototype.saveEditDrawRegion = function ()
 }
 
 /**
+* 退出当前编辑状态不进行任何保存
+*
+*/
+AR.ExpdopMap.prototype.endWithoutSave = function ()
+{
+    if (this._regionManager == null)
+    {
+        return;
+    }
+    this._regionManager.endWithoutSave();
+}
+
+
+/**
 * 获取新绘制的区域
 * 返回值是一个区域对象
 */
@@ -877,20 +909,7 @@ AR.ExpdopDrawRegionManager.prototype._initialize = function ()
 AR.ExpdopDrawRegionManager.prototype.start = function (opts)
 {
     ///重置变量状态
-    if (this._currentPolygon != null)
-    {
-        this._currentPolygon == null;
-    }
-    if (this._newPolygon != null)
-    {
-        this._newPolygon = null;
-    }
-
-    this._existsPolygon = [];          // 将列表置空
-
-    // 清空地图
-    // 非正常退出地图，原来的overlay会一直存在
-    this._map.clearOverlays();
+    this.endWithoutSave();
 
 
     // 添加相关区域的渲染
@@ -950,6 +969,20 @@ AR.ExpdopDrawRegionManager.prototype.reDraw = function ()
 */
 AR.ExpdopDrawRegionManager.prototype.end = function ()
 {
+
+    // 如果当前正处于绘制状态，那么默认保存编辑结果
+    this.saveEdit();
+
+    // 结束编辑状态
+    this.endWithoutSave();
+
+}
+
+/**
+* 结束绘图状态，不进行保存
+*/
+AR.ExpdopDrawRegionManager.prototype.endWithoutSave = function ()
+{
     // 首先清除掉现有的元素
     if (this._existsPolygon != null)
     {
@@ -959,9 +992,6 @@ AR.ExpdopDrawRegionManager.prototype.end = function ()
             this._map.removeOverlay(this._existsPolygon[i]);
         }
     }
-
-    // 如果当前正处于绘制状态，那么默认保存编辑结果
-    this.saveEdit();
 
     // 关闭交互编辑状态
     this._drawingManager.close();
@@ -973,6 +1003,9 @@ AR.ExpdopDrawRegionManager.prototype.end = function ()
     this._newPolygon = null;
     this._newPolygonID = null;
 }
+
+
+
 /**
 * 开始编辑
 * 编辑当前选定的多边形
@@ -1096,19 +1129,7 @@ AR.ExpdopDrawRegionManager.prototype._renderExists = function (polygonstr)
         return;
     }
 
-
-    // 转化成多边形参数
-    var polygon = JSON.parse(polygonstr);
-    if (!AR.Utility.isDefAndNotNull(polygon))
-    {
-        return;
-    }
-
-    // 创建多边形， (使用参数中自带的属性进行渲染)
-    var bdpolygon = new BMap.Polygon(polygon.path, polygon.styleOptions);
-
-    // 给多边形覆盖物添加一个自定义的属性
-    bdpolygon.selfStyleOptions = polygon;
+    var bdpolygon = this._createPolygonFromParams(polygonstr);
 
     // 绑定点击事件
     this._bindClickEvent(bdpolygon);
@@ -1132,17 +1153,10 @@ AR.ExpdopDrawRegionManager.prototype._existEdit = function (overlay)
     {
         return;
     }
-    // 转化成多边形参数
-    var polygon = JSON.parse(overlay);
-    if (!AR.Utility.isDefAndNotNull(polygon))
-    {
-        return;
-    }
-    // 创建多边形，
-    var bdpolygon = new BMap.Polygon(polygon.path, polygon.sylteOptions);
 
-    // 给多边形覆盖物添加一个自定义的属性
-    bdpolygon.selfStyleOptions = polygon;
+    // 创建多边形，
+    var bdpolygon = this._createPolygonFromParams(overlay);
+
     // 绑定点击事件
     this._bindClickEvent(bdpolygon);
 
@@ -1159,7 +1173,7 @@ AR.ExpdopDrawRegionManager.prototype._existEdit = function (overlay)
 
     // 地图视域定位
     var map = this._map;
-    setTimeout(function () { map.setViewport(polygon.path); }, 100);
+    setTimeout(function () { map.setViewport(bdpolygon.getPath()); }, 300);
 }
 
 /**
@@ -1246,6 +1260,46 @@ AR.ExpdopDrawRegionManager.prototype._resetRenderStyles = function (overlay, sty
 }
 
 /**
+* 根据多边形参数创建一个新的多边形
+* 有些地方还有待重构
+*/
+AR.ExpdopDrawRegionManager.prototype._createPolygonFromParams = function (overlay)
+{
+    if (!AR.Utility.isDefAndNotNull(overlay))
+    {
+        return;
+    }
+
+    if (AR.Utility.isString(overlay))
+    {
+        var jsonResult = AR.Utility.parse(overlay);
+        if (!jsonResult.status)
+        {
+            return;
+        }
+        overlay = jsonResult.result;
+    }
+
+    // 解析地址坐标
+    var bdPoints = [];
+    for (var i = 0, length = overlay.path.length; i < length; i++)
+    {
+        var oriPoint = overlay.path[i];
+        bdPoints.push(new BMap.Point(oriPoint.lng, oriPoint.lat));
+    }
+
+    // 创建多边形，
+    var bdpolygon = new BMap.Polygon(bdPoints, overlay.styleOptions);
+
+    // 给多边形覆盖物添加一个自定义的属性
+    bdpolygon.selfStyleOptions = overlay;
+
+    return bdpolygon;
+
+}
+
+
+/**
 * 获取当前默认的多边形绘制风格
 * 绘制以及选中时的风格
 */
@@ -1311,7 +1365,7 @@ AR.ExpdopShopManager = function (opts)
 
     this._map = opts.map ? opts.map : null;                                // _map 不可为空
     this._type = null;                                                    // 定义系统的交互模式
-    var type = opts.type ? opts.type : AR.ShopManagerType.NONE;		// 获取交互操作类型
+    var type = opts.type ? opts.type : AR.ShopManagerType.NONE;    // 获取交互操作类型
     this._searchResultMarkers = [];                                       // 搜索结果marker集合
     this._pickMarker = null;                                              // 当前点选的店面marker
     this._localSearch = null;
@@ -1625,7 +1679,6 @@ AR.ExpdopMarkerManager = function (opts)
 AR.Utility.inherits(AR.ExpdopMarkerManager, AR.Observable);
 
 
-
 /**
 * 定位到指定坐标区域
 */
@@ -1650,8 +1703,6 @@ AR.ExpdopMarkerManager.prototype.FlyTo = function (coordinate)
     setTimeout(function () { map.setViewport(bdPoints); }, 200);
 
 };
-
-
 
 /**
 * 获取商店信息
@@ -1690,8 +1741,12 @@ AR.ExpdopMarkerManager.prototype.setShopInformations = function (shopInfos)
         {
             // 构造marker
             var shop1 = shopInfos[i];
-            var shop1Position = JSON.parse(shop1.stoCoordinate);
-            var shopmarker1 = new BMap.Marker(new BMap.Point(shop1Position.lng, shop1Position.lat));
+            var shop1Position = AR.Utility.parse(shop1.stoCoordinate);
+            if (!shop1Position.status)
+            {
+                return;
+            }
+            var shopmarker1 = new BMap.Marker(new BMap.Point(shop1Position.result.lng, shop1Position.result.lat));
             // 添加文字标注
             var label = new BMap.Label(shop1.stoName, { offset: new BMap.Size(20, -10) });
             shopmarker1.setLabel(label);
@@ -1736,7 +1791,7 @@ AR.ExpdopMarkerManager.prototype.setCourierInformations = function (couriers)
     {
         return ele.id;
     });
-    
+
     // 删除不应该存在的配送员
     this._clearCouriers(existsCouriers.diff);
 
@@ -1762,6 +1817,12 @@ AR.ExpdopMarkerManager.prototype.setCourierInformations = function (couriers)
             // 构建marker
             var courier = newCouriers[i];
             var couriermarker = this._getCourierMarker(courier);
+
+            if (couriermarker == null)
+            {
+                return;
+            }
+
             // 记录ID
             couriermarker.courierContext = courier.id;
 
@@ -1798,12 +1859,12 @@ AR.ExpdopMarkerManager.prototype._resetCourierMarker = function (courierMarkers,
 
     var dic = {};     // 记录
 
-    for (var i = 0,length=courierInfos.length; i < length; i++)
+    for (var i = 0, length = courierInfos.length; i < length; i++)
     {
         dic[courierInfos[i].id];
     }
 
-    for (var i = 0,length=courierMarkers.length; i < length; i++)
+    for (var i = 0, length = courierMarkers.length; i < length; i++)
     {
         var courierInfo = dic[courierMarkers[i].courierContext];
         if (!AR.Utility.isDefAndNotNull(courierInfo))
@@ -1834,12 +1895,18 @@ AR.ExpdopMarkerManager.prototype._getCourierMarker = function (courierInfo)
     //return couriermarker;
     */
     // 更换图标
-    var markerIcon = new BMap.Icon("webpage/dop/map/images/delivery.png", new BMap.Size(22, 30));
+    var imgName = "del" + courierInfo.status + ".png";
+    var markerIcon = new BMap.Icon("~/Images/" + imgName, new BMap.Size(22, 30));
     // 添加文字标签
     var markerLabel = new BMap.Label(courierInfo.delName, { offset: new BMap.Size(20, -10) });
-    var position = JSON.parse(courierInfo.coordinate);
+
+    var position = AR.Utility.parse(courierInfo.coordinate);
+    if (!position.status)
+    {
+        return null;
+    }
     // 构建marker
-    var courierMarker = new BMap.Marker(new BMap.Point(position.lng, position.lat));
+    var courierMarker = new BMap.Marker(new BMap.Point(position.result.lng, position.result.lat));
     courierMarker.setTop(true);
     courierMarker.setIcon(markerIcon);
     courierMarker.setLabel(markerLabel);
@@ -1854,7 +1921,7 @@ AR.ExpdopMarkerManager.prototype._getCourierMarker = function (courierInfo)
 AR.ExpdopMarkerManager.prototype._getCourierContent = function (courierInfo)
 {
     var contentstring = '<div style="position: absolute; margin: 0pt; padding: 0pt; width: 80px; height: 26px; left: -18px; top: -25px; overflow: hidden;">'
-                 + '<img id="rm3_image" style="border:none;left:0px; top:0px; position:absolute;" src="webpage/dop/map/images/back3.png">'
+                 + '<img id="rm3_image" style="border:none;left:0px; top:0px; position:absolute;" src="../../Images/back3.png">'
                  + '</div>'
                  + '<label class=" BMapLabel" unselectable="on" style="position: absolute; -moz-user-select: none; display: inline; cursor: inherit; border: 0px none; padding: 2px 1px 1px; white-space: nowrap; font: 12px arial,simsun; z-index: 80; color: rgb(255, 102, 0); left: 12px; top: -25px;">'
                  + courierInfo.delName
@@ -1925,12 +1992,6 @@ AR.ExpdopMarkerManager.prototype.showBusinessRegions = function (opts)
         points = points.concat(polygon.getPath());
 
     }
-
-    // 定位到区域
-    //var map = this._map;
-    //setTimeout(function () { map.setViewport(points); }, 200);
-
-
 
 
     return this;
@@ -2073,31 +2134,43 @@ AR.ExpdopMarkerManager.prototype.showOrders = function (opts)
             var telephone = order.telephone;
             var status = order.status;
             var id = order.id;
-
-            AR.ExpdopGeoCoder.geoCoder(address, function (point)
+            var position = AR.Utility.parse(order.custPosition);
+            if (position.status)
             {
-                // 地理编码失败 point参数值会为null
-                if (AR.Utility.isDefAndNotNull(point))   // 只有地址解析出结果的订单才会添加到地图上
-                {
-                    // 是否按筛选区域进行匹配
-                    if (!AR.Utility.isDefAndNotNull(filterRegion) || markerManager._isInPolygons(point, filterRegion))
-                    {
-                        // 构建订单marker
-                        var orderMarker = markerManager._getOrderMarker({
-                            point: point, custName: name, address: address, teldephone: telephone, status: status
-                        });
-                        // 记录ID
-                        orderMarker.orderContext = id;
-                        // 添加到地图中
-                        markerManager._addOrder(orderMarker)        //
-                    }
-                }
-                else
-                {
-                    // 解析失败？  是返回订单，还是进行关键字筛选查询呢？
-                    failOrders.push(order);
-                }
-            });
+                var point = new BMap.Point(position.result.lng, position.result.lat);
+                //构建订单marker
+                var orderMarker = markerManager._getOrderMarker({
+                    point: point, custName: name, address: address, teldephone: telephone, status: status
+                });
+                // 记录ID
+                orderMarker.orderContext = id;
+                // 添加到地图中
+                markerManager._addOrder(orderMarker)        //
+            }
+            //AR.ExpdopGeoCoder.geoCoder(address, function (point)
+            //{
+            //    // 地理编码失败 point参数值会为null
+            //    if (AR.Utility.isDefAndNotNull(point))   // 只有地址解析出结果的订单才会添加到地图上
+            //    {
+            //        // 是否按筛选区域进行匹配
+            //        if (!AR.Utility.isDefAndNotNull(filterRegion) || markerManager._isInPolygons(point, filterRegion))
+            //        {
+            //            // 构建订单marker
+            //            var orderMarker = markerManager._getOrderMarker({
+            //                point: point, custName: name, address: address, teldephone: telephone, status: status
+            //            });
+            //            // 记录ID
+            //            orderMarker.orderContext = id;
+            //            // 添加到地图中
+            //            markerManager._addOrder(orderMarker)        //
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // 解析失败？  是返回订单，还是进行关键字筛选查询呢？
+            //        failOrders.push(order);
+            //    }
+            //});
         })();
     }
 
@@ -2271,7 +2344,7 @@ AR.ExpdopMarkerManager.prototype._getOrderContent = function (opts)
     }
     var imgName = opts.status + ".png"
     var contentstring = '<div style="position: absolute; margin: 0pt; padding: 0pt; width: 80px; height: 26px; left: 0px; top: 0px; overflow: hidden;">'
-                 + '<img id="' + opts.status + '" style="border:none;left:0px; top:0px; position:absolute;" src="webpage/dop/map/images/' + imgName + '">'
+                 + '<img id="' + opts.status + '" style="border:none;left:0px; top:0px; position:absolute;" src="../../Images/' + imgName + '">'
                  + '</div>'
                  + '<label class=" BMapLabel" unselectable="on" style="position: absolute; -moz-user-select: none; display: inline; cursor: inherit; border: 0px none; padding: 2px 1px 1px; white-space: nowrap; font: 12px arial,simsun; z-index: 80; color: rgb(255, 102, 0); left: 25px; top: 0px;">'
                  + opts.custName

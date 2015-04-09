@@ -67,7 +67,6 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 
 	public DeliveryStation updateDeliveryStationByUid(DeliveryStation deliveryStationParam) {
 		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationByUid(deliveryStationParam.getUid());
-		deliveryStation.setName(deliveryStationParam.getName());
 		deliveryStation.setCoordinate(deliveryStationParam.getCoordinate());
 		deliveryStation.setMapcenterLng(deliveryStationParam.getMapcenterLng());
 		deliveryStation.setMapcenterLat(deliveryStationParam.getMapcenterLat());

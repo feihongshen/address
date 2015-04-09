@@ -101,18 +101,18 @@
 </body>
 
 </div>
-<div id="keyword_edit_panel" style="display:none;">
+<div id="keyword_edit_panel" style="display: none;">
 	<table class="">
 		<tr>
-			<th>省/直辖市：</th>
+			<td>省/直辖市：</td>
 			<td><div>
 					<input id="province" readonly="readonly">
 				</div></td>
-			<th>市：</th>
+			<td>市：</td>
 			<td><div>
 					<input id="city" readonly="readonly">
 				</div></td>
-			<th>区/县：</th>
+			<td>区/县：</td>
 			<td><div>
 					<input id="district" readonly="readonly">
 				</div></td>
@@ -122,21 +122,24 @@
 			<input id="addressId2" type="hidden" />
 			<input id="addressId3" type="hidden" />
 
-			<th>关键字1：</th>
+			<td>关键字1：</td>
 			<td><div>
 					<input id="addressName1">
 				</div></td>
-			<th>关键字2：</th>
+			<td>关键字2：</td>
 			<td><div>
 					<input id="addressName2">
 				</div></td>
-			<th>关键字3：</th>
+			<td>关键字3：</td>
 			<td><div>
 					<input id="addressName3">
 				</div></td>
 		</tr>
 		<tr>
-			<th>站点名称：</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<td>站点名称：</td>
 			<td><div>
 					<input id="deliveryStationName">
 				</div></td>
@@ -150,7 +153,7 @@
 
 
 <div id="keyword_suffix_panel" title="关键词后缀维护">
-	<div style="height: 400px; width:750px; overflow-y: auto; paddding: 30px 0px;">
+	<div style="height: 400px; width: 750px; overflow-y: auto; paddding: 30px 0px;">
 		<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
 	</div>
 	<br />

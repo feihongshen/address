@@ -24,12 +24,12 @@
 		
 	Tools.doAction(ctx+'/station/modifyByUid', {
 		"uid" : modifyRegion.id,
-		"name" : $("#station_add_panel_input_area").val(),
 		"coordinate" : JSON.stringify(modifyRegion),
 		"mapcenterLng" : modifyRegion.center.lng,
 		"mapcenterLat" : modifyRegion.center.lat
 	}, false, function(data) {
 		if (data.success) {
+			layer.close(StationAdd);
 			Tip.msgOk("保存成功！");
 			init();
 		}
@@ -179,7 +179,6 @@
 		}
 		if(polygon)
 		{
-			// 新增数据
 				Tools.doAction(ctx+'/station/modifyById', {
 					"id" : id,
 					"name" : stationName,
@@ -228,7 +227,7 @@
 			shadeClose : true,
 			maxmin : false,
 			fix : false,
-			area : [1000, 540],
+			area : [1000, 550],
 			page : {
 				dom : '#station_add_panel'
 			}
