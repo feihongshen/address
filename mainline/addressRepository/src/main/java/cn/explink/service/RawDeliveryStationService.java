@@ -3,7 +3,6 @@ package cn.explink.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.stereotype.Service;
 
 import cn.explink.dao.CustomerDao;
@@ -21,9 +20,6 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 
 	@Autowired
 	private RawDeliveryStationDao rawDeliveryStationDao;
-
-	@Autowired
-	private SecurityContextHolderStrategy securityContextHolderStrategy;
 
 	@Autowired
 	private CustomerDao customerDao;

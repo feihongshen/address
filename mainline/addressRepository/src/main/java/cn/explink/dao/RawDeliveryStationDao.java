@@ -35,7 +35,13 @@ public class RawDeliveryStationDao extends BasicHibernateDaoSupport<RawDeliveryS
 		Query query = this.getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		query.setString("name", name);
-		return (RawDeliveryStation) query.uniqueResult();
+		@SuppressWarnings("unchecked")
+		List<RawDeliveryStation> rawDeliveryStationList = query.list();
+		if ((null != rawDeliveryStationList) && (rawDeliveryStationList.size() > 0)) {
+			return rawDeliveryStationList.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	public List<RawDeliveryStation> getDeliverStation(List<RawAddressStationPair> pairList) {
