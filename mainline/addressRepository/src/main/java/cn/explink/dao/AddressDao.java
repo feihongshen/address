@@ -204,6 +204,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		Query query = this.getSession().createSQLQuery(sql);
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
+		@SuppressWarnings("unchecked")
 		List<Object> data = query.list();
 
 		return this.getAddrStatPairList(data);
@@ -211,7 +212,12 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 
 	public List<Address> getFullPathAddrList(List<AddressStationPair> pairList) {
 		Set<Long> addrIdSet = this.getAddressIdSet(pairList);
-		List<Address> addrList = this.getAddressList(addrIdSet);
+		List<Address> addrList = null;
+		if (addrIdSet.size() == 0) {
+			addrList = new ArrayList<Address>();
+		} else {
+			addrList = this.getAddressList(addrIdSet);
+		}
 		List<Address> pathAddrList = this.getPathAddrList(addrList);
 
 		addrList.addAll(pathAddrList);
@@ -224,7 +230,11 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		for (Address addr : addrList) {
 			this.fillAddrPathIdSet(pathAddrIdSet, addr);
 		}
-		return this.getAddressList(pathAddrIdSet);
+		if (pathAddrIdSet.size() == 0) {
+			return new ArrayList<Address>();
+		} else {
+			return this.getAddressList(pathAddrIdSet);
+		}
 	}
 
 	private void fillAddrPathIdSet(Set<Long> pathIdSet, Address addr) {

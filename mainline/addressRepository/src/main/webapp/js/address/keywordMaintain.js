@@ -3,12 +3,12 @@ var keywordSuffixLayer = "";
 
 $("#datagrid_keyword").datagrid({
 	url : "",
-	height : 500,
+	height : 630,
 	loadMsg : '数据加载中...',
 	pagination : true,
 	fitColumns : false,
 	singleSelect : false,
-	fit : true,
+	fit : false,
 	pageSize : 20,
 	pageList : [20, 30, 50, 100],
 	sortOrder : 'desc',
@@ -384,7 +384,7 @@ $("#keyword_cancel").click(function() {
 // get params
 function getQueryParams() {
 	return {
-		address : $("input[code='address_query']").val(),
+		keyword : $("input[code='keyword_query']").val(),
 		station : $("input[code='station_query']").val()
 	};
 }

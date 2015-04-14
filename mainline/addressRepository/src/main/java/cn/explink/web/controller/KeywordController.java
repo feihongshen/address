@@ -87,7 +87,7 @@ public class KeywordController extends BaseController {
 	public List<AddressDetail> loadData(int pageNum, int pageSize, HttpServletRequest request) {
 		try {
 			Long customerId = this.getCustomerId();
-			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, null, null, pageNum, pageSize);
+			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, pageNum, pageSize);
 			List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
 			return addressDetailList;
 		} catch (Exception e) {
@@ -98,14 +98,71 @@ public class KeywordController extends BaseController {
 
 	@RequestMapping("/query")
 	@ResponseBody
-	public Map<String, Object> queryByPage(String address, String station, int pageNum, int pageSize, HttpServletRequest request) {
+	public Map<String, Object> queryByPage(String keyword, String station, int pageNum, int pageSize, HttpServletRequest request) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Long customerId = this.getCustomerId();
-		List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, address, station, pageNum, pageSize);
+		List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, pageNum, pageSize);
 		List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
-		resultMap.put("count", this.rawAddressService.getRawAddressCount(customerId, address, station));
-		resultMap.put("list", addressDetailList);
+		List<AddressDetail> filtedAddressDetailList = null;
+		if (StringUtil.isEmpty(keyword) && StringUtil.isEmpty(station)) {
+			filtedAddressDetailList = addressDetailList;
+		} else {
+			filtedAddressDetailList = this.filtByKeywordAndStation(addressDetailList, keyword, station);
+		}
+		resultMap.put("count", this.rawAddressService.getRawAddressCount(customerId));
+		resultMap.put("list", filtedAddressDetailList);
 		return resultMap;
+	}
+
+	/**
+	 * 根据关键字、站点进行过滤
+	 *
+	 * @param addressDetailList
+	 * @param keyword
+	 * @param station
+	 * @return
+	 */
+	private List<AddressDetail> filtByKeywordAndStation(List<AddressDetail> addressDetailList, String keyword, String station) {
+		List<AddressDetail> filtedAddressDetailList = new ArrayList<AddressDetail>();
+
+		if (StringUtil.isEmpty(keyword) && StringUtil.isEmpty(station)) {
+			filtedAddressDetailList = addressDetailList;
+			return filtedAddressDetailList;
+		}
+
+		for (AddressDetail addressDetail : addressDetailList) {
+			String province = addressDetail.getProvince();
+			String city = addressDetail.getCity();
+			String district = addressDetail.getDistrict();
+			String addressName1 = addressDetail.getAddressName1();
+			String addressName2 = addressDetail.getAddressName2();
+			String addressName3 = addressDetail.getAddressName3();
+			String deliveryStationName = addressDetail.getDeliveryStationName();
+
+			if (StringUtil.isNotEmpty(keyword) && StringUtil.isNotEmpty(keyword)) {
+				if ((this.contains(keyword, province) || this.contains(keyword, city) || this.contains(keyword, district) || this.contains(keyword, addressName1)
+						|| this.contains(keyword, addressName2) || this.contains(keyword, addressName3))
+						&& (this.contains(station, deliveryStationName))) {
+					filtedAddressDetailList.add(addressDetail);
+				}
+			} else if (StringUtil.isNotEmpty(keyword) && StringUtil.isEmpty(station)) {
+				if (this.contains(keyword, province) || this.contains(keyword, city) || this.contains(keyword, district) || this.contains(keyword, addressName1)
+						|| this.contains(keyword, addressName2) || this.contains(keyword, addressName3)) {
+					filtedAddressDetailList.add(addressDetail);
+				}
+			} else if (StringUtil.isNotEmpty(station) && StringUtil.isEmpty(keyword)) {
+				if (this.contains(station, deliveryStationName)) {
+					filtedAddressDetailList.add(addressDetail);
+				}
+			}
+		}
+
+		return filtedAddressDetailList;
+
+	}
+
+	private boolean contains(String str, String containedStr) {
+		return StringUtil.isNotEmpty(containedStr) && containedStr.contains(str);
 	}
 
 	private List<AddressDetail> convertToAddressDetail(List<FullRawAddressStationPair> fullRawAddressStationPairList) {

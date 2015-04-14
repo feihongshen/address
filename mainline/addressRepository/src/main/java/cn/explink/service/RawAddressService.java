@@ -59,16 +59,16 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 	@Autowired
 	private RawDeliveryStationRuleDao rawDeliveryStationRuleDao;
 
-	public List<FullRawAddressStationPair> getFullRawAddressStationPair(Long customerId, String address, String station, int page, int pageSize) {
-		List<RawAddressStationPair> pairList = this.rawAddressDao.getPageAddressList(customerId, address, station, page, pageSize);
+	public List<FullRawAddressStationPair> getFullRawAddressStationPair(Long customerId, int page, int pageSize) {
+		List<RawAddressStationPair> pairList = this.rawAddressDao.getPageAddressList(customerId, page, pageSize);
 		List<RawAddress> fullPathAddrList = this.rawAddressDao.getFullPathAddrList(pairList);
 		List<RawDeliveryStation> delStatList = this.rawDeliveryStationDao.getDeliverStation(pairList);
 
 		return this.getFullPairList(pairList, fullPathAddrList, delStatList);
 	}
 
-	public int getRawAddressCount(Long customerId, String address, String station) {
-		return this.rawAddressDao.getRawAddressCount(customerId, address, station);
+	public int getRawAddressCount(Long customerId) {
+		return this.rawAddressDao.getRawAddressCount(customerId);
 	}
 
 	private List<FullRawAddressStationPair> getFullPairList(List<RawAddressStationPair> pairList, List<RawAddress> addrList, List<RawDeliveryStation> delStatList) {
@@ -187,8 +187,11 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 			this.addNonNullValue(addressNames, detail.getAddressName3());
 		}
 
+		List<RawAddress> rawAddressList = new ArrayList<RawAddress>();
 		// 查找关键词并构造addressMap
-		List<RawAddress> rawAddressList = this.rawAddressDao.getRawAddressByNames(addressNames);
+		if (addressNames.size() > 0) {
+			rawAddressList = this.rawAddressDao.getRawAddressByNames(addressNames);
+		}
 		if ((rawAddressList != null) && !rawAddressList.isEmpty()) {
 			for (RawAddress a : rawAddressList) {
 				addressMap.put(a.getParentId() + "-" + a.getName(), a);
@@ -326,7 +329,8 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				bindMap.put(bindAddress.getId(), bindAddress);
 			}
 		} else {
-			throw new ExplinkRuntimeException("导入格式不合规范");
+			// throw new ExplinkRuntimeException("导入格式不合规范");
+			RawAddressService.logger.info("导入格式不合规范");
 		}
 	}
 
@@ -336,7 +340,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 			return false;
 		} else {
 			if (StringUtils.isBlank(detail.getAddressName1())) {
-				throw new ExplinkRuntimeException("关键字为空！");
+				// throw new ExplinkRuntimeException("关键字为空！");
+				RawAddressService.logger.info("关键字为空！");
+				return false;
 			} else {
 				if (StringUtils.isBlank(detail.getAddressName2()) && StringUtils.isNotBlank(detail.getAddressName3())) {
 					flag = false;

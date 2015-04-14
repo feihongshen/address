@@ -80,10 +80,10 @@
 		<table class="table table-striped table-hover table-condensed dop-table-deliveryman"
 			id="dop_table_deliveryman_query">
 			<tr>
-				<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-				<th>地址：</th>
+				<th>&nbsp;&nbsp;&nbsp;</th>
+				<th>关键字：</th>
 				<td><div>
-						<input code="address_query">
+						<input code="keyword_query">
 					</div></td>
 				<th>&nbsp;&nbsp;&nbsp;</th>
 				<th>站点：</th>
@@ -93,7 +93,7 @@
 			</tr>
 		</table>
 
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_query" iconCls="icon-search">查询</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_query" iconCls="icon-search">过滤</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_edit" iconCls="icon-edit">修改</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_delete" iconCls="icon-remove">删除</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit" iconCls="icon-ok">提交</a>
@@ -152,7 +152,7 @@
 </div>
 
 
-<div id="keyword_suffix_panel" title="关键词后缀维护">
+<div id="keyword_suffix_panel" title="关键词后缀维护" style="display: none;">
 	<div style="height: 400px; width: 750px; overflow-y: auto; paddding: 30px 0px;">
 		<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
 	</div>

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.RawAddress;
 import cn.explink.spliter.vo.RawAddressStationPair;
-import cn.explink.util.StringUtil;
 
 import com.sun.xml.bind.v2.model.core.ID;
 
@@ -54,9 +53,9 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 		return query.list();
 	}
 
-	public List<RawAddressStationPair> getPageAddressList(Long customerId, String address, String station, int page, int pageSize) {
+	public List<RawAddressStationPair> getPageAddressList(Long customerId, int page, int pageSize) {
 		StringBuffer sql = new StringBuffer("select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
-		sql.append(this.getWhereSql(customerId, address, station));
+		sql.append(this.getWhereSql(customerId));
 		Query query = this.getSession().createSQLQuery(sql.toString());
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
@@ -66,22 +65,16 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 		return this.getAddrStatPairList(data);
 	}
 
-	public int getRawAddressCount(Long customerId, String address, String station) {
+	public int getRawAddressCount(Long customerId) {
 		StringBuffer sql = new StringBuffer("select count(r.raw_address_id) from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
-		sql.append(this.getWhereSql(customerId, address, station));
+		sql.append(this.getWhereSql(customerId));
 		Query query = this.getSession().createSQLQuery(sql.toString());
 		return ((Number) query.uniqueResult()).intValue();
 	}
 
-	private StringBuffer getWhereSql(Long customerId, String address, String station) {
+	private StringBuffer getWhereSql(Long customerId) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(" where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id=").append(customerId);
-		if (StringUtil.isNotEmpty(address)) {
-			sql.append(" and a.name like '%").append(address).append("%'");
-		}
-		if (StringUtil.isNotEmpty(station)) {
-			sql.append(" and d.name like '%").append(station).append("%' ");
-		}
 		return sql;
 	}
 

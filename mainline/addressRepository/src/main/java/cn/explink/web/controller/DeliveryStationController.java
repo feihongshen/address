@@ -3,7 +3,13 @@ package cn.explink.web.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +26,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
+import cn.explink.domain.fields.AddressIdAndAddressLinePair;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.modle.SortDirection;
 import cn.explink.qbc.CriteriaQuery;
+import cn.explink.quick.QuickSerivce;
+import cn.explink.service.AddressService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
@@ -38,6 +48,10 @@ public class DeliveryStationController extends BaseController {
 	private static Logger logger = LoggerFactory.getLogger(DeliveryStationController.class);
 	@Autowired
 	private DeliveryStationService deliveryStationService;
+	@Autowired
+	private QuickSerivce quickSerivce;
+	@Autowired
+	private AddressService addressService;
 
 	@RequestMapping("/list")
 	public @ResponseBody DataGridReturn list(DeliveryStation deliveryStation, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
@@ -139,6 +153,10 @@ public class DeliveryStationController extends BaseController {
 	public AjaxJson modifyByUid(String uid, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 
+		Long customerId = this.getCustomerId();
+		DeliveryStation oldDeliveryStation = this.deliveryStationService.getDeliveryStationByUid(uid);
+		String oldCoordinate = oldDeliveryStation.getCoordinate();
+
 		if (StringUtil.isEmpty(uid) || StringUtil.isEmpty(coordinate)) {
 			aj.setSuccess(false);
 			return aj;
@@ -153,6 +171,12 @@ public class DeliveryStationController extends BaseController {
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		for (int i = 0; i < 10; i++) {
+			service.submit(new SynUpdateDeliveryStationRuleThread(customerId, oldDeliveryStation.getId(), oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
+		}
+		service.shutdown();
+
 		return aj;
 	}
 
@@ -160,6 +184,10 @@ public class DeliveryStationController extends BaseController {
 	@ResponseBody
 	public AjaxJson modifyById(Long id, String uid, String name, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
+
+		Long customerId = this.getCustomerId();
+
+		String oldCoordinate = this.deliveryStationService.getDeliveryStationById(id).getCoordinate();
 
 		DeliveryStation deliveryStation = new DeliveryStation();
 		deliveryStation.setId(id);
@@ -172,6 +200,118 @@ public class DeliveryStationController extends BaseController {
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		for (int i = 0; i < 10; i++) {
+			service.submit(new SynUpdateDeliveryStationRuleThread(customerId, id, oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
+		}
+		service.shutdown();
+
 		return aj;
+	}
+
+	public class SynUpdateDeliveryStationRuleThread implements Runnable {
+		private Long customerId;
+		private Long stationId;
+		private String oldCoordinate;
+		private String newCoordinate;
+		private DeliveryStationService deliveryStationService;
+		private AddressService addressService;
+
+		public SynUpdateDeliveryStationRuleThread(Long customerId, Long stationId, String oldCoordinate, String newCoordinate, DeliveryStationService deliveryStationService,
+				AddressService addressService) {
+			super();
+			this.customerId = customerId;
+			this.stationId = stationId;
+			this.oldCoordinate = oldCoordinate;
+			this.newCoordinate = newCoordinate;
+			this.deliveryStationService = deliveryStationService;
+			this.addressService = addressService;
+		}
+
+		@Override
+		public void run() {
+			List<AddressIdAndAddressLinePair> addressIdAndAddressLinePairList = this.getAllAddressByCustomerId(this.customerId);
+			this.deliveryStationService.synUpdateDeliveryStationRule(addressIdAndAddressLinePairList, this.oldCoordinate, this.newCoordinate, this.customerId, this.stationId);
+		}
+
+		private List<AddressIdAndAddressLinePair> getAllAddressByCustomerId(Long customerId) {
+			List<AddressIdAndAddressLinePair> pairList = new ArrayList<AddressIdAndAddressLinePair>();
+
+			List<Address> customerAddressList = this.addressService.getAllBands(customerId);
+			Set<Long> pathIdSet = new HashSet<Long>();
+			for (Address customerAddress : customerAddressList) {
+				String path = customerAddress.getPath();
+				if ((path == null) || path.isEmpty()) {
+					continue;
+				}
+				String[] parts = path.split("-");
+				for (String part : parts) {
+					pathIdSet.add(Long.valueOf(part));
+				}
+			}
+
+			Map<Long, Address> addressMap = this.addressService.getAddressMapByIdSet(pathIdSet);
+			for (Address customerAddress : customerAddressList) {
+				AddressIdAndAddressLinePair pair = new AddressIdAndAddressLinePair();
+				Stack<String> stack = new Stack<String>();
+				stack.push(customerAddress.getName());
+				pair.setAddressId(customerAddress.getId());
+				Long parentId = customerAddress.getParentId();
+				while (parentId != -1) {
+					Address address = addressMap.get(parentId);
+					stack.push(address.getName());
+					parentId = address.getParentId();
+				}
+				StringBuffer addressLine = new StringBuffer();
+				while (!stack.isEmpty()) {
+					addressLine.append(stack.pop());
+				}
+				pair.setAddressLine(addressLine.toString());
+
+				pairList.add(pair);
+			}
+			return pairList;
+		}
+
+		public Long getCustomerId() {
+			return this.customerId;
+		}
+
+		public void setCustomerId(Long customerId) {
+			this.customerId = customerId;
+		}
+
+		public Long getStationId() {
+			return this.stationId;
+		}
+
+		public void setStationId(Long stationId) {
+			this.stationId = stationId;
+		}
+
+		public String getOldCoordinate() {
+			return this.oldCoordinate;
+		}
+
+		public void setOldCoordinate(String oldCoordinate) {
+			this.oldCoordinate = oldCoordinate;
+		}
+
+		public String getNewCoordinate() {
+			return this.newCoordinate;
+		}
+
+		public void setNewCoordinate(String newCoordinate) {
+			this.newCoordinate = newCoordinate;
+		}
+
+		public DeliveryStationService getDeliveryStationService() {
+			return this.deliveryStationService;
+		}
+
+		public void setDeliveryStationService(DeliveryStationService deliveryStationService) {
+			this.deliveryStationService = deliveryStationService;
+		}
+
 	}
 }

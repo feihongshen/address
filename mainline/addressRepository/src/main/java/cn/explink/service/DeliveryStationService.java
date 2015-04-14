@@ -1,11 +1,14 @@
 package cn.explink.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.sf.json.JSONArray;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -15,13 +18,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.explink.dao.AddressDao;
 import cn.explink.dao.CustomerDao;
 import cn.explink.dao.DeliveryStationDao;
+import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Customer;
 import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Vendor;
+import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
+import cn.explink.domain.fields.AddressIdAndAddressLinePair;
+import cn.explink.gis.GeoCoder;
+import cn.explink.gis.GeoPoint;
+import cn.explink.gis.GeoUtility;
 import cn.explink.modle.ComboBox;
 import cn.explink.ws.vo.DeliveryStationVo;
 
@@ -38,6 +49,10 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 
 	@Autowired
 	private CustomerDao customerDao;
+	@Autowired
+	private DeliveryStationRuleDao deliveryStationRuleDao;
+	@Autowired
+	private AddressDao addressDao;
 
 	public DeliveryStation createDeliveryStation(DeliveryStationVo deliveryStationVo) {
 		Customer customer = this.customerDao.get(deliveryStationVo.getCustomerId());
@@ -74,6 +89,14 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		return this.deliveryStationDao.save(deliveryStation);
 	}
 
+	public DeliveryStation getDeliveryStationByUid(String uid) {
+		return this.deliveryStationDao.getDeliveryStationByUid(uid);
+	}
+
+	public DeliveryStation getDeliveryStationById(Long id) {
+		return this.deliveryStationDao.getDeliveryStationById(id);
+	}
+
 	public DeliveryStation updateDeliveryStationById(DeliveryStation deliveryStationParam) {
 		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationById(deliveryStationParam.getId());
 		deliveryStation.setName(deliveryStationParam.getName());
@@ -83,6 +106,77 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		deliveryStation.setUid(deliveryStationParam.getUid());
 
 		return this.deliveryStationDao.save(deliveryStation);
+	}
+
+	/**
+	 * 同步更新关键字-站点关联关系
+	 */
+	public void synUpdateDeliveryStationRule(List<AddressIdAndAddressLinePair> addressIdAndAddressLinePairList, String oldCoordinate, String newCoordinate, Long customerId, Long stationId) {
+		List<Long> toDeleteAddressIdList = new ArrayList<Long>();
+		for (AddressIdAndAddressLinePair addressIdAndAddressLinePair : addressIdAndAddressLinePairList) {
+			// AddressIdAndAddressLinePair idAndLinePair =
+			// this.combineAddressLine(fullAddrStationPair.getAddrList());
+			boolean inOldArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), oldCoordinate);
+			boolean inNewArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), newCoordinate);
+			// 在修改前区域，不在修改后区域，则解除绑定
+			if (inOldArea && !inNewArea) {
+				toDeleteAddressIdList.add(addressIdAndAddressLinePair.getAddressId());
+			}
+			// 不在修改前区域，在修改后区域，则新增绑定
+			if (!inOldArea && inNewArea) {
+				this.createDeliveryStationRule(addressIdAndAddressLinePair.getAddressId(), stationId, customerId);
+			}
+			// 其他情况不需要处理
+		}
+		if (toDeleteAddressIdList.size() > 0) {
+			this.deliveryStationRuleDao.deleteRuleByIds(toDeleteAddressIdList, customerId);
+		}
+	}
+
+	private DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId) {
+		Address address = this.addressDao.get(addressId);
+		DeliveryStation deliveryStation = this.deliveryStationDao.get(deliveryStationId);
+
+		DeliveryStationRule deliveryStationRule = new DeliveryStationRule();
+		address.getDeliveryStationRules().add(deliveryStationRule);
+		deliveryStationRule.setAddress(address);
+		deliveryStationRule.setDeliveryStation(deliveryStation);
+		deliveryStationRule.setCreationTime(new Date());
+		deliveryStationRule.setRuleType(DeliveryStationRuleTypeEnum.fallback.getValue());
+		this.deliveryStationRuleDao.save(deliveryStationRule);
+
+		return deliveryStationRule;
+	}
+
+	private List<GeoPoint> getGeoPointListByCoordinate(String coorString) {
+		@SuppressWarnings("unchecked")
+		List<GeoPoint> pts = (List<GeoPoint>) JSONArray.toCollection(JSONArray.fromObject(coorString), GeoPoint.class);
+		return pts;
+	}
+
+	private String getPathFromCoordinate(String coorString) {
+		coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
+		return coorString;
+	}
+
+	private boolean containsAddress(String addressLine, String coordinate) {
+		GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+		// 地理编码+POI检索失败
+		if (position == null) {
+			return false;
+		}
+		coordinate = this.getPathFromCoordinate(coordinate);
+		List<GeoPoint> geoPointList = this.getGeoPointListByCoordinate(coordinate);
+		if (geoPointList == null) {
+			return false;
+		}
+
+		// 空间检索
+		GeoPoint[] polygon = new GeoPoint[geoPointList.size()];
+		if (GeoUtility.isInPolygon(position, geoPointList.toArray(polygon))) {
+			return true;
+		}
+		return false;
 	}
 
 	public DeliveryStation deleteDeliveryStation(DeliveryStationVo deliveryStationVo) {

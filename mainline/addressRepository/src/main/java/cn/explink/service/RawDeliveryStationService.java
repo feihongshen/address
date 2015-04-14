@@ -24,7 +24,7 @@ public class RawDeliveryStationService extends CommonServiceImpl<RawDeliveryStat
 	@Autowired
 	private CustomerDao customerDao;
 
-	public void createDeliveryStation(Long customerId, List<String> deliveryStationNameList) {
+	public synchronized void createDeliveryStation(Long customerId, List<String> deliveryStationNameList) {
 		for (String deliveryStationName : deliveryStationNameList) {
 			Customer customer = this.customerDao.get(customerId);
 			if (customer == null) {

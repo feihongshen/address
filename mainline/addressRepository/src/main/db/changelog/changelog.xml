@@ -300,6 +300,10 @@
 	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
 		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建黑龙江品骏客户 -->
+	<changeSet id="songkaojun-2015-04-14-01" author="songkaojun">
+		<sqlFile path="customer_init_hljpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 
 </databaseChangeLog>

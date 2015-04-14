@@ -165,7 +165,7 @@ $.fn.pagination.defaults={total:1,pageSize:10,pageNumber:1,pageList:[10,20,30,50
 },onBeforeRefresh:function(_23,_24){
 },onRefresh:function(_25,_26){
 },onChangePageSize:function(_27){
-},beforePageText:"Page",afterPageText:"of {pages}",displayMsg:"Displaying {from} to {to} of {total} items",nav:{first:{iconCls:"pagination-first",handler:function(){
+},beforePageText:"Page",afterPageText:"of {pages}",displayMsg:"第{from}到{to}条，共{total}条",nav:{first:{iconCls:"pagination-first",handler:function(){
 var _28=$(this).pagination("options");
 if(_28.pageNumber>1){
 $(this).pagination("select",1);

@@ -121,7 +121,11 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 	public List<DeliveryStation> getDeliverStation(List<AddressStationPair> pairList) {
 		Set<Long> delStatIdSet = this.getDeliverStationIdSet(pairList);
 
-		return this.getDeliverStation(delStatIdSet);
+		if (delStatIdSet.size() == 0) {
+			return new ArrayList<DeliveryStation>();
+		} else {
+			return this.getDeliverStation(delStatIdSet);
+		}
 	}
 
 	private Set<Long> getDeliverStationIdSet(List<AddressStationPair> pairList) {

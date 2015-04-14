@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.hibernate.Query;
 import org.slf4j.Logger;
@@ -320,11 +322,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
-					try {
-						this.splitAndImportRawAddress(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					this.splitAndImport(orderVo, deliveryStationList);
 				}
 				singleResult.setRelatedAddressList(new ArrayList<Address>());
 				singleResult.setDeliveryStationList(deliveryStationList);
@@ -373,35 +371,17 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return result;
 	}
 
+	private void splitAndImport(OrderVo orderVo, List<DeliveryStation> deliveryStationList) {
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		for (int i = 0; i < 10; i++) {
+			service.submit(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
+					this.rawAddressService, this.keywordSuffixService));
+		}
+		service.shutdown();
+	}
+
 	private List<DeliveryStation> searchByGis(OrderVo orderVo) {
 		return this.gisService.search(orderVo.getAddressLine(), orderVo.getCustomerId());
-	}
-
-	private void splitAndImportRawAddress(Long customerId, String addressLine, String stationName) {
-		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
-		AddressStation addressStation = new AddressStation(addressLine, stationName);
-		addressStationList.add(addressStation);
-
-		AddressSplitter addressSplitter = new AddressSplitter(addressStationList, this.getKeywordSuffixNameList(customerId));
-		List<AddressDetail> addressDetailList = addressSplitter.split();
-		if (addressDetailList.size() == 0) {
-			return;
-		}
-		List<String> deliveryStationNameList = new ArrayList<String>();
-		for (AddressDetail addressDetail : addressDetailList) {
-			deliveryStationNameList.add(addressDetail.getDeliveryStationName());
-		}
-		this.rawDeliveryStationService.createDeliveryStation(customerId, deliveryStationNameList);
-		this.rawAddressService.importAddress(customerId, addressDetailList);
-	}
-
-	private List<String> getKeywordSuffixNameList(Long customerId) {
-		List<String> keywordSuffixNameList = new ArrayList<String>();
-		List<KeywordSuffix> keywordSuffixList = this.keywordSuffixService.getKeywordSuffixByCustomerId(customerId);
-		for (KeywordSuffix keywordSuffix : keywordSuffixList) {
-			keywordSuffixNameList.add(keywordSuffix.getName());
-		}
-		return keywordSuffixNameList;
 	}
 
 	/**
@@ -434,11 +414,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				} else if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
-					try {
-						this.splitAndImportRawAddress(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					this.splitAndImport(orderVo, deliveryStationList);
 				} else {
 					singleResult.setResult(AddressMappingResultEnum.multipleResult);
 				}
@@ -791,5 +767,64 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public List<ZTreeNode> getAsyncAddressPage(Long customerId, Long parentId, String ids, Integer page, Integer pageSize) {
 		return this.addressDao.getAsyncAddressPage(customerId, parentId, ids, page, pageSize);
+	}
+
+	public Map<Long, Address> getAddressMapByIdSet(Set<Long> addressIdSet) {
+		Map<Long, Address> map = new HashMap<Long, Address>();
+		List<Address> addressList = this.addressDao.getAddressByIdSet(addressIdSet);
+		for (Address address : addressList) {
+			map.put(address.getId(), address);
+		}
+		return map;
+	}
+
+	public class SplitAndImportRawAddressThread implements Runnable {
+		private Long customerId;
+		private String addressLine;
+		private String stationName;
+		private RawDeliveryStationService rawDeliveryStationService;
+		private RawAddressService rawAddressService;
+		private KeywordSuffixService keywordSuffixService;
+
+		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService,
+				KeywordSuffixService keywordSuffixService) {
+			super();
+			this.customerId = customerId;
+			this.addressLine = addressLine;
+			this.stationName = stationName;
+			this.rawDeliveryStationService = rawDeliveryStationService;
+			this.rawAddressService = rawAddressService;
+			this.keywordSuffixService = keywordSuffixService;
+		}
+
+		@Override
+		public void run() {
+			List<AddressStation> addressStationList = new ArrayList<AddressStation>();
+			AddressStation addressStation = new AddressStation(this.addressLine, this.stationName);
+			addressStationList.add(addressStation);
+
+			AddressSplitter addressSplitter = new AddressSplitter(addressStationList, this.getKeywordSuffixNameList(this.customerId));
+			List<AddressDetail> addressDetailList = addressSplitter.split();
+			if (addressDetailList.size() == 0) {
+				return;
+			}
+			List<String> deliveryStationNameList = new ArrayList<String>();
+			for (AddressDetail addressDetail : addressDetailList) {
+				deliveryStationNameList.add(addressDetail.getDeliveryStationName());
+			}
+			this.rawDeliveryStationService.createDeliveryStation(this.customerId, deliveryStationNameList);
+			this.rawAddressService.importAddress(this.customerId, addressDetailList);
+
+		}
+
+		private List<String> getKeywordSuffixNameList(Long customerId) {
+			List<String> keywordSuffixNameList = new ArrayList<String>();
+			List<KeywordSuffix> keywordSuffixList = this.keywordSuffixService.getKeywordSuffixByCustomerId(customerId);
+			for (KeywordSuffix keywordSuffix : keywordSuffixList) {
+				keywordSuffixNameList.add(keywordSuffix.getName());
+			}
+			return keywordSuffixNameList;
+		}
+
 	}
 }

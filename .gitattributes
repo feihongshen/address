@@ -27,6 +27,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_fjfy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_gxpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_gzpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_gztl.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_hljpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_hnyt.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jlpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jxfy.sql -text
@@ -95,6 +96,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/enums/DelivererStausE
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/DeliveryStationRuleTypeEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/DeliveryStationStausEnmu.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/VendorStausEnmu.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/fields/AddressIdAndAddressLinePair.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/NumberExpression.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/RuleExpression.java -text
 mainline/addressRepository/src/main/java/cn/explink/exception/ExplinkRuntimeException.java -text

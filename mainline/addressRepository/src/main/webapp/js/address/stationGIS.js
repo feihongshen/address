@@ -134,7 +134,7 @@
 			}
 		}
 		else
-			layer.tips('请选择要修改行', this, {
+			layer.tips('请选择要绘制的站点', this, {
 				guide : 2,
 				time : 2
 			});

@@ -53,15 +53,14 @@ public class GisService {
 					continue;
 				}
 				// TODO 格式可能变化
-				coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
+				coorString = this.getPathFromCoordinate(coorString);
 
 				if (coorString == null) {
 					// 站点配送范围获取失败
 					continue;
 				}
 
-				@SuppressWarnings("unchecked")
-				List<GeoPoint> pts = (List<GeoPoint>) JSONArray.toCollection(JSONArray.fromObject(coorString), GeoPoint.class);
+				List<GeoPoint> pts = this.getGeoPointListByCoordinate(coorString);
 
 				if (pts == null) // 站点的配送区域坐标查询失败
 				{
@@ -81,6 +80,37 @@ public class GisService {
 		}
 
 		return null;
+	}
+
+	private List<GeoPoint> getGeoPointListByCoordinate(String coorString) {
+		@SuppressWarnings("unchecked")
+		List<GeoPoint> pts = (List<GeoPoint>) JSONArray.toCollection(JSONArray.fromObject(coorString), GeoPoint.class);
+		return pts;
+	}
+
+	private String getPathFromCoordinate(String coorString) {
+		coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
+		return coorString;
+	}
+
+	public boolean containsAddress(String addressLine, String coordinate) {
+		GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+		// 地理编码+POI检索失败
+		if (position == null) {
+			return false;
+		}
+		coordinate = this.getPathFromCoordinate(coordinate);
+		List<GeoPoint> geoPointList = this.getGeoPointListByCoordinate(coordinate);
+		if (geoPointList == null) {
+			return false;
+		}
+
+		// 空间检索
+		GeoPoint[] polygon = new GeoPoint[geoPointList.size()];
+		if (GeoUtility.isInPolygon(position, geoPointList.toArray(polygon))) {
+			return true;
+		}
+		return false;
 	}
 
 	public DeliveryStationDao getDeliveryStationDao() {
