@@ -29,57 +29,50 @@ public class GisService {
 	private DeliveryStationDao deliveryStationDao;
 
 	public List<DeliveryStation> search(String addressLine, Long customerId) {
-		try {
-			GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
-			if (position == null) // 地理编码+POI检索失败
-			{
-				return null;
-			}
+		List<DeliveryStation> resultStations = new ArrayList<DeliveryStation>();
 
-			List<DeliveryStation> allStations = this.deliveryStationDao.listAll(customerId);
-
-			if ((allStations == null) || (allStations.size() == 0)) // 站点返回为空
-			{
-				return null;
-			}
-
-			List<DeliveryStation> resultStations = new ArrayList<DeliveryStation>();
-
-			// 遍历全部站点，进行空间匹配
-			for (DeliveryStation deliveryStation : allStations) {
-
-				String coorString = deliveryStation.getCoordinate();
-				if (StringUtil.isEmpty(coorString)) {
-					continue;
-				}
-				// TODO 格式可能变化
-				coorString = this.getPathFromCoordinate(coorString);
-
-				if (coorString == null) {
-					// 站点配送范围获取失败
-					continue;
-				}
-
-				List<GeoPoint> pts = this.getGeoPointListByCoordinate(coorString);
-
-				if (pts == null) // 站点的配送区域坐标查询失败
-				{
-					continue;
-				}
-
-				// 空间检索
-				GeoPoint[] polygon = new GeoPoint[pts.size()];
-				if (GeoUtility.isInPolygon(position, pts.toArray(polygon))) {
-					resultStations.add(deliveryStation);
-				}
-			}
+		GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+		if (position == null) // 地理编码+POI检索失败
+		{
 			return resultStations;
-
-		} catch (Exception e) {
-			System.out.print(e);
 		}
 
-		return null;
+		List<DeliveryStation> allStations = this.deliveryStationDao.listAll(customerId);
+
+		if ((allStations == null) || (allStations.size() == 0)) // 站点返回为空
+		{
+			return resultStations;
+		}
+
+		// 遍历全部站点，进行空间匹配
+		for (DeliveryStation deliveryStation : allStations) {
+
+			String coorString = deliveryStation.getCoordinate();
+			if (StringUtil.isEmpty(coorString)) {
+				continue;
+			}
+			// TODO 格式可能变化
+			coorString = this.getPathFromCoordinate(coorString);
+
+			if (coorString == null) {
+				// 站点配送范围获取失败
+				continue;
+			}
+
+			List<GeoPoint> pts = this.getGeoPointListByCoordinate(coorString);
+
+			if (pts == null) // 站点的配送区域坐标查询失败
+			{
+				continue;
+			}
+
+			// 空间检索
+			GeoPoint[] polygon = new GeoPoint[pts.size()];
+			if (GeoUtility.isInPolygon(position, pts.toArray(polygon))) {
+				resultStations.add(deliveryStation);
+			}
+		}
+		return resultStations;
 	}
 
 	private List<GeoPoint> getGeoPointListByCoordinate(String coorString) {

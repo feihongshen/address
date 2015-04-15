@@ -171,10 +171,8 @@ public class DeliveryStationController extends BaseController {
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
-		ExecutorService service = Executors.newFixedThreadPool(1);
-		for (int i = 0; i < 10; i++) {
-			service.submit(new SynUpdateDeliveryStationRuleThread(customerId, oldDeliveryStation.getId(), oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
-		}
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynUpdateDeliveryStationRuleThread(customerId, oldDeliveryStation.getId(), oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
 		service.shutdown();
 
 		return aj;
@@ -200,10 +198,8 @@ public class DeliveryStationController extends BaseController {
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
-		ExecutorService service = Executors.newFixedThreadPool(1);
-		for (int i = 0; i < 10; i++) {
-			service.submit(new SynUpdateDeliveryStationRuleThread(customerId, id, oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
-		}
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynUpdateDeliveryStationRuleThread(customerId, id, oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
 		service.shutdown();
 
 		return aj;

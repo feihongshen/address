@@ -319,7 +319,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			case exceptionResult:
 				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
 
-				if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
+				if (1 == deliveryStationList.size()) {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
 					this.splitAndImport(orderVo, deliveryStationList);
@@ -372,11 +372,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	}
 
 	private void splitAndImport(OrderVo orderVo, List<DeliveryStation> deliveryStationList) {
-		ExecutorService service = Executors.newFixedThreadPool(1);
-		for (int i = 0; i < 10; i++) {
-			service.submit(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
-					this.rawAddressService, this.keywordSuffixService));
-		}
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
+				this.rawAddressService, this.keywordSuffixService));
 		service.shutdown();
 	}
 
