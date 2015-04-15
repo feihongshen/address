@@ -106,15 +106,15 @@
 		<tr>
 			<td>省/直辖市：</td>
 			<td><div>
-					<input id="province" readonly="readonly">
+					<input id="province" readonly="readonly" disabled="disabled" >
 				</div></td>
 			<td>市：</td>
 			<td><div>
-					<input id="city" readonly="readonly">
+					<input id="city" readonly="readonly" disabled="disabled" >
 				</div></td>
 			<td>区/县：</td>
 			<td><div>
-					<input id="district" readonly="readonly">
+					<input id="district" readonly="readonly" disabled="disabled">
 				</div></td>
 		</tr>
 		<tr>

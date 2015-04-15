@@ -2,6 +2,11 @@
 //文件上传
 function ajaxFileUpload() {
 	$("#startImport").attr('disabled', true);
+	var file = document.getElementById('file').files[0];
+	if(file==null){
+		$.messager.alert("提示","请选择文件！");
+		return ;
+	}
 	process=null;
 	flushProcess();	
 	$("#procDiv").fadeIn("fast");

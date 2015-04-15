@@ -253,7 +253,7 @@ public class AddressController extends BaseController {
 			e.printStackTrace();
 			AddressController.logger.info(e.getMessage());
 			aj.setSuccess(false);
-			aj.setInfo(e.getMessage());
+			aj.setInfo("导入失败！");
 		}
 		return aj;
 	}
