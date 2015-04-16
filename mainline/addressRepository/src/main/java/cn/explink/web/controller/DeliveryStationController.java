@@ -205,6 +205,14 @@ public class DeliveryStationController extends BaseController {
 		return aj;
 	}
 
+	public DeliveryStationService getDeliveryStationService() {
+		return this.deliveryStationService;
+	}
+
+	public void setDeliveryStationService(DeliveryStationService deliveryStationService) {
+		this.deliveryStationService = deliveryStationService;
+	}
+
 	public class SynUpdateDeliveryStationRuleThread implements Runnable {
 		private Long customerId;
 		private Long stationId;

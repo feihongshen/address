@@ -3,6 +3,7 @@ package cn.explink.web.filter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ResourceBundle;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,28 +18,34 @@ import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.util.JSONReslutUtil;
+import cn.explink.util.StringUtil;
 
 public class DmpAccessFilter implements Filter {
 
 	private static Logger logger = LoggerFactory.getLogger(DmpAccessFilter.class);
 
-	// 校验用户的url
-	private static String dmpVarifyUserUrl = "http://192.168.0.83:8080/dmp";
+	private static ResourceBundle bundle;
 
-	// 结算登录的url
-	// private static String eapUrl = null;
+	// 校验用户的url
+	private static String dmpVarifyUserUrl;
 
 	// 重定向到登录页面 的url
-	private static String dmpIndexUrl = "http://192.168.0.83:8080/dmp";
+	private static String dmpIndexUrl;
 
-	private DmpLoginFilter dmpLoginFilter;
+	static {
+		DmpAccessFilter.bundle = ResourceBundle.getBundle("address");
+
+		DmpAccessFilter.dmpVarifyUserUrl = DmpAccessFilter.bundle.getString("dmpVarifyUserUrl");
+
+		DmpAccessFilter.dmpIndexUrl = DmpAccessFilter.bundle.getString("dmpIndexUrl");
+	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
 	}
 
 	@Override
@@ -49,25 +56,22 @@ public class DmpAccessFilter implements Filter {
 		String dmpid = request.getParameter("dmpid");
 
 		// 判断是否用登录的信息
-		// if (StringUtil.isNotEmpty(dmpid)) {// 如果存在dmpid
-		// httpRequest.getSession().setAttribute("dmpid", dmpid);
-		//
-		// User user = this.getLogUser(dmpid);
-		//
-		// if ("[]".equals(user) || "".equals(user.getUsername()) || (null ==
-		// user.getUsername())) {// 用户不存在
-		// // 重定向到登录页面
-		// DmpAccessFilter.logger.info("非本子系统链接过来的请求  ...");
-		// httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
-		// return;
-		// }
-		// ((DmpLoginFilter)
-		// ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest,
-		// httpResponse);
-		// } else {
-		// return;
-		// }
-		((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
+		if (StringUtil.isNotEmpty(dmpid)) {// 如果存在dmpid
+			User user = this.getLogUser(dmpid);
+			if ("[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername())) {// 用户不存在
+				// 重定向到登录页面
+				DmpAccessFilter.logger.info("非本子系统链接过来的请求  ...");
+				httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
+				return;
+			} else {
+				Object authenticationObj = httpRequest.getSession().getAttribute(DmpLoginFilter.AR_SESSION_ID);
+				Authentication authentication = (null == authenticationObj) ? null : (Authentication) authenticationObj;
+				if (null == authentication) {
+					((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
+				}
+			}
+
+		}
 
 		chain.doFilter(request, response);
 	}
@@ -89,9 +93,6 @@ public class DmpAccessFilter implements Filter {
 		String user = "";
 		try {
 			user = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
-			// user = JSONReslutUtil.getResultMessage(dmpVarifyUserUrl+
-			// "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8",
-			// "POST").toString();
 			if ("[]".equals(user)) {
 				DmpAccessFilter.logger.error("获取[]登录用户失败,登录失效了");
 				return u;

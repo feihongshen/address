@@ -17,6 +17,8 @@ import cn.explink.web.ExplinkUserDetail;
 
 public class DmpLoginFilter extends UsernamePasswordAuthenticationFilter {
 
+	public static final String AR_SESSION_ID = "AR_SESSION_ID";
+
 	@Autowired
 	private SecurityContextHolderStrategy securityContextHolderStrategy;
 
@@ -32,6 +34,8 @@ public class DmpLoginFilter extends UsernamePasswordAuthenticationFilter {
 		// Allow subclasses to set the "details" property
 		this.setDetails(request, authRequest);
 		Authentication authentication = this.getAuthenticationManager().authenticate(authRequest);
+
+		request.getSession().setAttribute(DmpLoginFilter.AR_SESSION_ID, authentication);
 
 		this.securityContextHolderStrategy.getContext().setAuthentication(authentication);
 
