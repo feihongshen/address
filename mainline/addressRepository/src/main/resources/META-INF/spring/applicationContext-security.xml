@@ -20,7 +20,7 @@
 		<intercept-url pattern="/address/**" access="permitAll" />
 		<intercept-url pattern="/keyword/**" access="permitAll" />
 		<intercept-url pattern="/station/**" access="permitAll" />
-		<intercept-url pattern="/stationAdressRelation/**" access="permitAll" />
+		<intercept-url pattern="/stationAdressRelation/**" access="permitAll" /> 
 		<intercept-url pattern="/deliveryStationRule/**" access="permitAll" />
 		
 		<intercept-url pattern="/**" access="isAuthenticated()" />
