@@ -24,6 +24,10 @@ import cn.explink.util.ApplicationContextUtil;
 import cn.explink.util.JSONReslutUtil;
 import cn.explink.util.StringUtil;
 
+/**
+ *
+ * @author songkaojun 2015年4月16日
+ */
 public class DmpAccessFilter implements Filter {
 
 	private static Logger logger = LoggerFactory.getLogger(DmpAccessFilter.class);
@@ -70,9 +74,7 @@ public class DmpAccessFilter implements Filter {
 					((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
 				}
 			}
-
 		}
-
 		chain.doFilter(request, response);
 	}
 

@@ -15,6 +15,10 @@ import cn.explink.domain.User;
 import cn.explink.util.StringUtil;
 import cn.explink.web.ExplinkUserDetail;
 
+/**
+ *
+ * @author songkaojun 2015年4月16日
+ */
 public class DmpLoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	public static final String AR_SESSION_ID = "AR_SESSION_ID";
