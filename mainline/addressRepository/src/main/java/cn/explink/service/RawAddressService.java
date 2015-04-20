@@ -22,6 +22,7 @@ import cn.explink.dao.RawAddressDao;
 import cn.explink.dao.RawAddressPermissionDao;
 import cn.explink.dao.RawDeliveryStationDao;
 import cn.explink.dao.RawDeliveryStationRuleDao;
+import cn.explink.domain.AddressDetail;
 import cn.explink.domain.RawAddress;
 import cn.explink.domain.RawAddressPermission;
 import cn.explink.domain.RawDeliveryStation;
@@ -29,7 +30,6 @@ import cn.explink.domain.RawDeliveryStationRule;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
-import cn.explink.spliter.vo.AddressDetail;
 import cn.explink.spliter.vo.FullRawAddressStationPair;
 import cn.explink.spliter.vo.RawAddressQuickVO;
 import cn.explink.spliter.vo.RawAddressStationPair;
@@ -59,17 +59,17 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 	@Autowired
 	private RawDeliveryStationRuleDao rawDeliveryStationRuleDao;
 
-	public List<FullRawAddressStationPair> getFullRawAddressStationPair(Long customerId, int page, int pageSize) {
-		List<RawAddressStationPair> pairList = this.rawAddressDao.getPageAddressList(customerId, page, pageSize);
+	public List<FullRawAddressStationPair> getFullRawAddressStationPair(Long customerId) {
+		List<RawAddressStationPair> pairList = this.rawAddressDao.getPageAddressList(customerId);
 		List<RawAddress> fullPathAddrList = this.rawAddressDao.getFullPathAddrList(pairList);
 		List<RawDeliveryStation> delStatList = this.rawDeliveryStationDao.getDeliverStation(pairList);
 
 		return this.getFullPairList(pairList, fullPathAddrList, delStatList);
 	}
 
-	public int getRawAddressCount(Long customerId) {
-		return this.rawAddressDao.getRawAddressCount(customerId);
-	}
+	// public int getRawAddressCount(Long customerId) {
+	// return this.rawAddressDao.getRawAddressCount(customerId);
+	// }
 
 	private List<FullRawAddressStationPair> getFullPairList(List<RawAddressStationPair> pairList, List<RawAddress> addrList, List<RawDeliveryStation> delStatList) {
 		List<FullRawAddressStationPair> fullPairList = new ArrayList<FullRawAddressStationPair>();

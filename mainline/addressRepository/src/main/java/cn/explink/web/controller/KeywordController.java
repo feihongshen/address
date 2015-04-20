@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.explink.domain.Address;
+import cn.explink.domain.AddressDetail;
 import cn.explink.domain.AddressImportDetail;
 import cn.explink.domain.AddressImportResult;
 import cn.explink.domain.Deliverer;
@@ -35,6 +36,7 @@ import cn.explink.domain.KeywordSuffix;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.modle.AjaxJson;
+import cn.explink.service.AddressDetailService;
 import cn.explink.service.AddressImportResultService;
 import cn.explink.service.AddressImportService;
 import cn.explink.service.AddressService;
@@ -42,9 +44,6 @@ import cn.explink.service.DeliveryStationService;
 import cn.explink.service.KeywordSuffixService;
 import cn.explink.service.RawAddressPermissionService;
 import cn.explink.service.RawAddressService;
-import cn.explink.spliter.vo.AddressDetail;
-import cn.explink.spliter.vo.FullRawAddressStationPair;
-import cn.explink.spliter.vo.RawAddressQuickVO;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
 
@@ -75,6 +74,9 @@ public class KeywordController extends BaseController {
 	@Autowired
 	private KeywordSuffixService keywordSuffixService;
 
+	@Autowired
+	private AddressDetailService addressDetailService;
+
 	public final ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping("/keywordMaintain")
@@ -87,9 +89,13 @@ public class KeywordController extends BaseController {
 	public List<AddressDetail> loadData(int pageNum, int pageSize, HttpServletRequest request) {
 		try {
 			Long customerId = this.getCustomerId();
-			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, pageNum, pageSize);
-			List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
-			return addressDetailList;
+			// List<FullRawAddressStationPair> fullRawAddressStationPairList =
+			// this.rawAddressService.getFullRawAddressStationPair(customerId,
+			// pageNum, pageSize);
+			// List<AddressDetail> addressDetailList =
+			// this.convertToAddressDetail(fullRawAddressStationPairList);
+			// return addressDetailList;
+			return new ArrayList<AddressDetail>();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AddressDetail>();
@@ -101,96 +107,12 @@ public class KeywordController extends BaseController {
 	public Map<String, Object> queryByPage(String keyword, String station, int pageNum, int pageSize, HttpServletRequest request) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Long customerId = this.getCustomerId();
-		List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(customerId, pageNum, pageSize);
-		List<AddressDetail> addressDetailList = this.convertToAddressDetail(fullRawAddressStationPairList);
-		List<AddressDetail> filtedAddressDetailList = null;
-		if (StringUtil.isEmpty(keyword) && StringUtil.isEmpty(station)) {
-			filtedAddressDetailList = addressDetailList;
-		} else {
-			filtedAddressDetailList = this.filtByKeywordAndStation(addressDetailList, keyword, station);
-		}
-		resultMap.put("count", this.rawAddressService.getRawAddressCount(customerId));
+
+		List<AddressDetail> filtedAddressDetailList = this.addressDetailService.fuzzyQueryByPage(keyword, station, customerId, pageNum, pageSize);
+
+		resultMap.put("count", this.addressDetailService.getAddressDetailCount(keyword, station, customerId));
 		resultMap.put("list", filtedAddressDetailList);
 		return resultMap;
-	}
-
-	/**
-	 * 根据关键字、站点进行过滤
-	 *
-	 * @param addressDetailList
-	 * @param keyword
-	 * @param station
-	 * @return
-	 */
-	private List<AddressDetail> filtByKeywordAndStation(List<AddressDetail> addressDetailList, String keyword, String station) {
-		List<AddressDetail> filtedAddressDetailList = new ArrayList<AddressDetail>();
-
-		if (StringUtil.isEmpty(keyword) && StringUtil.isEmpty(station)) {
-			filtedAddressDetailList = addressDetailList;
-			return filtedAddressDetailList;
-		}
-
-		for (AddressDetail addressDetail : addressDetailList) {
-			String province = addressDetail.getProvince();
-			String city = addressDetail.getCity();
-			String district = addressDetail.getDistrict();
-			String addressName1 = addressDetail.getAddressName1();
-			String addressName2 = addressDetail.getAddressName2();
-			String addressName3 = addressDetail.getAddressName3();
-			String deliveryStationName = addressDetail.getDeliveryStationName();
-
-			if (StringUtil.isNotEmpty(keyword) && StringUtil.isNotEmpty(keyword)) {
-				if ((this.contains(keyword, province) || this.contains(keyword, city) || this.contains(keyword, district) || this.contains(keyword, addressName1)
-						|| this.contains(keyword, addressName2) || this.contains(keyword, addressName3))
-						&& (this.contains(station, deliveryStationName))) {
-					filtedAddressDetailList.add(addressDetail);
-				}
-			} else if (StringUtil.isNotEmpty(keyword) && StringUtil.isEmpty(station)) {
-				if (this.contains(keyword, province) || this.contains(keyword, city) || this.contains(keyword, district) || this.contains(keyword, addressName1)
-						|| this.contains(keyword, addressName2) || this.contains(keyword, addressName3)) {
-					filtedAddressDetailList.add(addressDetail);
-				}
-			} else if (StringUtil.isNotEmpty(station) && StringUtil.isEmpty(keyword)) {
-				if (this.contains(station, deliveryStationName)) {
-					filtedAddressDetailList.add(addressDetail);
-				}
-			}
-		}
-
-		return filtedAddressDetailList;
-
-	}
-
-	private boolean contains(String str, String containedStr) {
-		return StringUtil.isNotEmpty(containedStr) && containedStr.contains(str);
-	}
-
-	private List<AddressDetail> convertToAddressDetail(List<FullRawAddressStationPair> fullRawAddressStationPairList) {
-		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
-		for (FullRawAddressStationPair fullRawASPair : fullRawAddressStationPairList) {
-			AddressDetail addressDetail = new AddressDetail();
-			List<RawAddressQuickVO> rawAddressList = fullRawASPair.getAddrList();
-
-			addressDetail.setProvince(rawAddressList.get(1).getName());
-			addressDetail.setCity(rawAddressList.get(2).getName());
-			addressDetail.setDistrict(rawAddressList.get(3).getName());
-			if ((rawAddressList.size() > 4) && (null != rawAddressList.get(4))) {
-				addressDetail.setAddressId1(rawAddressList.get(4).getId());
-				addressDetail.setAddressName1(rawAddressList.get(4).getName());
-			}
-			if ((rawAddressList.size() > 5) && (null != rawAddressList.get(5))) {
-				addressDetail.setAddressId2(rawAddressList.get(5).getId());
-				addressDetail.setAddressName2(rawAddressList.get(5).getName());
-			}
-			if ((rawAddressList.size() > 6) && (null != rawAddressList.get(6))) {
-				addressDetail.setAddressId3(rawAddressList.get(6).getId());
-				addressDetail.setAddressName3(rawAddressList.get(6).getName());
-			}
-			addressDetail.setDeliveryStationName(fullRawASPair.getRawDeliveryStation().getName());
-
-			addressDetailList.add(addressDetail);
-		}
-		return addressDetailList;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -198,7 +120,7 @@ public class KeywordController extends BaseController {
 	@ResponseBody
 	public AjaxJson save(String addressDetailListJson, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
-		AddressImportResult addressImportResult = new AddressImportResult();
+		AddressImportResult addressImportResult = null;
 		List<AddressDetail> addressDetailList = null;
 
 		JavaType javaType = this.getCollectionType(ArrayList.class, AddressDetail.class);
@@ -223,7 +145,6 @@ public class KeywordController extends BaseController {
 				addressImportDetail.setAddress2(addressDetail.getAddressName2());
 				addressImportDetail.setAddress3(addressDetail.getAddressName3());
 				addressImportDetail.setDeliveryStationName(addressDetail.getDeliveryStationName());
-				addressImportDetail.setAddressImportResult(addressImportResult);
 
 				addressImportDetailList.add(addressImportDetail);
 			}
@@ -276,6 +197,7 @@ public class KeywordController extends BaseController {
 			return;
 		}
 		List<Long> rawAddressIdList = new ArrayList<Long>();
+		List<Long> addressDetailIdList = new ArrayList<Long>();
 		for (AddressImportDetail addressImportDetail : addressImportDetailList) {
 			if (addressImportDetail.getStatus() != AddressImportDetailStatsEnum.success.getValue()) {
 				continue;
@@ -288,10 +210,14 @@ public class KeywordController extends BaseController {
 				} else if ((addressDetail.getAddressId1() != null) && (addressDetail.getAddressId1() != 0)) {
 					rawAddressIdList.add(addressDetail.getAddressId1());
 				}
+				addressDetailIdList.add(addressDetail.getId());
 			}
 
 		}
 
+		if (addressDetailIdList.size() > 0) {
+			this.addressDetailService.deleteByIdList(addressDetailIdList);
+		}
 		if (rawAddressIdList.size() > 0) {
 			this.rawAddressPermissionService.batchUnbindAddress(rawAddressIdList, this.getCustomerId());
 		}
@@ -419,6 +345,7 @@ public class KeywordController extends BaseController {
 			e.printStackTrace();
 		}
 		List<Long> rawAddressIdList = new ArrayList<Long>();
+		List<Long> addressDetailIdList = new ArrayList<Long>();
 		for (AddressDetail addressDetail : addressDetailList) {
 			if (StringUtil.isNotEmpty(addressDetail.getAddressName3())) {
 				rawAddressIdList.add(addressDetail.getAddressId3());
@@ -427,6 +354,10 @@ public class KeywordController extends BaseController {
 			} else if (StringUtil.isNotEmpty(addressDetail.getAddressName1())) {
 				rawAddressIdList.add(addressDetail.getAddressId1());
 			}
+			addressDetailIdList.add(addressDetail.getId());
+		}
+		if (addressDetailIdList.size() > 0) {
+			this.addressDetailService.deleteByIdList(addressDetailIdList);
 		}
 
 		if (rawAddressIdList.size() > 0) {

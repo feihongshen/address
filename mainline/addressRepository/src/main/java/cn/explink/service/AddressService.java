@@ -28,6 +28,7 @@ import cn.explink.dao.OrderDao;
 import cn.explink.dao.VendorDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
+import cn.explink.domain.AddressDetail;
 import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Alias;
 import cn.explink.domain.Deliverer;
@@ -42,8 +43,9 @@ import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.spliter.AddressSplitter;
-import cn.explink.spliter.vo.AddressDetail;
 import cn.explink.spliter.vo.AddressStation;
+import cn.explink.spliter.vo.FullRawAddressStationPair;
+import cn.explink.spliter.vo.RawAddressQuickVO;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.AddressUtil;
 import cn.explink.util.StringUtil;
@@ -114,6 +116,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private RawDeliveryStationService rawDeliveryStationService;
 	@Autowired
 	private KeywordSuffixService keywordSuffixService;
+	@Autowired
+	private AddressDetailService addressDetailService;
 
 	public void listAddress() {
 		List<Address> addressList = this.addressDao.getAllAddresses();
@@ -374,7 +378,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private void splitAndImport(OrderVo orderVo, List<DeliveryStation> deliveryStationList) {
 		ExecutorService service = Executors.newCachedThreadPool();
 		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
-				this.rawAddressService, this.keywordSuffixService));
+				this.rawAddressService, this.keywordSuffixService, this.addressDetailService));
 		service.shutdown();
 	}
 
@@ -783,9 +787,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		private RawDeliveryStationService rawDeliveryStationService;
 		private RawAddressService rawAddressService;
 		private KeywordSuffixService keywordSuffixService;
+		private AddressDetailService addressDetailService;
 
 		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService,
-				KeywordSuffixService keywordSuffixService) {
+				KeywordSuffixService keywordSuffixService, AddressDetailService addressDetailService) {
 			super();
 			this.customerId = customerId;
 			this.addressLine = addressLine;
@@ -793,6 +798,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			this.rawDeliveryStationService = rawDeliveryStationService;
 			this.rawAddressService = rawAddressService;
 			this.keywordSuffixService = keywordSuffixService;
+			this.addressDetailService = addressDetailService;
 		}
 
 		@Override
@@ -813,6 +819,39 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			this.rawDeliveryStationService.createDeliveryStation(this.customerId, deliveryStationNameList);
 			this.rawAddressService.importAddress(this.customerId, addressDetailList);
 
+			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(this.customerId);
+
+			this.addressDetailService.synAddressDetail(this.convertToAddressDetail(fullRawAddressStationPairList, this.customerId));
+
+		}
+
+		private List<AddressDetail> convertToAddressDetail(List<FullRawAddressStationPair> fullRawAddressStationPairList, Long customerId) {
+			List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
+			for (FullRawAddressStationPair fullRawASPair : fullRawAddressStationPairList) {
+				AddressDetail addressDetail = new AddressDetail();
+				List<RawAddressQuickVO> rawAddressList = fullRawASPair.getAddrList();
+
+				addressDetail.setProvince(rawAddressList.get(1).getName());
+				addressDetail.setCity(rawAddressList.get(2).getName());
+				addressDetail.setDistrict(rawAddressList.get(3).getName());
+				if ((rawAddressList.size() > 4) && (null != rawAddressList.get(4))) {
+					addressDetail.setAddressId1(rawAddressList.get(4).getId());
+					addressDetail.setAddressName1(rawAddressList.get(4).getName());
+				}
+				if ((rawAddressList.size() > 5) && (null != rawAddressList.get(5))) {
+					addressDetail.setAddressId2(rawAddressList.get(5).getId());
+					addressDetail.setAddressName2(rawAddressList.get(5).getName());
+				}
+				if ((rawAddressList.size() > 6) && (null != rawAddressList.get(6))) {
+					addressDetail.setAddressId3(rawAddressList.get(6).getId());
+					addressDetail.setAddressName3(rawAddressList.get(6).getName());
+				}
+				addressDetail.setDeliveryStationName(fullRawASPair.getRawDeliveryStation().getName());
+				addressDetail.setCustomerId(customerId);
+
+				addressDetailList.add(addressDetail);
+			}
+			return addressDetailList;
 		}
 
 		private List<String> getKeywordSuffixNameList(Long customerId) {

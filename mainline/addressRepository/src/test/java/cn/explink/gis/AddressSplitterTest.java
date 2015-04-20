@@ -6,10 +6,10 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.explink.domain.AddressDetail;
 import cn.explink.service.RawAddressService;
 import cn.explink.service.RawDeliveryStationService;
 import cn.explink.spliter.AddressSplitter;
-import cn.explink.spliter.vo.AddressDetail;
 import cn.explink.spliter.vo.AddressStation;
 import cn.explink.test.support.BaseTestCase;
 

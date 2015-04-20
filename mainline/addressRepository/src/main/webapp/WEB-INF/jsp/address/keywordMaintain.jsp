@@ -104,6 +104,7 @@
 <div id="keyword_edit_panel" style="display: none;">
 	<table class="">
 		<tr>
+		    <input id="id" type="hidden" />
 			<td>省/直辖市：</td>
 			<td><div>
 					<input id="province" readonly="readonly" disabled="disabled" >

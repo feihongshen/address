@@ -342,6 +342,7 @@ function getMultipleSaveParams(selections) {
 	for (var i = 0; i < selections.length; i++) {
 		var addressDetail = {};
 
+		addressDetail.id = selections[i].id;
 		addressDetail.province = selections[i].province;
 		addressDetail.city = selections[i].city;
 		addressDetail.district = selections[i].district;
@@ -361,6 +362,7 @@ function getMultipleSaveParams(selections) {
 function getSingleSaveParams() {
 	var addressDetailList = new Array;
 	var addressDetail = {};
+	addressDetail.id=$("input[id='id']").val();
 	addressDetail.province = $("input[id='province']").val();
 	addressDetail.city = $("input[id='city']").val();
 	addressDetail.district = $("input[id='district']").val();

@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.explink.domain.AddressDetail;
 import cn.explink.spliter.consts.CommonKeyWord;
-import cn.explink.spliter.vo.AddressDetail;
 import cn.explink.spliter.vo.AddressStation;
 import cn.explink.util.StringUtil;
 

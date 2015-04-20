@@ -41,6 +41,7 @@ mainline/addressRepository/src/main/db/pom.xml -text
 mainline/addressRepository/src/main/java/cn/explink/Constants.java -text
 mainline/addressRepository/src/main/java/cn/explink/annocation/Excel.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressDao.java -text
+mainline/addressRepository/src/main/java/cn/explink/dao/AddressDetailDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressImportDetailDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressImportResultDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressPermissionDao.java -text
@@ -67,6 +68,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicJdbcTemplat
 mainline/addressRepository/src/main/java/cn/explink/dao/support/DataInfo.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/LockOptions.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Address.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/AddressDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressPermission.java -text
@@ -151,6 +153,7 @@ mainline/addressRepository/src/main/java/cn/explink/schedule/ScheduledWorker.jav
 mainline/addressRepository/src/main/java/cn/explink/schedule/Task.java -text
 mainline/addressRepository/src/main/java/cn/explink/schedule/Worker.java -text
 mainline/addressRepository/src/main/java/cn/explink/schedule/worker/UpdateIndexWorker.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/AddressDetailService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/AddressImportResultService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/AddressImportService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/AddressService.java -text
@@ -175,7 +178,6 @@ mainline/addressRepository/src/main/java/cn/explink/service/UserService.java -te
 mainline/addressRepository/src/main/java/cn/explink/service/VendorService.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/AddressSplitter.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/consts/CommonKeyWord.java -text
-mainline/addressRepository/src/main/java/cn/explink/spliter/vo/AddressDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/AddressStation.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/FullRawAddressStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/RawAddressQuickVO.java -text

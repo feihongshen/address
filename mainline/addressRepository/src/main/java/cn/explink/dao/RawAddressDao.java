@@ -53,24 +53,23 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 		return query.list();
 	}
 
-	public List<RawAddressStationPair> getPageAddressList(Long customerId, int page, int pageSize) {
+	public List<RawAddressStationPair> getPageAddressList(Long customerId) {
 		StringBuffer sql = new StringBuffer("select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
 		sql.append(this.getWhereSql(customerId));
 		Query query = this.getSession().createSQLQuery(sql.toString());
-		query.setFirstResult((page - 1) * pageSize);
-		query.setMaxResults(pageSize);
 		@SuppressWarnings("unchecked")
 		List<Object> data = query.list();
 
 		return this.getAddrStatPairList(data);
 	}
 
-	public int getRawAddressCount(Long customerId) {
-		StringBuffer sql = new StringBuffer("select count(r.raw_address_id) from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
-		sql.append(this.getWhereSql(customerId));
-		Query query = this.getSession().createSQLQuery(sql.toString());
-		return ((Number) query.uniqueResult()).intValue();
-	}
+	// public int getRawAddressCount(Long customerId) {
+	// StringBuffer sql = new
+	// StringBuffer("select count(r.raw_address_id) from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
+	// sql.append(this.getWhereSql(customerId));
+	// Query query = this.getSession().createSQLQuery(sql.toString());
+	// return ((Number) query.uniqueResult()).intValue();
+	// }
 
 	private StringBuffer getWhereSql(Long customerId) {
 		StringBuffer sql = new StringBuffer();
