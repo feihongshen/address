@@ -22,7 +22,7 @@ public class AddressSplitterTest extends BaseTestCase {
 	@Test
 	public void testSplitAddressList() {
 		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
-		AddressStation addressStation = new AddressStation("广西壮族自治区南宁市兴宁区广西南宁市花鸟市场A区瑶家寨恭城油茶", "兴宁站");
+		AddressStation addressStation = new AddressStation("北京市西城区槐柏树街南里7号楼1门202室", "兴宁站");
 		addressStationList.add(addressStation);
 		AddressSplitter addressSplitter = new AddressSplitter(addressStationList);
 		List<AddressDetail> addressDetailList = addressSplitter.split();
@@ -30,7 +30,8 @@ public class AddressSplitterTest extends BaseTestCase {
 		for (AddressDetail addressDetail : addressDetailList) {
 			deliveryStationNameList.add(addressDetail.getDeliveryStationName());
 		}
-		this.rawDeliveryStationService.createDeliveryStation(4L, deliveryStationNameList);
-		this.rawAddressService.importAddress(4L, addressDetailList);
+		// this.rawDeliveryStationService.createDeliveryStation(4L,
+		// deliveryStationNameList);
+		// this.rawAddressService.importAddress(4L, addressDetailList);
 	}
 }

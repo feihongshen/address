@@ -198,7 +198,7 @@ public class KeywordController extends BaseController {
 	@ResponseBody
 	public AjaxJson save(String addressDetailListJson, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
-		AddressImportResult addressImportResult = null;
+		AddressImportResult addressImportResult = new AddressImportResult();
 		List<AddressDetail> addressDetailList = null;
 
 		JavaType javaType = this.getCollectionType(ArrayList.class, AddressDetail.class);
@@ -223,6 +223,7 @@ public class KeywordController extends BaseController {
 				addressImportDetail.setAddress2(addressDetail.getAddressName2());
 				addressImportDetail.setAddress3(addressDetail.getAddressName3());
 				addressImportDetail.setDeliveryStationName(addressDetail.getDeliveryStationName());
+				addressImportDetail.setAddressImportResult(addressImportResult);
 
 				addressImportDetailList.add(addressImportDetail);
 			}
@@ -233,10 +234,11 @@ public class KeywordController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		// 解绑“粗”地址信息
 		this.unbindRawAddress(addressImportDetailList, addressDetailList);
 
 		Integer failureCount = addressImportResult.getFailureCount();
-		if (failureCount > 0) {
+		if ((null != failureCount) && (failureCount > 0)) {
 			aj.setSuccess(false);
 		} else {
 			aj.setSuccess(true);

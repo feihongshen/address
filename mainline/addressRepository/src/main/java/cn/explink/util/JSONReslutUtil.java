@@ -6,6 +6,7 @@ import java.net.URL;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
@@ -40,8 +41,12 @@ public class JSONReslutUtil {
 			}
 		}
 		try {
-			httpClient.executeMethod(postMethod); // post数据
-			responseXml = postMethod.getResponseBodyAsString();
+			int statusCode = httpClient.executeMethod(postMethod); // post数据
+			if (statusCode == HttpStatus.SC_OK) {
+				responseXml = postMethod.getResponseBodyAsString();
+			} else {
+				System.err.println("Response Code: " + statusCode);
+			}
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

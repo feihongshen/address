@@ -91,25 +91,25 @@ public class DmpAccessFilter implements Filter {
 	 */
 	private User getLogUser(String dmpid) {
 		JSONObject jsonObject = new JSONObject();
-		User u = new User();
-		String user = "";
+		User user = new User();
+		String userStr = "";
 		try {
-			user = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
-			if ("[]".equals(user)) {
-				DmpAccessFilter.logger.error("获取[]登录用户失败,登录失效了");
-				return u;
+			userStr = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
+			if (StringUtil.isEmpty(userStr)) {
+				DmpAccessFilter.logger.error("获取登录用户失败,登录失效了");
+				return user;
 			}
-			jsonObject = JSONObject.fromObject(user);
-			u.setUserid(jsonObject.getLong("userid"));
-			u.setBranchid(jsonObject.getLong("branchid"));
-			u.setUsername(jsonObject.getString("username"));
-			u.setRealname(jsonObject.getString("realname"));
-			u.setRoleid(jsonObject.getInt("roleid"));
+			jsonObject = JSONObject.fromObject(userStr);
+			user.setUserid(jsonObject.getLong("userid"));
+			user.setBranchid(jsonObject.getLong("branchid"));
+			user.setUsername(jsonObject.getString("username"));
+			user.setRealname(jsonObject.getString("realname"));
+			user.setRoleid(jsonObject.getInt("roleid"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			DmpAccessFilter.logger.error("获取登录用户失败,登录失效了");
 		}
-		return u;
+		return user;
 	}
 
 	public class User implements Serializable {

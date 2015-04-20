@@ -170,18 +170,20 @@ public class AddressSplitter {
 	}
 
 	private boolean exceptDistrict(String subAddress) {
-		return !subAddress.endsWith("小区") && !subAddress.endsWith("特区") && !subAddress.endsWith("山区") && !subAddress.endsWith("城区") && !subAddress.endsWith("校区") && !subAddress.endsWith("东区")
-				&& !subAddress.endsWith("西区") && !subAddress.endsWith("南区") && !subAddress.endsWith("北区") && !subAddress.endsWith("中区") && !subAddress.endsWith("一区") && !subAddress.endsWith("二区")
-				&& !subAddress.endsWith("三区") && !subAddress.endsWith("四区") && !subAddress.endsWith("工业区") && !subAddress.endsWith("开发区") && !subAddress.endsWith("新区") && !subAddress.endsWith("社区")
-				&& !subAddress.endsWith("A区") && !subAddress.endsWith("B区") && !subAddress.endsWith("C区") && !subAddress.endsWith("D区") && !subAddress.endsWith("T区") && !subAddress.endsWith("管理区")
-				&& !subAddress.endsWith("交易区") && !subAddress.endsWith("厂区") && !subAddress.endsWith("度假区") && !subAddress.endsWith("生活区") && !subAddress.endsWith("军区");
+		return !subAddress.endsWith("小区") && !subAddress.endsWith("特区") && !subAddress.endsWith("山区") && !subAddress.endsWith("校区") && !subAddress.endsWith("东区") && !subAddress.endsWith("西区")
+				&& !subAddress.endsWith("南区") && !subAddress.endsWith("北区") && !subAddress.endsWith("中区") && !subAddress.endsWith("一区") && !subAddress.endsWith("二区") && !subAddress.endsWith("三区")
+				&& !subAddress.endsWith("四区") && !subAddress.endsWith("工业区") && !subAddress.endsWith("开发区") && !subAddress.endsWith("新区") && !subAddress.endsWith("社区") && !subAddress.endsWith("A区")
+				&& !subAddress.endsWith("B区") && !subAddress.endsWith("C区") && !subAddress.endsWith("D区") && !subAddress.endsWith("T区") && !subAddress.endsWith("管理区") && !subAddress.endsWith("交易区")
+				&& !subAddress.endsWith("厂区") && !subAddress.endsWith("度假区") && !subAddress.endsWith("生活区") && !subAddress.endsWith("军区");
 	}
 
 	private List<String> getKeywordPostList() {
 		Set<String> commonKeyWordSet = CommonKeyWord.getKeyWordSet();
 
-		for (String customKeywordSuffix : this.customKeywordSuffixList) {
-			commonKeyWordSet.add(customKeywordSuffix);
+		if (null != this.customKeywordSuffixList) {
+			for (String customKeywordSuffix : this.customKeywordSuffixList) {
+				commonKeyWordSet.add(customKeywordSuffix);
+			}
 		}
 		return new ArrayList<String>(commonKeyWordSet);
 	}
