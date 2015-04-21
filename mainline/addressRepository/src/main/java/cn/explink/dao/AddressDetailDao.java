@@ -18,13 +18,6 @@ public class AddressDetailDao extends BasicHibernateDaoSupport<AddressDetail, Lo
 	}
 
 	public void synAddressDetail(List<AddressDetail> addressDetailList) {
-		// this.createTempTable();
-
-		// this.insertAddressDetail(addressDetailList);
-		String clearData = " delete from AddressDetail";
-		Query clearDataQuery = this.getSession().createQuery(clearData);
-		clearDataQuery.executeUpdate();
-
 		this.insert(addressDetailList);
 	}
 

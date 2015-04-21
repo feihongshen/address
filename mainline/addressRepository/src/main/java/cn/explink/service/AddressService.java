@@ -817,11 +817,16 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				deliveryStationNameList.add(addressDetail.getDeliveryStationName());
 			}
 			this.rawDeliveryStationService.createDeliveryStation(this.customerId, deliveryStationNameList);
-			this.rawAddressService.importAddress(this.customerId, addressDetailList);
+			List<AddressDetail> successImportList = this.rawAddressService.importAddress(this.customerId, addressDetailList);
 
-			List<FullRawAddressStationPair> fullRawAddressStationPairList = this.rawAddressService.getFullRawAddressStationPair(this.customerId);
-
-			this.addressDetailService.synAddressDetail(this.convertToAddressDetail(fullRawAddressStationPairList, this.customerId));
+			// List<FullRawAddressStationPair> fullRawAddressStationPairList =
+			// this.rawAddressService.getFullRawAddressStationPair(this.customerId);
+			// 将成功拆分，并插入raw_address中的地址同步到address_detail
+			if ((null != successImportList) && (successImportList.size() > 0)) {
+				this.addressDetailService.synAddressDetail(successImportList);
+			}
+			// this.addressDetailService.synAddressDetail(this.convertToAddressDetail(fullRawAddressStationPairList,
+			// this.customerId));
 
 		}
 

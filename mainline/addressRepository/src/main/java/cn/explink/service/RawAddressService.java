@@ -170,7 +170,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		return addrMap;
 	}
 
-	public void importAddress(Long customerId, List<AddressDetail> detailList) {
+	public List<AddressDetail> importAddress(Long customerId, List<AddressDetail> detailList) {
 		Map<String, RawAddress> map = new HashMap<String, RawAddress>();// 省市区地址MAP(Key:省-市-区)
 		Map<String, RawAddress> addressMap = new HashMap<String, RawAddress>();// 关键字MAP(Key:父ID-名称)
 		Map<String, RawDeliveryStation> stationMap = new HashMap<String, RawDeliveryStation>(); // 站点MAP(Key:客户ID-名称)
@@ -227,19 +227,25 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				bindMap.put(a.getId(), a);
 			}
 		}
+
+		List<AddressDetail> successImportList = new ArrayList<AddressDetail>();
 		for (AddressDetail detail : detailList) {
-			this.txNewImportDetail(map, detail, addressMap, stationMap, bindMap, customerId);
+			boolean isSave = this.txNewImportDetail(map, detail, addressMap, stationMap, bindMap, customerId);
+			if (isSave) {
+				successImportList.add(detail);
+			}
 		}
+		return successImportList;
 	}
 
-	private void txNewImportDetail(Map<String, RawAddress> map, AddressDetail detail, Map<String, RawAddress> addressMap, Map<String, RawDeliveryStation> stationMap, Map<Long, RawAddress> bindMap,
+	private boolean txNewImportDetail(Map<String, RawAddress> map, AddressDetail detail, Map<String, RawAddress> addressMap, Map<String, RawDeliveryStation> stationMap, Map<Long, RawAddress> bindMap,
 			Long customerId) {
 		if (this.validateDetail(detail)) {
 			RawAddress rawAddress = map.get(detail.getProvince() + "-" + detail.getCity() + "-" + detail.getDistrict());
 			if (rawAddress == null) {
 				// throw new ExplinkRuntimeException("省/市/区地址不存在");
 				RawAddressService.logger.info("省/市/区地址不存在");
-				return;
+				return false;
 			} else {
 				RawAddress bindAddress = null;// 需要绑定站点或者配送员的地址（动态变化，取最后一级地址）
 				RawAddress a1 = null;
@@ -264,7 +270,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 					if (isSaved) {
 						// throw new ExplinkRuntimeException("父节点不存在");
 						RawAddressService.logger.info("父节点不存在");
-						return;
+						return false;
 					}
 					a2 = addressMap.get(a1.getId() + "-" + detail.getAddressName2());
 					if (a2 == null) {// 为空则创建并绑定
@@ -284,7 +290,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 					if (isSaved) {
 						// throw new ExplinkRuntimeException("父节点不存在");
 						RawAddressService.logger.info("父节点不存在");
-						return;
+						return false;
 					}
 					a3 = addressMap.get(a2.getId() + "-" + detail.getAddressName3());
 					if (a3 == null) {// 为空则创建并绑定
@@ -304,7 +310,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 					if (ds == null) {
 						// throw new ExplinkRuntimeException("配送站点不存在");
 						RawAddressService.logger.info("配送站点不存在");
-						return;
+						return false;
 					} else {
 						// if (!ds.getId().equals(stationId)) {
 						// throw new ExplinkRuntimeException("导入站点不匹配！");
@@ -316,8 +322,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 						rawDeliveryStationRule.setRule("");
 						rawDeliveryStationRule.setRuleExpression("");
 						rawDeliveryStationRule.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
-						this.addRule(rawDeliveryStationRule, customerId);
-						isSaved = true;
+						isSaved = this.addRule(rawDeliveryStationRule, customerId);
 					}
 				}
 
@@ -327,10 +332,12 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				}
 				addressMap.put(bindAddress.getParentId() + "-" + bindAddress.getName(), bindAddress);
 				bindMap.put(bindAddress.getId(), bindAddress);
+				return isSaved;
 			}
 		} else {
 			// throw new ExplinkRuntimeException("导入格式不合规范");
 			RawAddressService.logger.info("导入格式不合规范");
+			return false;
 		}
 	}
 
@@ -380,14 +387,15 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		this.rawAddressPermissionDao.save(rawAddressPermission);
 	}
 
-	private void addRule(RawDeliveryStationRule rawDeliveryStationRule, Long customerId) {
+	private boolean addRule(RawDeliveryStationRule rawDeliveryStationRule, Long customerId) {
 		List<Long> idList = this.rawDeliveryStationRuleDao.getByAddressAndStation(rawDeliveryStationRule.getRawAddress().getId(), rawDeliveryStationRule.getRawDeliveryStation().getId(), customerId);
 		if ((idList != null) && !idList.isEmpty()) {
 			// throw new ExplinkRuntimeException("该关键字已绑定默认站点");
 			RawAddressService.logger.info("该关键字已绑定默认站点");
-			return;
+			return false;
 		}
 		this.rawDeliveryStationRuleDao.save(rawDeliveryStationRule);
+		return true;
 	}
 
 	private void addNonNullValue(Collection<String> collection, String element) {
