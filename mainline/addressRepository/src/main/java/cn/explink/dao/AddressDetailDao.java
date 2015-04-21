@@ -57,16 +57,16 @@ public class AddressDetailDao extends BasicHibernateDaoSupport<AddressDetail, Lo
 		String keywordLikeSql = " like '%" + keyword + "%' ";
 
 		if (StringUtil.isNotEmpty(keyword)) {
-			sql.append(" and province ");
+			sql.append(" and (province ");
 			sql.append(keywordLikeSql + " or city ");
 			sql.append(keywordLikeSql + " or district ");
 			sql.append(keywordLikeSql + " or address_name1 ");
 			sql.append(keywordLikeSql + " or address_name2 ");
 			sql.append(keywordLikeSql + " or address_name3 ");
-			sql.append(keywordLikeSql);
+			sql.append(keywordLikeSql + ")");
 		}
 		if (StringUtil.isNotEmpty(stationName)) {
-			sql.append(" and d.name like '%" + stationName + "%'");
+			sql.append(" and delivery_station_name like '%" + stationName + "%'");
 		}
 
 		return sql;
