@@ -148,6 +148,12 @@ public class DeliveryStationController extends BaseController {
 		return null;
 	}
 
+	@RequestMapping("/getDeliveryStationByUid")
+	@ResponseBody
+	public DeliveryStation getDeliveryStationByUid(String uid) {
+		return this.deliveryStationService.getDeliveryStationByUid(uid);
+	}
+
 	@RequestMapping("/modifyByUid")
 	@ResponseBody
 	public AjaxJson modifyByUid(String uid, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {

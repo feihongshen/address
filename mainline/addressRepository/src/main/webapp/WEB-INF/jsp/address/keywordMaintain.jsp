@@ -75,8 +75,8 @@
 
 </head>
 <body>
-	<table id="datagrid_keyword" toolbar="#datagrid_keyword_toolbar"></table>
-	<div style="margin: 5px; border: 0;" id="datagrid_keyword_toolbar">
+	
+	<div style="margin: 0px; border: 0" id="datagrid_keyword_toolbar" >
 		<table class="table table-striped table-hover table-condensed dop-table-deliveryman"
 			id="dop_table_deliveryman_query">
 			<tr>
@@ -98,71 +98,74 @@
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_delete" iconCls="icon-remove">删除</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_submit" iconCls="icon-ok">提交</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_suffix_maintain" iconCls="">后缀维护</a>
+	</div>
+
+	<table id="datagrid_keyword" toolbar="#datagrid_keyword_toolbar"></table>
+
+
+	<div id="keyword_edit_panel" style="display: none;">
+		<table class="">
+			<tr>
+				<input id="id" type="hidden" />
+				<td>省/直辖市：</td>
+				<td><div>
+						<input id="province" readonly="readonly" disabled="disabled">
+					</div></td>
+				<td>市：</td>
+				<td><div>
+						<input id="city" readonly="readonly" disabled="disabled">
+					</div></td>
+				<td>区/县：</td>
+				<td><div>
+						<input id="district" readonly="readonly" disabled="disabled">
+					</div></td>
+			</tr>
+			<tr>
+				<input id="addressId1" type="hidden" />
+				<input id="addressId2" type="hidden" />
+				<input id="addressId3" type="hidden" />
+
+				<td>关键字1：</td>
+				<td><div>
+						<input id="addressName1">
+					</div></td>
+				<td>关键字2：</td>
+				<td><div>
+						<input id="addressName2">
+					</div></td>
+				<td>关键字3：</td>
+				<td><div>
+						<input id="addressName3">
+					</div></td>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+			</tr>
+			<tr>
+				<td>站点名称：</td>
+				<td><div>
+						<input id="deliveryStationName">
+					</div></td>
+			</tr>
+		</table>
+		<div class="pull-right" align="right" style="margin: 5px 10px 0 0;">
+			<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_ok" iconCls="icon-ok">提交</a> <a
+				href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
+		</div>
+	</div>
+
+
+	<div id="keyword_suffix_panel" title="关键词后缀维护" style="display: none;">
+		<div style="height: 400px; width: 750px; overflow-y: auto; paddding: 30px 0px;">
+			<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
+		</div>
+		<br />
+		<div style="float: right">
+			<input type="text" name="keywordSuffix" id="keywordSuffix" /><a
+				href="javascript:addKeywordSuffix();" id="addKeywordSuffix" class="easyui-linkbutton">添加关键词后缀</a>
+		</div>
+	</div>
 </body>
-
-</div>
-<div id="keyword_edit_panel" style="display: none;">
-	<table class="">
-		<tr>
-		    <input id="id" type="hidden" />
-			<td>省/直辖市：</td>
-			<td><div>
-					<input id="province" readonly="readonly" disabled="disabled" >
-				</div></td>
-			<td>市：</td>
-			<td><div>
-					<input id="city" readonly="readonly" disabled="disabled" >
-				</div></td>
-			<td>区/县：</td>
-			<td><div>
-					<input id="district" readonly="readonly" disabled="disabled">
-				</div></td>
-		</tr>
-		<tr>
-			<input id="addressId1" type="hidden" />
-			<input id="addressId2" type="hidden" />
-			<input id="addressId3" type="hidden" />
-
-			<td>关键字1：</td>
-			<td><div>
-					<input id="addressName1">
-				</div></td>
-			<td>关键字2：</td>
-			<td><div>
-					<input id="addressName2">
-				</div></td>
-			<td>关键字3：</td>
-			<td><div>
-					<input id="addressName3">
-				</div></td>
-		</tr>
-		<tr>
-			<th>&nbsp;</th>
-		</tr>
-		<tr>
-			<td>站点名称：</td>
-			<td><div>
-					<input id="deliveryStationName">
-				</div></td>
-		</tr>
-	</table>
-	<div class="pull-right" align="right" style="margin: 5px 10px 0 0;">
-		<a href="javascript:void(0)" class="easyui-linkbutton" id="keyword_ok" iconCls="icon-ok">提交</a> <a
-			href="javascript:void(0)" class="easyui-linkbutton" id="keyword_cancel" iconCls="icon-cancel">取消</a>
-	</div>
-</div>
-
-
-<div id="keyword_suffix_panel" title="关键词后缀维护" style="display: none;">
-	<div style="height: 400px; width: 750px; overflow-y: auto; paddding: 30px 0px;">
-		<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
-	</div>
-	<br />
-	<div style="float: right">
-		<input type="text" name="keywordSuffix" id="keywordSuffix" /><a
-			href="javascript:addKeywordSuffix();" id="addKeywordSuffix" class="easyui-linkbutton">添加关键词后缀</a>
-	</div>
-</div>
 
 <script type="text/javascript" src="${ctx}/js/tools.js"></script>
 <script type="text/javascript"

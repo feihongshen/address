@@ -3,16 +3,16 @@ var keywordSuffixLayer = "";
 
 $("#datagrid_keyword").datagrid({
 	url : "",
-	height : 630,
 	loadMsg : '数据加载中...',
 	pagination : true,
 	fitColumns : false,
 	singleSelect : false,
-	fit : false,
+	fit : true,
 	pageSize : 20,
 	pageList : [20, 30, 50, 100],
 	sortOrder : 'desc',
 	rownumbers : true,
+	fitColumns : true,
 	showFooter : true,
 	frozenColumns : [[]],
 	columns : [[{
@@ -94,6 +94,7 @@ $(p).pagination({
 				"rows" : data.list,
 				"total" : data.count
 			} || {});
+
 		});
 	}
 });
@@ -124,6 +125,7 @@ $("#keyword_edit")
 										}
 									});
 
+							var id = selections[0].id;
 							var province = selections[0].province;
 							var city = selections[0].city;
 							var district = selections[0].district;
@@ -136,6 +138,7 @@ $("#keyword_edit")
 
 							var deliveryStationName = selections[0].deliveryStationName;
 
+							$("input[id='id']").val(id);
 							$("input[id='province']").val(province);
 							$("input[id='city']").val(city);
 							$("input[id='district']").val(district);
@@ -336,6 +339,8 @@ $("#keyword_submit").click(function() {
 
 });
 
+
+
 function getMultipleSaveParams(selections) {
 	var addressDetailList = new Array;
 
@@ -362,7 +367,7 @@ function getMultipleSaveParams(selections) {
 function getSingleSaveParams() {
 	var addressDetailList = new Array;
 	var addressDetail = {};
-	addressDetail.id=$("input[id='id']").val();
+	addressDetail.id = $("input[id='id']").val();
 	addressDetail.province = $("input[id='province']").val();
 	addressDetail.city = $("input[id='city']").val();
 	addressDetail.district = $("input[id='district']").val();
@@ -409,5 +414,10 @@ function init() {
 		} || {});
 		var p = $("#datagrid_keyword").datagrid('getPager');
 		$("td:last", p).find("a").click();
+
+
 	});
+
 }
+
+

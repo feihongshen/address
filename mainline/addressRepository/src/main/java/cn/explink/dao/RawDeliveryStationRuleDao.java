@@ -27,4 +27,11 @@ public class RawDeliveryStationRuleDao extends BasicHibernateDaoSupport<RawDeliv
 		return query.list();
 	}
 
+	public int batchUnbindRawAddressStationRule(List<Long> rawAddressIdList) {
+		String hql = " delete from RawDeliveryStationRule where rawAddress.id in :rawAddressIdList";
+		Query query = this.getSession().createQuery(hql);
+		query.setParameterList("rawAddressIdList", rawAddressIdList);
+		return query.executeUpdate();
+	}
+
 }

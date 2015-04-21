@@ -169,6 +169,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/KeywordSuffixService
 mainline/addressRepository/src/main/java/cn/explink/service/LuceneService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawAddressPermissionService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawAddressService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/RawDeliveryStationRuleService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RawDeliveryStationService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/RuleService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/ScheduledTaskService.java -text

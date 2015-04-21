@@ -44,6 +44,7 @@ import cn.explink.service.DeliveryStationService;
 import cn.explink.service.KeywordSuffixService;
 import cn.explink.service.RawAddressPermissionService;
 import cn.explink.service.RawAddressService;
+import cn.explink.service.RawDeliveryStationRuleService;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
 
@@ -76,6 +77,9 @@ public class KeywordController extends BaseController {
 
 	@Autowired
 	private AddressDetailService addressDetailService;
+
+	@Autowired
+	private RawDeliveryStationRuleService rawDeliveryStationRuleService;
 
 	public final ObjectMapper mapper = new ObjectMapper();
 
@@ -215,10 +219,13 @@ public class KeywordController extends BaseController {
 
 		}
 
+		// 删除ADDRESS_DETAIL中对应数据
 		if (addressDetailIdList.size() > 0) {
 			this.addressDetailService.deleteByIdList(addressDetailIdList);
 		}
+		// 删除raw_delivery_station_rules中“地址-站点”管理关系和raw_address_permissions中“地址-客户”关联关系
 		if (rawAddressIdList.size() > 0) {
+			this.rawDeliveryStationRuleService.batchUnbindRawAddressStationRule(rawAddressIdList);
 			this.rawAddressPermissionService.batchUnbindAddress(rawAddressIdList, this.getCustomerId());
 		}
 
@@ -360,9 +367,11 @@ public class KeywordController extends BaseController {
 			this.addressDetailService.deleteByIdList(addressDetailIdList);
 		}
 
+		// 删除raw_delivery_station_rules中“地址-站点”管理关系和raw_address_permissions中“地址-客户”关联关系
 		if (rawAddressIdList.size() > 0) {
+			int unbindRawAddressStationRuleCount = this.rawDeliveryStationRuleService.batchUnbindRawAddressStationRule(rawAddressIdList);
 			int unbindAddressCount = this.rawAddressPermissionService.batchUnbindAddress(rawAddressIdList, this.getCustomerId());
-			if (rawAddressIdList.size() == unbindAddressCount) {
+			if ((rawAddressIdList.size() == unbindAddressCount) && (rawAddressIdList.size() == unbindRawAddressStationRuleCount)) {
 				j.setSuccess(true);
 			}
 		}
