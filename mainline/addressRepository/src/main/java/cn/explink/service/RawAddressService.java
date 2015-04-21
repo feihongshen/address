@@ -232,6 +232,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		for (AddressDetail detail : detailList) {
 			boolean isSave = this.txNewImportDetail(map, detail, addressMap, stationMap, bindMap, customerId);
 			if (isSave) {
+				detail.setCustomerId(customerId);
 				successImportList.add(detail);
 			}
 		}
