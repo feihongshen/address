@@ -53,9 +53,9 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 		return query.list();
 	}
 
-	public List<RawAddressStationPair> getPageAddressList(Long customerId) {
+	public List<RawAddressStationPair> getPageAddressList(Long customerId, Long rawAddressId) {
 		StringBuffer sql = new StringBuffer("select r.raw_address_id , r.raw_delivery_station_id from raw_address a,raw_address_permissions p,raw_delivery_stations d, raw_delivery_station_rules r ");
-		sql.append(this.getWhereSql(customerId));
+		sql.append(this.getWhereSql(customerId, rawAddressId));
 		Query query = this.getSession().createSQLQuery(sql.toString());
 		@SuppressWarnings("unchecked")
 		List<Object> data = query.list();
@@ -71,9 +71,10 @@ public class RawAddressDao extends BasicHibernateDaoSupport<RawAddress, ID> {
 	// return ((Number) query.uniqueResult()).intValue();
 	// }
 
-	private StringBuffer getWhereSql(Long customerId) {
+	private StringBuffer getWhereSql(Long customerId, Long rawAddressId) {
 		StringBuffer sql = new StringBuffer();
-		sql.append(" where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id=").append(customerId);
+		sql.append(" where a.id=r.raw_address_id and a.id=p.raw_address_id and p.customer_id=d.customer_id and d.id=r.raw_delivery_station_id and d.customer_id=").append(customerId)
+				.append(" and a.id=").append(rawAddressId);
 		return sql;
 	}
 
