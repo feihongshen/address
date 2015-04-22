@@ -331,6 +331,9 @@
 	<changeSet id="songkaojun-2015-04-14-01" author="songkaojun">
 		<sqlFile path="customer_init_hljpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-
+	<!-- 创建黑龙江邮政客户 -->
+	<changeSet id="songkaojun-2015-04-22-01" author="songkaojun">
+		<sqlFile path="customer_init_hljyz.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>

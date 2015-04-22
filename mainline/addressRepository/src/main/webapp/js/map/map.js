@@ -419,8 +419,8 @@ AR.Utility.inherits(AR.ExpdopMap, AR.Observable);
 AR.ExpdopMap.prototype.initializeMap = function(opts) {
 	// 初始化地图
 	var mapPanel = opts.map ? opts.map : "map";
-	this._map = new BMap.Map(mapPanel, { enableMapClick: false }); // 
-										// 此参数可能会导致鼠标在多边形区域内缩放时bug
+	this._map = new BMap.Map(mapPanel); // , { enableMapClick: false }
+										
 	this._map.enableScrollWheelZoom();
 	this._map.highResolutionEnabled();
 
