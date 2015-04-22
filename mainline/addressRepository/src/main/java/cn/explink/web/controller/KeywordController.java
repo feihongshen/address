@@ -327,9 +327,6 @@ public class KeywordController extends BaseController {
 		result.setFailureCount(failureCount);
 		result.setImportDate(new Date());
 		result.setUserId(user.getId());
-		if (importType == AddressImportTypeEnum.init.getValue()) {
-			this.addressImportResultService.save(result);
-		}
 		return result;
 	}
 
