@@ -168,24 +168,14 @@ $("#station_add_panel_btn_submit").click(
 			var selections = $("#stationList").datagrid("getSelections");
 			var id = selections[0].id;
 
-			var polygon = mapManager.getNewDrawRegion(), stationName = $(
-					"#station_add_panel_input_area").val();
+			var polygon = mapManager.getNewDrawRegion();
 
 			if (!polygon) {
-				return;
-			}
-			if (!stationName) {
-				layer.tips('请填写站点名称', document
-						.getElementById("station_add_panel_input_area"), {
-					guide : 1,
-					time : 2
-				});
 				return;
 			}
 			if (polygon) {
 				Tools.doAction(ctx + '/station/modifyById', {
 					"id" : id,
-					"name" : stationName,
 					"coordinate" : JSON.stringify(polygon),
 					"uid" : polygon.id,
 					"mapcenterLng" : polygon.center.lng,

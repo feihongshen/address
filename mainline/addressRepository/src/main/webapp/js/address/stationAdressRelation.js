@@ -8,7 +8,8 @@ function initStations(){
 			url:ctx+"/deliveryStationRule/station4combobox",
 			success:function(optionData){
 				//初始化TREE和相关数据
-				//initDemoTree('sourceStation');
+//				initDemoTree('sourceStation');
+				
 				$("#targetStation").append("<option value='0'></option>");
 				$("#sourceStation").append("<option value='0'></option>");
 				for(var i=0;i<optionData.length;i++){

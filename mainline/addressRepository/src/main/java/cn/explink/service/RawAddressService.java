@@ -361,6 +361,7 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				if (!isSaved) {
 					// throw new ExplinkRuntimeException("数据重复！");
 					RawAddressService.logger.info("数据重复！");
+					return null;
 				}
 				addressMap.put(bindAddress.getParentId() + "-" + bindAddress.getName(), bindAddress);
 				bindMap.put(bindAddress.getId(), bindAddress);

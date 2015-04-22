@@ -394,7 +394,7 @@ public class AddressController extends BaseController {
 				cq.ge("importDate", beginDate);
 			}
 			if (StringUtils.isNotBlank(end)) {
-				Date endDate = DateUtils.parseDate(end, "yyyy-MM-dd");
+				Date endDate = org.apache.commons.lang.time.DateUtils.addDays(DateUtils.parseDate(end, "yyyy-MM-dd"), 1);
 				cq.le("importDate", endDate);
 			}
 		} catch (java.text.ParseException e) {

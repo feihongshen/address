@@ -300,6 +300,10 @@ $("#keyword_ok").click(function() {
 		Tip.alertError("关键字不能为空！");
 		return;
 	}
+	if ($.trim(deliveryStationName) == '') {
+		Tip.alertError("站点名称不能为空！");
+		return;
+	}
 
 	var addressDetailList = getSingleSaveParams();
 	Tools.doAction(ctx + '/keyword/save', {

@@ -186,17 +186,18 @@ public class DeliveryStationController extends BaseController {
 
 	@RequestMapping("/modifyById")
 	@ResponseBody
-	public AjaxJson modifyById(Long id, String uid, String name, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
+	public AjaxJson modifyById(Long id, String uid, String coordinate, BigDecimal mapcenterLat, BigDecimal mapcenterLng, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 
 		Long customerId = this.getCustomerId();
 
-		String oldCoordinate = this.deliveryStationService.getDeliveryStationById(id).getCoordinate();
+		DeliveryStation oldDeliveryStation = this.deliveryStationService.getDeliveryStationById(id);
+		String oldCoordinate = oldDeliveryStation.getCoordinate();
 
 		DeliveryStation deliveryStation = new DeliveryStation();
 		deliveryStation.setId(id);
+		deliveryStation.setName(oldDeliveryStation.getName());
 		deliveryStation.setUid(uid);
-		deliveryStation.setName(name);
 		deliveryStation.setCoordinate(coordinate);
 		deliveryStation.setMapcenterLat(mapcenterLat);
 		deliveryStation.setMapcenterLng(mapcenterLng);

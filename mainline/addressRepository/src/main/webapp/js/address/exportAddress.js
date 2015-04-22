@@ -44,6 +44,11 @@
 	});
 	$("#startKwImport").click(function(){
 		$("#startKwImport").attr('disabled', true);
+		var file = document.getElementById('file').files[0];
+		if(file==null){
+			$.messager.alert("提示","请选择文件！");
+			return ;
+		}
 		$.ajaxFileUpload({
 			url : ctx+'/address/moveAddress',
 			secureuri : false,

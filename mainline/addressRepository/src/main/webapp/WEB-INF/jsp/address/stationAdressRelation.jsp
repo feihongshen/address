@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>配送站点关联维护</title>
+<title>拆合站维护</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/mutitleTree.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/stationAdressRelation.js"></script>
@@ -59,7 +59,7 @@ span.button.firstPage {float:right; margin-left:2px; margin-right: 0; background
  
 <script type="text/javascript">
 var backNode;
-var inital=false;
+// var inital=false;
 var setting = {
 		async: {
 			enable: true,
@@ -91,10 +91,18 @@ var setting = {
 	        });
 		       
 	        $("#upup").click(function(){
-	        	if(!inital){
-	        		inital=true;
-	        		initStations();
-	        	}
+// 	        	if(!inital){
+// 	        		inital=true;
+// 	        	}
+
+				//初始化站点信息前，先清空站点和地址树信息
+				$("#targetStation").empty();
+				$("#sourceStation").empty();
+				$("#sourceStationtree").empty();
+				$("#targetStationtree").empty();
+				
+	        	initStations();
+	        	
 	         	$('.easyui-layout').layout('collapse','north');	
 	        });
 	        
