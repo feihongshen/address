@@ -55,9 +55,17 @@ mapManager.add(AR.ExpdopDrawRegionManager.OverlayEventType.POLYGONCLICK,
 			Tools.doAction(ctx + '/station/getDeliveryStationByUid', {
 				"uid" : uid
 			}, false, function(data) {
+				var name;
+				//如果用户重新点击新绘制的区域，此时通过UID取到的是null
+				if(data===null){
+					var selections = $("#stationList").datagrid("getSelections");
+					name=selections[0].name;
+				}else{
+					name=data.name;
+				}
 				// 更新区域名称的显示
 				$("#station_add_panel_input_area").val(
-						data.name);
+						name);
 			});
 		});
 
@@ -170,7 +178,8 @@ $("#station_add_panel_btn_submit").click(
 
 			var polygon = mapManager.getNewDrawRegion();
 
-			if (!polygon) {
+			if (!polygon||(polygon&&polygon.path.length<2)) {
+				Tip.msgError("请绘制完成后再提交！");
 				return;
 			}
 			if (polygon) {

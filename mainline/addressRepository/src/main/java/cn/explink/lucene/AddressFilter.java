@@ -208,59 +208,34 @@ public class AddressFilter {
 		}
 
 		private int getMatchScore(Address address, String fullAddr) {
-			// String partAddr = address.getName();
-			// int length = partAddr.length();
-			// int index = -1;
-			// // 关键词数量大于1.
-			// while (length > 1) {
-			// index = fullAddr.indexOf(partAddr.substring(0, length));
-			// if (index != -1) {
-			// break;
-			// }
-			// length--;
-			// }
-			// if (length == 0) {
-			// return -1;
-			// }
-			// // 关键词越靠后权重越高.
-			// return length + index;
-
 			// added by songkaojun 2015-01-28 添加别名权重
 			List<Alias> aliasList = address.getAliasList();
+			// 取关键词和该关键词的别名中得分最高的一个最为最终的得分
 			if ((null != aliasList) && (aliasList.size() > 0)) {
-				int score = this.getScore(address.getName(), fullAddr);
+				int score = this.getScore(address.getName(), address.getAddressLevel(), fullAddr);
 				for (Alias alias : aliasList) {
 					String name = alias.getName();
-					int tempScore = this.getScore(name, fullAddr);
+					int tempScore = this.getScore(name, address.getAddressLevel(), fullAddr);
 					if (tempScore > score) {
 						score = tempScore;
 					}
 				}
 				return score;
 			}
-			return this.getScore(address, fullAddr);
+			return this.getScore(address.getName(), address.getAddressLevel(), fullAddr);
 		}
 
-		private int getScore(String address, String fullAddr) {
-			String lowerAddr = address.toLowerCase();
-			String lowerFullAddr = fullAddr.toLowerCase();
-			int length = address.length();
-
-			return lowerFullAddr.contains(lowerAddr) ? length : -length;
-		}
-
-		private int getScore(Address address, String fullAddr) {
+		private int getScore(String addressName, Integer addressLevel, String fullAddr) {
 			int score = 0;
 			int factor = 3;
-			Integer addressLevel = address.getAddressLevel();
 			// 区写错（最常见），或者一路跨两区，地址库中只在一个区下挂这条路
 			// 这种情况系数是其他层级的三分之一
 			if (Integer.valueOf(3).equals(addressLevel)) {
 				factor = 1;
 			}
-			String lowerAddr = address.getName().toLowerCase();
+			String lowerAddr = addressName.toLowerCase();
 			String lowerFullAddr = fullAddr.toLowerCase();
-			int length = address.getName().length();
+			int length = addressName.length();
 			if (lowerFullAddr.contains(lowerAddr)) {
 				score = length * factor;
 			} else {

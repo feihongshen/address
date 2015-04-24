@@ -95,7 +95,7 @@ public class DmpAccessFilter implements Filter {
 		String userStr = "";
 		try {
 			userStr = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
-			if (StringUtil.isEmpty(userStr)) {
+			if (StringUtil.isEmpty(userStr) || userStr.equals("[]")) {
 				DmpAccessFilter.logger.error("获取登录用户失败,登录失效了");
 				return user;
 			}

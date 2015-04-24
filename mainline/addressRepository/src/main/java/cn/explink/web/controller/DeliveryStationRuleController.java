@@ -44,10 +44,10 @@ public class DeliveryStationRuleController extends BaseController {
 
 	@Autowired
 	private DeliveryStationRuleService deliveryStationRuleService;
-	
+
 	@Autowired
 	private DeliveryStationService deliverySationtService;
-	
+
 	@Autowired
 	private VendorService vendorService;
 
@@ -56,54 +56,50 @@ public class DeliveryStationRuleController extends BaseController {
 		return "/address/deliveryStationPage";
 	}
 
-	
-
-	
-	
 	@RequestMapping("/parseAdress")
-	public @ResponseBody AjaxJson parseAdress(String needMatched,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
-		//TODO GET CUSTOMER FROM USER
-		Long customerId=getCustomerId();
-		List<OrderVo> list=new ArrayList<OrderVo>();
-		for(String addressLine : needMatched.split("\n")){
-			if(addressLine.trim().length()==0){
+	public @ResponseBody AjaxJson parseAdress(String needMatched, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
+		// TODO GET CUSTOMER FROM USER
+		Long customerId = this.getCustomerId();
+		List<OrderVo> list = new ArrayList<OrderVo>();
+		for (String addressLine : needMatched.split("\n")) {
+			if (addressLine.trim().length() == 0) {
 				continue;
 			}
-			OrderVo order=new OrderVo();
+			OrderVo order = new OrderVo();
 			order.setCustomerId(customerId);
 			order.setAddressLine(addressLine);
 			list.add(order);
 		}
 		try {
-			Map<String, Object> attributes = addressService.txNoneMatch(customerId, list);
+			Map<String, Object> attributes = this.addressService.txNoneMatch(customerId, list);
 			attributes.put("insum", list.size());
 			aj.setAttributes(attributes);
-			
+
 		} catch (Exception e) {
 			aj.setSuccess(false);
-			aj.setMsg("匹配异常"+e.getMessage());
-		} 
+			aj.setMsg("匹配异常" + e.getMessage());
+		}
 		aj.setSuccess(true);
 		aj.setMsg("完成匹配");
 		return aj;
-		
+
 	}
-	
+
 	@RequestMapping("/saveDeliveryStationRule")
-	public @ResponseBody AjaxJson saveDeliveryStationRule(Long addressId,String deliveryStationRule,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
-		//TODO GET CUSTOMER FROM USER
-		Map map=new HashMap();
+	public @ResponseBody AjaxJson saveDeliveryStationRule(Long addressId, String deliveryStationRule, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
+		// TODO GET CUSTOMER FROM USER
+		Map map = new HashMap();
 		try {
-			Long customerId=getCustomerId();
-			//前台用，拼接参数字段
-			String[] dsrkey=deliveryStationRule.split(",");
+			Long customerId = this.getCustomerId();
+			// 前台用，拼接参数字段
+			String[] dsrkey = deliveryStationRule.split(",");
 			for (String key : dsrkey) {
-				String[] deliveryStationKey=key.split("#");
-				//TODO 批量创建 规则冲突判断
+				String[] deliveryStationKey = key.split("#");
+				// TODO 批量创建 规则冲突判断
 				try {
-					deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
+					this.deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
 				} catch (Exception e) {
 					map.put(deliveryStationKey[1], e.getMessage());
 					aj.setSuccess(false);
@@ -112,130 +108,132 @@ public class DeliveryStationRuleController extends BaseController {
 			}
 		} catch (Exception e) {
 			aj.setSuccess(false);
-		} 
-		if(!aj.isSuccess()){
+		}
+		if (!aj.isSuccess()) {
 			aj.setAttributes(map);
 			return aj;
 		}
 		aj.setSuccess(true);
 		return aj;
-		
+
 	}
+
 	@RequestMapping("/saveDeliveryStationRuleJson")
-	public @ResponseBody AjaxJson saveDeliveryStationRuleJson(String jsonStr,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
+	public @ResponseBody AjaxJson saveDeliveryStationRuleJson(String jsonStr, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
 		try {
-			JSONArray array =  JSONArray.fromObject(jsonStr);
-			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig()); 
-			Long customerId=getCustomerId();
-			if(list!=null){
-				deliveryStationRuleService.createDeliveryStationRuleList(list,customerId );
+			JSONArray array = JSONArray.fromObject(jsonStr);
+			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig());
+			Long customerId = this.getCustomerId();
+			if (list != null) {
+				this.deliveryStationRuleService.createDeliveryStationRuleList(list, customerId);
 			}
 		} catch (Exception e) {
 			aj.setSuccess(false);
-			aj.setMsg(e.getMessage());
-		} 
+			aj.setMsg("无效规则");
+		}
 		return aj;
 	}
-	
+
 	@RequestMapping("/saveVendorAge")
-	public @ResponseBody AjaxJson saveVendorAge(String jsonStr,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
+	public @ResponseBody AjaxJson saveVendorAge(String jsonStr, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		try {
-			JSONArray array =  JSONArray.fromObject(jsonStr);
-			List<VendorsAgingVo> list = JSONArray.toList(array, new VendorsAgingVo(), new JsonConfig());;
-			Long customerId=getCustomerId();
-			if(list!=null){
-				deliveryStationRuleService.saveVendorAge(list,customerId);
+			JSONArray array = JSONArray.fromObject(jsonStr);
+			List<VendorsAgingVo> list = JSONArray.toList(array, new VendorsAgingVo(), new JsonConfig());
+			;
+			Long customerId = this.getCustomerId();
+			if (list != null) {
+				this.deliveryStationRuleService.saveVendorAge(list, customerId);
 			}
 		} catch (Exception e) {
 			aj.setSuccess(false);
 			aj.setMsg(e.getMessage());
-		} 
+		}
 		return aj;
 	}
-	
+
 	@RequestMapping("/station4combobox")
 	@ResponseBody
 	public List<ComboBox> station4combobox() {
-		Long customerId=getCustomerId();
-		return deliverySationtService.getAllSationt(customerId);
+		Long customerId = this.getCustomerId();
+		return this.deliverySationtService.getAllSationt(customerId);
 	}
+
 	@RequestMapping("/vendors4combobox")
 	@ResponseBody
 	public List<ComboBox> vendors4combobox() {
-		Long customerId=getCustomerId();
-		return vendorService.getAllvendor(customerId);
+		Long customerId = this.getCustomerId();
+		return this.vendorService.getAllvendor(customerId);
 	}
-	
+
 	@RequestMapping("/datagrid")
 	public @ResponseBody DataGridReturn datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		String addressId=request.getParameter("addressId");
+		String addressId = request.getParameter("addressId");
 		return this.deliveryStationRuleService.getDataGridReturnView(addressId);
-		
+
 	}
+
 	@RequestMapping("/getAllStationRule")
 	public @ResponseBody List<DeliveryStationRuleVo> getAllStationRule(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		String addressId=request.getParameter("addressId");
+		String addressId = request.getParameter("addressId");
 		Long custmerId = this.getCustomerId();
-		return this.deliveryStationRuleService.getAllStationRule(addressId,custmerId);
-		
+		return this.deliveryStationRuleService.getAllStationRule(addressId, custmerId);
+
 	}
+
 	@RequestMapping("/getAges")
 	public @ResponseBody List<VendorsAging> getAges(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		String addressId=request.getParameter("addressId");
+		String addressId = request.getParameter("addressId");
 		Long custmerId = this.getCustomerId();
-		return this.deliveryStationRuleService.getAllVendorAging(addressId,custmerId);
+		return this.deliveryStationRuleService.getAllVendorAging(addressId, custmerId);
 	}
-	
+
 	@RequestMapping("/getMatchTree")
-	public @ResponseBody List<Long>  getMatchTree( @RequestParam(value = "id", required = false) Long parentId) {
-		Long customerId=getCustomerId();
-		if(parentId==null){
-			parentId=1L;
+	public @ResponseBody List<Long> getMatchTree(@RequestParam(value = "id", required = false) Long parentId) {
+		Long customerId = this.getCustomerId();
+		if (parentId == null) {
+			parentId = 1L;
 		}
-		return deliveryStationRuleService.getAddressIds(parentId,customerId);
+		return this.deliveryStationRuleService.getAddressIds(parentId, customerId);
 	}
-	
+
 	@RequestMapping("/delete")
-	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
-		deliveryStationRuleService.delete(deliveryStationRuleId);
+	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
+		this.deliveryStationRuleService.delete(deliveryStationRuleId);
 		aj.setSuccess(true);
 		return aj;
-		
+
 	}
+
 	@RequestMapping("/deleteVendorAge")
-	public @ResponseBody AjaxJson deleteVendorAge(Long id,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
-		deliveryStationRuleService.deleteVendorAge(id);
+	public @ResponseBody AjaxJson deleteVendorAge(Long id, HttpServletRequest request, HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
+		this.deliveryStationRuleService.deleteVendorAge(id);
 		aj.setSuccess(true);
 		return aj;
-		
+
 	}
+
 	@RequestMapping("/changeStationRelation")
-	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId,Long targetStationId,
-			String sourceAddressId,String targetAddressId,HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson aj=new AjaxJson();
-		//TODO GET CUSTOMER FROM USER
-		Long customerId=getCustomerId();
-		
+	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId, Long targetStationId, String sourceAddressId, String targetAddressId, HttpServletRequest request,
+			HttpServletResponse response) {
+		AjaxJson aj = new AjaxJson();
+		// TODO GET CUSTOMER FROM USER
+		Long customerId = this.getCustomerId();
+
 		try {
-			deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
+			this.deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
 		} catch (Exception e) {
 			aj.setSuccess(false);
-			aj.setMsg("异常"+e.getMessage());
-		} 
+			aj.setMsg("异常" + e.getMessage());
+		}
 		aj.setSuccess(true);
 		aj.setMsg("完成匹配");
 		return aj;
-		
+
 	}
-	
-	
-	
-	
-	
-	
+
 }

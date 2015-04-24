@@ -157,7 +157,7 @@ public class DeliveryStationRuleService extends RuleService {
 		for (Address address : addressList) {
 			// 默认规则
 			DeliveryStationRule defaultRule = null;
-			DeliveryStationRule mappingRule = null;
+			boolean hasCustomerRule = false;
 			// 存在别名时匹配报错[zhaoshb+]2015-01-16.
 
 			String addressLine = StringUtil.full2Half(orderVo.getAddressLine());
@@ -173,18 +173,15 @@ public class DeliveryStationRuleService extends RuleService {
 				} else {
 					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
 					boolean isMapping = this.isMapping(addressLine, ruleExpression);
+					hasCustomerRule = hasCustomerRule || isMapping;
 					if (isMapping) {
-						mappingRule = rule;
+						ruleList.add(rule);
 					}
 				}
 			}
-
-			if (mappingRule == null) {
-				// 针对每一个address，没有匹配上任何客户化规则时，则匹配到默认规则
-				mappingRule = defaultRule;
-			}
-			if (mappingRule != null) {
-				ruleList.add(mappingRule);
+			// 如果没有客户定制的规则，则将默认规则添加到规则列表
+			if (!hasCustomerRule && (defaultRule != null)) {
+				ruleList.add(defaultRule);
 			}
 		}
 		return ruleList;

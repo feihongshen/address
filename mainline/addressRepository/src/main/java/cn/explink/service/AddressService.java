@@ -40,6 +40,7 @@ import cn.explink.domain.Order;
 import cn.explink.domain.VendorsAging;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
+import cn.explink.exception.BindFailedException;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.spliter.AddressSplitter;
@@ -607,7 +608,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			a.setName(addressLine);
 			Address l = this.addressDao.getAddressByNameAndPid(addressLine, parentId);
 			if (l != null) {// 已存在则绑定
-				this.bindAddress(l, customerId);
+				boolean successBind = this.bindAddress(l, customerId);
+				if (!successBind) {
+					throw new BindFailedException("关键字已存在");
+				}
 				a = l;
 			} else {
 				this.createAndBindAddress(a, parent, customerId);

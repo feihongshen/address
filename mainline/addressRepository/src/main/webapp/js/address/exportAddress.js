@@ -11,6 +11,7 @@
 				async:false,
 				success : function(list) {
 					$("#stationShow").html("");
+					$("#startExport").attr("href", "javascript:$.messager.alert('提示', '请选择站点!')");
 					if(list&&list.length>0){
 						var ul=$("<ul></ul>").addClass("ul");
 						for(var i = 0;i<list.length;i++){

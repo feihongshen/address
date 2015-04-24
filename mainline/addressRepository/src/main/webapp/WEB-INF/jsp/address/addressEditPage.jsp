@@ -5,6 +5,8 @@
 <title>地址库维护</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/addressEditPage.js"></script>
+<script type="text/javascript" src="${ctx}/js/address/fuzzySearch.js"></script>
+
 <style type="text/css">
 .alias>li{float:left;margin:10px 5px 10px 0px;}
 .alias {list-style:none;padding:2px;}
@@ -20,7 +22,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td align="left">
-          	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree');"/>
+          	<input style="width:180px" id="searchA" onkeydown="searchByKeyword('searchA','tree');"/>
             </td>
             <td  align="left" width="160px;">
          	 <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> 

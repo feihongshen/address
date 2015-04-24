@@ -105,21 +105,6 @@
 				</span>
 
 			</div>
-			<!-- 		    <div id="station_add_panel_btn" style="margin-top: 0px; position: absolute; right: 5px;"> -->
-			<!-- 			<div class="btn btn-default dop-btn dop-region-edit" id="station_add_panel_btn_reset"> -->
-			<!-- 				<i class="icon-share-alt"></i>绘制/重绘 -->
-			<!-- 			</div> -->
-			<!-- 			<div class="btn btn-default dop-btn" id="station_add_panel_btn_edit"> -->
-			<!-- 				<i class="icon-pencil"></i>编辑 -->
-			<!-- 			</div> -->
-			<!-- 			<div class="btn btn-default dop-btn" id="station_add_panel_btn_save"> -->
-			<!-- 				<i class="icon-file"></i>保存 -->
-			<!-- 			</div> -->
-			<!-- 			<div class="btn btn-default dop-btn dop-region-edit" id="station_add_panel_btn_submit"> -->
-			<!-- 				<i class="icon-ok"></i>提交 -->
-			<!-- 			</div> -->
-			<!-- 							<div class="btn btn-default dop-btn" id="dop_btn_baseInfo_cancel"><i class="icon-remove"></i>关闭</div> -->
-			<!-- 		</div> -->
 	</div>
 
 

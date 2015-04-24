@@ -5,6 +5,7 @@
 <title>配送站点关联维护</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/deliveryStationPage.js"></script>
+<script type="text/javascript" src="${ctx}/js/address/fuzzySearch.js"></script>
 <style type="text/css">
 .table {
     border-collapse: collapse;
@@ -42,7 +43,7 @@ span.button.firstPage {float:right; margin-left:2px; margin-right: 0; background
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
            <td align="left">
-          	<input style="width:180px" id="searchA" onkeydown="searchVal('searchA','tree');"/>
+          	<input style="width:180px" id="searchA" onkeydown="searchByKeyword('searchA','tree');"/>
             </td>
             <td  align="left" width="160px;">
          	 <a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> 

@@ -32,15 +32,14 @@ public class GisService {
 		List<DeliveryStation> resultStations = new ArrayList<DeliveryStation>();
 
 		GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
-		if (position == null) // 地理编码+POI检索失败
-		{
+		// 地理编码+POI检索失败
+		if (position == null) {
 			return resultStations;
 		}
 
 		List<DeliveryStation> allStations = this.deliveryStationDao.listAll(customerId);
-
-		if ((allStations == null) || (allStations.size() == 0)) // 站点返回为空
-		{
+		// 站点返回为空
+		if ((allStations == null) || (allStations.size() == 0)) {
 			return resultStations;
 		}
 
@@ -60,9 +59,8 @@ public class GisService {
 			}
 
 			List<GeoPoint> pts = this.getGeoPointListByCoordinate(coorString);
-
-			if (pts == null) // 站点的配送区域坐标查询失败
-			{
+			// 站点的配送区域坐标查询失败
+			if (pts == null) {
 				continue;
 			}
 

@@ -104,7 +104,6 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 		if (StringUtil.match(addressLine, strictPatten)) {
 			addressLine = StringUtil.substring(addressLine, strictPatten);
 			number = StringUtil.startNumeric(addressLine);
-			System.out.println("number = " + number);
 		} else {
 			return false;
 		}
