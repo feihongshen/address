@@ -487,7 +487,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 			if ((addrList == null) || (addrList.size() == 0) || (result.getDeliveryStationList().size() == 0)) {
 				result.setResult(AddressMappingResultEnum.zeroResult);
-			} else if ((addrList.size() == 1) || (result.getDeliveryStationList().size() == 1)) {
+			} else if ((result.getDeliveryStationList().size() == 1)) {
 				result.setResult(AddressMappingResultEnum.singleResult);
 			} else {
 				result.setResult(AddressMappingResultEnum.multipleResult);
@@ -610,7 +610,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			if (l != null) {// 已存在则绑定
 				boolean successBind = this.bindAddress(l, customerId);
 				if (!successBind) {
-					throw new BindFailedException("关键字已存在");
+					throw new BindFailedException("关键词已存在");
 				}
 				a = l;
 			} else {
