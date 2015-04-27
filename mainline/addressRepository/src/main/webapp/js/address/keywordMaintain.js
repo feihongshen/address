@@ -175,33 +175,55 @@ $("#keyword_suffix_maintain")
 									dom : '#keyword_suffix_panel'
 								}
 							});
-					// 查询关键词后缀
-					Tools
-							.doAction(
-									ctx + '/keyword/getKeywordSuffix',
-									{},
-									false,
-									function(data) {
-										$("#keywordSuffixUl").html("");
-										for (var i = 0; i < data.length; i++) {
-											var btn = $("<a href='javascript:void(0)' keywordSuffixId='"
-													+ data[i].id
-													+ "'>"
-													+ data[i].name
-													+ "</a></li>");
-											var li = $("<li></li>").append(btn);
-											li.appendTo($("#keywordSuffixUl"));
-											btn.linkbutton({
-												iconCls : 'icon-remove',
-												iconAlign : 'right'
-											});
-										}
-									});
+					// 显示预制的关键词后缀
+					showPresetKeywordSuffix();
+					
+					// 显示客户的关键词后缀
+					showCustomKeywordSuffix();
 
 				});
 
+function showCustomKeywordSuffix(){
+	Tools.doAction(
+				ctx + '/keyword/getCustomKeywordSuffix',
+				{},
+				false,
+				function(data) {
+					$("#keywordSuffixUl").html("");
+					for (var i = 0; i < data.length; i++) {
+						var btn = $("<a href='javascript:void(0)' keywordSuffixId='"
+								+ data[i].id
+								+ "'>"
+								+ data[i].name
+								+ "</a></li>");
+						var li = $("<li></li>").append(btn);
+						li.appendTo($("#keywordSuffixUl"));
+						btn.linkbutton({
+							iconCls : 'icon-remove',
+							iconAlign : 'right'
+						});
+					}
+				});}
+
+function showPresetKeywordSuffix(){
+	Tools.doAction(
+		ctx + '/keyword/getPresetKeywordSuffix',
+		{},
+		false,
+		function(data) {
+			$("#presetKeywordSuffix").html("");
+			for (var i = 0; i < data.length; i++) {
+				var btn = $("<a href='javascript:void(0)'>"+ data[i].name+ "</a></li>");
+				var li = $("<li></li>").append(btn);
+				li.appendTo($("#presetKeywordSuffix"));
+				btn.linkbutton({
+					iconAlign : 'right'
+				});
+			}
+		});}
+
 function addKeywordSuffix() {
-	var keywordSuffix = $("#keywordSuffix").val();
+	var keywordSuffix = $.trim($("#keywordSuffix").val());
 	if (keywordSuffix == "") {
 		Tip.alertError("请输入关键词后缀！");
 		return false;
@@ -271,41 +293,41 @@ $("#keyword_delete").click(function() {
 
 // 修改面板 提交按钮
 $("#keyword_ok").click(function() {
-	var addressName1 = $("input[id='addressName1']").val();
-	var addressName2 = $("input[id='addressName2']").val();
-	var addressName3 = $("input[id='addressName3']").val();
-	var deliveryStationName = $("input[id='deliveryStationName']").val();
+	var addressName1 = $.trim($("input[id='addressName1']").val());
+	var addressName2 = $.trim($("input[id='addressName2']").val());
+	var addressName3 = $.trim($("input[id='addressName3']").val());
+	var deliveryStationName = $.trim($("input[id='deliveryStationName']").val());
 
-	if (!$.trim(addressName3) == '') {
-		if ($.trim(addressName1) == '' && $.trim(addressName2) == '') {
+	if (!addressName3 == '') {
+		if (addressName1 == '' && addressName2 == '') {
 			Tip.alertError("关键字1、2不能为空！");
 			return;
 		}
-		if ($.trim(addressName1) == '') {
+		if (addressName1== '') {
 			Tip.alertError("关键字1不能为空！");
 			return;
 		}
-		if ($.trim(addressName2) == '') {
+		if (addressName2 == '') {
 			Tip.alertError("关键字2不能为空！");
 			return;
 		}
-	} else if (!$.trim(addressName2) == '') {
-		if ($.trim(addressName1) == '') {
+	} else if (!addressName2 == '') {
+		if (addressName1 == '') {
 			Tip.alertError("关键字1不能为空！");
 			return;
 		}
 	}
 
-	if ($.trim(addressName1) == '') {
+	if (addressName1 == '') {
 		Tip.alertError("关键字不能为空！");
 		return;
 	}
-	if ($.trim(deliveryStationName) == '') {
+	if (deliveryStationName == '') {
 		Tip.alertError("站点名称不能为空！");
 		return;
 	}
 
-	var addressDetailList = getSingleSaveParams();
+	var addressDetailList = getSingleSaveParams(addressName1,addressName2,addressName3,deliveryStationName);
 	Tools.doAction(ctx + '/keyword/save', {
 		addressDetailListJson : JSON.stringify(addressDetailList)
 	}, false, function(data) {
@@ -336,7 +358,7 @@ $("#keyword_submit").click(function() {
 			init();
 		});
 	} else
-		layer.tips('请选择要修改行', this, {
+		layer.tips('请选择要提交行', this, {
 			guide : 2,
 			time : 2
 		});
@@ -368,7 +390,7 @@ function getMultipleSaveParams(selections) {
 	return addressDetailList;
 }
 
-function getSingleSaveParams() {
+function getSingleSaveParams(addressName1,addressName2,addressName3,deliveryStationName) {
 	var addressDetailList = new Array;
 	var addressDetail = {};
 	addressDetail.id = $("input[id='id']").val();
@@ -376,13 +398,12 @@ function getSingleSaveParams() {
 	addressDetail.city = $("input[id='city']").val();
 	addressDetail.district = $("input[id='district']").val();
 	addressDetail.addressId1 = $("input[id='addressId1']").val();
-	addressDetail.addressName1 = $("input[id='addressName1']").val();
+	addressDetail.addressName1 = addressName1;
 	addressDetail.addressId2 = $("input[id='addressId2']").val();
-	addressDetail.addressName2 = $("input[id='addressName2']").val();
+	addressDetail.addressName2 = addressName2;
 	addressDetail.addressId3 = $("input[id='addressId3']").val();
-	addressDetail.addressName3 = $("input[id='addressName3']").val();
-	addressDetail.deliveryStationName = $("input[id='deliveryStationName']")
-			.val();
+	addressDetail.addressName3 = addressName3;
+	addressDetail.deliveryStationName =deliveryStationName;
 	addressDetailList.push(addressDetail);
 	return addressDetailList;
 }

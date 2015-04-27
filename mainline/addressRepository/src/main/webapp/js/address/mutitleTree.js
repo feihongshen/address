@@ -133,8 +133,6 @@
 
         
         $(document).ready(function(){
-            
-           
             $(function() {
                 $("#toRight").click(function() {
                 	if(checked()){
@@ -146,7 +144,8 @@
                 		if(treeNode.check_Child_State!=1){
                 			var test=zTreeObj1.getNodeByParam("id",treeNode.id);
                 			if(test){
-                    		moveNodes(zTreeObj1,treeNode,zTreeObj2,leftDivStr,rightDivStr);
+                				moveNodes(zTreeObj1,treeNode,zTreeObj2,leftDivStr,rightDivStr);
+                				reSearch();
                 			}
                 		};
                 	}
@@ -161,17 +160,25 @@
                 		if(treeNode.check_Child_State!=1){
                 			var test=zTreeObj2.getNodeByParam("id",treeNode.id);
                 			if(test){
-                			moveNodes(zTreeObj2,treeNode,zTreeObj1,rightDivStr,leftDivStr);
+                				moveNodes(zTreeObj2,treeNode,zTreeObj1,rightDivStr,leftDivStr);
+                				reSearch();
                 			}
                 		};
                 	}
-                    
-
                 });    
             });
         });
         
-        
+        function reSearch(){
+        	var sourceStrVal= $("#sourceStrVal").val();
+			if(sourceStrVal){
+				doSearch('sourceStrVal','sourceStationtree');
+			}
+			var targetStrVal= $("#targetStrVal").val();
+			if(targetStrVal){
+				doSearch('targetStrVal','targetStationtree');
+			}
+        }
         
         function checked(){
         	var sval=$("#sourceStation").val();

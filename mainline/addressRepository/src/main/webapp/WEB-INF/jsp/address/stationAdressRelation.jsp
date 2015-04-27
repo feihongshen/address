@@ -240,10 +240,10 @@ span.button.lastPage {
 				</tr>
 				<tr>
 					<td bgcolor="#FFFFFF">模糊搜索: <input name="textfield5" id="sourceStrVal" type="text"
-						id="textfield5" size="15" onkeydown="searchVal('sourceStrVal','sourceStationtree')" />
+						id="textfield5" size="15" onkeydown="searchByEnter('sourceStrVal','sourceStationtree')" />
 					</td>
 					<td bgcolor="#FFFFFF">模糊搜索: <input name="textfield5" type="text" id="targetStrVal"
-						size="15" onkeydown="searchVal('targetStrVal','targetStationtree')" />
+						size="15" onkeydown="searchByEnter('targetStrVal','targetStationtree')" />
 					</td>
 				</tr>
 				<tr height="90%" style="overflow-y: scroll">

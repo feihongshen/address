@@ -45,6 +45,7 @@ import cn.explink.service.KeywordSuffixService;
 import cn.explink.service.RawAddressPermissionService;
 import cn.explink.service.RawAddressService;
 import cn.explink.service.RawDeliveryStationRuleService;
+import cn.explink.spliter.consts.CommonKeyWordSuffix;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
 
@@ -376,8 +377,18 @@ public class KeywordController extends BaseController {
 		return j;
 	}
 
-	@RequestMapping("/getKeywordSuffix")
-	public @ResponseBody List<KeywordSuffix> getKeywordSuffix() {
+	@RequestMapping("/getPresetKeywordSuffix")
+	public @ResponseBody List<KeywordSuffix> getPresetKeywordSuffix() {
+		List<KeywordSuffix> keywordSuffixList = new ArrayList<KeywordSuffix>();
+		Set<String> keywordSet = CommonKeyWordSuffix.getKeywordSuffixSet();
+		for (String keyword : keywordSet) {
+			keywordSuffixList.add(new KeywordSuffix(keyword));
+		}
+		return keywordSuffixList;
+	}
+
+	@RequestMapping("/getCustomKeywordSuffix")
+	public @ResponseBody List<KeywordSuffix> getCustomKeywordSuffix() {
 		Long customerId = this.getCustomerId();
 		return this.keywordSuffixService.getKeywordSuffixByCustomerId(customerId);
 	}

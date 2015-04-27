@@ -75,8 +75,8 @@
 
 </head>
 <body>
-	
-	<div style="margin: 0px; border: 0" id="datagrid_keyword_toolbar" >
+
+	<div style="margin: 0px; border: 0" id="datagrid_keyword_toolbar">
 		<table class="table table-striped table-hover table-condensed dop-table-deliveryman"
 			id="dop_table_deliveryman_query">
 			<tr>
@@ -127,15 +127,15 @@
 
 				<td>关键字1：</td>
 				<td><div>
-						<input id="addressName1">
+						<input id="addressName1" maxlength="20" >
 					</div></td>
 				<td>关键字2：</td>
 				<td><div>
-						<input id="addressName2">
+						<input id="addressName2" maxlength="20" >
 					</div></td>
 				<td>关键字3：</td>
 				<td><div>
-						<input id="addressName3">
+						<input id="addressName3" maxlength="20" >
 					</div></td>
 			</tr>
 			<tr>
@@ -144,7 +144,7 @@
 			<tr>
 				<td>站点名称：</td>
 				<td><div>
-						<input id="deliveryStationName">
+						<input id="deliveryStationName" maxlength="20" >
 					</div></td>
 			</tr>
 		</table>
@@ -157,11 +157,18 @@
 
 	<div id="keyword_suffix_panel" title="关键词后缀维护" style="display: none;">
 		<div style="height: 400px; width: 750px; overflow-y: auto; paddding: 30px 0px;">
-			<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
+			<fieldset style="border:1px dotted">
+				<legend style="font-size: 15px">系统预制</legend>
+				<ul class="keywordSuffix" id="presetKeywordSuffix"></ul>
+			</fieldset>
+			<fieldset style="border:1px dotted">
+				<legend style="font-size: 15px">客户定制</legend>
+				<ul class="keywordSuffix" id="keywordSuffixUl"></ul>
+			</fieldset>
 		</div>
 		<br />
 		<div style="float: right">
-			<input type="text" name="keywordSuffix" id="keywordSuffix" /><a
+			<input type="text" name="keywordSuffix" id="keywordSuffix" maxlength="20" /><a
 				href="javascript:addKeywordSuffix();" id="addKeywordSuffix" class="easyui-linkbutton">添加关键词后缀</a>
 		</div>
 	</div>

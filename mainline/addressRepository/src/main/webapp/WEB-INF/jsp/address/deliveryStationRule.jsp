@@ -90,7 +90,7 @@ var backNode;
       <table width="100%" border="0" cellspacing="0" cellpadding="10">
         <tr>
           <td><input style="width:150px" id="searchA">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchVal('searchA','tree')">查询</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="false"  onclick="searchByEnter('searchA','tree')">查询</a>
             </td>
         </tr>
         <tr>

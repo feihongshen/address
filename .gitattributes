@@ -181,7 +181,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/SystemConfigServiceI
 mainline/addressRepository/src/main/java/cn/explink/service/UserService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/VendorService.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/AddressSplitter.java -text
-mainline/addressRepository/src/main/java/cn/explink/spliter/consts/CommonKeyWord.java -text
+mainline/addressRepository/src/main/java/cn/explink/spliter/consts/CommonKeyWordSuffix.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/AddressStation.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/FullRawAddressStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/RawAddressQuickVO.java -text

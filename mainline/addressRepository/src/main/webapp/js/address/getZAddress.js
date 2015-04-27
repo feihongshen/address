@@ -130,10 +130,14 @@ function expandNode(e) {
 		}
 	}
 }
-
-function searchVal(valName,treeName){
+//回车前台模糊搜索
+function searchByEnter(valName,treeName){
 	if (event.keyCode!=13) return;  //回车键的键值为13
 	event.stopPropagation();
+	
+	doSearch(valName,treeName);
+}
+function doSearch(valName,treeName){
 	var target = $.fn.zTree.getZTreeObj(treeName);
 	//经过transformToArray转换后是一个Array数组，数组里的每个元素都是object对象，这个对象里包含了node的21个属性。
     var nodes = target.transformToArray(target.getNodes()[0].children);
@@ -156,7 +160,6 @@ function searchVal(valName,treeName){
     for(var i=0;i<filterNodes.length;i++){
        toggle(target,filterNodes[i].getParentNode());
     }
-
 }
 
 function toggle(target,node){

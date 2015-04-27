@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.explink.domain.AddressDetail;
-import cn.explink.spliter.consts.CommonKeyWord;
+import cn.explink.spliter.consts.CommonKeyWordSuffix;
 import cn.explink.spliter.vo.AddressStation;
 import cn.explink.util.StringUtil;
 
@@ -178,7 +178,7 @@ public class AddressSplitter {
 	}
 
 	private List<String> getKeywordPostList() {
-		Set<String> commonKeyWordSet = CommonKeyWord.getKeyWordSet();
+		Set<String> commonKeyWordSet = CommonKeyWordSuffix.getKeywordSuffixSet();
 
 		if (null != this.customKeywordSuffixList) {
 			for (String customKeywordSuffix : this.customKeywordSuffixList) {

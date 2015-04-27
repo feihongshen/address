@@ -21,6 +21,22 @@ public class KeywordSuffix {
 	@Column(name = "NAME", length = 50, nullable = false)
 	private String name;
 
+	public KeywordSuffix() {
+		super();
+	}
+
+	public KeywordSuffix(Long id, Long customerId, String name) {
+		super();
+		this.id = id;
+		this.customerId = customerId;
+		this.name = name;
+	}
+
+	public KeywordSuffix(String name) {
+		super();
+		this.name = name;
+	}
+
 	public Long getId() {
 		return this.id;
 	}
