@@ -678,7 +678,7 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>dmp4_1_test</id>
+			<id>AHPJ</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
 				<jdbc.url>jdbc:mysql://localhost:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
