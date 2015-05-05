@@ -70,7 +70,7 @@
 		    <div style="paddding:30px 0px;"><ul class="alias" id="aliasUl"></ul> 
 		    </div>
 		     <div style="margin:40px 10px;clear:both;">
-		     <input type="text"  name = "alias" id="alias" /><a href="javascript:addAlias();" id="addAlias" class="easyui-linkbutton">添加别名</a>
+		     <input type="text"  name = "alias" id="alias" maxlength="20"/><a href="javascript:addAlias();" id="addAlias" class="easyui-linkbutton">添加别名</a>
 			 </div>
 	 </div>
 	</div>

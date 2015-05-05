@@ -84,76 +84,60 @@ function resetColorPicker(styleOptions) {
 	$("#station_add_panel_top_linewidth").val(styleOptions.strokeWeight);
 }
 
-// bind modify event
-$("#station_edit")
-		.click(
-				function() {
-					var selections = $("#stationList")
-							.datagrid("getSelections");
-					if (selections && selections.length > 0) {
-						if (selections.length > 1) {
-							layer.tips('请选择一行数据', this, {
-								guide : 2,
-								time : 2
-							});
-						} else {
-							// 显示地图div
-							showMapPanel();
-							// 获得此项记录的多边形信息
-							var polygon = selections[0].coordinate;
-							if (null == polygon) {
-								polygon = undefined;
+// 绘制站点区域
+function editStation(){
+	var selections = $("#stationList").datagrid("getSelections");
+	// 显示地图div
+	showMapPanel();
+	// 获得此项记录的多边形信息
+	var polygon = selections[0].coordinate;
+	if (null == polygon) {
+		polygon = undefined;
+	}
+
+	// 获取相关显示的区域
+	var existsRegions = [];
+	// 暂时可以选择添加全部的列表中的区域
+	// 第一页 50个元素
+	var params = {
+		pageNum : 1,
+		pageSize : 50,
+		baseAreaName : ""
+	};
+	// 同步ajax调用
+	Tools
+			.doAction(
+					ctx + '/station/listAll',
+					params,
+					false,
+					function(data) {
+						if (data) {
+							for (var inte = 0, length = data.length; inte < length; inte++) {
+								if (selections[0].id != data[inte].id) {
+									// 根据id排除当前选中对象
+									existsRegions
+											.push(data[inte].coordinate);
+								}
 							}
-
-							// 获取相关显示的区域
-							var existsRegions = [];
-							// 暂时可以选择添加全部的列表中的区域
-							// 第一页 50个元素
-							var params = {
-								pageNum : 1,
-								pageSize : 50,
-								baseAreaName : ""
-							};
-							// 同步ajax调用
-							Tools
-									.doAction(
-											ctx + '/station/listAll',
-											params,
-											false,
-											function(data) {
-												if (data) {
-													for (var inte = 0, length = data.length; inte < length; inte++) {
-														if (selections[0].id != data[inte].id) {
-															// 根据id排除当前选中对象
-															existsRegions
-																	.push(data[inte].coordinate);
-														}
-													}
-												}
-											});
-
-							// 开启编辑状态
-							mapManager.startDrawRegion({
-								overlay : polygon,
-								exists : existsRegions
-							})
-							// 更新区域名称的显示
-							$("#station_add_panel_input_area").val(
-									selections[0].name);
-
-							// 更新风格选择器中的当前区域的渲染风格。
-							var styles = JSON.parse(polygon);
-							resetColorPicker(styles.styleOptions);
-							// 隐藏区域编辑中不会使用到的按钮
-							$(".dop-region-edit").hide();
-
 						}
-					} else
-						layer.tips('请选择要绘制的站点', this, {
-							guide : 2,
-							time : 2
-						});
-				});
+					});
+
+	// 开启编辑状态
+	mapManager.startDrawRegion({
+		overlay : polygon,
+		exists : existsRegions
+	})
+	// 更新区域名称的显示
+	$("#station_add_panel_input_area").val(
+			selections[0].name);
+
+	// 更新风格选择器中的当前区域的渲染风格。
+	var styles = JSON.parse(polygon);
+	resetColorPicker(styles.styleOptions);
+	// 隐藏区域编辑中不会使用到的按钮
+	$(".dop-region-edit").hide();
+
+}
 
 // bind map panel reset event
 $("#station_add_panel_btn_reset").click(function() {

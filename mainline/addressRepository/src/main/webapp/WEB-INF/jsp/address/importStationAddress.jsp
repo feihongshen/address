@@ -48,8 +48,6 @@
 </style>
 </head>
 <body>
-	<!-- 	<a href="javascript:void(0)" class="easyui-linkbutton" id="station_add" iconCls="icon-add">新增</a> -->
-	<a href="javascript:void(0)" class="easyui-linkbutton" id="station_edit" iconCls="icon-edit">绘制区域</a>
 	<div class="easyui-layout" style="height: 500px;">
 		<div data-options="region:'center'" style="border: 0px;">
 			<table width="80%" border="1" cellpadding="8" id="stationList" cellspacing="1" bgcolor="#CCCCCC"></table>

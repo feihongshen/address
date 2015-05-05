@@ -2,7 +2,7 @@
 INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (3, '新京报', 0, '');
 
 -- 新建客户应用
-INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (3, 'xjb', '123', 3, 1);
+INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (3, 'xjb', 'xjb', 3, 1);
 
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (3, 'xjb', 'xjb', 0, 3);

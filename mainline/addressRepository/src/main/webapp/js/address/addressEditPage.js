@@ -214,7 +214,7 @@ var setting = {
 			});
 	}
 	function addAlias(){
-		var alias = $("#alias").val();
+		var alias =$.trim($("#alias").val());
 		var addressId = $("#addressId").val();
 		if(addressId==""){
 			$.messager.alert("提示","请选择一个地址！");
