@@ -2,31 +2,39 @@ package cn.explink.util;
 
 import cn.explink.service.SystemConfigService;
 
-
 public class ConfigManager {
 	private SystemConfigService systemConfigService;
-	private static class CacheHolder{
+
+	private static class CacheHolder {
 		static ConfigManager instance = new ConfigManager();
 	}
-	private ConfigManager(){
-		 
+
+	private ConfigManager() {
+
 	}
-	public Object get(String key){
-		Object obj =this.getSystemConfigService().getConfig(key);
-		return obj ;
+
+	public Object get(String name) {
+		Object obj = this.getSystemConfigService().getConfig(name);
+		return obj;
 	}
-	static public ConfigManager getInstance(){
+
+	public Object getByNameAndCustomerId(String name, Long customerId) {
+		Object obj = this.getSystemConfigService().getConfigByNameAndCustomerId(name, customerId);
+		return obj;
+	}
+
+	static public ConfigManager getInstance() {
 		return CacheHolder.instance;
 	}
-	 
-		public SystemConfigService getSystemConfigService() {
-			if(systemConfigService==null){
-				systemConfigService=ApplicationContextUtil.getBean("systemConfigServiceImpl");
-			}
-			return systemConfigService;
-		}
 
-		public void setSystemConfigService(SystemConfigService systemConfigService) {
-			this.systemConfigService = systemConfigService;
+	public SystemConfigService getSystemConfigService() {
+		if (this.systemConfigService == null) {
+			this.systemConfigService = ApplicationContextUtil.getBean("systemConfigServiceImpl");
 		}
+		return this.systemConfigService;
+	}
+
+	public void setSystemConfigService(SystemConfigService systemConfigService) {
+		this.systemConfigService = systemConfigService;
+	}
 }

@@ -204,6 +204,7 @@ mainline/addressRepository/src/main/java/cn/explink/util/ReflectionUtil.java -te
 mainline/addressRepository/src/main/java/cn/explink/util/ResourceBundleUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ResourceUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/StringUtil.java -text
+mainline/addressRepository/src/main/java/cn/explink/util/UserManager.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/ExplinkUserDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/AddressController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/BaseController.java -text
@@ -1190,6 +1191,7 @@ mainline/addressRepository/src/main/webapp/js/zTree/js/jquery.ztree.exedit-3.5.m
 mainline/addressRepository/src/main/webapp/js/zTree/js/jquery.ztree.exedit.js -text
 mainline/addressRepository/src/main/webapp/js/zTree/js/jquery.ztree.exhide-3.5.js -text
 mainline/addressRepository/src/main/webapp/js/zTree/js/jquery.ztree.exhide-3.5.min.js -text
+mainline/addressRepository/src/test/java/cn/explink/filter/DmpAccessFilterTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/gis/AddressSplitterTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/lucene/ScoreFilterTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/AddressImportServiceTest.java -text

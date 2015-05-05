@@ -3,7 +3,6 @@ package cn.explink.web.filter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ResourceBundle;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -20,9 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import cn.explink.domain.SystemConfig;
 import cn.explink.util.ApplicationContextUtil;
+import cn.explink.util.ConfigManager;
 import cn.explink.util.JSONReslutUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.util.UserManager;
+import cn.explink.web.ExplinkUserDetail;
 
 /**
  *
@@ -32,7 +35,7 @@ public class DmpAccessFilter implements Filter {
 
 	private static Logger logger = LoggerFactory.getLogger(DmpAccessFilter.class);
 
-	private static ResourceBundle bundle;
+	private static final String ISDMP4_1 = "1";
 
 	// 校验用户的url
 	private static String dmpVarifyUserUrl;
@@ -40,47 +43,89 @@ public class DmpAccessFilter implements Filter {
 	// 重定向到登录页面 的url
 	private static String dmpIndexUrl;
 
-	static {
-		DmpAccessFilter.bundle = ResourceBundle.getBundle("address");
-
-		DmpAccessFilter.dmpVarifyUserUrl = DmpAccessFilter.bundle.getString("dmpVarifyUserUrl");
-
-		DmpAccessFilter.dmpIndexUrl = DmpAccessFilter.bundle.getString("dmpIndexUrl");
-	}
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		// 获取请求路径中的参数dmpid
-		String dmpid = request.getParameter("dmpid");
+		// 使用的是DMP4.1版本（地址库被整合到DMP中的版本）
+		if (this.isDmp4_1(request)) {
+			Long customerId = this.getCustomerId(request);
+			if (!customerId.equals(Long.valueOf(0))) {
+				SystemConfig dmpVarifyUserUrlConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("dmpVarifyUserUrl", customerId);
+				SystemConfig dmpIndexUrlConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("dmpIndexUrl", customerId);
+				if ((null != dmpVarifyUserUrlConfig) && (null != dmpIndexUrlConfig)) {
+					DmpAccessFilter.dmpVarifyUserUrl = dmpVarifyUserUrlConfig.getValue();
+					DmpAccessFilter.dmpIndexUrl = dmpIndexUrlConfig.getValue();
+					HttpServletRequest httpRequest = (HttpServletRequest) request;
+					HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		// 判断是否用登录的信息
-		if (StringUtil.isNotEmpty(dmpid)) {// 如果存在dmpid
-			User user = this.getLogUser(dmpid);
-			if ("[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername())) {// 用户不存在
-				// 重定向到登录页面
-				DmpAccessFilter.logger.info("非本子系统链接过来的请求  ...");
-				httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
-				return;
-			} else {
-				Object authenticationObj = httpRequest.getSession().getAttribute(DmpLoginFilter.AR_SESSION_ID);
-				Authentication authentication = (null == authenticationObj) ? null : (Authentication) authenticationObj;
-				if (null == authentication) {
-					((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
+					// 获取请求路径中的参数dmpid
+					String dmpid = request.getParameter("dmpid");
+
+					// 判断是否用登录的信息
+					if (StringUtil.isNotEmpty(dmpid)) {// 如果存在dmpid
+						User user = this.getLogUser(dmpid);
+						if ("[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername())) {// 用户不存在
+							// 重定向到登录页面
+							DmpAccessFilter.logger.info("非本子系统链接过来的请求  ...");
+							httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
+							return;
+						} else {
+							Object authenticationObj = httpRequest.getSession().getAttribute(DmpLoginFilter.AR_SESSION_ID);
+							Authentication authentication = (null == authenticationObj) ? null : (Authentication) authenticationObj;
+							if (null == authentication) {
+								((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
+							}
+						}
+					}
 				}
+
 			}
 		}
+
 		chain.doFilter(request, response);
 	}
 
 	@Override
 	public void destroy() {
 
+	}
+
+	public boolean isDmp4_1(ServletRequest request) {
+		Long customerId = this.getCustomerId(request);
+		if (customerId.equals(Long.valueOf(0))) {
+			return false;
+		}
+		SystemConfig systemConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("isDmp4_1", customerId);
+		if (null != systemConfig) {
+			String isDmp4_1 = systemConfig.getValue();
+			if (StringUtil.isNotEmpty(isDmp4_1)) {
+				if (isDmp4_1.equals(DmpAccessFilter.ISDMP4_1)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	private Long getCustomerId(ServletRequest request) {
+		Long customerId = 0L;
+		String username = request.getParameter("username") == null ? "" : request.getParameter("username");
+		if (StringUtil.isEmpty(username)) {
+			return customerId;
+		}
+		ExplinkUserDetail explinkUserDetail = (ExplinkUserDetail) UserManager.getInstance().getByUsername(username);
+		if (null != explinkUserDetail) {
+			cn.explink.domain.User user = explinkUserDetail.getUser();
+			if (null != user) {
+				customerId = user.getCustomer().getId();
+			}
+		}
+		return customerId;
 	}
 
 	/**

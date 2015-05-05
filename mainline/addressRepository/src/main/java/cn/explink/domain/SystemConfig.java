@@ -27,8 +27,11 @@ public class SystemConfig {
 	@Column(name = "EDITABLE")
 	private Boolean editable;
 
+	@Column(name = "CUSTOMER_ID")
+	private Long customerId;
+
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -36,7 +39,7 @@ public class SystemConfig {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -44,7 +47,7 @@ public class SystemConfig {
 	}
 
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	public void setValue(String value) {
@@ -52,7 +55,7 @@ public class SystemConfig {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -60,11 +63,19 @@ public class SystemConfig {
 	}
 
 	public Boolean getEditable() {
-		return editable;
+		return this.editable;
 	}
 
 	public void setEditable(Boolean editable) {
 		this.editable = editable;
+	}
+
+	public Long getCustomerId() {
+		return this.customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 }
