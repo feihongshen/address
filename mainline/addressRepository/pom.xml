@@ -698,8 +698,6 @@
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
 				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
 				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
-				<dmpVarifyUserUrl>http://172.20.200.22:8080/ahpj</dmpVarifyUserUrl>
-				<dmpIndexUrl>http://172.20.200.22:8080/ahpj</dmpIndexUrl>
 				<label>prod</label>
 			</properties>
 		</profile>
