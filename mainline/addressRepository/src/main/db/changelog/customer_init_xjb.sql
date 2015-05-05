@@ -7,6 +7,9 @@ INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (3, 'xjb', 'xjb', 0, 3);
 
+--与DMP整合参数
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '0', '是否开启与dmp4.1整合', '1', '3');
+
 -- 新建客户地址权限
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (1, 3);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2, 3);

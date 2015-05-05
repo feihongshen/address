@@ -259,6 +259,13 @@
 			DEFAULT CHARSET=utf8;
 		</sql>
 	</changeSet>
+	
+	<!--系统配置表添加客户ID列，用于解决多客户共用一个地址库的场景 -->
+	<changeSet id="songkaojun-2015-05-05-01" author="songkaojun">
+		<sql>
+			ALTER TABLE `system_config` ADD COLUMN `CUSTOMER_ID` int(11) NULL AFTER `EDITABLE`;
+		</sql>
+	</changeSet>
 
 	<!-- 添加粗地址预制数据 -->
 	<changeSet id="songkaojun-2015-04-07-08" author="songkaojun">
@@ -334,6 +341,18 @@
 	<!-- 创建黑龙江邮政客户 -->
 	<changeSet id="songkaojun-2015-04-22-01" author="songkaojun">
 		<sqlFile path="customer_init_hljyz.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建江苏品骏客户 -->
+	<changeSet id="songkaojun-2015-05-05-01" author="songkaojun">
+		<sqlFile path="customer_init_jspj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建青海品骏客户 -->
+	<changeSet id="songkaojun-2015-05-05-02" author="songkaojun">
+		<sqlFile path="customer_init_qhpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建甘肃品骏客户 -->
+	<changeSet id="songkaojun-2015-05-05-03" author="songkaojun">
+		<sqlFile path="customer_init_gspj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 </databaseChangeLog>

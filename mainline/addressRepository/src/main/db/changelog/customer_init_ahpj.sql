@@ -7,6 +7,11 @@ INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (10, 'ahpj', 'ahpj', 0, 10);
 
+--与DMP整合参数
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '1', '是否开启与dmp4.1整合', '1', '10');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpVarifyUserUrl', 'http://172.20.200.22:8080/ahpj', 'DMP验证用户URL', '1', '10');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpIndexUrl', 'http://172.20.200.22:8080/ahpj', 'DMP主页URL', '1', '10');
+
 -- 新建客户地址权限
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (1, 10);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2, 10);
