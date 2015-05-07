@@ -418,7 +418,6 @@ public class AddressController extends BaseController {
 	@RequestMapping("/parseAdress")
 	public @ResponseBody AjaxJson parseAdress(String needMatched, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
-		// TODO GET CUSTOMER FROM USER
 		Long customerId = this.getCustomerId();
 		List<OrderVo> list = new ArrayList<OrderVo>();
 		for (String addressLine : needMatched.split("\n")) {
@@ -649,7 +648,7 @@ public class AddressController extends BaseController {
 				details.add(detail);
 			}
 		} catch (Exception e) {
-			String msg = "关键词导入异常，异常行[" + rowNum + "]异常内容[" + e.getMessage() + "]";
+			String msg = "关键词导入异常，异常行[" + rowNum + "],请检查该行格式是否正确！";
 			throw new Exception(msg, e);
 		}
 
@@ -756,39 +755,44 @@ public class AddressController extends BaseController {
 		XSSFWorkbook wb = new XSSFWorkbook(in);
 		XSSFSheet sheet = wb.getSheetAt(0);
 		int rowNum = 1;
-		while (true) {
-			XSSFRow row = sheet.getRow(rowNum);
-			if (row == null) {
-				break;
+		try {
+			while (true) {
+				XSSFRow row = sheet.getRow(rowNum);
+				if (row == null) {
+					break;
+				}
+				rowNum++;
+				String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
+				String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
+				String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
+				String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
+				String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
+				String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
+				String deliveryStationOldName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
+				String deliveryStationName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
+
+				this.addressImportService.addNonNullValue(adminNames, province);
+				this.addressImportService.addNonNullValue(adminNames, city);
+				this.addressImportService.addNonNullValue(adminNames, district);
+				this.addressImportService.addNonNullValue(addressNames, address1);
+				this.addressImportService.addNonNullValue(addressNames, address2);
+				this.addressImportService.addNonNullValue(addressNames, address3);
+
+				AddressImportDetail detail = new AddressImportDetail();
+				detail.setProvince(province);
+				detail.setCity(city);
+				detail.setDistrict(district);
+				detail.setAddress1(address1);
+				detail.setAddress2(address2);
+				detail.setAddress3(address3);
+				detail.setDeliveryStationOldName(deliveryStationOldName);
+				detail.setDeliveryStationName(deliveryStationName);
+				detail.setAddressImportResult(result);
+				details.add(detail);
 			}
-			rowNum++;
-			String province = row.getCell(0) == null ? null : row.getCell(0).getStringCellValue();
-			String city = row.getCell(1) == null ? null : row.getCell(1).getStringCellValue();
-			String district = row.getCell(2) == null ? null : row.getCell(2).getStringCellValue();
-			String address1 = row.getCell(3) == null ? null : row.getCell(3).getStringCellValue();
-			String address2 = row.getCell(4) == null ? null : row.getCell(4).getStringCellValue();
-			String address3 = row.getCell(5) == null ? null : row.getCell(5).getStringCellValue();
-			String deliveryStationOldName = row.getCell(6) == null ? null : row.getCell(6).getStringCellValue();
-			String deliveryStationName = row.getCell(7) == null ? null : row.getCell(7).getStringCellValue();
-
-			this.addressImportService.addNonNullValue(adminNames, province);
-			this.addressImportService.addNonNullValue(adminNames, city);
-			this.addressImportService.addNonNullValue(adminNames, district);
-			this.addressImportService.addNonNullValue(addressNames, address1);
-			this.addressImportService.addNonNullValue(addressNames, address2);
-			this.addressImportService.addNonNullValue(addressNames, address3);
-
-			AddressImportDetail detail = new AddressImportDetail();
-			detail.setProvince(province);
-			detail.setCity(city);
-			detail.setDistrict(district);
-			detail.setAddress1(address1);
-			detail.setAddress2(address2);
-			detail.setAddress3(address3);
-			detail.setDeliveryStationOldName(deliveryStationOldName);
-			detail.setDeliveryStationName(deliveryStationName);
-			detail.setAddressImportResult(result);
-			details.add(detail);
+		} catch (Exception e) {
+			String msg = "关键词导入异常，异常行[" + rowNum + "],请检查该行格式是否正确！";
+			throw new Exception(msg, e);
 		}
 
 		// 查找客户已有关键词并构造addressMap

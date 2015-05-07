@@ -25,7 +25,8 @@ var setting = {
 		 $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		//刷新
 			 $("#refreshAllBtn").click(function(){
-				var ids=getAllNodes();
+//				var ids=getAllNodes();
+				 var  ids;
 				 getAll(ids);
 			 });
 		 $.ajax({

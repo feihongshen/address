@@ -98,9 +98,7 @@ function getNeedMatchedWords(){
 <textarea name="needMatched" id="needMatched" class="textbox" style="height:40px; width:47% ;resize: none" data-options="multiline:false"></textarea>
 <a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a>
 
-<div id="keywordDiv" class="keyword"> 
-</div>
-
+<div id="keywordDiv" class="keyword"></div>
   <div style="overflow-y: scroll;width:52%;float:right">
     <td bgcolor="#FFFFFF" style="vertical-align: top;">
     <div style="overflow-y: scroll;height: 600px;border:1px solid #999;padding:3px;">
@@ -108,5 +106,7 @@ function getNeedMatchedWords(){
     </div>
     </td>
  </div>
+ <div></div>
+ 
 </body>
 </html>

@@ -73,7 +73,7 @@
 					}
 				  });
 				} else {
-					alert($.messager.alert("提示",data.info));
+					$.messager.alert("提示",data.info);
 				}
 			},
 			error : function(AjaxJson, status, e) {

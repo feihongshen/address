@@ -87,12 +87,12 @@
 			<li><span>关联设置</span>
 				<ul>
 					<li><a href="#" onclick="addTab('拆合站维护','stationAdressRelation/stationAdressRelation')">拆合站维护</a></li>
-					<li><a href="#" onclick="addTab('配送站点关联维护','deliveryStationRule/deliveryStationRule')">站点关联维护</a></li>
+					<li><a href="#" onclick="addTab('站点关联维护','deliveryStationRule/deliveryStationRule')">站点关联维护</a></li>
 				</ul></li>
 			<li><span>匹配测试</span>
 				<ul>
 					<li><a href="#" onclick="addTab('地址库匹配','address/addressMapping')">地址库匹配</a></li>
-					<li><a href="#" onclick="addTab('关键词匹配','address/keywordMapping')">匹配情况分析</a></li>
+					<li><a href="#" onclick="addTab('匹配情况分析','address/keywordMapping')">匹配情况分析</a></li>
 				</ul></li>
 
 		</ul>

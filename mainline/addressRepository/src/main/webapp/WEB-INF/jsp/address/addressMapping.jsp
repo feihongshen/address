@@ -97,8 +97,6 @@ $(function(){
             <th align="center" bgcolor="#f1f1f1">地址</th>
             <th align="center" bgcolor="#f1f1f1">站点</th>
           </tr>
-          
-         
         </thead>
       </table>
     </div>
