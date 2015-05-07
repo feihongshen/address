@@ -679,6 +679,36 @@ AR.ExpdopMap.prototype.getShopManager = function() {
 	return this._shopManager;
 };
 
+
+
+/**
+* 站点分单
+*/
+AR.ExpdopMap.prototype.initializeDeliveryStation = function ()
+{
+    this._deliveryStation = new AR.DeliveryStation({ map: this._map });
+
+    var _this = this;
+
+    // 绑定交互事件
+    this._deliveryStation.add(AR.DeliveryStationEventType.STATIONREGIONCLICK, function (e)
+    {
+        _this.dispatch(e);
+    });
+
+}
+
+/**
+* 获取站点分单
+*/
+AR.ExpdopMap.prototype.getDeliveryStation = function ()
+{
+    return this._deliveryStation;
+};
+
+
+
+
 // 图形绘制
 /**
  * 图形绘制管理器，依赖百度开源库 现只有多边形一种 这个模块现在还存在一些逻辑bug，如编辑和添加不同状态时的一些函数是否可用等的判断。
@@ -2301,3 +2331,371 @@ AR.lbs.Polygon = function(pts, id, style) {
 	// 中心点
 	this.center = AR.lbs.utility.getCenter(pts);
 };
+
+
+
+
+
+
+/**
+* 站点分单
+*/
+
+
+
+AR.DeliveryStationEventType = {
+    STATIONMARKERCLICK: "stationmarkerclick",
+    STATIONREGIONCLICK: "stationregionclick"
+};
+
+/**
+*   配送站
+*   1.显示站点和区域。
+*   2.点击站点和区域时会触发事件。
+*/
+AR.DeliveryStation = function (opts)
+{
+    if (!AR.Utility.isDefAndNotNull(opts) || !AR.Utility.isDefAndNotNull(opts.map))
+    {
+        // 未指定地图，返回
+        return;
+    }
+
+    this._map = opts.map;
+    this._stationMarkers = [];
+    this._regionMarkers = [];
+    this._currentSelectedRegionMarker = null;
+
+
+    this._addressMarkers = [];
+
+    //调用基类构造
+    AR.Utility.base(this, opts);
+
+};
+AR.Utility.inherits(AR.DeliveryStation, AR.Observable);
+
+
+AR.DeliveryStation.prototype.setDeliveryStationItems = function (delStations)
+{
+    if (!AR.Utility.isArray(delStations))
+    {
+        return;
+    }
+
+    // 清除已有
+
+    this.clearAllOverlay();
+
+    // 添加
+    for (var i = 0, length = delStations.length; i < length; i++)
+    {
+        this._addStationRegion(delStations[i]);
+    }
+
+};
+
+/**
+* 获取当前选中站点的ID
+**/
+AR.DeliveryStation.prototype.getSelectedDeliveryStationID = function ()
+{
+    if (this._currentSelectedRegionMarker != null)
+    {
+        return this._currentSelectedRegionMarker.delStat.id;
+    }
+};
+
+
+/**
+* 地图视角定位到全部配送站区域
+*
+*/
+AR.DeliveryStation.prototype.setViewportToAllStationRegion = function ()
+{
+    if (!AR.Utility.isArray(this._regionMarkers) || this._regionMarkers.length == 0 || !AR.Utility.isDefAndNotNull(this._map))
+    {
+        return;
+    }
+    var allPts = [];
+    for (var i = 0, length = this._regionMarkers.length; i < length; i++)
+    {
+        var bounds = this._regionMarkers[i].getBounds();
+        allPts.push(bounds.getSouthWest());
+        allPts.push(bounds.getNorthEast());
+    }
+    this._map.setViewport(allPts);
+};
+
+
+/**
+* 添加一个站点区域
+*/
+AR.DeliveryStation.prototype._addStationRegion = function (delstat)
+{
+    if (!AR.Utility.isDefAndNotNull(delstat))
+    {
+        return;
+    }
+    var polygonCoordinateStr = delstat.coordinate;
+
+    if (!AR.Utility.isDefAndNotNull(polygonCoordinateStr))
+    {
+        return;
+    }
+
+    // 创建多边形，
+    var bdpolygon = this._createPolygonFromParams(polygonCoordinateStr, delstat);
+
+    if (!AR.Utility.isDefAndNotNull(bdpolygon))
+    {
+        return;
+    }
+    // 记录站点全部信息
+    bdpolygon.delStat = delstat;
+
+    // 绑定点击事件
+    this._bindClickEvent(bdpolygon, delstat);
+
+    // 添加到地图中
+    this._regionMarkers.push(bdpolygon);
+    this._map.addOverlay(bdpolygon);
+
+    // 在中心点添加一个marker (外包围框的中心点，可能并不在多边形内)
+    var center = bdpolygon.getBounds().getCenter();
+    this._addStationMarker(center, delstat);
+
+};
+
+
+/**
+* 添加一个站点marker
+**/
+AR.DeliveryStation.prototype._addStationMarker = function (point, delstat)
+{
+    // 构建标签
+    var marker = new BMap.Marker(point);
+    // 添加一个名称显示
+    var label = new BMap.Label(delstat.name, { offset: new BMap.Size(20, 0) });
+    marker.setLabel(label);
+    // 初始化标签点击时显示的弹出窗
+    //var infoWindow = new BMap.InfoWindow("<div style='line-height:1.8em;font-size:12px;'><b>名称:</b>" + point.title + "</br><b>地址:</b>" + point.address + "</br><b>电话:</b>" + point.phoneNumber + "</br><a style='text-decoration:none;color:#2679BA;float:right' target='_blank' href='" + point.detailUrl + "'>详情>></a></div>");  // 创建信息窗口对象
+    //var shopManager = this;
+    // 检索结果标签的点击事件
+    //marker.addEventListener("click", function (e)
+    //{
+    //    marker.openInfoWindow(infoWindow);
+    //    shopManager._setBlueIcon(marker);
+    //    shopManager.dispatch(new AR.Event(AR.ShopManagerEventType.TARGETSELECTED, { position: point.point, address: point.address }));
+    //});
+
+    // 添加到地图中
+    this._map.addOverlay(marker);
+    this._stationMarkers.push(marker);
+
+};
+
+
+/**
+* 绑定点击事件
+**/
+AR.DeliveryStation.prototype._bindClickEvent = function (overlay, delstat)
+{
+    var _this = this;
+    overlay.addEventListener("click", function (e)
+    {
+        // 选中的是当前编辑的对象
+        if (_this._currentSelectedRegionMarker == overlay)
+        {
+            return;
+        }
+
+        var selectedMarker = e.target;
+        if (_this._currentSelectedRegionMarker != null)
+        {
+            // 还原状态
+            var oriStyle = _this._currentSelectedRegionMarker.selfStyleOptions.styleOptions;
+            _this._resetRenderStyles(_this._currentSelectedRegionMarker, oriStyle);
+
+        }
+        // 修改多边形选中时的风格
+        var selectedStyle = _this._getSelectedStyles();
+        _this._resetRenderStyles(selectedMarker, selectedStyle);
+
+        // 记录新的当前选中对象
+        _this._currentSelectedRegionMarker = selectedMarker;
+
+        // 分发选中事件
+        _this.dispatch(new AR.Event(AR.DeliveryStationEventType.STATIONREGIONCLICK, delstat.id));
+
+    });
+};
+
+/**
+* 清除区域和站点
+*/
+AR.DeliveryStation.prototype.clearAllOverlay = function ()
+{
+    if (AR.Utility.isDefAndNotNull(this._map))
+    {
+        return;
+    }
+
+    // 站标
+    if (AR.Utility.isArray(this._stationMarkers))
+    {
+        for (var i = 0, length = this._stationMarkers.length; i < length; i++)
+        {
+            this._map.removeOverlay(this._stationMarkers[i]);
+        }
+        this._stationMarkers = [];
+    }
+
+    // 区域
+    if (AR.Utility.isArray(this._regionMarkers))
+    {
+        for (var i = 0, length = this._regionMarkers.length; i < length; i++)
+        {
+            this._map.removeOverlay(this._regionMarkers[i]);
+        }
+        this._regionMarkers = [];
+    }
+
+    // 当前选中置空
+    this._currentSelectedRegionMarker = null;
+
+};
+
+
+/**
+* 重置覆盖物的渲染状态
+*/
+AR.DeliveryStation.prototype._resetRenderStyles = function (overlay, styleOptions)
+{
+    if (!AR.Utility.isDefAndNotNull(overlay) || !AR.Utility.isDefAndNotNull(styleOptions))
+    {
+        return;
+    }
+    //重置状态
+    overlay.setFillColor(styleOptions.fillColor);
+    overlay.setFillOpacity(styleOptions.fillOpacity);
+    overlay.setStrokeColor(styleOptions.strokeColor);
+    overlay.setStrokeOpacity(styleOptions.strokeOpacity);
+    overlay.setStrokeStyle(styleOptions.strokeStyle);
+    overlay.setStrokeWeight(styleOptions.strokeWeight);
+}
+
+/**
+* 根据多边形参数创建一个新的多边形
+* 有些地方还有待重构
+*/
+AR.DeliveryStation.prototype._createPolygonFromParams = function (overlay)
+{
+    if (!AR.Utility.isDefAndNotNull(overlay))
+    {
+        return;
+    }
+
+    if (AR.Utility.isString(overlay))
+    {
+        var jsonResult = AR.Utility.parse(overlay);
+        if (!jsonResult.status)
+        {
+            return;
+        }
+        overlay = jsonResult.result;
+    }
+
+    // 解析地址坐标
+    var bdPoints = [];
+    for (var i = 0, length = overlay.path.length; i < length; i++)
+    {
+        var oriPoint = overlay.path[i];
+        bdPoints.push(new BMap.Point(oriPoint.lng, oriPoint.lat));
+    }
+
+    // 创建多边形，
+    var bdpolygon = new BMap.Polygon(bdPoints, overlay.styleOptions);
+
+    // 给多边形覆盖物添加一个自定义的属性
+    bdpolygon.selfStyleOptions = overlay;
+
+    return bdpolygon;
+
+}
+
+
+/**
+* 获取默认的选中区域的风格
+*
+**/
+AR.DeliveryStation.prototype._getSelectedStyles = function ()
+{
+    return {                    // 这个大括号必须放到这
+        strokeColor: '#fefe3f',    //边线颜色。
+        fillColor: "#000",      //填充颜色。当参数为空时，圆形将没有填充效果。
+        strokeWeight: 5,       //边线的宽度，以像素为单位。
+        strokeOpacity: 0.6,	   //边线透明度，取值范围0 - 1。
+        fillOpacity: 0.2,      //填充的透明度，取值范围0 - 1。
+        strokeStyle: 'solid'   //边线的样式，solid或dashed。
+    };
+};
+
+
+/**
+* 添加marker
+*/
+AR.DeliveryStation.prototype.addAddressMarker = function (items)
+{
+    if (!AR.Utility.isDefAndNotNull(items))
+    {
+        return;
+    }
+    if (!AR.Utility.isArray(items))
+    {
+        items = [items];
+    }
+    this.clearAddressMarker();
+    for (var i = 0, length = items.length; i < length; i++)
+    {
+
+        var marker = new BMap.Marker(items[i].point);
+        var label = new BMap.Label(items[i].label);
+        marker.setLabel(label);
+
+        this._map.addOverlay(marker);
+        this._addressMarkers.push(marker);
+    }
+};
+/**
+* 删除marker
+*/
+AR.DeliveryStation.prototype.clearAddressMarker = function ()
+{
+    if (!AR.Utility.isArray(this._addressMarkers) || this._addressMarkers.length == 0)
+    {
+        return;
+    }
+    for (var i = 0, length = this._addressMarkers.length; i < length; i++)
+    {
+        this._map.removeOverlay(this._addressMarkers[i]);
+    }
+    this._addressMarkers = [];
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

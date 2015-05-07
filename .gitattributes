@@ -223,6 +223,7 @@ mainline/addressRepository/src/main/java/cn/explink/web/filter/DmpAccessFilter.j
 mainline/addressRepository/src/main/java/cn/explink/web/filter/DmpLoginFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/filter/ExplinkFilter.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/AddressImportTypeEnum.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/vo/AddressPosition.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/DeliveryStationRuleVo.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/SingleAddressMappingResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/vo/VendorsAgingVo.java -text

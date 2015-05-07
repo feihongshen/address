@@ -3754,7 +3754,8 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 -- 江苏品骏预置数据 added by songkaojun 2015-05-05
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2367241, '无锡新区', 1, 3, 896, '1-882-896', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2367242, '工业园区', 1, 3, 927, '1-882-927', now());
-
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2368129, '高新区', 1, 3, 927, '1-882-927', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2368130, '经济技术开发区', 1, 3, 978, '1-882-978', now());
 
 
 

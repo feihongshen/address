@@ -9,12 +9,21 @@
 <title>关键词匹配</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <style type="text/css">
-.keyword{
-	overflow-y: scroll;height: 600px;width:47%;float:left;color: blue;font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-border:1px solid #999;padding:3px;
+.keyword {
+	overflow-y: scroll;
+	height: 600px;
+	width: 24%;
+	float: left;
+	color: blue;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+	border: 1px solid #999;
+	padding: 3px;
 }
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mutitleTree.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=szTBW9236HO8EDCYuk4xQlP4"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/map/map.js"></script>
 <script type="text/javascript">
 var setting = {
 		view: {
@@ -40,11 +49,17 @@ var zNodes;
 var keywords;
 var keywordsTable;
 $(function(){
+	var needMatchedWords= $("#needMatched").val();
 	$("#mapping").click(function(){
+		needMatchedWords= $("#needMatched").val();
+		if(needMatchedWords==undefined||needMatchedWords==null||needMatchedWords.length==0){
+			alert("请输入要匹配的关键词");
+			return;
+		}
 		$.ajax({
 		 type: "POST",
 			url:"<%=request.getContextPath()%>/address/matchKeyword",
-			data:{needMatched:getNeedMatchedWords()},
+			data:{needMatched:needMatchedWords},
 			success:function(optionData){
 				zNodes=optionData['zTreeNodeList'];
 				keywords=optionData['keywordList'];
@@ -53,12 +68,15 @@ $(function(){
 					$("#resultTree").html("");
 					return;
 				}
-				
 				zTreeObj1 = $.fn.zTree.init($("#resultTree"), setting, zNodes);
 			}
 		});
+		initMap(needMatchedWords);
 	});
-})
+	
+	
+	initMap(needMatchedWords);
+});
 
 function setFontCss(treeId, treeNode) {
 	var color;
@@ -83,30 +101,68 @@ function setKeywords(){
 	keywordsTable=keywordsTable+"</table>";
 	$("#keywordDiv").html(keywordsTable);
 }
-function getNeedMatchedWords(){
-	var needMatched= $("#needMatched").val();
-	if(needMatched==undefined||needMatched==null||needMatched.length==0){
-		alert("请输入要匹配的关键词");
-	}else{
-		return needMatched;
-	}
-}
 
+
+function initMap(needMatchedWords)
+{
+	var mapManager=new AR.ExpdopMap();
+    mapManager.initializeMap({map:"addressmap"});
+    mapManager.initializeDeliveryStation();
+    var deliverySta=mapManager.getDeliveryStation();
+    
+	$.ajax({
+		 type: "POST",
+			url:"<%=request.getContextPath()%>/station/listAll",
+			data:{},
+			success:function(data){
+   				 // 站点数据
+   				 deliverySta.setDeliveryStationItems(data);
+			}
+		});
+	if(needMatchedWords==undefined||needMatchedWords==null||needMatchedWords.length==0){
+		return;
+	}
+	$.ajax({
+		 type: "POST",
+			url:"<%=request.getContextPath()%>/address/getPointByAddress",
+			data : {
+				needMatched : needMatchedWords
+			},
+			success : function(returnData) {
+				// 地址点 
+				var pointLabelArray = new Array(returnData.length);
+				for (var i = 0; i < returnData.length; i++) {
+					var pointLabel = new Object();
+					pointLabel.point = new BMap.Point(returnData[i].lng,
+							returnData[i].lat);
+					pointLabel.label = returnData[i].addressLine;
+					pointLabelArray[i] = pointLabel;
+				}
+				deliverySta.addAddressMarker(pointLabelArray);
+			}
+		});
+
+	}
 </script>
 </head>
 <body>
-<textarea name="needMatched" id="needMatched" class="textbox" style="height:40px; width:47% ;resize: none" data-options="multiline:false"></textarea>
-<a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a>
+	<div>
+		<textarea name="needMatched" id="needMatched" class="textbox"
+			style="height: 40px; width: 47%; resize: none;" data-options="multiline:false"></textarea>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok">匹配</a>
+	</div>
 
-<div id="keywordDiv" class="keyword"></div>
-  <div style="overflow-y: scroll;width:52%;float:right">
-    <td bgcolor="#FFFFFF" style="vertical-align: top;">
-    <div style="overflow-y: scroll;height: 600px;border:1px solid #999;padding:3px;">
-         <ul  class="ztree" id="resultTree" > </ul>
-    </div>
-    </td>
- </div>
- <div></div>
- 
+	<div id="keywordDiv" class="keyword"></div>
+
+	<div style="overflow-y: scroll; width: 24%; float: left">
+		<td bgcolor="#FFFFFF" style="vertical-align: top;">
+			<div style="overflow-y: scroll; height: 600px; border: 1px solid #999; padding: 3px;">
+				<ul class="ztree" id="resultTree">
+				</ul>
+			</div>
+		</td>
+	</div>
+	<div id=addressmap style="width: 50%; height: 600px; float: right;"></div>
+
 </body>
 </html>

@@ -38,6 +38,8 @@ import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
+import cn.explink.gis.GeoCoder;
+import cn.explink.gis.GeoPoint;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
@@ -54,6 +56,7 @@ import cn.explink.tree.ZTreeNode;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
 import cn.explink.web.vo.AddressImportTypeEnum;
+import cn.explink.web.vo.AddressPosition;
 import cn.explink.ws.vo.OrderVo;
 
 @RequestMapping("/address")
@@ -463,6 +466,28 @@ public class AddressController extends BaseController {
 		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
 		this.addressService.appendStation(customerId, result.getzTreeNodeList());
 		return result;
+	}
+
+	@RequestMapping("/getPointByAddress")
+	public @ResponseBody List<AddressPosition> getPointByAddress(String needMatched, HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+		List<AddressPosition> addressPositionList = new ArrayList<AddressPosition>();
+		if (StringUtil.isEmpty(needMatched)) {
+			return null;
+		}
+		for (String addressLine : needMatched.split("\n")) {
+			if (addressLine.trim().length() == 0) {
+				continue;
+			}
+			AddressPosition addressPosition = new AddressPosition();
+			GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+			addressPosition.setAddressLine(addressLine);
+			addressPosition.setLat(position.getLat());
+			addressPosition.setLng(position.getLng());
+
+			addressPositionList.add(addressPosition);
+		}
+
+		return addressPositionList;
 	}
 
 	@RequestMapping("/getUnbindInfo")
