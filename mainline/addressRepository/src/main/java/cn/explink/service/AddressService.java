@@ -400,6 +400,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		List<BeanVo> unList = new ArrayList<BeanVo>();
 		List<BeanVo> dList = new ArrayList<BeanVo>();
 		List<BeanVo> kList = new ArrayList<BeanVo>();
+		List<String> mapAddressList = new ArrayList<String>();
 		List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
 		for (OrderVo orderVo : orderList) {
 			orderVo.setCustomerId(customerId);
@@ -410,6 +411,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			case zeroResult:
 			case multipleResult:
 			case exceptionResult:
+				// 将被地图匹配的地址收集起来
+				mapAddressList.add(orderVo.getAddressLine());
+				// 调用地图匹配
 				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
 
 				if ((deliveryStationList == null) || (0 == deliveryStationList.size())) {
@@ -467,6 +471,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		attributes.put("unList", unList);
 		attributes.put("suList", suList);
 		attributes.put("kList", kList);
+		attributes.put("mapAddressList", mapAddressList);
 		return attributes;
 	}
 

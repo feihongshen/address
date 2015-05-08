@@ -738,6 +738,7 @@ mainline/addressRepository/src/main/webapp/js/address/import.js -text
 mainline/addressRepository/src/main/webapp/js/address/importAdress.js -text
 mainline/addressRepository/src/main/webapp/js/address/importStationAddress.js -text
 mainline/addressRepository/src/main/webapp/js/address/keywordMaintain.js -text
+mainline/addressRepository/src/main/webapp/js/address/mapMatchResult.js -text
 mainline/addressRepository/src/main/webapp/js/address/mutitleTree.js -text
 mainline/addressRepository/src/main/webapp/js/address/result.js -text
 mainline/addressRepository/src/main/webapp/js/address/stationAdressRelation.js -text

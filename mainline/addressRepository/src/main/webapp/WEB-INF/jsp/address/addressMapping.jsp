@@ -10,7 +10,11 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=szTBW9236HO8EDCYuk4xQlP4"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/map/map.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mapMatchResult.js"></script>
 <script type="text/javascript">
+var ctx = '<%=request.getContextPath() %>';
 var arrsum=['insum','unsum','susum','dsum','ksum','pper'];
 var usedData;
 var tableData;
@@ -59,7 +63,13 @@ $(function(){
 				tableData=usedData['kList'];
 				usedTable=$("#keytable");
 				break;
-
+			case '地图匹配情况':
+			    var mapAddressList=	usedData['mapAddressList'];
+			    var needMatchedWords="";
+			    for(var i=0;i<mapAddressList.length;i++){
+			    	needMatchedWords=needMatchedWords+mapAddressList[i]+"\n";
+			    }
+			    initMap("mapMatchedResult",needMatchedWords);
 			default:
 				break;
 			}
@@ -73,6 +83,7 @@ $(function(){
 		}
 	});
 })
+
 </script>
 </head>
 
@@ -138,6 +149,9 @@ $(function(){
          
         </thead>
       </table>
+    </div>
+    <div title="地图匹配情况" style="padding:10px">
+	    <div id="mapMatchedResult" style="width: 100%; height: 600px; float: right;"></div>
     </div>
   </div>
 </body>
