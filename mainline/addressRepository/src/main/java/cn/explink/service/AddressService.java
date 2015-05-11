@@ -44,7 +44,7 @@ import cn.explink.exception.BindFailedException;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.modle.AjaxJson;
 import cn.explink.spliter.AddressSplitter;
-import cn.explink.spliter.vo.AddressStation;
+import cn.explink.spliter.vo.AddressLineStationPair;
 import cn.explink.spliter.vo.FullRawAddressStationPair;
 import cn.explink.spliter.vo.RawAddressQuickVO;
 import cn.explink.tree.ZTreeNode;
@@ -816,8 +816,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 		@Override
 		public void run() {
-			List<AddressStation> addressStationList = new ArrayList<AddressStation>();
-			AddressStation addressStation = new AddressStation(this.addressLine, this.stationName);
+			List<AddressLineStationPair> addressStationList = new ArrayList<AddressLineStationPair>();
+			AddressLineStationPair addressStation = new AddressLineStationPair(this.addressLine, this.stationName);
 			addressStationList.add(addressStation);
 
 			AddressSplitter addressSplitter = new AddressSplitter(addressStationList, this.getKeywordSuffixNameList(this.customerId));

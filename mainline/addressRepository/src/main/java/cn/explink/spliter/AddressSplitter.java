@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import cn.explink.domain.AddressDetail;
 import cn.explink.spliter.consts.CommonKeyWordSuffix;
-import cn.explink.spliter.vo.AddressStation;
+import cn.explink.spliter.vo.AddressLineStationPair;
 import cn.explink.util.StringUtil;
 
 /**
@@ -21,19 +21,19 @@ public class AddressSplitter {
 	/**
 	 * 待拆分的地址串--站点
 	 */
-	private List<AddressStation> addressStationList;
+	private List<AddressLineStationPair> addressStationList;
 
 	/**
 	 * 客户维护的关键词后缀
 	 */
 	private List<String> customKeywordSuffixList;
 
-	public AddressSplitter(List<AddressStation> addressStationList) {
+	public AddressSplitter(List<AddressLineStationPair> addressStationList) {
 		super();
 		this.addressStationList = addressStationList;
 	}
 
-	public AddressSplitter(List<AddressStation> addressStationList, List<String> customKeywordSuffixList) {
+	public AddressSplitter(List<AddressLineStationPair> addressStationList, List<String> customKeywordSuffixList) {
 		super();
 		this.addressStationList = addressStationList;
 		this.customKeywordSuffixList = customKeywordSuffixList;
@@ -46,7 +46,7 @@ public class AddressSplitter {
 	 */
 	public List<AddressDetail> split() {
 		List<AddressDetail> addressDetailList = new ArrayList<AddressDetail>();
-		for (AddressStation addressStation : this.addressStationList) {
+		for (AddressLineStationPair addressStation : this.addressStationList) {
 			// 过滤掉特殊字符：.。+&&||!()（）{}[]【】^\"~*?:\\/
 			String addressLine = StringUtil.filterQureyStr(addressStation.getAddressLine());
 			// 过滤掉XXX号

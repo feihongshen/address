@@ -10,7 +10,7 @@ import cn.explink.domain.AddressDetail;
 import cn.explink.service.RawAddressService;
 import cn.explink.service.RawDeliveryStationService;
 import cn.explink.spliter.AddressSplitter;
-import cn.explink.spliter.vo.AddressStation;
+import cn.explink.spliter.vo.AddressLineStationPair;
 import cn.explink.test.support.BaseTestCase;
 
 public class AddressSplitterTest extends BaseTestCase {
@@ -21,8 +21,8 @@ public class AddressSplitterTest extends BaseTestCase {
 
 	@Test
 	public void testSplitAddressList() {
-		List<AddressStation> addressStationList = new ArrayList<AddressStation>();
-		AddressStation addressStation = new AddressStation("北京市西城区槐柏树街南里7号楼1门202室", "兴宁站");
+		List<AddressLineStationPair> addressStationList = new ArrayList<AddressLineStationPair>();
+		AddressLineStationPair addressStation = new AddressLineStationPair("北京市西城区槐柏树街南里7号楼1门202室", "兴宁站");
 		addressStationList.add(addressStation);
 		AddressSplitter addressSplitter = new AddressSplitter(addressStationList);
 		List<AddressDetail> addressDetailList = addressSplitter.split();

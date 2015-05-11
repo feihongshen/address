@@ -37,6 +37,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_jxfy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_nxpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_qhpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_shpj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_sypj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_whfy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xjb.sql -text
 mainline/addressRepository/src/main/db/changelog/quartz_init.sql -text
@@ -184,7 +185,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/UserService.java -te
 mainline/addressRepository/src/main/java/cn/explink/service/VendorService.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/AddressSplitter.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/consts/CommonKeyWordSuffix.java -text
-mainline/addressRepository/src/main/java/cn/explink/spliter/vo/AddressStation.java -text
+mainline/addressRepository/src/main/java/cn/explink/spliter/vo/AddressLineStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/FullRawAddressStationPair.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/RawAddressQuickVO.java -text
 mainline/addressRepository/src/main/java/cn/explink/spliter/vo/RawAddressStationPair.java -text

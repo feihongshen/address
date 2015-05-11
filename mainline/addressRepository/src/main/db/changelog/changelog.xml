@@ -354,5 +354,9 @@
 	<changeSet id="songkaojun-2015-05-05-03" author="songkaojun">
 		<sqlFile path="customer_init_gspj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建沈阳品骏客户 -->
+	<changeSet id="songkaojun-2015-05-05-11" author="songkaojun">
+		<sqlFile path="customer_init_sypj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
