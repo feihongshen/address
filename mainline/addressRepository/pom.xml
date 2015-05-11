@@ -705,7 +705,7 @@
 			<id>CQHY</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://172.20.200.24:3306/addressRepository_cqhy?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://172.20.200.40:3306/addressRepository_cqhy?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -722,8 +722,6 @@
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
 				<luceneIndexPath>/home/apps/address_cqhy/lucene/index</luceneIndexPath>
 				<luceneDictPath>/home/apps/address_cqhy/lucene/dict</luceneDictPath>
-				<dmpVarifyUserUrl>http://103.229.214.164/cqhy_test</dmpVarifyUserUrl>
-				<dmpIndexUrl>http://103.229.214.164/cqhy_test</dmpIndexUrl>
 				<label>prod</label>
 			</properties>
 		</profile>
