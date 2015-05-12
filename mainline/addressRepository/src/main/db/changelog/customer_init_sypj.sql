@@ -3533,12 +3533,6 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2362567, 20);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2362568, 20);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2362569, 20);
 
--- 江苏品骏预置数据 added by songkaojun 2015-05-05
-INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2367241, 20);
-INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2367242, 20);
-INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2368129, 20);
-INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2368130, 20);
-
 
 -- 新建客户粗地址权限
 INSERT INTO RAW_ADDRESS_PERMISSIONS (raw_address_id, customer_id) VALUES (1, 20);

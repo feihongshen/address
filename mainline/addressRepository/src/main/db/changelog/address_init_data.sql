@@ -3757,5 +3757,13 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2368129, '高新区', 1, 3, 927, '1-882-927', now());
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2368130, '经济技术开发区', 1, 3, 978, '1-882-978', now());
 
+-- 吉林品骏预置数据 added by songkaojun 2015-05-11
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2373843, '高新技术开发区', 1, 3, 631, '1-630-631', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2373844, '净月经济开发区', 1, 3, 631, '1-630-631', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2373845, '经济技术开发区', 1, 3, 631, '1-630-631', now());
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2373846, '汽车产业开发区', 1, 3, 631, '1-630-631', now());
+
+
+
 
 

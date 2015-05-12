@@ -3525,6 +3525,10 @@ INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3514, 14);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3515, 14);
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (3516, 14);
 
-
+-- 吉林品骏预置数据 added by songkaojun 2015-05-11
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2373843, 14);
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2373844, 14);
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2373845, 14);
+INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (2373846, 14);
 
 

@@ -152,7 +152,7 @@ public class AddressSplitter {
 			addressDetail.setProvince(subAddress);
 		} else if (subAddress.endsWith("市") && this.exceptCity(subAddress) && !StringUtil.isEmpty(addressDetail.getProvince())) {
 			addressDetail.setCity(subAddress);
-		} else if (subAddress.endsWith("县") || (subAddress.endsWith("区") && this.exceptDistrict(subAddress) && !StringUtil.isEmpty(addressDetail.getCity()))) {
+		} else if ((subAddress.endsWith("县") || ((subAddress.endsWith("区")) && this.exceptDistrict(subAddress) && !StringUtil.isEmpty(addressDetail.getCity())))) {
 			addressDetail.setDistrict(subAddress);
 		} else if (!StringUtil.isEmpty(addressDetail.getDistrict()) && StringUtil.isEmpty(addressDetail.getAddressName1())) {
 			addressDetail.setAddressName1(subAddress);
