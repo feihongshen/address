@@ -7,7 +7,7 @@ INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES
 -- 新建管理员用户
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (5, 'cqhy', 'cqhy', 0, 5);
 
---与DMP整合参数
+-- 与DMP整合参数
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '1', '是否开启与dmp4.1整合', '1', '5');
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpVarifyUserUrl', 'http://103.229.214.164/cqhy_test', 'DMP验证用户URL', '1', '5');
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpIndexUrl', 'http://103.229.214.164/cqhy_test', 'DMP主页URL', '1', '5');
