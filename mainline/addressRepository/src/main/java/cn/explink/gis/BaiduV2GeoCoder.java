@@ -15,7 +15,7 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 	/**
 	 * 百度api中必须用的key。此key可以在百度LBS开放平台申请
 	 */
-	private static String apiKey = "szTBW9236HO8EDCYuk4xQlP4";
+	private static String apiKey = BaiduApiKeyPool.getRandomKey();
 
 	@Override
 	public GeoPoint GetLocation(String address) {
@@ -24,15 +24,13 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 		String url = "http://api.map.baidu.com/geocoder/v2/";
 		try {
 			String addressh = URLEncoder.encode(address, "UTF-8");
-			String keywords = "ak=" + apiKey
-					+ "&callback=?&output=json&address=" + addressh;
+			String keywords = "ak=" + BaiduV2GeoCoder.apiKey + "&callback=?&output=json&address=" + addressh;
 			String result = HttpUtility.sendGet(url, keywords); // 返回结果
 			JSONObject json = JSONObject.fromObject(result); // 转成json字符串
 			int status = json.getInt("status"); // 获取执行状态
 			if (status == 0) // 成功
 			{
-				JSONObject lnglat = json.getJSONObject("result").getJSONObject(
-						"location");
+				JSONObject lnglat = json.getJSONObject("result").getJSONObject("location");
 				double lng = lnglat.getDouble("lng");
 				double lat = lnglat.getDouble("lat");
 				return new GeoPoint(lng, lat);
@@ -48,10 +46,9 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 
 	@Override
 	public GeoPoint GetLocationDetails(String address) {
-		GeoPoint coderResult=GetLocation(address);
-		if(coderResult==null)
-		{
-			return Search(address);
+		GeoPoint coderResult = this.GetLocation(address);
+		if (coderResult == null) {
+			return this.Search(address);
 		}
 		return coderResult;
 	}
@@ -59,41 +56,39 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 	@Override
 	public ReGeoCoderResult GetAddress(double lng, double lat) {
 		// TODO Auto-generated method stub
-		
-	    String url="http://api.map.baidu.com/geocoder/v2/";
-		
-	    try {
-	    	String keyWords="ak="+apiKey+"&callback=&location="+lat+","+lng+"&output=json&pois=1";
-	    	
-	    	String result=HttpUtility.sendGet(url, keyWords);
-	    	JSONObject json = JSONObject.fromObject(result); // 转成json字符串
+
+		String url = "http://api.map.baidu.com/geocoder/v2/";
+
+		try {
+			String keyWords = "ak=" + BaiduV2GeoCoder.apiKey + "&callback=&location=" + lat + "," + lng + "&output=json&pois=1";
+
+			String result = HttpUtility.sendGet(url, keyWords);
+			JSONObject json = JSONObject.fromObject(result); // 转成json字符串
 			int status = json.getInt("status"); // 获取执行状态
 			if (status == 0) // 成功
 			{
-				ReGeoCoderResult reGeoResult=new ReGeoCoderResult();
-				JSONObject jsonResult=json.getJSONObject("result");
-				
+				ReGeoCoderResult reGeoResult = new ReGeoCoderResult();
+				JSONObject jsonResult = json.getJSONObject("result");
+
 				JSONObject address = jsonResult.getJSONObject("addressComponent");
-				if(address!=null)
-				{
-					reGeoResult.setAddressComponent((AddressComponent)JSONObject.toBean(address, AddressComponent.class));
+				if (address != null) {
+					reGeoResult.setAddressComponent((AddressComponent) JSONObject.toBean(address, AddressComponent.class));
 				}
-				
-				JSONArray poiArr=jsonResult.getJSONArray("pois");
-				if(poiArr!=null)
-				{
-					reGeoResult.setPois((List<POI>)JSONArray.toCollection(poiArr, POI.class));
+
+				JSONArray poiArr = jsonResult.getJSONArray("pois");
+				if (poiArr != null) {
+					reGeoResult.setPois((List<POI>) JSONArray.toCollection(poiArr, POI.class));
 				}
-				
+
 				return reGeoResult;
 			} else {
 				return null;
 			}
-	    	
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-	    
+
 		return null;
 	}
 
@@ -104,8 +99,7 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 		try {
 			String addressh = URLEncoder.encode(address, "UTF-8");
 			String region = "12,73,53,136"; // 表示中国的范围(外包围框)
-			String keywords = "ak=" + apiKey + "&bounds=" + region
-					+ "&output=json&q=" + addressh;
+			String keywords = "ak=" + BaiduV2GeoCoder.apiKey + "&bounds=" + region + "&output=json&q=" + addressh;
 			String result = HttpUtility.sendGet(url, keywords);
 			JSONObject json = JSONObject.fromObject(result);
 
@@ -115,8 +109,7 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 				JSONArray results = json.getJSONArray("results");
 				if (!results.isEmpty()) {
 					// 默认取第一个poi
-					JSONObject lnglat = results.getJSONObject(0).getJSONObject(
-							"location");
+					JSONObject lnglat = results.getJSONObject(0).getJSONObject("location");
 					double lng = lnglat.getDouble("lng");
 					double lat = lnglat.getDouble("lat");
 					return new GeoPoint(lng, lat);

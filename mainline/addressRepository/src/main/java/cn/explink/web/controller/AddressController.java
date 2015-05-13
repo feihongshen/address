@@ -339,9 +339,10 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/deleteImportAddressResult")
-	public @ResponseBody AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id) {
+	public @ResponseBody AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportService.deleteImportAddressResult(id, this.getCustomerId());
+		AddressController.logger.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
 		aj.setSuccess(true);
 		return aj;
 	}
@@ -413,6 +414,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportResultService.delete(addressImportResult.getId());
+		AddressController.logger.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + addressImportResult.getId());
 		aj.setSuccess(true);
 		return aj;
 
@@ -591,10 +593,11 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/delAlias")
-	public @ResponseBody AjaxJson delAlias(@RequestParam(value = "id") Long id) {
+	public @ResponseBody AjaxJson delAlias(@RequestParam(value = "id") Long id, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		this.addressService.deleteAlias(id);
+		AddressController.logger.info("删除别名：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
 		return aj;
 	}
 
@@ -605,11 +608,13 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/delAddress")
-	public @ResponseBody AjaxJson delAddress(Long addressId) {
+	public @ResponseBody AjaxJson delAddress(Long addressId, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		try {
 			this.addressService.deleteAddress(addressId, this.getCustomerId());
+
+			AddressController.logger.info("删除关键词：{}", "IP:" + request.getRemoteAddr() + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			aj.setSuccess(false);

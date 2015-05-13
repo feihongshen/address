@@ -245,6 +245,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 */
 	public void batchUnbindAddress(List<Long> addressIdList, Long customerId) {
 		this.addressPermissionDao.batchUnbindAddress(addressIdList, customerId);
+
 		// 批量删除别名
 		this.aliasDao.deleteAliasByIds(addressIdList, customerId);
 		// 批量删除站点关联关系

@@ -110,6 +110,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/fields/RuleExpression
 mainline/addressRepository/src/main/java/cn/explink/exception/BindFailedException.java -text
 mainline/addressRepository/src/main/java/cn/explink/exception/ExplinkRuntimeException.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/AddressComponent.java -text
+mainline/addressRepository/src/main/java/cn/explink/gis/BaiduApiKeyPool.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV1RouteMatrix.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV2GeoCoder.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoCoder.java -text
