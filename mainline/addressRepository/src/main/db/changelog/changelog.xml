@@ -362,5 +362,9 @@
 	<changeSet id="songkaojun-2015-05-12-01" author="songkaojun">
 		<sqlFile path="customer_init_hnsrx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建小红帽客户 -->
+	<changeSet id="songkaojun-2015-05-14-01" author="songkaojun">
+		<sqlFile path="customer_init_xhm.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
