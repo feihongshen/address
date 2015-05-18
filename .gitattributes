@@ -169,6 +169,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/AddressService.java 
 mainline/addressRepository/src/main/java/cn/explink/service/ApplicationService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/CommonServiceImpl.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/CustomerService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/DBBackupAndRestoreService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/DelivererRuleService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/DelivererService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/DeliveryStationRuleService.java -text
@@ -1202,6 +1203,7 @@ mainline/addressRepository/src/test/java/cn/explink/gis/AddressSplitterTest.java
 mainline/addressRepository/src/test/java/cn/explink/lucene/ScoreFilterTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/AddressImportServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/AddressServiceTest.java -text
+mainline/addressRepository/src/test/java/cn/explink/service/DBBackupAndRestoreServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/DelivererRuleServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/DeliveryStationRuleServiceTest.java -text
 mainline/addressRepository/src/test/java/cn/explink/service/DeliveryStationServiceTest.java -text
