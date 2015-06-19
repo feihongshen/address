@@ -370,5 +370,9 @@
 	<changeSet id="songkaojun-2015-05-21-01" author="songkaojun">
 		<sqlFile path="customer_init_mkmk.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建嘉兴速达客户 -->
+	<changeSet id="songkaojun-2015-06-19-01" author="songkaojun">
+		<sqlFile path="customer_init_jxsd.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
