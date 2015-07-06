@@ -3764,6 +3764,7 @@ insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_
 insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (2373846, '汽车产业开发区', 1, 3, 631, '1-630-631', now());
 
 
+insert into ADDRESS (id, name, status, address_level, parent_id, path, creation_time) values (1997, '云龙区', 1, 3, 1997, '1-1985-1997', now());
 
 
 
