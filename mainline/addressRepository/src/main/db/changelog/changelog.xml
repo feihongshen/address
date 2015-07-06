@@ -382,5 +382,9 @@
 	<changeSet id="songkaojun-2015-07-06-01" author="songkaojun">
 		<sqlFile path="customer_init_xzpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建湖南品骏客户 -->
+	<changeSet id="songkaojun-2015-07-06-02" author="songkaojun">
+		<sqlFile path="customer_init_hnpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
