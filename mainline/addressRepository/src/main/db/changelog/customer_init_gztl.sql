@@ -9,6 +9,8 @@ INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (6, 'gztl', '
 
 -- 与DMP整合参数
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '0', '是否开启与dmp4.1整合', '1', '6');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpVarifyUserUrl', 'http://183.61.89.252/gztl_42', 'DMP验证用户URL', '1', '6');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpIndexUrl', 'http://183.61.89.252/gztl_42', 'DMP主页URL', '1', '6');
 
 -- 新建客户地址权限
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (1, 6);
