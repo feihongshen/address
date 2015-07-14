@@ -18,7 +18,7 @@ import cn.explink.schedule.Worker;
 
 public class ScheduledTaskService {
 
-	private static Logger logger = LoggerFactory.getLogger(ScheduledTaskService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTaskService.class);
 
 	@Autowired
 	private ScheduledTaskDao scheduledTaskDao;
@@ -66,7 +66,7 @@ public class ScheduledTaskService {
 		task.setWorker(this.cachedWorkers.get(taskType));
 
 		ExecutorService executorService = this.findExecutorService(taskType);
-		ScheduledTaskService.logger.debug("putting task to thread pool for taskId = {}", taskId);
+		ScheduledTaskService.LOGGER.debug("putting task to thread pool for taskId = {}", taskId);
 		executorService.submit(task);
 	}
 

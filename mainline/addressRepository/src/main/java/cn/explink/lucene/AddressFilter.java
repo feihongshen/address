@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cn.explink.domain.Address;
 import cn.explink.domain.Alias;
 
@@ -21,12 +24,16 @@ import cn.explink.domain.Alias;
  */
 public class AddressFilter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddressFilter.class);
+
 	public static List<Address> filter(String strAddr, List<Address> addrList) {
 		if (addrList.isEmpty()) {
 			return addrList;
 		}
 		AddressForest forest = new AddressForest(strAddr, addrList);
 		MatchResult matchResult = forest.getMatchResult();
+
+		AddressFilter.LOGGER.info("得分最高的地址是{}，得分为{}", matchResult.getAddress(), matchResult.getWeight());
 
 		return matchResult.getAddress();
 	}
@@ -232,6 +239,9 @@ public class AddressFilter {
 			// 这种情况系数是其他层级的三分之一
 			if (Integer.valueOf(3).equals(addressLevel)) {
 				factor = 1;
+			}// 市级别极少会写错，并且错分不同市极不能容忍
+			else if (Integer.valueOf(2).equals(addressLevel)) {
+				factor = 6;
 			}
 			String lowerAddr = addressName.toLowerCase();
 			String lowerFullAddr = fullAddr.toLowerCase();

@@ -50,7 +50,7 @@ import cn.explink.util.StringUtil;
 @Service
 public class LuceneService {
 
-	private static Logger logger = LoggerFactory.getLogger(LuceneService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LuceneService.class);
 
 	@Autowired
 	private AddressDao addressDao;
@@ -75,10 +75,10 @@ public class LuceneService {
 				if (!dictDirectory.exists()) {
 					try {
 						if (dictDirectory.mkdirs()) {
-							LuceneService.logger.info("create ik dict path success.");
+							LuceneService.LOGGER.info("create ik dict path success.");
 						} else {
 							String message = "create ik dict path failure.";
-							LuceneService.logger.error(message);
+							LuceneService.LOGGER.error(message);
 							throw new RuntimeException(message);
 						}
 						this.initIndex();
@@ -128,7 +128,7 @@ public class LuceneService {
 				}
 			}
 		}
-		LuceneService.logger.info("read dict time = {}", (System.currentTimeMillis() - startTime));
+		LuceneService.LOGGER.info("read dict time = {}", (System.currentTimeMillis() - startTime));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class LuceneService {
 			}
 		}
 		long analyzerTime = System.currentTimeMillis() - beginTime;
-		LuceneService.logger.info("init IK analyzer time = {}", analyzerTime);
+		LuceneService.LOGGER.info("init IK analyzer time = {}", analyzerTime);
 		this.addressDao.baseAddressIndexed();
 	}
 
@@ -424,7 +424,8 @@ public class LuceneService {
 		for (Document doc : docList) {
 			IndexableField addressIdField = doc.getField("addressId");
 			IndexableField aliasIdField = doc.getField("aliasId");
-			LuceneService.logger.info("addressId = {}, aliasId = {}", addressIdField, aliasIdField);
+			// LuceneService.LOGGER.info("addressId = {}, aliasId = {}",
+			// addressIdField, aliasIdField);
 			if (aliasIdField != null) {
 				String aliasId = aliasIdField.stringValue();
 				if (aliasId != null) {
@@ -459,14 +460,15 @@ public class LuceneService {
 					}
 				}
 			}
-			LuceneService.logger.info("relatedAddressList = " + relatedAddressList);
+			// LuceneService.LOGGER.info("relatedAddressList = " +
+			// relatedAddressList);
 			return relatedAddressList;
 		}
 		return new ArrayList<Address>();
 	}
 
 	private List<Document> getLuceneMatchDocList(String addressLine) throws IOException, ParseException {
-		LuceneService.logger.info("search for {}", addressLine);
+		LuceneService.LOGGER.info("search for {}", addressLine);
 		LuceneEnvironment luceneEnv = LuceneEnvironment.getInstance();
 		IndexSearcher searcher = luceneEnv.getIndexSearch();
 		QueryParser parser = luceneEnv.getQueryParser();

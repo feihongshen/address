@@ -21,31 +21,31 @@ import cn.explink.service.LuceneService;
 @Component("updateIndexWorker")
 public class UpdateIndexWorker extends ScheduledWorker {
 
-	private static Logger logger = LoggerFactory.getLogger(UpdateIndexWorker.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateIndexWorker.class);
+
 	@Autowired
 	private AddressDao addressDao;
 
 	@Autowired
 	private SystemConfigDao SystemConfigDao;
-	
+
 	@Autowired
 	private ScheduledTaskDao scheduledTaskDao;
 
 	@Autowired
 	private LuceneService luceneService;
-	
+
 	@Override
 	protected boolean doJob(ScheduledTask scheduledTask) throws Exception {
 		if (!LuceneInitializer.inited) {
-			logger.info("lucene is not inited. waiting lucene initialize");
+			UpdateIndexWorker.LOGGER.info("lucene is not inited. waiting lucene initialize");
 			LuceneInitializer.class.wait();
 		}
-		List<ScheduledTask> scheduledTaskList = scheduledTaskDao.listAllTasksByType(Constants.TASK_TYPE_SUB_UPDATE_INDEX, true);
+		List<ScheduledTask> scheduledTaskList = this.scheduledTaskDao.listAllTasksByType(Constants.TASK_TYPE_SUB_UPDATE_INDEX, true);
 		if (scheduledTaskList.size() == 0) {
-			return completeJob(scheduledTask);
+			return this.completeJob(scheduledTask);
 		}
-		
+
 		List<Long> addressIdList = new ArrayList<Long>();
 		List<Long> aliasIdList = new ArrayList<Long>();
 		List<Long> taskIdList = new ArrayList<Long>(scheduledTaskList.size());
@@ -58,10 +58,10 @@ public class UpdateIndexWorker extends ScheduledWorker {
 			}
 			taskIdList.add(task.getId());
 		}
-		
-		luceneService.updateIndex(addressIdList, aliasIdList);
-		scheduledTaskDao.batchUpdateStatus(taskIdList, Constants.TASK_STATUS_COMPLETED);
-		return completeJob(scheduledTask);
+
+		this.luceneService.updateIndex(addressIdList, aliasIdList);
+		this.scheduledTaskDao.batchUpdateStatus(taskIdList, Constants.TASK_STATUS_COMPLETED);
+		return this.completeJob(scheduledTask);
 	}
 
 	private boolean completeJob(ScheduledTask scheduledTask) {

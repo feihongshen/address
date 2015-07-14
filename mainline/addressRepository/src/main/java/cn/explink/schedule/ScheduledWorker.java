@@ -15,7 +15,7 @@ import cn.explink.util.DateTimeUtil;
 
 public abstract class ScheduledWorker implements Worker {
 
-	private static Logger logger = LoggerFactory.getLogger(ScheduledWorker.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledWorker.class);
 
 	@Autowired
 	private ScheduledTaskDao scheduledTaskDao;
@@ -25,40 +25,40 @@ public abstract class ScheduledWorker implements Worker {
 	public void executeTask(Task task) {
 		ScheduledTask scheduledTask = null;
 		try {
-			scheduledTask = lockTask(task.getTaskId());
-			logger.info("lock task success. task id = {} ", scheduledTask.getId());
+			scheduledTask = this.lockTask(task.getTaskId());
+			ScheduledWorker.LOGGER.info("lock task success. task id = {} ", scheduledTask.getId());
 			if (Constants.TASK_STATUS_COMPLETED == scheduledTask.getStatus()) {
-				logger.info("task is already completed. id = {}, referenceId = {}", new Object[] { scheduledTask.getId(), scheduledTask.getReferenceId() });
+				ScheduledWorker.LOGGER.info("task is already completed. id = {}, referenceId = {}", new Object[] { scheduledTask.getId(), scheduledTask.getReferenceId() });
 				return;
 			}
 			if (DateTimeUtil.isBefore(new Date(), scheduledTask.getFireTime())) {
-				logger.info("task is not readdy to run. id = {}, fireTime = {}", new Object[] { scheduledTask.getId(), scheduledTask.getFireTime() });
+				ScheduledWorker.LOGGER.info("task is not readdy to run. id = {}, fireTime = {}", new Object[] { scheduledTask.getId(), scheduledTask.getFireTime() });
 				return;
 			}
 		} catch (Exception e) {
-			logger.warn("lock task failed. taskId = {}", task.getTaskId());
+			ScheduledWorker.LOGGER.warn("lock task failed. taskId = {}", task.getTaskId());
 		}
 
 		try {
 			if (scheduledTask != null) {
-				if (doJob(scheduledTask)) {
-					logger.info("task success. task id = " + scheduledTask.getId());
+				if (this.doJob(scheduledTask)) {
+					ScheduledWorker.LOGGER.info("task success. task id = " + scheduledTask.getId());
 					scheduledTask.setStatus(Constants.TASK_STATUS_COMPLETED);
 					scheduledTask.setCompletedTime(new Date());
 				} else {
-					logger.info("task failed. task id = " + scheduledTask.getId());
-					handleFailedTask(scheduledTask);
+					ScheduledWorker.LOGGER.info("task failed. task id = " + scheduledTask.getId());
+					this.handleFailedTask(scheduledTask);
 				}
-				getScheduledTaskDao().save(scheduledTask);
+				this.getScheduledTaskDao().save(scheduledTask);
 			}
 		} catch (Exception e) {
-			logger.error("task exception. taskId = {}", task.getTaskId(), e);
+			ScheduledWorker.LOGGER.error("task exception. taskId = {}", task.getTaskId(), e);
 		}
 	}
 
 	/**
 	 * 处理失败的任务，默认只增加尝试次数，子类可以覆盖此方法做进一步的安排
-	 * 
+	 *
 	 * @param scheduledTask
 	 */
 	protected void handleFailedTask(ScheduledTask scheduledTask) {
@@ -67,7 +67,7 @@ public abstract class ScheduledWorker implements Worker {
 
 	/**
 	 * 任务对应的处理方法，由子类实现各任务的方法
-	 * 
+	 *
 	 * @param scheduledTask
 	 * @return 任务是否成功
 	 * @throws Exception
@@ -75,13 +75,13 @@ public abstract class ScheduledWorker implements Worker {
 	protected abstract boolean doJob(ScheduledTask scheduledTask) throws Exception;
 
 	private ScheduledTask lockTask(Long taskId) {
-		return scheduledTaskDao.lock(taskId);
+		return this.scheduledTaskDao.lock(taskId);
 	}
 
 	/**
 	 * for some duplicate tasks, we need scheduled the next task after a task
 	 * finished.
-	 * 
+	 *
 	 * @param currentTask
 	 * @param nextJobTime
 	 */
@@ -91,11 +91,11 @@ public abstract class ScheduledWorker implements Worker {
 		newTask.setId(null);
 		newTask.setFireTime(nextJobTime);
 		newTask.setCreatedAt(new Date());
-		getScheduledTaskDao().save(newTask);
+		this.getScheduledTaskDao().save(newTask);
 	}
 
 	protected ScheduledTaskDao getScheduledTaskDao() {
-		return scheduledTaskDao;
+		return this.scheduledTaskDao;
 	}
 
 	protected void setScheduledTaskDao(ScheduledTaskDao scheduledTaskDao) {

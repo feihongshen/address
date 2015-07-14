@@ -275,7 +275,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 		if (this.validateDetail(detail)) {
 			RawAddress rawAddress = map.get(detail.getProvince() + "-" + detail.getCity() + "-" + detail.getDistrict());
 			if (rawAddress == null) {
-				// throw new ExplinkRuntimeException("省/市/区地址不存在");
 				RawAddressService.logger.info("省/市/区地址不存在");
 				return null;
 			} else {
@@ -300,7 +299,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				// 处理第二关键字
 				if (StringUtils.isNotBlank(detail.getAddressName2())) {
 					if (isSaved) {
-						// throw new ExplinkRuntimeException("父节点不存在");
 						RawAddressService.logger.info("父节点不存在");
 						return null;
 					}
@@ -320,7 +318,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				// 处理第三个关键字
 				if (StringUtils.isNotBlank(detail.getAddressName3())) {
 					if (isSaved) {
-						// throw new ExplinkRuntimeException("父节点不存在");
 						RawAddressService.logger.info("父节点不存在");
 						return null;
 					}
@@ -340,13 +337,9 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				if (StringUtils.isNotBlank(detail.getDeliveryStationName())) {
 					RawDeliveryStation ds = stationMap.get(customerId + "-" + detail.getDeliveryStationName());
 					if (ds == null) {
-						// throw new ExplinkRuntimeException("配送站点不存在");
 						RawAddressService.logger.info("配送站点不存在");
 						return null;
 					} else {
-						// if (!ds.getId().equals(stationId)) {
-						// throw new ExplinkRuntimeException("导入站点不匹配！");
-						// }
 						RawDeliveryStationRule rawDeliveryStationRule = new RawDeliveryStationRule();
 						rawDeliveryStationRule.setRawAddress(bindAddress);
 						rawDeliveryStationRule.setCreationTime(new Date());
@@ -359,7 +352,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				}
 
 				if (!isSaved) {
-					// throw new ExplinkRuntimeException("数据重复！");
 					RawAddressService.logger.info("数据重复！");
 					return null;
 				}
@@ -369,7 +361,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 				return bindAddress;
 			}
 		} else {
-			// throw new ExplinkRuntimeException("导入格式不合规范");
 			RawAddressService.logger.info("导入格式不合规范");
 			return null;
 		}
@@ -381,7 +372,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 			return false;
 		} else {
 			if (StringUtils.isBlank(detail.getAddressName1())) {
-				// throw new ExplinkRuntimeException("关键字为空！");
 				RawAddressService.logger.info("关键字为空！");
 				return false;
 			} else {
@@ -424,7 +414,6 @@ public class RawAddressService extends CommonServiceImpl<RawAddress, Long> {
 	private boolean addRule(RawDeliveryStationRule rawDeliveryStationRule, Long customerId) {
 		List<Long> idList = this.rawDeliveryStationRuleDao.getByAddressAndStation(rawDeliveryStationRule.getRawAddress().getId(), rawDeliveryStationRule.getRawDeliveryStation().getId(), customerId);
 		if ((idList != null) && !idList.isEmpty()) {
-			// throw new ExplinkRuntimeException("该关键字已绑定默认站点");
 			RawAddressService.logger.info("该关键字已绑定默认站点");
 			return false;
 		}
