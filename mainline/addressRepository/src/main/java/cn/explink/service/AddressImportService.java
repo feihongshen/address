@@ -231,7 +231,7 @@ public class AddressImportService extends CommonServiceImpl<AddressImportDetail,
 				}
 				addressMap.put(bindAddress.getParentId() + "-" + bindAddress.getName(), bindAddress);
 				bindMap.put(bindAddress.getId(), bindAddress);
-				if (!new Integer(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())) {
+				if (!Integer.valueOf(AddressImportDetailStatsEnum.failure.getValue()).equals(detail.getStatus())) {
 					detail.setStatus(AddressImportDetailStatsEnum.success.getValue());
 					detail.setAddressId(bindAddress.getId());
 				}

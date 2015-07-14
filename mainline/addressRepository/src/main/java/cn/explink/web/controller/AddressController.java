@@ -63,7 +63,8 @@ import cn.explink.ws.vo.OrderVo;
 @Controller
 public class AddressController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger(AddressController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddressController.class);
+
 	@Autowired
 	private LuceneService luceneService;
 
@@ -72,6 +73,7 @@ public class AddressController extends BaseController {
 
 	@Autowired
 	private AddressImportService addressImportService;
+
 	@Autowired
 	private AddressImportResultService addressImportResultService;
 
@@ -88,8 +90,6 @@ public class AddressController extends BaseController {
 
 	@RequestMapping("/getAddress")
 	public String getAddress(Model model, @RequestParam(value = "addressId", required = false) Long addressId) {
-		if (addressId != null) {
-		}
 		return "/address/getAddress";
 	}
 
@@ -169,21 +169,11 @@ public class AddressController extends BaseController {
 	 */
 	@RequestMapping("/addressImportPage")
 	public String addressImportPage(Model model) {
-		// List<AddressImportDetail> detailList= addressImportService.getAll();
-		// List<AddressImportResult> resultList=
-		// addressImportResultService.getAll();
-		// model.addAttribute("detailList", detailList);
-		// model.addAttribute("resultList", resultList);
 		return "address/importDatagrid";
 	}
 
 	@RequestMapping("/addressMapping")
 	public String addressMapping(Model model) {
-		// List<AddressImportDetail> detailList= addressImportService.getAll();
-		// List<AddressImportResult> resultList=
-		// addressImportResultService.getAll();
-		// model.addAttribute("detailList", detailList);
-		// model.addAttribute("resultList", resultList);
 		return "address/addressMapping";
 	}
 
@@ -254,7 +244,7 @@ public class AddressController extends BaseController {
 			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
 			e.printStackTrace();
-			AddressController.logger.info(e.getMessage());
+			AddressController.LOGGER.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo("导入失败！");
 		}
@@ -289,7 +279,7 @@ public class AddressController extends BaseController {
 			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
 			e.printStackTrace();
-			AddressController.logger.info(e.getMessage());
+			AddressController.LOGGER.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo(e.getMessage());
 		}
@@ -342,7 +332,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportService.deleteImportAddressResult(id, this.getCustomerId());
-		AddressController.logger.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
+		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
 		aj.setSuccess(true);
 		return aj;
 	}
@@ -402,7 +392,7 @@ public class AddressController extends BaseController {
 				cq.le("importDate", endDate);
 			}
 		} catch (java.text.ParseException e) {
-			AddressController.logger.error(e.getMessage());
+			AddressController.LOGGER.error(e.getMessage());
 		}
 		addressImportResult.setUserId(this.getCustomerId());
 		HqlGenerateUtil.installHql(cq, addressImportResult, request.getParameterMap());
@@ -414,7 +404,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportResultService.delete(addressImportResult.getId());
-		AddressController.logger.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + addressImportResult.getId());
+		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + addressImportResult.getId());
 		aj.setSuccess(true);
 		return aj;
 
@@ -537,6 +527,7 @@ public class AddressController extends BaseController {
 				list = this.addressService.addAddress(parentId, addresses, customerId);
 			}
 			zList = this.transAddress(list);
+			AddressController.LOGGER.info("添加关键词：{}", addresses);
 		} catch (Exception e) {
 			aj.setSuccess(false);
 			aj.setMsg(e.getMessage());
@@ -597,7 +588,7 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		this.addressService.deleteAlias(id);
-		AddressController.logger.info("删除别名：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
+		AddressController.LOGGER.info("删除别名：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
 		return aj;
 	}
 
@@ -614,7 +605,7 @@ public class AddressController extends BaseController {
 		try {
 			this.addressService.deleteAddress(addressId, this.getCustomerId());
 
-			AddressController.logger.info("删除关键词：{}", "IP:" + request.getRemoteAddr() + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
+			AddressController.LOGGER.info("删除关键词：{}", "IP:" + request.getRemoteAddr() + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			aj.setSuccess(false);
@@ -743,7 +734,7 @@ public class AddressController extends BaseController {
 			} catch (Exception e) {
 				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 				detail.setMessage(e.getMessage());
-				AddressController.logger.info(e.getMessage());
+				AddressController.LOGGER.info(e.getMessage());
 				proc.setFailure(proc.getFailure() + 1);
 				proc.setProcessed(proc.getProcessed() + 1);
 			}
@@ -868,7 +859,7 @@ public class AddressController extends BaseController {
 			} catch (Exception e) {
 				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 				detail.setMessage(e.getMessage());
-				AddressController.logger.info(e.getMessage());
+				AddressController.LOGGER.info(e.getMessage());
 			}
 		}
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();

@@ -735,7 +735,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 	}
 
-	public Map getAdressPromtInfo(Long customerId) {
+	public Map<String, BigInteger> getAdressPromtInfo(Long customerId) {
 		Map<String, BigInteger> map = new HashMap<String, BigInteger>();
 		String keysql = " select count(1)  from ADDRESS_PERMISSIONS p inner join ADDRESS a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID=" + customerId;
 		BigInteger keys = (BigInteger) this.getSession().createSQLQuery(keysql).uniqueResult();
