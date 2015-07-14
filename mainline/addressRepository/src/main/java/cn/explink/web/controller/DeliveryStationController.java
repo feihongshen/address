@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
+import cn.explink.domain.enums.DeliveryStationStausEnmu;
 import cn.explink.domain.fields.AddressIdAndAddressLinePair;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
@@ -45,7 +44,6 @@ import cn.explink.util.StringUtil;
 @Controller
 public class DeliveryStationController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger(DeliveryStationController.class);
 	@Autowired
 	private DeliveryStationService deliveryStationService;
 	@Autowired
@@ -58,6 +56,7 @@ public class DeliveryStationController extends BaseController {
 		CriteriaQuery cq = new CriteriaQuery(DeliveryStation.class, dataGrid);
 		cq.addOrder("name", SortDirection.asc);
 		cq.add(Restrictions.eq("customer.id", this.getCustomerId()));
+		cq.add(Restrictions.eq("status", DeliveryStationStausEnmu.valid.getValue()));
 		HqlGenerateUtil.installHql(cq, deliveryStation, request.getParameterMap());
 		return this.deliveryStationService.getDataGridReturn(cq, true);
 	}
