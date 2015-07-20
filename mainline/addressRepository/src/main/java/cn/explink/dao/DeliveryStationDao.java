@@ -12,6 +12,7 @@ import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
+import cn.explink.domain.enums.DeliveryStationStausEnmu;
 import cn.explink.modle.ComboBox;
 import cn.explink.quick.AddressStationPair;
 
@@ -59,7 +60,8 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 	}
 
 	public List<ComboBox> getComBoxDeliveryStation(Long customerId) {
-		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId order by ds.name ";
+		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId and status=" + DeliveryStationStausEnmu.valid.getValue()
+				+ " order by ds.name ";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		return query.list();
