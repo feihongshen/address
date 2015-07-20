@@ -390,5 +390,9 @@
 	<changeSet id="songkaojun-2015-07-08-01" author="songkaojun">
 		<sqlFile path="customer_init_wxpw.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建京城际通客户 -->
+	<changeSet id="songkaojun-2015-07-20-01" author="songkaojun">
+		<sqlFile path="customer_init_jcjt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
