@@ -43,13 +43,16 @@ mainline/addressRepository/src/main/db/changelog/customer_init_jxsd.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_mkmk.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_nxpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_qhpj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_scpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_shpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_sypj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_whfy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_wxpw.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xhm.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xjb.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_xjpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xzpj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_ynpx.sql -text
 mainline/addressRepository/src/main/db/changelog/quartz_init.sql -text
 mainline/addressRepository/src/main/db/changelog/raw_address_init_data.sql -text
 mainline/addressRepository/src/main/db/pom.xml -text

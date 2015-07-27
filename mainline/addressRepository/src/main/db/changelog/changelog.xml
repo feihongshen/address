@@ -284,112 +284,112 @@
 	</changeSet>
 
 	<!-- 创建新京报客户 -->
-	<changeSet id="xushiju-2014-10-09-01" author="xushiju">
-		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="xushiju-2014-10-09-01" author="xushiju"> -->
+<!-- 		<sqlFile path="customer_init_xjb.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 
 	<!-- 创建广西品信客户 -->
-	<changeSet id="xushiju-2014-11-04-01" author="xushiju">
-		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="xushiju-2014-11-04-01" author="xushiju"> -->
+<!-- 		<sqlFile path="customer_init_gxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 
 	<!-- 创建重庆华宇客户 -->
-	<changeSet id="xushiju-2014-11-13-01" author="xushiju">
-		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="xushiju-2014-11-13-01" author="xushiju"> -->
+<!-- 		<sqlFile path="customer_init_cqhy.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建广州通路客户 -->
-	<changeSet id="xushiju-2014-12-03-01" author="xushiju">
-		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="xushiju-2014-12-03-01" author="xushiju"> -->
+<!-- 		<sqlFile path="customer_init_gztl.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 
 	<!-- 创建宁夏品信客户 -->
-	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun">
-		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-02-27-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_nxpx.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建武汉飞远客户 -->
-	<changeSet id="songkaojun-2015-02-27-02" author="songkaojun">
-		<sqlFile path="customer_init_whfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-02-27-02" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_whfy.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建福建飞远客户 -->
-	<changeSet id="songkaojun-2015-02-27-03" author="songkaojun">
-		<sqlFile path="customer_init_fjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-02-27-03" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_fjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建安徽品骏客户 -->
-	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun">
-		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-02-27-04" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_ahpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建河南豫铁客户 -->
-	<changeSet id="songkaojun-2015-03-18-01" author="songkaojun">
-		<sqlFile path="customer_init_hnyt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-03-18-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_hnyt.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建江西飞远客户 -->
-	<changeSet id="songkaojun-2015-03-31-01" author="songkaojun">
-		<sqlFile path="customer_init_jxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-03-31-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_jxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建上海品骏客户 -->
-	<changeSet id="songkaojun-2015-04-07-01" author="songkaojun">
-		<sqlFile path="customer_init_shpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-04-07-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_shpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建吉林品骏客户 -->
-	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun">
-		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-04-07-02" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_jlpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建黑龙江品骏客户 -->
-	<changeSet id="songkaojun-2015-04-14-01" author="songkaojun">
-		<sqlFile path="customer_init_hljpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-04-14-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_hljpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建黑龙江邮政客户 -->
-	<changeSet id="songkaojun-2015-04-22-01" author="songkaojun">
-		<sqlFile path="customer_init_hljyz.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-04-22-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_hljyz.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建江苏品骏客户 -->
-	<changeSet id="songkaojun-2015-05-05-02" author="songkaojun">
-		<sqlFile path="customer_init_jspj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-05-02" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_jspj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建青海品骏客户 -->
-	<changeSet id="songkaojun-2015-05-05-03" author="songkaojun">
-		<sqlFile path="customer_init_qhpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-05-03" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_qhpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建甘肃品骏客户 -->
-	<changeSet id="songkaojun-2015-05-05-04" author="songkaojun">
-		<sqlFile path="customer_init_gspj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-05-04" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_gspj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建沈阳品骏客户 -->
-	<changeSet id="songkaojun-2015-05-11-01" author="songkaojun">
-		<sqlFile path="customer_init_sypj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-11-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_sypj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建湖南三人行客户 -->
-	<changeSet id="songkaojun-2015-05-12-01" author="songkaojun">
-		<sqlFile path="customer_init_hnsrx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-12-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_hnsrx.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建小红帽客户 -->
-	<changeSet id="songkaojun-2015-05-14-01" author="songkaojun">
-		<sqlFile path="customer_init_xhm.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-14-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_xhm.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建米卡米卡客户 -->
-	<changeSet id="songkaojun-2015-05-21-01" author="songkaojun">
-		<sqlFile path="customer_init_mkmk.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-05-21-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_mkmk.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建嘉兴速达客户 -->
-	<changeSet id="songkaojun-2015-06-19-01" author="songkaojun">
-		<sqlFile path="customer_init_jxsd.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-06-19-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_jxsd.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建恒信世纪客户 -->
 	<changeSet id="songkaojun-2015-06-25-01" author="songkaojun">
 		<sqlFile path="customer_init_hxsj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 	<!-- 创建西藏品骏客户 -->
-	<changeSet id="songkaojun-2015-07-06-01" author="songkaojun">
-		<sqlFile path="customer_init_xzpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-07-06-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_xzpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建湖南品骏客户 -->
-	<changeSet id="songkaojun-2015-07-06-02" author="songkaojun">
-		<sqlFile path="customer_init_hnpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-07-06-02" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_hnpj.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建无锡品唯客户 -->
-	<changeSet id="songkaojun-2015-07-08-01" author="songkaojun">
-		<sqlFile path="customer_init_wxpw.sql" encoding="UTF-8" relativeToChangelogFile="true" />
-	</changeSet>
+<!-- 	<changeSet id="songkaojun-2015-07-08-01" author="songkaojun"> -->
+<!-- 		<sqlFile path="customer_init_wxpw.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
+<!-- 	</changeSet> -->
 	<!-- 创建京城际通客户 -->
 	<changeSet id="songkaojun-2015-07-20-01" author="songkaojun">
 		<sqlFile path="customer_init_jcjt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
@@ -397,6 +397,18 @@
 	<!-- 创建杭州爱淘客户 -->
 	<changeSet id="songkaojun-2015-07-21-01" author="songkaojun">
 		<sqlFile path="customer_init_hzat.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建四川品骏客户 -->
+	<changeSet id="songkaojun-2015-07-27-01" author="songkaojun">
+		<sqlFile path="customer_init_scpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建新疆品信客户 -->
+	<changeSet id="songkaojun-2015-07-27-02" author="songkaojun">
+		<sqlFile path="customer_init_xjpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建云南品信客户 -->
+	<changeSet id="songkaojun-2015-07-27-03" author="songkaojun">
+		<sqlFile path="customer_init_ynpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
 </databaseChangeLog>
