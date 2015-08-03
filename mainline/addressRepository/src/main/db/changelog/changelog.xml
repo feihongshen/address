@@ -410,5 +410,9 @@
 	<changeSet id="songkaojun-2015-07-27-03" author="songkaojun">
 		<sqlFile path="customer_init_ynpx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建陕西黄马甲客户 -->
+	<changeSet id="songkaojun-2015-08-03-01" author="songkaojun">
+		<sqlFile path="customer_init_sxhmj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
