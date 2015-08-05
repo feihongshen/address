@@ -470,8 +470,11 @@ public class AddressController extends BaseController {
 			if (addressLine.trim().length() == 0) {
 				continue;
 			}
-			AddressPosition addressPosition = new AddressPosition();
 			GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+			if (position == null) {
+				continue;
+			}
+			AddressPosition addressPosition = new AddressPosition();
 			addressPosition.setAddressLine(addressLine);
 			addressPosition.setLat(position.getLat());
 			addressPosition.setLng(position.getLng());

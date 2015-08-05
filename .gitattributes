@@ -127,6 +127,7 @@ mainline/addressRepository/src/main/java/cn/explink/gis/BaiduApiKeyPool.java -te
 mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV1RouteMatrix.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/BaiduV2GeoCoder.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoCoder.java -text
+mainline/addressRepository/src/main/java/cn/explink/gis/GeoCoderMain.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoPoint.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoRectangle.java -text
 mainline/addressRepository/src/main/java/cn/explink/gis/GeoUtility.java -text

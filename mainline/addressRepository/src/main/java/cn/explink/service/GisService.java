@@ -36,7 +36,6 @@ public class GisService {
 		if (position == null) {
 			return resultStations;
 		}
-
 		List<DeliveryStation> allStations = this.deliveryStationDao.listAll(customerId);
 		// 站点返回为空
 		if ((allStations == null) || (allStations.size() == 0)) {

@@ -4,7 +4,7 @@ import net.sf.json.JSONObject;
 
 /**
  * 地理 点对象
- * 
+ *
  * @author Administrator
  *
  */
@@ -13,6 +13,26 @@ public class GeoPoint {
 	private double lng;
 	private double lat;
 
+	private int precise; // 查找类型
+
+	public int getPrecise() {
+		return this.precise;
+	}
+
+	public void setPrecise(int precise) {
+		this.precise = precise;
+	}
+
+	public int getConfidence() {
+		return this.confidence;
+	}
+
+	public void setConfidence(int confidence) {
+		this.confidence = confidence;
+	}
+
+	private int confidence; // 可信度
+
 	public GeoPoint() {
 		this.lng = 0;
 		this.lat = 0;
@@ -20,12 +40,12 @@ public class GeoPoint {
 
 	/**
 	 * 构造函数
-	 * 
+	 *
 	 * @param lng
 	 *            经度
 	 * @param lat
 	 *            纬度
-	 * 
+	 *
 	 */
 	public GeoPoint(double lng, double lat) {
 		this.lng = lng;
@@ -34,13 +54,13 @@ public class GeoPoint {
 
 	/**
 	 * 构造函数
-	 * 
+	 *
 	 * @param point
 	 *            point格式 ： {"lng":116.478513,"lat":39.916465} json字符串
 	 */
 	public GeoPoint(String point) {
 		try {
-			JSONObject jsonPoint = JSONObject.fromObject(point); 
+			JSONObject jsonPoint = JSONObject.fromObject(point);
 			this.lng = jsonPoint.getDouble("lng");
 			this.lat = jsonPoint.getDouble("lat");
 		} catch (Exception e) {
@@ -53,7 +73,7 @@ public class GeoPoint {
 
 	/**
 	 * 获取经度值
-	 * 
+	 *
 	 * @return 经度值
 	 */
 	public double getLng() {
@@ -62,7 +82,7 @@ public class GeoPoint {
 
 	/**
 	 * 设置经度值
-	 * 
+	 *
 	 * @param lng
 	 *            经度值
 	 */
@@ -72,7 +92,7 @@ public class GeoPoint {
 
 	/**
 	 * 获取纬度值
-	 * 
+	 *
 	 * @return 纬度值
 	 */
 	public double getLat() {
@@ -81,7 +101,7 @@ public class GeoPoint {
 
 	/**
 	 * 设置纬度值
-	 * 
+	 *
 	 * @param lat
 	 *            纬度值
 	 */
@@ -96,7 +116,7 @@ public class GeoPoint {
 			return false;
 		}
 
-		if (getClass() != obj.getClass()) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 
@@ -105,8 +125,7 @@ public class GeoPoint {
 		GeoPoint pt = (GeoPoint) obj;
 
 		// 相等
-		if ((Math.abs(pt.getLat() - this.getLat()) < precision)
-				&& (Math.abs(pt.getLng() - this.getLng()) < precision)) {
+		if ((Math.abs(pt.getLat() - this.getLat()) < precision) && (Math.abs(pt.getLng() - this.getLng()) < precision)) {
 			return true;
 		}
 
