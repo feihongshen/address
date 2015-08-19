@@ -241,7 +241,7 @@ public class AddressFilter {
 				factor = 1;
 			}// 市级别极少会写错，并且错分不同市极不能容忍
 			else if (Integer.valueOf(2).equals(addressLevel)) {
-				factor = 6;
+				factor = 10;
 			}
 			String lowerAddr = addressName.toLowerCase();
 			String lowerFullAddr = fullAddr.toLowerCase();
