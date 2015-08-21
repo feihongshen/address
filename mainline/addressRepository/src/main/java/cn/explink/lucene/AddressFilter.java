@@ -3,7 +3,9 @@ package cn.explink.lucene;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,15 @@ import cn.explink.domain.Alias;
 public class AddressFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressFilter.class);
+
+	// 四个直辖市的ID集合
+	private static final Set<Long> MUNICIPALITY_ID_SET = new HashSet<Long>();
+	static {
+		AddressFilter.MUNICIPALITY_ID_SET.add(2L);
+		AddressFilter.MUNICIPALITY_ID_SET.add(21L);
+		AddressFilter.MUNICIPALITY_ID_SET.add(862L);
+		AddressFilter.MUNICIPALITY_ID_SET.add(2466L);
+	}
 
 	public static List<Address> filter(String strAddr, List<Address> addrList) {
 		if (addrList.isEmpty()) {
@@ -219,20 +230,20 @@ public class AddressFilter {
 			List<Alias> aliasList = address.getAliasList();
 			// 取关键词和该关键词的别名中得分最高的一个最为最终的得分
 			if ((null != aliasList) && (aliasList.size() > 0)) {
-				int score = this.getScore(address.getName(), address.getAddressLevel(), fullAddr);
+				int score = this.getScore(address.getName(), address.getAddressLevel(), fullAddr, address.getParentId());
 				for (Alias alias : aliasList) {
 					String name = alias.getName();
-					int tempScore = this.getScore(name, address.getAddressLevel(), fullAddr);
+					int tempScore = this.getScore(name, address.getAddressLevel(), fullAddr, address.getParentId());
 					if (tempScore > score) {
 						score = tempScore;
 					}
 				}
 				return score;
 			}
-			return this.getScore(address.getName(), address.getAddressLevel(), fullAddr);
+			return this.getScore(address.getName(), address.getAddressLevel(), fullAddr, address.getParentId());
 		}
 
-		private int getScore(String addressName, Integer addressLevel, String fullAddr) {
+		private int getScore(String addressName, Integer addressLevel, String fullAddr, Long parentId) {
 			int score = 0;
 			int factor = 3;
 			// 区写错（最常见），或者一路跨两区，地址库中只在一个区下挂这条路
@@ -241,7 +252,9 @@ public class AddressFilter {
 				factor = 1;
 			}// 市级别极少会写错，并且错分不同市极不能容忍
 			else if (Integer.valueOf(2).equals(addressLevel)) {
-				factor = 10;
+				if (!AddressFilter.MUNICIPALITY_ID_SET.contains(parentId)) {
+					factor = 10;
+				}
 			}
 			String lowerAddr = addressName.toLowerCase();
 			String lowerFullAddr = fullAddr.toLowerCase();
