@@ -104,7 +104,6 @@ public class AddressController extends BaseController {
 	public String searchAddress(Model model, @RequestParam(value = "addressLine", required = false) String addressLine) throws IOException, ParseException {
 		if (!StringUtil.isEmpty(addressLine)) {
 			List<Address> addressList = this.luceneService.search(addressLine, this.getCustomerId());
-			System.out.println("search result = " + addressList);
 		}
 		return "/address/getAddress";
 	}
@@ -197,8 +196,6 @@ public class AddressController extends BaseController {
 		String fileName = "地址导入模板.xlsx";
 		this.setDownloadFileName(response, fileName);
 		try {
-			// response.setHeader("Content-Disposition", "attachment;filename="
-			// + URLEncoder.encode("地址导入模板.xlsx", "UTF-8"));
 			ServletOutputStream out = response.getOutputStream();
 			wb.write(out);
 			out.close();
@@ -332,7 +329,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportService.deleteImportAddressResult(id, this.getCustomerId());
-		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
+		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + this.getUserIp(request) + " id=" + id);
 		aj.setSuccess(true);
 		return aj;
 	}
@@ -404,7 +401,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		AjaxJson aj = new AjaxJson();
 		this.addressImportResultService.delete(addressImportResult.getId());
-		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + request.getRemoteAddr() + " id=" + addressImportResult.getId());
+		AddressController.LOGGER.info("删除导入结果：{}", "IP:" + this.getUserIp(request) + " id=" + addressImportResult.getId());
 		aj.setSuccess(true);
 		return aj;
 
@@ -489,6 +486,7 @@ public class AddressController extends BaseController {
 	public @ResponseBody KeywordMatchedResult getUnbindInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
 		Long customerId = this.getCustomerId();
 
+		// TODO
 		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult("人民医院", customerId);
 		return result;
 	}
@@ -591,7 +589,7 @@ public class AddressController extends BaseController {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		this.addressService.deleteAlias(id);
-		AddressController.LOGGER.info("删除别名：{}", "IP:" + request.getRemoteAddr() + " id=" + id);
+		AddressController.LOGGER.info("删除别名：{}", "IP:" + this.getUserIp(request) + " id=" + id);
 		return aj;
 	}
 
@@ -608,7 +606,7 @@ public class AddressController extends BaseController {
 		try {
 			this.addressService.deleteAddress(addressId, this.getCustomerId());
 
-			AddressController.LOGGER.info("删除关键词：{}", "IP:" + request.getRemoteAddr() + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
+			AddressController.LOGGER.info("删除关键词：{}", "IP:" + this.getUserIp(request) + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			aj.setSuccess(false);

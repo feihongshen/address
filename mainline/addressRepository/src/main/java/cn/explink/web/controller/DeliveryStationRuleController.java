@@ -37,7 +37,7 @@ import cn.explink.ws.vo.OrderVo;
 @Controller
 public class DeliveryStationRuleController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger(DeliveryStationRuleController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeliveryStationRuleController.class);
 
 	@Autowired
 	private AddressService addressService;
@@ -203,7 +203,7 @@ public class DeliveryStationRuleController extends BaseController {
 	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
 		this.deliveryStationRuleService.delete(deliveryStationRuleId);
-		DeliveryStationRuleController.logger.info("删除规则结果：{}", "IP:" + request.getRemoteAddr() + " deliveryStationRuleId=" + deliveryStationRuleId);
+		DeliveryStationRuleController.LOGGER.info("删除规则结果：{}", "IP:" + this.getUserIp(request) + " deliveryStationRuleId=" + deliveryStationRuleId);
 		aj.setSuccess(true);
 		return aj;
 
@@ -227,7 +227,7 @@ public class DeliveryStationRuleController extends BaseController {
 
 		try {
 			this.deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-			DeliveryStationRuleController.logger.info("拆合站：{}", "IP:" + request.getRemoteAddr() + "  sourceStationId=" + sourceStationId + "  targetStationId=" + targetStationId
+			DeliveryStationRuleController.LOGGER.info("拆合站：{}", "IP:" + this.getUserIp(request) + "  sourceStationId=" + sourceStationId + "  targetStationId=" + targetStationId
 					+ "  sourceAddressId=" + sourceAddressId + "  targetAddressId=" + targetAddressId);
 		} catch (Exception e) {
 			aj.setSuccess(false);
