@@ -179,7 +179,7 @@ var setting = {
 	function submitForm(){
 		var addresses = $.trim($("#addresses").val());
 		var parentId = $("#parentId").val();
-		var stationId = $("#stationId").val();
+		var stationId = $("#stationId").combobox('getValue');
 		if($("#level").val()<3){
 			$.messager.alert("提示","仅支持区域以下设置关键字！");
 			return false;
