@@ -49,18 +49,18 @@ var setting = {
 				async:false,
 				success : function(resp) {
 					$("#stationId").empty();
-					$("#stationId").append("<option value=''>  </option>");
+//					$("#stationId").append("<option value=''>  </option>");
 					if(resp.length>0){
+						var data=[];
 						for(var i = 0;i<resp.length;i++){
-							$("#stationId").append("<option value='"+resp[i].id+"'>"+resp[i].name+"</option>"); 
+							data.push({label:resp[i].name,value:resp[i].id});
+							//$("#stationId").append("<option value='"+resp[i].id+"'>"+resp[i].name+"</option>"); 
 						}
+						$('#stationId').combobox('loadData', data);
 					} 
+				
 				}
 			});
-		
-		
-		
-		
 	});
 	function zTreeBeforeRemove(treeId, treeNode) {
 		if(treeNode.level<4){
