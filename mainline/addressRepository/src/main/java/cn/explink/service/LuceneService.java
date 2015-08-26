@@ -75,9 +75,9 @@ public class LuceneService {
 				if (!dictDirectory.exists()) {
 					try {
 						if (dictDirectory.mkdirs()) {
-							LuceneService.LOGGER.info("create ik dict path success.");
+							LuceneService.LOGGER.info("创建IK分词器词典路径成功！");
 						} else {
-							String message = "create ik dict path failure.";
+							String message = "创建IK分词器词典路径失败！";
 							LuceneService.LOGGER.error(message);
 							throw new RuntimeException(message);
 						}
@@ -128,7 +128,7 @@ public class LuceneService {
 				}
 			}
 		}
-		LuceneService.LOGGER.info("read dict time = {}", (System.currentTimeMillis() - startTime));
+		LuceneService.LOGGER.info("读取词典花费时间为:{}ms", (System.currentTimeMillis() - startTime));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class LuceneService {
 			}
 		}
 		long analyzerTime = System.currentTimeMillis() - beginTime;
-		LuceneService.LOGGER.info("init IK analyzer time = {}", analyzerTime);
+		LuceneService.LOGGER.info("初始化IK分词器用时{}ms", analyzerTime);
 		this.addressDao.baseAddressIndexed();
 	}
 
@@ -250,6 +250,7 @@ public class LuceneService {
 				indexWriter.deleteDocuments(query);
 				indexWriter.addDocument(this.createDocument(address));
 				this.addressDao.updateAddressIndex(address.getId());
+				LuceneService.LOGGER.info("已经为关键词[{}]成功创建索引！", address.getName());
 			}
 		}
 		if (aliasList != null) {
@@ -257,6 +258,7 @@ public class LuceneService {
 				query = new TermQuery(new Term("aliasId", String.valueOf(alias.getId())));
 				indexWriter.deleteDocuments(query);
 				indexWriter.addDocument(this.createDocument(alias));
+				LuceneService.LOGGER.info("已经为别名[{}]成功创建索引！", alias.getName());
 			}
 		}
 		indexWriter.commit();
@@ -424,8 +426,6 @@ public class LuceneService {
 		for (Document doc : docList) {
 			IndexableField addressIdField = doc.getField("addressId");
 			IndexableField aliasIdField = doc.getField("aliasId");
-			// LuceneService.LOGGER.info("addressId = {}, aliasId = {}",
-			// addressIdField, aliasIdField);
 			if (aliasIdField != null) {
 				String aliasId = aliasIdField.stringValue();
 				if (aliasId != null) {
@@ -460,8 +460,6 @@ public class LuceneService {
 					}
 				}
 			}
-			// LuceneService.LOGGER.info("relatedAddressList = " +
-			// relatedAddressList);
 			return relatedAddressList;
 		}
 		return new ArrayList<Address>();
