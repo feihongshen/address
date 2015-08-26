@@ -47,6 +47,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_qhpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_scpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_shpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_sxhmj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_sxpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_sypj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_tjcj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_whfy.sql -text

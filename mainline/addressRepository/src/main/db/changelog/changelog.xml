@@ -427,5 +427,9 @@
 	<changeSet id="songkaojun-2015-08-25-01" author="songkaojun">
 		<sqlFile path="customer_init_gzqlk.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建山西品骏客户 -->
+	<changeSet id="songkaojun-2015-08-26-01" author="songkaojun">
+		<sqlFile path="customer_init_sxpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
