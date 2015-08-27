@@ -9,6 +9,9 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cn.explink.domain.SystemConfig;
 import cn.explink.util.ApplicationContextUtil;
 import cn.explink.util.ConfigManager;
@@ -16,6 +19,9 @@ import cn.explink.util.ConfigManager;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class DBBackupAndRestoreService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DBBackupAndRestoreService.class);
+
 	static String dbName = "";
 	static String username = "";
 	static String password = "";
@@ -100,7 +106,7 @@ public class DBBackupAndRestoreService {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			DBBackupAndRestoreService.LOGGER.error(e.getMessage());
 		}
 		return true;
 	}
@@ -142,7 +148,7 @@ public class DBBackupAndRestoreService {
 			writer.close();
 			System.out.println("/* Load OK! */");
 		} catch (Exception e) {
-			e.printStackTrace();
+			DBBackupAndRestoreService.LOGGER.error(e.getMessage());
 		}
 	}
 
@@ -196,7 +202,7 @@ public class DBBackupAndRestoreService {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			DBBackupAndRestoreService.LOGGER.error(e.getMessage());
 		}
 		return false;
 	}

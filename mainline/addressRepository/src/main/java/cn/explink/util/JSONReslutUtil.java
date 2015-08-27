@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JSONReslutUtil {
-	private static Logger logger = LoggerFactory.getLogger(JSONReslutUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JSONReslutUtil.class);
 
 	/**
 	 * @param url
@@ -48,14 +48,13 @@ public class JSONReslutUtil {
 				System.err.println("Response Code: " + statusCode);
 			}
 		} catch (HttpException e) {
-			e.printStackTrace();
+			JSONReslutUtil.LOGGER.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			JSONReslutUtil.LOGGER.error(e.getMessage());
 		} finally {
 			postMethod.releaseConnection();
-
 		}
-		JSONReslutUtil.logger.info("RE : " + method + " : " + url + "?" + params + " : " + responseXml);
+		JSONReslutUtil.LOGGER.info("RE : " + method + " : " + url + "?" + params + " : " + responseXml);
 		return responseXml;
 
 	}
@@ -87,9 +86,9 @@ public class JSONReslutUtil {
 			httpClient.executeMethod(postMethod); // post数据
 			responseXml = postMethod.getResponseBodyAsString();
 		} catch (HttpException e) {
-			e.printStackTrace();
+			JSONReslutUtil.LOGGER.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			JSONReslutUtil.LOGGER.error(e.getMessage());
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -112,6 +111,7 @@ public class JSONReslutUtil {
 			httpUrlConnection.setReadTimeout(1);
 			httpUrlConnection.connect();// 发送请求
 		} catch (Exception e) {
+			JSONReslutUtil.LOGGER.error(e.getMessage());
 		}
 
 	}

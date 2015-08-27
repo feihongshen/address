@@ -83,7 +83,7 @@ public class LuceneService {
 						}
 						this.initIndex();
 					} catch (IOException e) {
-						e.printStackTrace();
+						LuceneService.LOGGER.error(e.getMessage());
 					}
 				} else {
 					// 分词词典目录已经存在
@@ -117,13 +117,13 @@ public class LuceneService {
 				}
 				dictionary.addWords(words);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LuceneService.LOGGER.error(e.getMessage());
 			} finally {
 				if (br != null) {
 					try {
 						br.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						LuceneService.LOGGER.error(e.getMessage());
 					}
 				}
 			}

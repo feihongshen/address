@@ -32,12 +32,16 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wltea.analyzer.cfg.Configuration;
 
 /**
  * 词典管理类,单子模式
  */
 public class Dictionary {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Dictionary.class);
 
 	/*
 	 * 词典单子实例
@@ -73,7 +77,7 @@ public class Dictionary {
 	/**
 	 * 词典初始化 由于IK Analyzer的词典采用Dictionary类的静态方法进行词典初始化
 	 * 只有当Dictionary类被实际调用时，才会开始载入词典， 这将延长首次分词操作的时间 该方法提供了一个在应用加载阶段就初始化字典的手段
-	 * 
+	 *
 	 * @return Dictionary
 	 */
 	public static Dictionary initial(Configuration cfg) {
@@ -90,7 +94,7 @@ public class Dictionary {
 
 	/**
 	 * 获取词典单子实例
-	 * 
+	 *
 	 * @return Dictionary 单例对象
 	 */
 	public static Dictionary getSingleton() {
@@ -102,7 +106,7 @@ public class Dictionary {
 
 	/**
 	 * 批量加载新词条
-	 * 
+	 *
 	 * @param words
 	 *            Collection<String>词条列表
 	 */
@@ -119,7 +123,7 @@ public class Dictionary {
 
 	/**
 	 * 批量移除（屏蔽）词条
-	 * 
+	 *
 	 * @param words
 	 */
 	public void disableWords(Collection<String> words) {
@@ -135,7 +139,7 @@ public class Dictionary {
 
 	/**
 	 * 检索匹配主词典
-	 * 
+	 *
 	 * @param charArray
 	 * @return Hit 匹配结果描述
 	 */
@@ -145,7 +149,7 @@ public class Dictionary {
 
 	/**
 	 * 检索匹配主词典
-	 * 
+	 *
 	 * @param charArray
 	 * @param begin
 	 * @param length
@@ -157,7 +161,7 @@ public class Dictionary {
 
 	/**
 	 * 检索匹配量词词典
-	 * 
+	 *
 	 * @param charArray
 	 * @param begin
 	 * @param length
@@ -169,7 +173,7 @@ public class Dictionary {
 
 	/**
 	 * 从已匹配的Hit中直接取出DictSegment，继续向下匹配
-	 * 
+	 *
 	 * @param charArray
 	 * @param currentIndex
 	 * @param matchedHit
@@ -182,7 +186,7 @@ public class Dictionary {
 
 	/**
 	 * 判断是否是停止词
-	 * 
+	 *
 	 * @param charArray
 	 * @param begin
 	 * @param length
@@ -216,8 +220,7 @@ public class Dictionary {
 
 		} catch (IOException ioe) {
 			System.err.println("Main Dictionary loading exception.");
-			ioe.printStackTrace();
-
+			Dictionary.LOGGER.error(ioe.getMessage());
 		} finally {
 			try {
 				if (is != null) {
@@ -225,7 +228,7 @@ public class Dictionary {
 					is = null;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Dictionary.LOGGER.error(e.getMessage());
 			}
 		}
 		// 加载扩展词典
@@ -262,8 +265,7 @@ public class Dictionary {
 
 				} catch (IOException ioe) {
 					System.err.println("Extension Dictionary loading exception.");
-					ioe.printStackTrace();
-
+					Dictionary.LOGGER.error(ioe.getMessage());
 				} finally {
 					try {
 						if (is != null) {
@@ -271,7 +273,7 @@ public class Dictionary {
 							is = null;
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						Dictionary.LOGGER.error(e.getMessage());
 					}
 				}
 			}
@@ -310,8 +312,7 @@ public class Dictionary {
 
 				} catch (IOException ioe) {
 					System.err.println("Extension Stop word Dictionary loading exception.");
-					ioe.printStackTrace();
-
+					Dictionary.LOGGER.error(ioe.getMessage());
 				} finally {
 					try {
 						if (is != null) {
@@ -319,7 +320,7 @@ public class Dictionary {
 							is = null;
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						Dictionary.LOGGER.error(e.getMessage());
 					}
 				}
 			}
@@ -349,8 +350,7 @@ public class Dictionary {
 
 		} catch (IOException ioe) {
 			System.err.println("Quantifier Dictionary loading exception.");
-			ioe.printStackTrace();
-
+			Dictionary.LOGGER.error(ioe.getMessage());
 		} finally {
 			try {
 				if (is != null) {
@@ -358,7 +358,7 @@ public class Dictionary {
 					is = null;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Dictionary.LOGGER.error(e.getMessage());
 			}
 		}
 	}

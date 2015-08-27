@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.AliasDao;
-import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
-import cn.explink.dao.OrderDao;
-import cn.explink.dao.VendorDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressDetail;
@@ -62,13 +59,13 @@ import cn.explink.ws.vo.OrderVo;
 @Service
 public class AddressService extends CommonServiceImpl<Address, Long> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddressService.class);
+
 	public AddressService() {
 		super(Address.class);
 	}
 
 	public static final int MIN_ADDRESS_LENGTH = 2;
-
-	private static Logger logger = LoggerFactory.getLogger(AddressService.class);
 
 	@Autowired
 	private AddressDao addressDao;
@@ -77,13 +74,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private AliasDao aliasDao;
 
 	@Autowired
-	private DeliveryStationDao deliveryStationDao;
-
-	@Autowired
 	private AddressPermissionDao addressPermissionDao;
-
-	@Autowired
-	private ScheduledTaskService scheduledTaskService;
 
 	@Autowired
 	private LuceneService luceneService;
@@ -92,18 +83,12 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private VendorService vendorService;
 
 	@Autowired
-	private OrderDao orderDao;
-
-	@Autowired
 	private DeliveryStationRuleService deliverStationRuleService;
 
 	@Autowired
 	private DelivererRuleService delivererRuleService;
 	@Autowired
 	private DeliveryStationRuleDao deliveryStationRuleDao;
-
-	@Autowired
-	private VendorDao vendorDao;
 
 	@Autowired
 	private VendorsAgingDao vendorAgingService;
@@ -122,7 +107,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	public void listAddress() {
 		List<Address> addressList = this.addressDao.getAllAddresses();
-		System.out.println(addressList);
+		AddressService.LOGGER.debug(addressList.toString());
 	}
 
 	public List<ZTreeNode> getAllAddress(Long customerId) {
@@ -156,15 +141,11 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			this.bindAddress(address, customerId);
 		}
 
-		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
-		// Constants.REFERENCE_TYPE_ADDRESS_ID,
-		// String.valueOf(address.getId()));
-
 		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
 		try {
 			this.updateIndexRightNow(address.getId(), null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			AddressService.LOGGER.error(e.getMessage());
 		}
 		return address;
 	}
@@ -197,13 +178,11 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		}
 
 		this.aliasDao.save(alias);
-		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
-		// Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(alias.getId()));
 		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
 		try {
 			this.updateIndexRightNow(null, alias.getId());
 		} catch (IOException e) {
-			e.printStackTrace();
+			AddressService.LOGGER.error(e.getMessage());
 		}
 	}
 
@@ -501,7 +480,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			result.setRelatedAddressList(addrList);
 
 		} catch (Exception e) {
-			AddressService.logger.error("search address failed due to {}", e.getMessage(), e);
+			AddressService.LOGGER.error("search address failed due to {}", e.getMessage(), e);
 			result.setResult(AddressMappingResultEnum.exceptionResult);
 			result.setMessage(e.getMessage());
 		}
@@ -659,8 +638,6 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public void deleteAlias(Long id) {
 		Alias a = this.aliasDao.get(id);
 		this.aliasDao.delete(a);
-		// this.scheduledTaskService.createScheduledTask(Constants.TASK_TYPE_SUB_UPDATE_INDEX,
-		// Constants.REFERENCE_TYPE_ALIAS_ID, String.valueOf(a.getAddressId()));
 		// modified by songkaojun 2015-01-10 不创建调度任务，立即执行更新索引操作
 		try {
 			this.updateIndexRightNow(null, a.getId());

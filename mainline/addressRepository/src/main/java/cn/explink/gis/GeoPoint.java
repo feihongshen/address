@@ -133,4 +133,13 @@ public class GeoPoint {
 
 	}
 
+	@Override
+	public int hashCode() {
+		long bitLng = Double.doubleToLongBits(Math.ceil(this.lng * 2e8));
+		long bitLat = Double.doubleToLongBits(Math.ceil(this.lat * 2e8));
+		long r1 = (int) (bitLng ^ (bitLng >>> 32));
+		long r2 = (int) (bitLat ^ (bitLat >>> 32));
+		return (int) (r1 ^ r2);
+	}
+
 }

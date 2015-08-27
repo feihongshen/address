@@ -1,6 +1,5 @@
 package cn.explink.web.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
@@ -53,7 +50,7 @@ import cn.explink.web.vo.AddressImportTypeEnum;
 @Controller
 public class KeywordController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger(KeywordController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KeywordController.class);
 
 	@Autowired
 	private RawAddressService rawAddressService;
@@ -102,7 +99,7 @@ public class KeywordController extends BaseController {
 			// return addressDetailList;
 			return new ArrayList<AddressDetail>();
 		} catch (Exception e) {
-			e.printStackTrace();
+			KeywordController.LOGGER.error(e.getMessage());
 			return new ArrayList<AddressDetail>();
 		}
 	}
@@ -131,12 +128,8 @@ public class KeywordController extends BaseController {
 		JavaType javaType = this.getCollectionType(ArrayList.class, AddressDetail.class);
 		try {
 			addressDetailList = (List<AddressDetail>) this.mapper.readValue(addressDetailListJson, javaType);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			KeywordController.LOGGER.error(e.getMessage());
 		}
 
 		List<AddressImportDetail> addressImportDetailList = new ArrayList<AddressImportDetail>();
@@ -158,7 +151,7 @@ public class KeywordController extends BaseController {
 		try {
 			addressImportResult = this.importAddress(addressImportDetailList, this.getLogginedUser(), AddressImportTypeEnum.init.getValue(), null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			KeywordController.LOGGER.error(e.getMessage());
 		}
 		// 解绑“粗”地址信息
 		this.unbindRawAddress(addressImportDetailList, addressDetailList);
@@ -309,7 +302,7 @@ public class KeywordController extends BaseController {
 			} catch (Exception e) {
 				detail.setStatus(AddressImportDetailStatsEnum.failure.getValue());
 				detail.setMessage(e.getMessage());
-				KeywordController.logger.info(e.getMessage());
+				KeywordController.LOGGER.info(e.getMessage());
 			}
 		}
 		Set<AddressImportDetail> detailSet = new HashSet<AddressImportDetail>();

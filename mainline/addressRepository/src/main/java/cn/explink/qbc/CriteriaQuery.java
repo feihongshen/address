@@ -18,7 +18,7 @@ import cn.explink.modle.DataGrid;
 import cn.explink.modle.SortDirection;
 
 /**
- * 
+ *
  * 类描述：CriteriaQuery类是对hibernate QBC查询方法的封装，需要的参数是当前操作的实体类
  */
 @SuppressWarnings({ "rawtypes", "static-access" })
@@ -65,7 +65,7 @@ public class CriteriaQuery implements Serializable {
 															// 防止重复创建
 
 	public List getResults() {
-		return results;
+		return this.results;
 	}
 
 	public void setResults(List results) {
@@ -73,7 +73,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public int getTotal() {
-		return total;
+		return this.total;
 	}
 
 	public void setTotal(int total) {
@@ -83,7 +83,7 @@ public class CriteriaQuery implements Serializable {
 	private DataGrid dataGrid;
 
 	public DataGrid getDataGrid() {
-		return dataGrid;
+		return this.dataGrid;
 	}
 
 	public void setDataGrid(DataGrid dataGrid) {
@@ -91,7 +91,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public Class getEntityClass() {
-		return entityClass;
+		return this.entityClass;
 	}
 
 	public void setEntityClass(Class entityClass) {
@@ -99,7 +99,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public CriterionList getJqcriterionList() {
-		return jqcriterionList;
+		return this.jqcriterionList;
 	}
 
 	public void setJqcriterionList(CriterionList jqcriterionList) {
@@ -165,51 +165,51 @@ public class CriteriaQuery implements Serializable {
 	 * cq.add(cq.and(cq.or(cq, 1, 2), cq, 0));
 	 */
 	public void add(Criterion c) {
-		detachedCriteria.add(c);
+		this.detachedCriteria.add(c);
 	}
 
 	/**
 	 * 加载条件
 	 */
 	public void add() {
-		for (int i = 0; i < getCriterionList().size(); i++) {
-			add(getCriterionList().getParas(i));
+		for (int i = 0; i < this.getCriterionList().size(); i++) {
+			this.add(this.getCriterionList().getParas(i));
 		}
-		getCriterionList().removeAll(getCriterionList());
+		this.getCriterionList().removeAll(this.getCriterionList());
 	}
 
 	public void createCriteria(String name) {
-		detachedCriteria.createCriteria(name);
+		this.detachedCriteria.createCriteria(name);
 	}
 
 	public void createCriteria(String name, String value) {
-		detachedCriteria.createCriteria(name, value);
+		this.detachedCriteria.createCriteria(name, value);
 	}
 
 	/**
 	 * 创建外键表关联对象
-	 * 
+	 *
 	 * @param name外键表实体名
 	 * @param value引用名
 	 */
 	public void createAlias(String name, String value) {
-		if (!alias.contains(name)) {
-			detachedCriteria.createAlias(name, value);
-			alias.add(name);
+		if (!this.alias.contains(name)) {
+			this.detachedCriteria.createAlias(name, value);
+			this.alias.add(name);
 		}
 	}
 
 	public void setResultTransformer(Class class1) {
-		detachedCriteria.setResultTransformer(Transformers.aliasToBean(class1));
+		this.detachedCriteria.setResultTransformer(Transformers.aliasToBean(class1));
 	}
 
 	public void setProjection(Property property) {
-		detachedCriteria.setProjection(property);
+		this.detachedCriteria.setProjection(property);
 	}
 
 	/**
 	 * 设置条件之间and关系
-	 * 
+	 *
 	 * @param query
 	 * @param source
 	 * @param dest
@@ -223,7 +223,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置条件之间and关系
-	 * 
+	 *
 	 * @param query
 	 * @param source
 	 * @param dest
@@ -245,7 +245,7 @@ public class CriteriaQuery implements Serializable {
 		c1 = list.getParas(0);
 		for (int i = 1; i < list.size(); i++) {
 			c2 = list.getParas(i);
-			c3 = getor(c1, c2);
+			c3 = this.getor(c1, c2);
 			c1 = c3;
 		}
 		return c3;
@@ -253,7 +253,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置组合后的Criterion OR关系
-	 * 
+	 *
 	 * @param query
 	 * @param source
 	 * @param dest
@@ -265,7 +265,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置条件之间and关系
-	 * 
+	 *
 	 * @param query
 	 * @param source
 	 * @param dest
@@ -279,7 +279,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置Or查询
-	 * 
+	 *
 	 * @param query
 	 * @param source条件1
 	 * @param dest条件2
@@ -291,7 +291,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置or(Criterion c, CriteriaQuery query, int source)（或）查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
@@ -302,7 +302,7 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置or(Criterion c1, Criterion c2)（或）查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
@@ -318,20 +318,20 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置order（排序）查询条件
-	 * 
+	 *
 	 * @param ordername
 	 *            ：排序字段名
 	 * @param ordervalue
 	 *            ：排序字段值（"asc","desc"）
 	 */
 	public void addOrder(String ordername, SortDirection ordervalue) {
-		ordermap.put(ordername, ordervalue);
+		this.ordermap.put(ordername, ordervalue);
 
 	}
 
 	/**
 	 * 设置order（排序）查询条件
-	 * 
+	 *
 	 * @param ordername
 	 *            ：排序字段名
 	 * @param ordervalue
@@ -339,25 +339,25 @@ public class CriteriaQuery implements Serializable {
 	 */
 	public void setOrder(Map<String, Object> map) {
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			judgecreateAlias(entry.getKey());
+			this.judgecreateAlias(entry.getKey());
 			if (SortDirection.asc.equals(entry.getValue())) {
-				detachedCriteria.addOrder(Order.asc(entry.getKey()));
+				this.detachedCriteria.addOrder(Order.asc(entry.getKey()));
 			} else {
-				detachedCriteria.addOrder(Order.desc(entry.getKey()));
+				this.detachedCriteria.addOrder(Order.desc(entry.getKey()));
 			}
 		}
 	}
 
 	/**
 	 * 创建 alias
-	 * 
+	 *
 	 * @param entitys
 	 *            规则 entitys 为a.b.c 这种将会创建 alias a和alias b而不会创建c 因为这样更加容易传值
 	 */
 	public void judgecreateAlias(String entitys) {
 		String[] aliass = entitys.split("\\.");
-		for (int i = 0; i < aliass.length - 1; i++) {
-			createAlias(aliass[i], aliass[i]);
+		for (int i = 0; i < (aliass.length - 1); i++) {
+			this.createAlias(aliass[i], aliass[i]);
 		}
 	}
 
@@ -371,177 +371,181 @@ public class CriteriaQuery implements Serializable {
 
 	/**
 	 * 设置eq(相等)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 *            :字段名
 	 * @param keyvalue
 	 *            ：字段值
 	 */
 	public void eq(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.eq(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.eq(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置notEq(不等)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void notEq(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.ne(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.ne(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置like(模糊)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void like(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
+		if (this.isNotEmpty(keyvalue)) {
 			// criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+
 			// "%"));
-			criterionList.addPara(Restrictions.like(keyname, keyvalue));
-			if (flag) {
+			this.criterionList.addPara(Restrictions.like(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置gt(>)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void gt(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.gt(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.gt(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
+	}
+
+	private boolean isNotEmpty(Object obj) {
+		return (obj != null) && (!obj.equals(""));
 	}
 
 	/**
 	 * 设置lt(<)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void lt(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.lt(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.lt(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置le(<=)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void le(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.le(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.le(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置ge(>=)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void ge(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			criterionList.addPara(Restrictions.ge(keyname, keyvalue));
-			if (flag) {
+		if (this.isNotEmpty(keyvalue)) {
+			this.criterionList.addPara(Restrictions.ge(keyname, keyvalue));
+			if (this.flag) {
 				this.put(keyname, keyvalue);
 			}
-			flag = true;
+			this.flag = true;
 		}
 	}
 
 	/**
 	 * 设置in(包含)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void in(String keyname, Object[] keyvalue) {
-		if (keyvalue != null && keyvalue[0] != "") {
-			criterionList.addPara(Restrictions.in(keyname, keyvalue));
+		if ((keyvalue != null) && (!keyvalue[0].equals(""))) {
+			this.criterionList.addPara(Restrictions.in(keyname, keyvalue));
 		}
 	}
 
 	/**
 	 * 设置isNull查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void isNull(String keyname) {
-		criterionList.addPara(Restrictions.isNull(keyname));
+		this.criterionList.addPara(Restrictions.isNull(keyname));
 	}
 
 	/**
 	 * 设置isNull查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void isNotNull(String keyname) {
-		criterionList.addPara(Restrictions.isNotNull(keyname));
+		this.criterionList.addPara(Restrictions.isNotNull(keyname));
 	}
 
 	/**
 	 * 保存查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
 	 */
 	public void put(String keyname, Object keyvalue) {
-		if (keyvalue != null && keyvalue != "") {
-			map.put(keyname, keyvalue);
+		if (this.isNotEmpty(keyvalue)) {
+			this.map.put(keyname, keyvalue);
 		}
 	}
 
 	/**
 	 * 设置between(之间)查询条件
-	 * 
+	 *
 	 * @param keyname
 	 * @param keyvalue1
 	 * @param keyvalue2
@@ -556,7 +560,7 @@ public class CriteriaQuery implements Serializable {
 		} else if (!keyvalue2.equals(null)) {
 			c = Restrictions.le(keyname, keyvalue2);
 		}
-		criterionList.add(c);
+		this.criterionList.add(c);
 	}
 
 	public void sql(String sql) {
@@ -572,7 +576,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public Integer getCurPage() {
-		return curPage;
+		return this.curPage;
 	}
 
 	public void setCurPage(Integer curPage) {
@@ -580,12 +584,12 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public int getPageSize() {
-		return pageSize;
+		return this.pageSize;
 	}
 
 	/**
 	 * 设置分页显示数
-	 * 
+	 *
 	 * @param pageSize
 	 */
 	public void setPageSize(int pageSize) {
@@ -593,7 +597,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public String getMyAction() {
-		return myAction;
+		return this.myAction;
 	}
 
 	public void setMyAction(String myAction) {
@@ -601,7 +605,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public String getMyForm() {
-		return myForm;
+		return this.myForm;
 	}
 
 	public void setMyForm(String myForm) {
@@ -609,7 +613,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public CriterionList getCriterionList() {
-		return criterionList;
+		return this.criterionList;
 	}
 
 	public void setCriterionList(CriterionList criterionList) {
@@ -617,11 +621,11 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public DetachedCriteria getDetachedCriteria() {
-		return detachedCriteria;
+		return this.detachedCriteria;
 	}
 
 	public String getField() {
-		return field;
+		return this.field;
 	}
 
 	public void setField(String field) {
@@ -633,12 +637,12 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public int getIsUseimage() {
-		return isUseimage;
+		return this.isUseimage;
 	}
 
 	/**
 	 * 设置工具条样式（0:不带图片：1带图片）
-	 * 
+	 *
 	 * @param isUseimage
 	 */
 	public void setIsUseimage(int isUseimage) {
@@ -646,7 +650,7 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public Map<String, Object> getMap() {
-		return map;
+		return this.map;
 	}
 
 	public void setMap(Map<String, Object> map) {
@@ -654,12 +658,12 @@ public class CriteriaQuery implements Serializable {
 	}
 
 	public boolean isFlag() {
-		return flag;
+		return this.flag;
 	}
 
 	/**
 	 * 对同一字段进行第二次重命名查询时值设置FASLE不保存重命名查询条件
-	 * 
+	 *
 	 * @param flag
 	 */
 	public void setFlag(boolean flag) {

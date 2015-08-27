@@ -103,7 +103,7 @@ public class AddressController extends BaseController {
 	@RequestMapping("/searchAddress")
 	public String searchAddress(Model model, @RequestParam(value = "addressLine", required = false) String addressLine) throws IOException, ParseException {
 		if (!StringUtil.isEmpty(addressLine)) {
-			List<Address> addressList = this.luceneService.search(addressLine, this.getCustomerId());
+			this.luceneService.search(addressLine, this.getCustomerId());
 		}
 		return "/address/getAddress";
 	}
@@ -200,7 +200,7 @@ public class AddressController extends BaseController {
 			wb.write(out);
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			AddressController.LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
@@ -240,7 +240,6 @@ public class AddressController extends BaseController {
 			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
 			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
-			e.printStackTrace();
 			AddressController.LOGGER.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo("导入失败！");
@@ -275,7 +274,6 @@ public class AddressController extends BaseController {
 			request.getSession().setAttribute("list", addressImportResult.getAddressImportDetails());
 			aj.setInfo("导入成功：" + addressImportResult.getSuccessCount() + "个；导入失败：" + addressImportResult.getFailureCount() + "个");
 		} catch (Exception e) {
-			e.printStackTrace();
 			AddressController.LOGGER.info(e.getMessage());
 			aj.setSuccess(false);
 			aj.setInfo(e.getMessage());
@@ -355,7 +353,7 @@ public class AddressController extends BaseController {
 			wb.write(out);
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			AddressController.LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
@@ -608,7 +606,7 @@ public class AddressController extends BaseController {
 
 			AddressController.LOGGER.info("删除关键词：{}", "IP:" + this.getUserIp(request) + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			AddressController.LOGGER.error(e.getMessage());
 			aj.setSuccess(false);
 		}
 		return aj;
