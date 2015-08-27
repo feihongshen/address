@@ -90,7 +90,7 @@ span.button.lastPage {
 						<tr>
 							<td width="60px">关键词:</td>
 							<td><textarea rows="13" cols="60" id="addresses" name="addresses"
-									class="easyui-validatebox textbox" disabled="true" maxlength="20"></textarea></td>
+									class="easyui-validatebox textbox" disabled="true" maxlength="50"></textarea></td>
 						</tr>
 						<tr>
 							<td width="60px"></td>
