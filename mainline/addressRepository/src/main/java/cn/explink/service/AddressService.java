@@ -561,13 +561,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Address parent = this.addressDao.get(parentId);
 		List<Address> list = new ArrayList<Address>();
 		for (String addressLine : addresses.split("\n")) {
-			if (addressLine.trim().length() == 0) {
+			String addressName = addressLine.trim();
+			if (addressName.length() == 0) {
 				continue;
 			}
 			Address a = new Address();
 			a.setParentId(parentId);
-			a.setName(addressLine);
-			Address l = this.addressDao.getAddressByNameAndPid(addressLine, parentId);
+			a.setName(addressName);
+			Address l = this.addressDao.getAddressByNameAndPid(addressName, parentId);
 			if (l != null) {// 已存在则绑定
 				a = l;
 				this.bindAddress(l, customerId);
@@ -585,13 +586,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Address parent = this.addressDao.get(parentId);
 		List<Address> list = new ArrayList<Address>();
 		for (String addressLine : addresses.split("\n")) {
-			if (addressLine.trim().length() == 0) {
+			String addressName = addressLine.trim();
+			if (addressName.length() == 0) {
 				continue;
 			}
 			Address a = new Address();
 			a.setParentId(parentId);
-			a.setName(addressLine);
-			Address l = this.addressDao.getAddressByNameAndPid(addressLine, parentId);
+			a.setName(addressName);
+			Address l = this.addressDao.getAddressByNameAndPid(addressName, parentId);
 			if (l != null) {// 已存在则绑定
 				boolean successBind = this.bindAddress(l, customerId);
 				if (!successBind) {
