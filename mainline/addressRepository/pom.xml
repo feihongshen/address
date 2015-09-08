@@ -511,7 +511,7 @@
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
 				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
-				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
 				<hibernate.show_sql>false</hibernate.show_sql>
 				<hibernate.format_sql>true</hibernate.format_sql>
 				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>

@@ -89,6 +89,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicHibernateDa
 mainline/addressRepository/src/main/java/cn/explink/dao/support/BasicJdbcTemplateDaoSupport.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/DataInfo.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/support/LockOptions.java -text
+mainline/addressRepository/src/main/java/cn/explink/db/dialect/MySQLLocalDialect.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Address.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportDetail.java -text

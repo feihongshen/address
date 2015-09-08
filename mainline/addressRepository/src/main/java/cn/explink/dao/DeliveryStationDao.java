@@ -53,15 +53,14 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		if (customerId == null) {
 			return new ArrayList<DeliveryStation>();
 		}
-		String hql = "from DeliveryStation where customer.id=:customerId and status=1";
+		String hql = "from DeliveryStation where customer.id=:customerId and status=1 order by convert_mine(name , 'gbk')";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		return query.list();
 	}
 
 	public List<ComboBox> getComBoxDeliveryStation(Long customerId) {
-		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId and status=" + DeliveryStationStausEnmu.valid.getValue()
-				+ " order by ds.name ";
+		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId and status=" + DeliveryStationStausEnmu.valid.getValue() + " order by ds.name ";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		return query.list();
