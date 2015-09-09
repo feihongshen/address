@@ -33,7 +33,7 @@ import cn.explink.web.ExplinkUserDetail;
  */
 public class DmpAccessFilter implements Filter {
 
-	private static Logger logger = LoggerFactory.getLogger(DmpAccessFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DmpAccessFilter.class);
 
 	private static final String ISDMP4_1 = "1";
 
@@ -69,7 +69,7 @@ public class DmpAccessFilter implements Filter {
 						User user = this.getLogUser(dmpid);
 						if ("[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername())) {// 用户不存在
 							// 重定向到登录页面
-							DmpAccessFilter.logger.info("非本子系统链接过来的请求  ...");
+							DmpAccessFilter.LOGGER.info("非本子系统链接过来的请求  ...");
 							httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
 							return;
 						} else {
@@ -141,7 +141,7 @@ public class DmpAccessFilter implements Filter {
 		try {
 			userStr = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
 			if (StringUtil.isEmpty(userStr) || userStr.equals("[]")) {
-				DmpAccessFilter.logger.error("获取登录用户失败,登录失效了");
+				DmpAccessFilter.LOGGER.error("获取登录用户失败,登录失效了");
 				return user;
 			}
 			jsonObject = JSONObject.fromObject(userStr);
@@ -152,7 +152,7 @@ public class DmpAccessFilter implements Filter {
 			user.setRoleid(jsonObject.getInt("roleid"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			DmpAccessFilter.logger.error("获取登录用户失败,登录失效了");
+			DmpAccessFilter.LOGGER.error("获取登录用户失败,登录失效了");
 		}
 		return user;
 	}
