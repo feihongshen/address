@@ -16,16 +16,20 @@
 	$(function() {
 	});
 	
-	function login() {
-		if($("#username").val()==""){
-			alert("用户名不能为空");
-			return false;
-		}
-		if($("#password").val()==""){
-			alert("密码不能为空");
-			return false;
-		}
-		$("#loginForm").submit();
+	function login() {		
+		setTimeout(function(){
+			if($("#username").val()==""){
+				alert("用户名不能为空");
+				return false;
+			}
+			
+			if($("#password").val()==""){
+				alert("密码不能为空");
+				return false;
+			}
+			$("#loginForm").submit();	
+		},100);
+		
 		return false;
 	}
 </script>
