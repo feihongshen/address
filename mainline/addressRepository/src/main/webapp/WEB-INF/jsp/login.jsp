@@ -31,7 +31,7 @@
 </script>
 
 </head>
-<body>
+<body onkeydown="if(event.keyCode==13){login();}">
 	<div class="login">
 		<div class="top">
 			<div class="top_left"><img src="${pageContext.request.contextPath}/images/login_03.gif" /></div>
