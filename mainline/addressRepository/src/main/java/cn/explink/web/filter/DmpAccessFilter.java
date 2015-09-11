@@ -35,74 +35,73 @@ public class DmpAccessFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DmpAccessFilter.class);
 
-	private static final String ISDMP4_1 = "1";
+	private static final String IS_DMP4_REQUEST = "1";
+
+	private static final String DMPID = "dmpid";
 
 	// 校验用户的url
-	private static String dmpVarifyUserUrl;
+	private static final String DMP_VARIFY_USER_URL = "dmpVarifyUserUrl";
 
 	// 重定向到登录页面 的url
-	private static String dmpIndexUrl;
+	private static final String DMP_INDEX_URL = "dmpIndexUrl";
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+	private static final String IS_Dmp4_1 = "isDmp4_1";
+
+	private static final String DMP_LOGIN_FILTER_BEAN_NAME = "dmpLoginFilter";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// 使用的是DMP4.1版本（地址库被整合到DMP中的版本）
-		if (this.isDmp4_1(request)) {
-			Long customerId = this.getCustomerId(request);
-			if (!customerId.equals(Long.valueOf(0))) {
-				SystemConfig dmpVarifyUserUrlConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("dmpVarifyUserUrl", customerId);
-				SystemConfig dmpIndexUrlConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("dmpIndexUrl", customerId);
-				if ((null != dmpVarifyUserUrlConfig) && (null != dmpIndexUrlConfig)) {
-					DmpAccessFilter.dmpVarifyUserUrl = dmpVarifyUserUrlConfig.getValue();
-					DmpAccessFilter.dmpIndexUrl = dmpIndexUrlConfig.getValue();
-					HttpServletRequest httpRequest = (HttpServletRequest) request;
-					HttpServletResponse httpResponse = (HttpServletResponse) response;
+		Long customerId = this.getCustomerId(request);
+		// 是否使用的是DMP4版本（地址库被整合到DMP中的版本）
+		if (this.isDmp4Request(request, customerId)) {
+			SystemConfig dmpVarifyUserUrlConfig = this.getSystemConfig(DmpAccessFilter.DMP_VARIFY_USER_URL, customerId);
+			SystemConfig dmpIndexUrlConfig = this.getSystemConfig(DmpAccessFilter.DMP_INDEX_URL, customerId);
 
-					// 获取请求路径中的参数dmpid
-					String dmpid = request.getParameter("dmpid");
-
-					// 判断是否用登录的信息
-					if (StringUtil.isNotEmpty(dmpid)) {// 如果存在dmpid
-						User user = this.getLogUser(dmpid);
-						if ("[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername())) {// 用户不存在
-							// 重定向到登录页面
-							DmpAccessFilter.LOGGER.info("非本子系统链接过来的请求  ...");
-							httpResponse.sendRedirect(DmpAccessFilter.dmpIndexUrl);
-							return;
-						} else {
-							Object authenticationObj = httpRequest.getSession().getAttribute(DmpLoginFilter.AR_SESSION_ID);
-							Authentication authentication = (null == authenticationObj) ? null : (Authentication) authenticationObj;
-							if (null == authentication) {
-								((DmpLoginFilter) ApplicationContextUtil.getBean("dmpLoginFilter")).attemptAuthentication(httpRequest, httpResponse);
-							}
-						}
-					}
+			if ((dmpVarifyUserUrlConfig == null) || (dmpIndexUrlConfig == null)) {
+				DmpAccessFilter.LOGGER.error("请检查system_config表中是否预制有客户ID为{}的dmpVarifyUserUrl和dmpIndexUrl数据！", customerId);
+				return;
+			}
+			// 获取请求路径中的参数dmpid
+			String dmpid = request.getParameter(DmpAccessFilter.DMPID);
+			if (StringUtil.isEmpty(dmpid)) {
+				DmpAccessFilter.LOGGER.error("DMP的请求中dmpid为空！");
+				return;
+			}
+			// 判断是否用登录的信息
+			User user = this.getDMPLoginUser(dmpid, dmpVarifyUserUrlConfig.getValue());
+			if (this.isUserNotExist(user)) {
+				// 重定向到登录页面
+				((HttpServletResponse) response).sendRedirect(dmpIndexUrlConfig.getValue());
+				DmpAccessFilter.LOGGER.info("非本子系统链接过来的请求  ...");
+			} else {
+				Object authenticationObj = ((HttpServletRequest) request).getSession().getAttribute(DmpLoginFilter.AR_SESSION_ID);
+				Authentication authentication = (null == authenticationObj) ? null : (Authentication) authenticationObj;
+				if (null == authentication) {
+					((DmpLoginFilter) ApplicationContextUtil.getBean(DmpAccessFilter.DMP_LOGIN_FILTER_BEAN_NAME)).attemptAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
 				}
-
 			}
 		}
 
 		chain.doFilter(request, response);
 	}
 
-	@Override
-	public void destroy() {
-
+	private boolean isUserNotExist(User user) {
+		return "[]".equals(user) || "".equals(user.getUsername()) || (null == user.getUsername());
 	}
 
-	public boolean isDmp4_1(ServletRequest request) {
-		Long customerId = this.getCustomerId(request);
+	private SystemConfig getSystemConfig(String name, Long customerId) {
+		return (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId(name, customerId);
+	}
+
+	private boolean isDmp4Request(ServletRequest request, Long customerId) {
 		if (customerId.equals(Long.valueOf(0))) {
 			return false;
 		}
-		SystemConfig systemConfig = (SystemConfig) ConfigManager.getInstance().getByNameAndCustomerId("isDmp4_1", customerId);
+		SystemConfig systemConfig = this.getSystemConfig(DmpAccessFilter.IS_Dmp4_1, customerId);
 		if (null != systemConfig) {
 			String isDmp4_1 = systemConfig.getValue();
 			if (StringUtil.isNotEmpty(isDmp4_1)) {
-				if (isDmp4_1.equals(DmpAccessFilter.ISDMP4_1)) {
+				if (isDmp4_1.equals(DmpAccessFilter.IS_DMP4_REQUEST)) {
 					return true;
 				} else {
 					return false;
@@ -134,12 +133,12 @@ public class DmpAccessFilter implements Filter {
 	 * @param dmpid
 	 * @return
 	 */
-	private User getLogUser(String dmpid) {
+	private User getDMPLoginUser(String dmpid, String dmpVarifyUserUrl) {
 		JSONObject jsonObject = new JSONObject();
 		User user = new User();
 		String userStr = "";
 		try {
-			userStr = JSONReslutUtil.getResultMessage(DmpAccessFilter.dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
+			userStr = JSONReslutUtil.getResultMessage(dmpVarifyUserUrl + "/OMSInterface/getLogUser;jsessionid=" + dmpid, "UTF-8", "POST").toString();
 			if (StringUtil.isEmpty(userStr) || userStr.equals("[]")) {
 				DmpAccessFilter.LOGGER.error("获取登录用户失败,登录失效了");
 				return user;
@@ -151,13 +150,22 @@ public class DmpAccessFilter implements Filter {
 			user.setRealname(jsonObject.getString("realname"));
 			user.setRoleid(jsonObject.getInt("roleid"));
 		} catch (Exception e) {
-			e.printStackTrace();
-			DmpAccessFilter.LOGGER.error("获取登录用户失败,登录失效了");
+			DmpAccessFilter.LOGGER.error("获取登录用户失败,登录失效了:" + e.getMessage());
 		}
 		return user;
 	}
 
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
+
+	}
+
 	public class User implements Serializable {
+		private static final long serialVersionUID = 1812216669910512128L;
 		long userid;
 		String username;
 		String realname;
@@ -283,12 +291,6 @@ public class DmpAccessFilter implements Filter {
 			this.branchid = branchid;
 		}
 
-		// public String getLastusername() {
-		// return lastusername;
-		// }
-		// public void setLastusername(String lastusername) {
-		// this.lastusername = lastusername;
-		// }
 		public long getUsercustomerid() {
 			return this.usercustomerid;
 		}
@@ -297,18 +299,6 @@ public class DmpAccessFilter implements Filter {
 			this.usercustomerid = usercustomerid;
 		}
 
-		// public int getUsertypeflag() {
-		// return usertypeflag;
-		// }
-		// public void setUsertypeflag(int usertypeflag) {
-		// this.usertypeflag = usertypeflag;
-		// }
-		// public long getDepartid() {
-		// return departid;
-		// }
-		// public void setDepartid(long departid) {
-		// this.departid = departid;
-		// }
 		public String getIdcardno() {
 			return this.idcardno;
 		}
@@ -320,15 +310,6 @@ public class DmpAccessFilter implements Filter {
 		public int getEmployeestatus() {
 			return this.employeestatus;
 		}
-
-		// public String getEmployeestatusName() {
-		// for (UserEmployeestatusEnum ue : UserEmployeestatusEnum.values()) {
-		// if (ue.getValue() == this.employeestatus) {
-		// return ue.getText();
-		// }
-		// }
-		// return "";
-		// }
 
 		public void setEmployeestatus(int employeestatus) {
 			this.employeestatus = employeestatus;
@@ -406,13 +387,6 @@ public class DmpAccessFilter implements Filter {
 			this.roleid = roleid;
 		}
 
-		/*
-		 * public int getDeliverpaytype() { return deliverpaytype; } public void
-		 * setDeliverpaytype(int deliverpaytype) { this.deliverpaytype =
-		 * deliverpaytype; } public int getBranchmanagerflag() { return
-		 * branchmanagerflag; } public void setBranchmanagerflag(int
-		 * branchmanagerflag) { this.branchmanagerflag = branchmanagerflag; }
-		 */
 		public long getUserDeleteFlag() {
 			return this.userDeleteFlag;
 		}
