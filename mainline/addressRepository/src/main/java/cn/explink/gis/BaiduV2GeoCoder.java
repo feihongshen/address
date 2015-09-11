@@ -108,6 +108,9 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 			String region = "12,73,53,136"; // 表示中国的范围(外包围框)
 			String keywords = "ak=" + BaiduV2GeoCoder.apiKey + "&bounds=" + region + "&output=json&q=" + addressh;
 			String result = HttpUtility.sendGet(url, keywords);
+			if (StringUtil.isEmpty(result)) {
+				return null;
+			}
 			JSONObject json = JSONObject.fromObject(result);
 
 			int status = json.getInt("status"); // 获取执行状态
