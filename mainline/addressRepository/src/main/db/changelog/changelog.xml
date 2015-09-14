@@ -431,5 +431,37 @@
 	<changeSet id="songkaojun-2015-08-26-01" author="songkaojun">
 		<sqlFile path="customer_init_sxpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建浙江飞远客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-01" author="liuwuqiang">
+		<sqlFile path="customer_init_zjfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建湖北飞远客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-02" author="liuwuqiang">
+		<sqlFile path="customer_init_hbfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建陕西飞远客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-03" author="liuwuqiang">
+		<sqlFile path="customer_init_sxfy.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>	
+	<!-- 创建河南安达信客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-04" author="liuwuqiang">
+		<sqlFile path="customer_init_hnadx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建山东品骏客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-05" author="liuwuqiang">
+		<sqlFile path="customer_init_sdpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建河北品骏客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-06" author="liuwuqiang">
+		<sqlFile path="customer_init_hbpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建天津品骏客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-07" author="liuwuqiang">
+		<sqlFile path="customer_init_tjpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
+	<!-- 创建北京品骏客户 -->
+	<changeSet id="liuwuqiang-2015-09-14-08" author="liuwuqiang">
+		<sqlFile path="customer_init_bjpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
