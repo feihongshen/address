@@ -16,7 +16,7 @@
 		     return;
 		    }
 		    //首先隐藏
-		    target.hideNodes(nodes);
+		    /*  target.hideNodes(nodes);
 
 		    nodeList=target.getNodesByParamFuzzy("name", key); //模糊匹配
 		  
@@ -27,7 +27,7 @@
 		    target.showNodes(filterNodes);
 		    for(var i=0;i<filterNodes.length;i++){
 		      toggle(target,filterNodes[i].getParentNode());
-		    }
+		    }*/
 	}
 	function toggle(target,node){
 		target.expandNode(node, true, false, false);
