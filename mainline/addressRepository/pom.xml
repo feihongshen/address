@@ -1026,7 +1026,32 @@
 				<label>SHPJ</label>
 			</properties>
 		</profile>		
-			
+
+		<profile>
+			<id>ADDRESSH</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://172.20.200.28:3306/addressRepositoryH?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password>explinkvipshop</jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/addressh/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/addressh/lucene/dict</luceneDictPath>
+				<label>ADDRESSH</label>
+			</properties>
+		</profile>
+		
 		
 	</profiles>
 </project>
