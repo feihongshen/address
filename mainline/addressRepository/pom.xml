@@ -1032,8 +1032,8 @@
 				<tomcat.manager.url></tomcat.manager.url>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
 				<jdbc.url>jdbc:mysql://192.168.0.217:3306/zjfy_addr?characterEncoding=utf8</jdbc.url>
-				<jdbc.user>root</jdbc.user>
-				<jdbc.password>express</jdbc.password>
+				<jdbc.user>eap</jdbc.user>
+				<jdbc.password>explink</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
