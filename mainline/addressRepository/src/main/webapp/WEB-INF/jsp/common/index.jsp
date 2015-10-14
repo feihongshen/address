@@ -301,25 +301,24 @@
 	            chars = 1 ;  
 	        }  
 	        if (num >= 2 && (password.length >= 8 && password.length <= 16)) {  
-	            $(".pswSpan").html("");  
 	        }else if(password.length< 8 || password.length>16){  
-	        	$.messager.alert('提示',"密码由8-16个字符组成！");
+	        	$.messager.alert('提示',"密码由8-16个字符组成，不能全为字母、数字或符号！");
 	        	return false;
 	        }else if(num == 1){  
 	            if(number==1){  
-	            	$.messager.alert('提示',"不能全为数字！");
+	            	$.messager.alert('提示',"密码由8-16个字符组成，不能全为字母、数字或符号！");
 	            	return false;  
 	            }  
 	            if(letter==1){ 
-	            	$.messager.alert('提示',"不能全为字母！");
+	            	$.messager.alert('提示',"密码由8-16个字符组成，不能全为字母、数字或符号！");
 	            	return false;  
 	            }  
 	            if(bigLetter==1){  
-	            	$.messager.alert('提示',"不能全为字母！");
+	            	$.messager.alert('提示',"密码由8-16个字符组成，不能全为字母、数字或符号！");
 	            	return false;  
 	            }  
 	            if(chars==1){  
-	            	$.messager.alert('提示',"不能全为字符！");
+	            	$.messager.alert('提示',"密码由8-16个字符组成，不能全为字母、数字或符号！");
 	            	return false;  
 	            }  
 	        }
