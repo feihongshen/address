@@ -29,12 +29,38 @@ public class AddressDetailDao extends BasicHibernateDaoSupport<AddressDetail, Lo
 	}
 
 	public List<AddressDetail> fuzzyQueryByPage(String keyword, String stationName, Long customerId, int page, int pageSize) {
-		StringBuffer sql = new StringBuffer(
-				"select id,province,city,district,address_id1,address_name1,address_id2,address_name2,address_id3,address_name3,delivery_station_name from address_detail where customer_id="
-						+ customerId);
-		sql.append(this.getWhereSql(keyword, stationName));
+		StringBuffer sql = new StringBuffer("select id,province,city,district,address_id1,address_name1,address_id2,address_name2,address_id3,address_name3,delivery_station_name from address_detail where customer_id=?");
+		//sql.append(this.getWhereSqlXiugai(keyword, stationName));
+		StringBuffer sqlwhere = new StringBuffer();
 
+		if (StringUtil.isNotEmpty(keyword)) {
+			sqlwhere.append(" and (province ");
+			sqlwhere.append(" like ? " + " or city ");
+			sqlwhere.append(" like ? " + " or district ");
+			sqlwhere.append(" like ? " + " or address_name1 ");
+			sqlwhere.append(" like ? " + " or address_name2 ");
+			sqlwhere.append(" like ? " + " or address_name3 ");
+			sqlwhere.append(" like ? " + ")");
+		}
+		if (StringUtil.isNotEmpty(stationName)) {
+			sqlwhere.append(" and delivery_station_name like ?");
+		}
+		int i = 0;
+		sql.append(sqlwhere);
 		Query query = this.getSession().createSQLQuery(sql.toString());
+		query.setParameter(i++, customerId);
+
+		if (StringUtil.isNotEmpty(keyword)) {
+			query.setParameter(i++, "%" + keyword + "%");
+			query.setParameter(i++, "%" + keyword + "%");
+			query.setParameter(i++, "%" + keyword + "%");
+			query.setParameter(i++, "%" + keyword + "%");
+			query.setParameter(i++, "%" + keyword + "%");
+			query.setParameter(i++, "%" + keyword + "%");
+		}
+		if (StringUtil.isNotEmpty(stationName)) {
+			query.setParameter(i++, "%" + stationName + "%");
+		}
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
 
@@ -60,6 +86,27 @@ public class AddressDetailDao extends BasicHibernateDaoSupport<AddressDetail, Lo
 		}
 		if (StringUtil.isNotEmpty(stationName)) {
 			sql.append(" and delivery_station_name like '%" + stationName + "%'");
+		}
+
+		return sql;
+	}
+
+	private StringBuffer getWhereSqlXiugai(String keyword, String stationName) {
+		StringBuffer sql = new StringBuffer();
+
+		String keywordLikeSql = " like '% :keyword %' ";
+
+		if (StringUtil.isNotEmpty(keyword)) {
+			sql.append(" and (province ");
+			sql.append(keywordLikeSql + " or city ");
+			sql.append(keywordLikeSql + " or district ");
+			sql.append(keywordLikeSql + " or address_name1 ");
+			sql.append(keywordLikeSql + " or address_name2 ");
+			sql.append(keywordLikeSql + " or address_name3 ");
+			sql.append(keywordLikeSql + ")");
+		}
+		if (StringUtil.isNotEmpty(stationName)) {
+			sql.append(" and delivery_station_name like '% :stationName %'");
 		}
 
 		return sql;
