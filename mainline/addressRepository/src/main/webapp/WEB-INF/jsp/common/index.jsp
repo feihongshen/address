@@ -275,6 +275,56 @@
 			};
 			//dealAjaxOpration(surl, $.param(paras), "setData", false);
 		}
+		//字母加数字或符号的组合密码，不能单独使用数字、字母或字符 ，8-16位
+	    function validPsw() {  
+	        var password = $("#password").val();  
+	        var num = 0;  
+	        var number = 0 ;  
+	        var letter = 0 ;  
+	        var bigLetter = 0 ;  
+	        var chars = 0 ;  
+	          
+	        if (password.search(/[0-9]/) != -1) {  
+	            num += 1;  
+	            number =1;  
+	        }  
+	        if (password.search(/[A-Z]/) != -1) {  
+	            num += 1;  
+	            bigLetter = 1 ;  
+	        }  
+	        if (password.search(/[a-z]/) != -1) {  
+	            num += 1;  
+	            letter = 1 ;  
+	        }  
+	        if (password.search(/[^A-Za-z0-9]/) != -1) {  
+	            num += 1;  
+	            chars = 1 ;  
+	        }  
+	        if (num >= 2 && (password.length >= 8 && password.length <= 16)) {  
+	            $(".pswSpan").html("");  
+	        }else if(password.length< 8 || password.length>16){  
+	        	$.messager.alert('提示',"密码由8-16个字符组成！");
+	        	return false;
+	        }else if(num == 1){  
+	            if(number==1){  
+	            	$.messager.alert('提示',"不能全为数字！");
+	            	return false;  
+	            }  
+	            if(letter==1){ 
+	            	$.messager.alert('提示',"不能全为字母！");
+	            	return false;  
+	            }  
+	            if(bigLetter==1){  
+	            	$.messager.alert('提示',"不能全为字母！");
+	            	return false;  
+	            }  
+	            if(chars==1){  
+	            	$.messager.alert('提示',"不能全为字符！");
+	            	return false;  
+	            }  
+	        }
+	        return true;
+	    }  
 		function chngPass() {
 			var oldpass = $("#oldpass").val();
 			var password = $("#password").val();
@@ -288,9 +338,12 @@
 				$.messager.alert('提示',"[登录密码]和[确认密码]不相同，请重新输入！");
 				return false;
 			}
-			if ($('#password').val() != "" && $('#password').val().length < 5) {
+			/* if ($('#password').val() != "" && $('#password').val().length < 5) {
 				$.messager.alert('提示',"[登录密码]不能小于5位，请重新填写!");
 				return false;
+			} */
+			if(!validPsw()){
+				return;
 			}
 			$('#fmChng').form('submit', {
 				url : "<%=request.getContextPath()%>/user/resetPsd",
@@ -326,6 +379,7 @@
 		}
 		$('#adminTabs').width($(window).width() - 165);
 		$('#adminTabs').height($(window).height() - 62);
+		
 	</script>
 </body>
 </html>
