@@ -463,5 +463,9 @@
 	<changeSet id="liuwuqiang-2015-09-14-08" author="liuwuqiang">
 		<sqlFile path="customer_init_bjpj.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建南京晟邦客户 -->
+	<changeSet id="liuwuqiang-2015-10-15-01" author="liuwuqiang">
+		<sqlFile path="customer_init_njcb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
