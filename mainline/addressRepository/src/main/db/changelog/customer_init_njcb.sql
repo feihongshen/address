@@ -5,7 +5,7 @@ INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (46, '南京晟邦'
 INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (46, 'njcb', 'njcb', 46, 1);
 
 -- 新建管理员用户
-INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (46, 'njcb', 'njcb', 0, 46);
+INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (46, 'njcb', 'njcb1234', 0, 46);
 
 -- 与DMP整合参数
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '0', '是否开启与dmp4.1整合', '1', '46');
