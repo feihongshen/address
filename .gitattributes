@@ -67,6 +67,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_xjpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xzpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_ynpx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_zjfy.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_zzyt.sql -text
 mainline/addressRepository/src/main/db/changelog/quartz_init.sql -text
 mainline/addressRepository/src/main/db/changelog/raw_address_init_data.sql -text
 mainline/addressRepository/src/main/db/pom.xml -text

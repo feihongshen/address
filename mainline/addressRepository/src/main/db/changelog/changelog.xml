@@ -471,4 +471,8 @@
 	<changeSet id="liuwuqiang-2015-10-16-01" author="liuwuqiang">
 		<sqlFile path="customer_init_sxcl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 创建中州运通客户 -->
+	<changeSet id="liuwuqiang-2015-10-21-01" author="liuwuqiang">
+		<sqlFile path="customer_init_zzyt.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 </databaseChangeLog>
