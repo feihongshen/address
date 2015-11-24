@@ -467,9 +467,9 @@
 	<changeSet id="liuwuqiang-2015-10-15-01" author="liuwuqiang">
 		<sqlFile path="customer_init_njcb.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	<!-- 创建陕西城联客户 -->
+	<!-- 创建西安品信客户 -->
 	<changeSet id="liuwuqiang-2015-10-16-01" author="liuwuqiang">
-		<sqlFile path="customer_init_sxcl.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_xapx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 	<!-- 创建中州运通客户 -->
 	<changeSet id="liuwuqiang-2015-10-21-01" author="liuwuqiang">

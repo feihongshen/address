@@ -1,11 +1,11 @@
 -- 新建客户
-INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (47, '陕西城联', 0, '');
+INSERT INTO CUSTOMERS (ID, NAME, STATUS, DESCRIPTION) VALUES (47, '西安品信', 0, '');
 
 -- 新建客户应用
-INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (47, 'sxcl', 'sxcl1234', 47, 1);
+INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES (47, 'xapx', 'xapx1234', 47, 1);
 
 -- 新建管理员用户
-INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (47, 'sxcl', 'sxcl1234', 0, 47);
+INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (47, 'xapx', 'xapx1234', 0, 47);
 
 -- 与DMP整合参数
 INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '0', '是否开启与dmp4.1整合', '1', '47');
