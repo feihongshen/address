@@ -79,6 +79,7 @@ mainline/addressRepository/src/main/java/cn/explink/dao/AddressImportDetailDao.j
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressImportResultDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AddressPermissionDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/AliasDao.java -text
+mainline/addressRepository/src/main/java/cn/explink/dao/BizLogDAO.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/ClientApplicationDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/CustomerDao.java -text
 mainline/addressRepository/src/main/java/cn/explink/dao/DelivererDao.java -text
@@ -107,6 +108,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportDetail.j
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressImportResult.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/AddressPermission.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Alias.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/BizLog.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/ClientApplication.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Customer.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/Deliverer.java -text
@@ -131,6 +133,7 @@ mainline/addressRepository/src/main/java/cn/explink/domain/enums/DelivererRuleTy
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/DelivererStausEnmu.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/DeliveryStationRuleTypeEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/DeliveryStationStausEnmu.java -text
+mainline/addressRepository/src/main/java/cn/explink/domain/enums/LogTypeEnum.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/enums/VendorStausEnmu.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/AddressIdAndAddressLinePair.java -text
 mainline/addressRepository/src/main/java/cn/explink/domain/fields/NumberExpression.java -text
@@ -195,6 +198,7 @@ mainline/addressRepository/src/main/java/cn/explink/service/AddressImportResultS
 mainline/addressRepository/src/main/java/cn/explink/service/AddressImportService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/AddressService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/ApplicationService.java -text
+mainline/addressRepository/src/main/java/cn/explink/service/BizLogService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/CommonServiceImpl.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/CustomerService.java -text
 mainline/addressRepository/src/main/java/cn/explink/service/DBBackupAndRestoreService.java -text
@@ -241,6 +245,7 @@ mainline/addressRepository/src/main/java/cn/explink/util/UserManager.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/ExplinkUserDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/AddressController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/BaseController.java -text
+mainline/addressRepository/src/main/java/cn/explink/web/controller/BizLogController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/CommonController.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/DateConvertEditor.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/DeliveryStationController.java -text
@@ -321,6 +326,7 @@ mainline/addressRepository/src/main/resources/stopword.dic -text
 mainline/addressRepository/src/main/webapp/META-INF/MANIFEST.MF -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/addressEditPage.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/addressMapping.jsp -text
+mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/bizlogSearch.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/deliveryStationPage.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/deliveryStationRule.jsp -text
 mainline/addressRepository/src/main/webapp/WEB-INF/jsp/address/getAddress.jsp -text
@@ -762,6 +768,7 @@ mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/swfuplo
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/thanks.php -text
 mainline/addressRepository/src/main/webapp/js/Validform/plugin/swfupload/upload.php -text
 mainline/addressRepository/src/main/webapp/js/address/addressEditPage.js -text
+mainline/addressRepository/src/main/webapp/js/address/bizlogSearch.js -text
 mainline/addressRepository/src/main/webapp/js/address/deliveryStationPage.js -text
 mainline/addressRepository/src/main/webapp/js/address/deliveryStationRule.js -text
 mainline/addressRepository/src/main/webapp/js/address/exportAddress.js -text

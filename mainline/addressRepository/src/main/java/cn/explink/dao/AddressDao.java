@@ -65,8 +65,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 	public List<Address> getChildAddress(Long customerId, Long parentId, Long deliveryStationId) {
 		Address parent = this.get(parentId);
 		if ((parent != null) && (parent.getAddressLevel() > 2)) {
-			String bindSql = " select concat(a.path,'-',CAST(a.ID AS CHAR)) from DELIVERY_STATION_RULES r ," + " DELIVERY_STATIONS d ," + " ADDRESS a where a.ID=r.ADDRESS_ID "
-					+ " and r.DELIVERY_STATION_ID=d.ID " + " and d.STATUS=1" + " and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
+			String bindSql = " select concat(a.path,'-',CAST(a.ID AS CHAR)) from DELIVERY_STATION_RULES r ," + " DELIVERY_STATIONS d ," + " ADDRESS a where a.ID=r.ADDRESS_ID " + " and r.DELIVERY_STATION_ID=d.ID " + " and d.STATUS=1" + " and d.CUSTOMER_ID=:customerId and d.EXTERNAL_ID=:deliveryStationId";
 			List<Object> bindsList = this.getSession().createSQLQuery(bindSql).setLong("customerId", customerId).setLong("deliveryStationId", deliveryStationId).list();
 			Set<String> binds = new HashSet<String>();
 			if ((bindsList != null) && !bindsList.isEmpty()) {
@@ -248,7 +247,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		}
 	}
 
-	private List<Address> getAddressList(Set<Long> addrIdSet) {
+	public List<Address> getAddressList(Set<Long> addrIdSet) {
 		String hql = "from Address a where a.id in(:ids)";
 		Query query = this.getSession().createQuery(hql);
 		query.setParameterList("ids", addrIdSet);

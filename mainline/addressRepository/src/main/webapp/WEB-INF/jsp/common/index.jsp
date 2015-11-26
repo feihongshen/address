@@ -94,6 +94,10 @@
 					<li><a href="#" onclick="addTab('地址库匹配','address/addressMapping')">地址库匹配</a></li>
 					<li><a href="#" onclick="addTab('匹配情况分析','address/keywordMapping')">匹配情况分析</a></li>
 				</ul></li>
+			<li><span>客服管理</span>
+			<ul>
+				<li><a href="#" onclick="addTab('查看日志','bizLogController/findLog')">查看日志</a></li>
+			</ul></li>
 
 		</ul>
 	</div>
