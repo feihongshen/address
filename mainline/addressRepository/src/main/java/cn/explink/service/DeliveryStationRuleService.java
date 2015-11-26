@@ -160,7 +160,8 @@ public class DeliveryStationRuleService extends RuleService {
 		List<DeliveryStationRule> ruleList = new ArrayList<DeliveryStationRule>();
 		for (Address address : addressList) {
 			// 默认规则
-			DeliveryStationRule defaultRule = null;
+			// 支持多个默认规则 added by songkaojun 2015-11-26
+			List<DeliveryStationRule> defaultRuleList = new ArrayList<DeliveryStationRule>();
 			boolean hasCustomerRule = false;
 			// 存在别名时匹配报错[zhaoshb+]2015-01-16.
 
@@ -173,7 +174,7 @@ public class DeliveryStationRuleService extends RuleService {
 			List<DeliveryStationRule> list = this.getByCustormerAndAdressId(orderVo.getCustomerId(), address.getId());
 			for (DeliveryStationRule rule : list) {
 				if (DeliveryStationRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
-					defaultRule = rule;
+					defaultRuleList.add(rule);
 				} else {
 					RuleExpression ruleExpression = JsonUtil.readValue(rule.getRuleExpression(), RuleExpression.class);
 					boolean isMapping = this.isMapping(addressLine, ruleExpression);
@@ -184,8 +185,8 @@ public class DeliveryStationRuleService extends RuleService {
 				}
 			}
 			// 如果没有客户定制的规则，则将默认规则添加到规则列表
-			if (!hasCustomerRule && (defaultRule != null)) {
-				ruleList.add(defaultRule);
+			if (!hasCustomerRule && !defaultRuleList.isEmpty()) {
+				ruleList.addAll(defaultRuleList);
 			}
 		}
 		return ruleList;
