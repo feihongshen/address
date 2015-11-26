@@ -297,22 +297,20 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = this.search(orderVo, true);
 
-			// *******GIS********
+			// 调用地图匹配逻辑 （开始）
 			switch (singleResult.getResult()) {
 			case zeroResult:
-			case multipleResult:
 			case exceptionResult:
 				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
-
-				if (1 == deliveryStationList.size()) {
-					singleResult.setResult(AddressMappingResultEnum.singleResult);
-
-					this.splitAndImport(orderVo, deliveryStationList);
-				}
 				singleResult.setRelatedAddressList(new ArrayList<Address>());
 				singleResult.setDeliveryStationList(deliveryStationList);
+
+				// 数字地图匹配到单个站点，则进行拆分操作
+				if (1 == deliveryStationList.size()) {
+					this.splitAndImport(orderVo, deliveryStationList);
+				}
 			}
-			// *******GIS********
+			// 调用地图匹配逻辑 （结束）
 
 			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
 
@@ -386,19 +384,18 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			orderVo.setCustomerId(customerId);
 			SingleAddressMappingResult singleResult = this.search(orderVo, false);
 
-			// *******GIS********
+			// 调用地图匹配逻辑 （开始）
 			switch (singleResult.getResult()) {
 			case zeroResult:
-			case multipleResult:
 			case exceptionResult:
 				// 将被地图匹配的地址收集起来
 				mapAddressList.add(orderVo.getAddressLine());
 				// 调用地图匹配
 				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
 
-				if ((deliveryStationList == null) || (0 == deliveryStationList.size())) {
+				if (deliveryStationList.isEmpty()) {
 					singleResult.setResult(AddressMappingResultEnum.zeroResult);
-				} else if ((deliveryStationList != null) && (1 == deliveryStationList.size())) {
+				} else if (1 == deliveryStationList.size()) {
 					singleResult.setResult(AddressMappingResultEnum.singleResult);
 
 					this.splitAndImport(orderVo, deliveryStationList);
@@ -407,7 +404,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 				}
 				singleResult.setDeliveryStationList(deliveryStationList);
 			}
-			// *******GIS********
+			// 调用地图匹配逻辑 （结束）
 
 			BeanVo b = new BeanVo();
 			b.setKey(orderVo.getAddressLine());

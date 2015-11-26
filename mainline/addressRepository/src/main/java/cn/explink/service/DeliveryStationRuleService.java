@@ -59,17 +59,21 @@ public class DeliveryStationRuleService extends RuleService {
 
 		Address address = this.addressDao.get(addressId);
 		DeliveryStation deliveryStation = this.deliveryStationDao.get(deliveryStationId);
-		// 判断是否与已有规则冲突
-		Set<DeliveryStationRule> filterdRules = this.filter(customerId, address.getDeliveryStationRules());
-		DeliveryStationRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
-		if (confilctingRule != null) {
-			String message = "无效规则";
-			if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
-				message = "已有默认规则";
-			} else {
-				message = "与已有规则冲突, " + confilctingRule.getRule();
+
+		// 一个关键词可以挂多个规则为空的站点 modified by songkaojun 2015-11-24
+		if (ruleExpression != null) {
+			// 判断是否与已有规则冲突
+			Set<DeliveryStationRule> filterdRules = this.filter(customerId, address.getDeliveryStationRules());
+			DeliveryStationRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
+			if (confilctingRule != null) {
+				String message = "无效规则";
+				if (DeliveryStationRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
+					message = "已有默认规则";
+				} else {
+					message = "与已有规则冲突, " + confilctingRule.getRule();
+				}
+				throw new ExplinkRuntimeException(message);
 			}
-			throw new ExplinkRuntimeException(message);
 		}
 
 		DeliveryStationRule deliveryStationRule = new DeliveryStationRule();
