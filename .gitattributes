@@ -241,6 +241,7 @@ mainline/addressRepository/src/main/java/cn/explink/util/ReflectionUtil.java -te
 mainline/addressRepository/src/main/java/cn/explink/util/ResourceBundleUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/ResourceUtil.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/StringUtil.java -text
+mainline/addressRepository/src/main/java/cn/explink/util/SynInsertBizLogThread.java -text
 mainline/addressRepository/src/main/java/cn/explink/util/UserManager.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/ExplinkUserDetail.java -text
 mainline/addressRepository/src/main/java/cn/explink/web/controller/AddressController.java -text

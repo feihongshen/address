@@ -190,6 +190,36 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return this.aliasDao.getAliasByIdList(aliasIdList);
 	}
 
+	/**
+	 *
+	 * @Title: getAliasById
+	 * @description 通过id，获取别名对象
+	 * @author 刘武强
+	 * @date  2015年11月27日下午3:01:10
+	 * @param  @param aliasIdList
+	 * @param  @return
+	 * @return  Alias
+	 * @throws
+	 */
+	public Alias getAliasById(Long aliasId) {
+		return this.aliasDao.getAliasById(aliasId);
+	}
+
+	/**
+	 *
+	 * @Title: getAddressById
+	 * @description 通过id获取关键词对象
+	 * @author 刘武强
+	 * @date  2015年11月27日下午3:33:29
+	 * @param  @param addressId
+	 * @param  @return
+	 * @return  Alias
+	 * @throws
+	 */
+	public Address getAddressById(Long addressId) {
+		return this.aliasDao.getAddressById(addressId);
+	}
+
 	public List<Address> getChildAddress(Long customerId, Long addressId, Long deliveryStationId) {
 		if (addressId == null) {
 			addressId = cn.explink.Constants.ADDRESS_ID_CHINA;
@@ -356,8 +386,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	private void splitAndImport(OrderVo orderVo, List<DeliveryStation> deliveryStationList) {
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
-				this.rawAddressService, this.keywordSuffixService, this.addressDetailService));
+		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService, this.rawAddressService, this.keywordSuffixService, this.addressDetailService));
 		service.shutdown();
 	}
 
@@ -715,8 +744,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Map<String, BigInteger> map = new HashMap<String, BigInteger>();
 		String keysql = " select count(1)  from ADDRESS_PERMISSIONS p inner join ADDRESS a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID=" + customerId;
 		BigInteger keys = (BigInteger) this.getSession().createSQLQuery(keysql).uniqueResult();
-		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r inner join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID="
-				+ customerId;
+		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r inner join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID=" + customerId;
 		BigInteger binds = (BigInteger) this.getSession().createSQLQuery(bindSql).uniqueResult();
 		map.put("keys", keys);
 		map.put("binds", binds);
@@ -779,8 +807,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		private KeywordSuffixService keywordSuffixService;
 		private AddressDetailService addressDetailService;
 
-		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService,
-				KeywordSuffixService keywordSuffixService, AddressDetailService addressDetailService) {
+		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService, KeywordSuffixService keywordSuffixService, AddressDetailService addressDetailService) {
 			super();
 			this.customerId = customerId;
 			this.addressLine = addressLine;
@@ -858,5 +885,20 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			return keywordSuffixNameList;
 		}
 
+	}
+
+	/**
+	 *
+	 * @Title: getAddressByNameList
+	 * @description 通过
+	 * @author 刘武强
+	 * @date  2015年11月26日下午7:35:46
+	 * @param  @param idList
+	 * @param  @return
+	 * @return  List<Address>
+	 * @throws
+	 */
+	public List<Address> getAddressByNameList(List<String> nameList) {
+		return this.addressDao.getAddressByNameList(nameList);
 	}
 }

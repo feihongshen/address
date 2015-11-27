@@ -77,8 +77,7 @@
 </head>
 <body> 
   	<div style="margin: 0px; border: 0" id="datagrid_log_toolbar">
-		<table class="table table-striped table-hover table-condensed dop-table-deliveryman"
-			id="dop_table_deliveryman_query">
+		<table  id="dop_table_deliveryman_query">
 			<tr>
 				<th>&nbsp;&nbsp;&nbsp;</th>
 				<td style="padding-top:15px;">导入日期：

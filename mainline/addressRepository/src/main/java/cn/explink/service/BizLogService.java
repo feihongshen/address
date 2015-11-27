@@ -1,10 +1,8 @@
 package cn.explink.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,10 +24,54 @@ public class BizLogService {
 	@Autowired
 	private AddressDao addressDAO;
 
-	public void loggerInfo(Class clazz, BizLog bizLog) {
+	/**
+	 *
+	 * @Title: loggerInfo
+	 * @description 打印日志并收集保存日志的方法
+	 * @author 刘武强
+	 * @date  2015年11月27日上午9:54:03
+	 * @param  @param clazz
+	 * @param  @param bizLogList
+	 * @param  @param bizLogDAO
+	 * @param  @param bizLogService
+	 * @return  void
+	 * @throws
+	 */
+	public void loggerInfo(Class clazz, List<BizLog> bizLogList, BizLogDAO bizLogDAO, BizLogService bizLogService) {
 		Logger logger = LoggerFactory.getLogger(clazz);
-		String msg = "";
-		logger.info(msg);
+		for (BizLog temp : bizLogList) {
+			temp.jointText(temp.getSplitCombineAddress());
+			logger.info(temp.getLogText());
+		}
+		bizLogService.save(bizLogList);
+	}
+
+	/**
+	 *
+	 * @Title: save
+	 * @description TODO
+	 * @author 刘武强
+	 * @date  2015年11月26日下午6:31:47
+	 * @param  @param bizLog
+	 * @return  void
+	 * @throws
+	 */
+	public void save(BizLog bizLog) {
+		this.bizLogDAO.save(bizLog);
+	}
+
+	/**
+	 *
+	 * @Title: save
+	 * @description TODO
+	 * @author 刘武强
+	 * @date  2015年11月26日下午6:31:47
+	 * @param  @param bizLog
+	 * @return  void
+	 * @throws
+	 */
+	public void save(List<BizLog> bizLogList) {
+		this.bizLogDAO.insert(bizLogList);
 	}
 
 	/**
@@ -58,14 +100,14 @@ public class BizLogService {
 
 			//如果是拆合站，那么就需要把地址id转化为名字
 			if (temp.getOperationType() == LogTypeEnum.changeStationRelation.getValue()) {
-				Set<Long> addressIds = new HashSet<Long>();
+				List<Long> addressIds = new ArrayList<Long>();
 				if (temp.getSplitCombineAddress() != null) {
 					for (String addressId : temp.getSplitCombineAddress().split(",")) {
 						if ((addressId != null) && BizLogService.isNumeric(addressId)) {
 							addressIds.add(Long.parseLong(addressId));
 						}
 					}
-					List<Address> addressList = this.addressDAO.getAddressList(addressIds);
+					List<Address> addressList = this.addressDAO.getAddressByIdList(addressIds);
 					List<String> addressNameList = new ArrayList<String>();
 					for (Address address : addressList) {
 						addressNameList.add(address.getName());

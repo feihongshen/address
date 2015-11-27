@@ -48,4 +48,5 @@ public class BizLogDAO extends BasicHibernateDaoSupport<BizLog, Long> {
 		map.put("count", count);
 		return map;
 	}
+
 }

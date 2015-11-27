@@ -29,6 +29,12 @@ public class BizLog {
 	private int operationType;
 
 	/*
+	 * 客户id
+	 */
+	@Column(name = "CUSTOMER_ID")
+	private Long customerId;
+
+	/*
 	 * 关键词id
 	 */
 	@Column(name = "ADDRESS_ID")
@@ -310,6 +316,14 @@ public class BizLog {
 
 	public void setOperationName(String operationName) {
 		this.operationName = operationName;
+	}
+
+	public Long getCustomerId() {
+		return this.customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	public void jointText(String allAddressString) {

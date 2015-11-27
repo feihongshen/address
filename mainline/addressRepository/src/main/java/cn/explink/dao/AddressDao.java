@@ -58,6 +58,28 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		}
 	}
 
+	/**
+	 *
+	 * @Title: getAddressByNameList
+	 * @description 根据关键词名字的集合，找出address对象的集合
+	 * @author 刘武强
+	 * @date  2015年11月26日下午7:37:21
+	 * @param  @param NameList
+	 * @param  @return
+	 * @return  List<Address>
+	 * @throws
+	 */
+	public List<Address> getAddressByNameList(List<String> NameList) {
+		if ((NameList != null) && !NameList.isEmpty()) {
+			String hql = "from Address where name in :NameList";
+			Query query = this.getSession().createQuery(hql);
+			query.setParameterList("idList", NameList);
+			return query.list();
+		} else {
+			return new ArrayList<Address>();
+		}
+	}
+
 	public List<Address> getAddressByIdSet(Set<Long> idSet) {
 		return this.getAddressByIdList(new ArrayList<Long>(idSet));
 	}
