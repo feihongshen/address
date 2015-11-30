@@ -163,7 +163,7 @@ public class SynInsertBizLogThread implements Runnable {
 			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
 			bizLog.setOriginStationName(deliveryStationRule.getDeliveryStation().getName());
 			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
-			bizLog.setRuleExpression(deliveryStationRule.getRuleExpression());
+			bizLog.setRuleExpression(deliveryStationRule.getRule());
 			bizLog.setOperationIP(this.operationIP);
 			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
