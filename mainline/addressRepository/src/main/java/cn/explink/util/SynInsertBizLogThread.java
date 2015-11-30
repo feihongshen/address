@@ -20,145 +20,30 @@ public class SynInsertBizLogThread implements Runnable {
 	private List<BizLog> bizLogList;
 	private BizLogDAO bizLogDAO;
 	private BizLogService bizLogService;
+	private Long customerId;
+	private int operationType;
+	private String operationIP;
+	private AddressService addressService;
+	private DeliveryStationService deliverySationtService;
+	private Object obj;
 
 	public SynInsertBizLogThread(Class clazz, Long customerId, int operationType, String operationIP, Object obj, BizLogDAO bizLogDAO, BizLogService bizLogService, AddressService addressService, DeliveryStationService deliverySationtService) {
 		super();
-		List<BizLog> bizLogList = new ArrayList<BizLog>();
-		Date date = new Date();
-		//新增关键词的处理--把关键词名称集合先转化成关键词对象，然后转化为日志对象，然后保存
-		if (operationType == LogTypeEnum.addAddress.getValue()) {
-			String addresses = (String) obj;
-			List<Address> addressList = new ArrayList<Address>();
-			List<String> addressNameList = new ArrayList<String>();
-			for (String addressLine : addresses.split("\n")) {
-				String addressName = addressLine.trim();
-				if (addressName.length() == 0) {
-					continue;
-				}
-				addressNameList.add(addressName);
-			}
-			if (addressNameList.size() > 0) {
-				addressList = addressService.getAddressByNameList(addressNameList);
-
-				for (Address temp : addressList) {
-					BizLog bizLog = new BizLog();
-					bizLog.setOperationType(LogTypeEnum.addAddress.getValue());
-					bizLog.setCustomerId(customerId);
-					bizLog.setAddressId(temp.getId());
-					bizLog.setAddressName(temp.getName());
-					bizLog.setOperationIP(operationIP);
-					bizLog.setOperationTime(date);
-					bizLogList.add(bizLog);
-				}
-			}
-		} else if (operationType == LogTypeEnum.deleteAddress.getValue()) {
-			Long addressId = (Long) obj;
-			Address address = addressService.getAddressById(addressId);
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.deleteAddress.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setAddressId(address.getId());
-			bizLog.setAddressName(address.getName());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.addAlias.getValue()) {
-			Alias alias = (Alias) obj;
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.addAlias.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setAliasId(alias.getId());
-			bizLog.setAliasName(alias.getName());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.deleteAlias.getValue()) {
-			Alias alias = (Alias) obj;
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.deleteAlias.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setAliasId(alias.getId());
-			bizLog.setAliasName(alias.getName());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.addRule.getValue()) {
-			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) obj;
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.addRule.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
-			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
-			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
-			bizLog.setOriginStationName(deliveryStationRule.getDeliveryStation().getName());
-			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
-			bizLog.setRuleExpression(deliveryStationRule.getRule());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.deleteRule.getValue()) {
-			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) obj;
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.deleteRule.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
-			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
-			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
-			bizLog.setOriginStationName(deliveryStationRule.getDeliveryStation().getName());
-			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
-			bizLog.setRuleExpression(deliveryStationRule.getRuleExpression());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.addStation.getValue()) {
-			DeliveryStation deliveryStation = (DeliveryStation) obj;
-
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.addStation.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setOriginStationId(deliveryStation.getId());
-			bizLog.setOriginStationName(deliveryStation.getName());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.updateStation.getValue()) {
-			BizLog bizLog = (BizLog) obj;
-			bizLog.setOperationType(LogTypeEnum.updateStation.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.deleteStation.getValue()) {
-			DeliveryStation deliveryStation = (DeliveryStation) obj;
-			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.deleteStation.getValue());
-			bizLog.setCustomerId(customerId);
-			bizLog.setDestStationId(deliveryStation.getId());
-			bizLog.setDestStationName(deliveryStation.getName());
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		} else if (operationType == LogTypeEnum.changeStationRelation.getValue()) {
-			BizLog bizLog = (BizLog) obj;
-			bizLog.setOperationType(LogTypeEnum.changeStationRelation.getValue());
-			DeliveryStation SourceStation = deliverySationtService.getDeliveryStationById(bizLog.getSourceStationId());
-			DeliveryStation DestStation = deliverySationtService.getDeliveryStationById(bizLog.getDestStationId());
-			bizLog.setSourceStationName(SourceStation.getName());
-			bizLog.setDestStationName(DestStation.getName());
-			bizLog.setCustomerId(customerId);
-			bizLog.setOperationIP(operationIP);
-			bizLog.setOperationTime(date);
-			bizLogList.add(bizLog);
-		}
-
 		this.clazz = clazz;
-		this.bizLogList = bizLogList;
+		this.bizLogList = this.bizLogList;
 		this.bizLogDAO = bizLogDAO;
 		this.bizLogService = bizLogService;
+		this.customerId = customerId;
+		this.operationType = operationType;
+		this.operationIP = operationIP;
+		this.addressService = addressService;
+		this.deliverySationtService = deliverySationtService;
+		this.obj = obj;
 	}
 
 	@Override
 	public void run() {
+		this.initBizLog();
 		this.bizLogService.loggerInfo(this.clazz, this.bizLogList, this.bizLogDAO, this.bizLogService);
 	}
 
@@ -192,6 +77,141 @@ public class SynInsertBizLogThread implements Runnable {
 
 	public void setBizLogService(BizLogService bizLogService) {
 		this.bizLogService = bizLogService;
+	}
+
+	public void initBizLog() {
+		List<BizLog> bizLogList = new ArrayList<BizLog>();
+		Date date = new Date();
+		//新增关键词的处理--把关键词名称集合先转化成关键词对象，然后转化为日志对象，然后保存
+		if (this.operationType == LogTypeEnum.addAddress.getValue()) {
+			String addresses = (String) this.obj;
+			List<Address> addressList = new ArrayList<Address>();
+			List<String> addressNameList = new ArrayList<String>();
+			for (String addressLine : addresses.split("\n")) {
+				String addressName = addressLine.trim();
+				if (addressName.length() == 0) {
+					continue;
+				}
+				addressNameList.add(addressName);
+			}
+			if (addressNameList.size() > 0) {
+				addressList = this.addressService.getAddressByNameList(addressNameList);
+
+				for (Address temp : addressList) {
+					BizLog bizLog = new BizLog();
+					bizLog.setOperationType(LogTypeEnum.addAddress.getValue());
+					bizLog.setCustomerId(this.customerId);
+					bizLog.setAddressId(temp.getId());
+					bizLog.setAddressName(temp.getName());
+					bizLog.setOperationIP(this.operationIP);
+					bizLog.setOperationTime(date);
+					bizLogList.add(bizLog);
+				}
+			}
+		} else if (this.operationType == LogTypeEnum.deleteAddress.getValue()) {
+			Long addressId = (Long) this.obj;
+			Address address = this.addressService.getAddressById(addressId);
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.deleteAddress.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setAddressId(address.getId());
+			bizLog.setAddressName(address.getName());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.addAlias.getValue()) {
+			Alias alias = (Alias) this.obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.addAlias.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setAliasId(alias.getId());
+			bizLog.setAliasName(alias.getName());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.deleteAlias.getValue()) {
+			Alias alias = (Alias) this.obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.deleteAlias.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setAliasId(alias.getId());
+			bizLog.setAliasName(alias.getName());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.addRule.getValue()) {
+			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) this.obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.addRule.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
+			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
+			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
+			bizLog.setOriginStationName(deliveryStationRule.getDeliveryStation().getName());
+			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
+			bizLog.setRuleExpression(deliveryStationRule.getRule());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.deleteRule.getValue()) {
+			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) this.obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.deleteRule.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
+			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
+			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
+			bizLog.setOriginStationName(deliveryStationRule.getDeliveryStation().getName());
+			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
+			bizLog.setRuleExpression(deliveryStationRule.getRuleExpression());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.addStation.getValue()) {
+			DeliveryStation deliveryStation = (DeliveryStation) this.obj;
+
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.addStation.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setOriginStationId(deliveryStation.getId());
+			bizLog.setOriginStationName(deliveryStation.getName());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.updateStation.getValue()) {
+			BizLog bizLog = (BizLog) this.obj;
+			bizLog.setOperationType(LogTypeEnum.updateStation.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.deleteStation.getValue()) {
+			DeliveryStation deliveryStation = (DeliveryStation) this.obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.deleteStation.getValue());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setDestStationId(deliveryStation.getId());
+			bizLog.setDestStationName(deliveryStation.getName());
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		} else if (this.operationType == LogTypeEnum.changeStationRelation.getValue()) {
+			BizLog bizLog = (BizLog) this.obj;
+			bizLog.setOperationType(LogTypeEnum.changeStationRelation.getValue());
+			DeliveryStation SourceStation = this.deliverySationtService.getDeliveryStationById(bizLog.getSourceStationId());
+			DeliveryStation DestStation = this.deliverySationtService.getDeliveryStationById(bizLog.getDestStationId());
+			bizLog.setSourceStationName(SourceStation.getName());
+			bizLog.setDestStationName(DestStation.getName());
+			bizLog.setCustomerId(this.customerId);
+			bizLog.setOperationIP(this.operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
+		}
+
+		this.clazz = this.clazz;
+		this.bizLogList = bizLogList;
+		this.bizLogDAO = this.bizLogDAO;
+		this.bizLogService = this.bizLogService;
 	}
 
 }
