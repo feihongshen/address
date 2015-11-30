@@ -139,7 +139,7 @@ public class SynInsertBizLogThread implements Runnable {
 		} else if (operationType == LogTypeEnum.deleteStation.getValue()) {
 			DeliveryStation deliveryStation = (DeliveryStation) obj;
 			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.updateStation.getValue());
+			bizLog.setOperationType(LogTypeEnum.deleteStation.getValue());
 			bizLog.setCustomerId(customerId);
 			bizLog.setDestStationId(deliveryStation.getId());
 			bizLog.setDestStationName(deliveryStation.getName());
@@ -148,6 +148,10 @@ public class SynInsertBizLogThread implements Runnable {
 			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.changeStationRelation.getValue()) {
 			BizLog bizLog = (BizLog) obj;
+			bizLog.setOperationType(LogTypeEnum.changeStationRelation.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
 		}
 
