@@ -1,10 +1,9 @@
 package cn.explink.service;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,130 +29,129 @@ public class DeliveryStationRuleServiceTest extends BaseTestCase {
 
 	@Autowired
 	private DeliveryStationService deliveryStationService;
-	
+
 	@Autowired
 	private DeliveryStationRuleService deliveryStationRuleService;
 
 	@Autowired
 	private DeliveryStationDao deliveryStationDao;
-	
+
 	@Autowired
 	private CustomerDao customerDao;
-	
+
 	@Autowired
 	private AddressDao addressDao;
-
 
 	// 北京市的id
 	private Long addressId = 2L;
 
 	@Test
 	public void testCreateDeliveryStationRule() {
-		Customer customer = prepareTestCustomer();
-		DeliveryStationVo deliveryStationVo = prepareDeliveryStation(customer);
-		DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-		
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+
 		String rule = null;
-		DeliveryStationRule fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-		assertNotNull("create fallbackRule should be success", fallbackRule);
-		
+		DeliveryStationRule fallbackRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+		Assert.assertNotNull("create fallbackRule should be success", fallbackRule);
+
 		// create the same fallbackRule should be failed
 		Exception exception = null;
 		try {
-			fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-			fail("should not be here");
+			fallbackRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+			Assert.fail("should not be here");
 		} catch (Exception e) {
 			exception = e;
 		}
-		assertNotNull("the excepted exception should not be null", exception);
-		
+		Assert.assertNotNull("the excepted exception should not be null", exception);
+
 		rule = "100|号";
-		DeliveryStationRule simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-		assertNotNull("create simpleRule should be success", simpleRule);
-		
+		DeliveryStationRule simpleRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+		Assert.assertNotNull("create simpleRule should be success", simpleRule);
+
 		rule = "11-21单|号";
-		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-		assertNotNull("create simpleRule should be success", simpleRule);
-		
+		simpleRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+		Assert.assertNotNull("create simpleRule should be success", simpleRule);
+
 		rule = "10-30双|号";
-		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-		assertNotNull("create simpleRule should be success", simpleRule);
-		
+		simpleRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+		Assert.assertNotNull("create simpleRule should be success", simpleRule);
+
 		exception = null;
 		try {
 			rule = "13-19单|号";
-			fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-			fail("should not be here");
+			fallbackRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+			Assert.fail("should not be here");
 		} catch (Exception e) {
 			exception = e;
 		}
-		assertNotNull("the excepted exception should not be null", exception);
-		
+		Assert.assertNotNull("the excepted exception should not be null", exception);
+
 		exception = null;
 		try {
 			rule = "3-11单|号";
-			fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-			fail("should not be here");
+			fallbackRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+			Assert.fail("should not be here");
 		} catch (Exception e) {
 			exception = e;
 		}
-		assertNotNull("the excepted exception should not be null", exception);
-		
+		Assert.assertNotNull("the excepted exception should not be null", exception);
+
 		exception = null;
 		try {
 			rule = "1-11单|号";
-			fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-			fail("should not be here");
+			fallbackRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+			Assert.fail("should not be here");
 		} catch (Exception e) {
 			exception = e;
 		}
-		assertNotNull("the excepted exception should not be null", exception);
-		
-//		TODO 解决边缘冲突问题, "10-20单|号"与"20-30单|号"并不冲突;
-//		TODO 解决非同类型冲突问题，"10-20单|号"与"15|号"冲突;
+		Assert.assertNotNull("the excepted exception should not be null", exception);
+
+		//		TODO 解决边缘冲突问题, "10-20单|号"与"20-30单|号"并不冲突;
+		//		TODO 解决非同类型冲突问题，"10-20单|号"与"15|号"冲突;
 	}
-	
+
 	@Test
 	public void testSearchDeliveryStationRule() {
-		Customer customer = prepareTestCustomer();
-		DeliveryStationVo deliveryStationVo = prepareDeliveryStation(customer);
-		DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-		
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+
 		String rule = null;
 		DeliveryStationRule simpleRule = null;
-//		DeliveryStationRule fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-//		assertNotNull("create fallbackRule should be success", fallbackRule);
-//		
-//		rule = "100|号";
-//		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-//		assertNotNull("create simpleRule should be success", simpleRule);
-		
+		//		DeliveryStationRule fallbackRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
+		//		assertNotNull("create fallbackRule should be success", fallbackRule);
+		//
+		//		rule = "100|号";
+		//		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
+		//		assertNotNull("create simpleRule should be success", simpleRule);
+
 		rule = "11-21单|号";
-		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-		assertNotNull("create simpleRule should be success", simpleRule);
-		
-//		rule = "10-30双|号";
-//		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
-//		assertNotNull("create simpleRule should be success", simpleRule);
-		
+		simpleRule = this.deliveryStationRuleService.createDeliveryStationRule(this.addressId, deliveryStation.getId(), customer.getId(), rule, null);
+		Assert.assertNotNull("create simpleRule should be success", simpleRule);
+
+		//		rule = "10-30双|号";
+		//		simpleRule = deliveryStationRuleService.createDeliveryStationRule(addressId, deliveryStation.getId(), customer.getId(), rule);
+		//		assertNotNull("create simpleRule should be success", simpleRule);
+
 		List<Address> addressList = new ArrayList<Address>();
-		Address address = addressDao.get(addressId);
+		Address address = this.addressDao.get(this.addressId);
 		addressList.add(address);
-		
+
 		OrderVo orderVo = new OrderVo();
 		String addressLine = "北京市15号";
 		orderVo.setAddressLine(addressLine);
-		List<DeliveryStationRule> ruleList = deliveryStationRuleService.search(addressList, orderVo);
-		assertNotNull("ruleList should not be null", ruleList);
-		assertEquals("only one rule mapped", 1, ruleList.size());
-		assertEquals("应当匹配到正确的规则", "11-21单|号", ruleList.get(0).getRule());
+		List<DeliveryStationRule> ruleList = this.deliveryStationRuleService.search(addressList, orderVo);
+		Assert.assertNotNull("ruleList should not be null", ruleList);
+		Assert.assertEquals("only one rule mapped", 1, ruleList.size());
+		Assert.assertEquals("应当匹配到正确的规则", "11-21单|号", ruleList.get(0).getRule());
 	}
 
 	private DeliveryStationVo prepareDeliveryStation(Customer customer) {
 		DeliveryStationVo deliveryStation = new DeliveryStationVo();
 		deliveryStation.setCustomerId(customer.getId());
-		deliveryStation.setExternalId(TEST_EXTERNAL_ID);
-		deliveryStation.setName(TEST_NAME);
+		deliveryStation.setExternalId(DeliveryStationRuleServiceTest.TEST_EXTERNAL_ID);
+		deliveryStation.setName(DeliveryStationRuleServiceTest.TEST_NAME);
 		return deliveryStation;
 	}
 
@@ -161,8 +159,8 @@ public class DeliveryStationRuleServiceTest extends BaseTestCase {
 		Customer customer = new Customer();
 		customer.setName("unit test customer");
 		customer.setStatus(CustomerStausEnmu.valid.getValue());
-		customerDao.save(customer);
-		assertNotNull("customerId should not be null", customer.getId());
+		this.customerDao.save(customer);
+		Assert.assertNotNull("customerId should not be null", customer.getId());
 		return customer;
 	}
 }
