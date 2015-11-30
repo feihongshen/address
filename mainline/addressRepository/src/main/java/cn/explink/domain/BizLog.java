@@ -80,7 +80,7 @@ public class BizLog {
 	 * 原站点
 	 */
 	@Column(name = "ORIGIN_STATION_NAME")
-	private String originStationNAME;
+	private String originStationName;
 
 	/*
 	 * 修改后站点id
@@ -222,12 +222,12 @@ public class BizLog {
 		this.originStationId = originStationId;
 	}
 
-	public String getOriginStationNAME() {
-		return this.originStationNAME;
+	public String getOriginStationName() {
+		return this.originStationName;
 	}
 
-	public void setOriginStationNAME(String originStationNAME) {
-		this.originStationNAME = originStationNAME;
+	public void setOriginStationName(String originStationName) {
+		this.originStationName = originStationName;
 	}
 
 	public Long getModifideStationId() {
@@ -336,11 +336,11 @@ public class BizLog {
 		} else if (this.operationType == LogTypeEnum.deleteAlias.getValue()) {
 			this.logText = "删除别名：" + this.AliasName + "(id=" + this.AliasId + ")";
 		} else if (this.operationType == LogTypeEnum.addRule.getValue()) {
-			this.logText = "新增规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationNAME + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
+			this.logText = "新增规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationName + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
 		} else if (this.operationType == LogTypeEnum.deleteRule.getValue()) {
-			this.logText = "删除规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationNAME + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
+			this.logText = "删除规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationName + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
 		} else if (this.operationType == LogTypeEnum.addStation.getValue()) {
-			this.logText = "新增站点：" + this.originStationNAME + "(id=" + this.originStationId + ")";
+			this.logText = "新增站点：" + this.originStationName + "(id=" + this.originStationId + ")";
 		} else if (this.operationType == LogTypeEnum.updateStation.getValue()) {
 			this.logText = "修改站点：" + this.modifideStationName + "(id=" + this.modifideStationId + ")";
 		} else if (this.operationType == LogTypeEnum.deleteStation.getValue()) {

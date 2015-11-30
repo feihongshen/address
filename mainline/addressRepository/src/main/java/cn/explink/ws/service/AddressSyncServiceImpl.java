@@ -1,27 +1,18 @@
 package cn.explink.ws.service;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.jws.WebService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import cn.explink.dao.BizLogDAO;
-import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.ClientApplication;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
-import cn.explink.domain.enums.LogTypeEnum;
-import cn.explink.service.BizLogService;
 import cn.explink.service.DelivererRuleService;
 import cn.explink.service.DelivererService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.service.VendorService;
 import cn.explink.util.ApplicationContextUtil;
-import cn.explink.util.SynInsertBizLogThread;
 import cn.explink.ws.vo.AddressSyncServiceResult;
 import cn.explink.ws.vo.ApplicationVo;
 import cn.explink.ws.vo.DelivererRuleVo;
@@ -32,15 +23,6 @@ import cn.explink.ws.vo.VendorVo;
 
 @WebService(endpointInterface = "cn.explink.ws.service.AddressSyncService")
 public class AddressSyncServiceImpl extends BaseWebserviceImpl implements AddressSyncService {
-
-	@Autowired
-	private BizLogService bizLogService;
-
-	@Autowired
-	private BizLogDAO bizLogDAO;
-
-	@Autowired
-	private DeliveryStationDao deliveryStationDao;
 
 	@Override
 	public AddressSyncServiceResult createDeliveryStation(ApplicationVo applicationVo, DeliveryStationVo deliveryStationVo) {
@@ -58,9 +40,6 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, this.deliveryStationDao));
-			service.shutdown();
 			result.setResultCode(ResultCodeEnum.success);
 			result.setReferenceId(deliveryStation.getId());
 		} catch (Exception e) {
@@ -86,9 +65,6 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.updateDeliveryStation(deliveryStationVo);
-			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, this.deliveryStationDao));
-			service.shutdown();
 			result.setResultCode(ResultCodeEnum.success);
 			result.setReferenceId(deliveryStation.getId());
 		} catch (Exception e) {
@@ -115,9 +91,6 @@ public class AddressSyncServiceImpl extends BaseWebserviceImpl implements Addres
 		DeliveryStationService deliveryStationService = ApplicationContextUtil.getBean("deliveryStationService");
 		try {
 			DeliveryStation deliveryStation = deliveryStationService.deleteDeliveryStation(deliveryStationVo);
-			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
-			service.shutdown();
 			result.setResultCode(ResultCodeEnum.success);
 			result.setReferenceId(deliveryStation.getId());
 		} catch (Exception e) {

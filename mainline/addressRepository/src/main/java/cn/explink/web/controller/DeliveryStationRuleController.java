@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.explink.dao.BizLogDAO;
+import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.BizLog;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.VendorsAging;
@@ -64,6 +65,9 @@ public class DeliveryStationRuleController extends BaseController {
 
 	@Autowired
 	private BizLogDAO bizLogDAO;
+
+	@Autowired
+	private DeliveryStationDao deliveryStationDao;
 
 	@RequestMapping("/deliveryStationRule")
 	public String index(Model model) {
@@ -217,6 +221,7 @@ public class DeliveryStationRuleController extends BaseController {
 	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
 		DeliveryStationRule deliveryStationRule = this.deliveryStationRuleService.getRuleById(deliveryStationRuleId);
+		deliveryStationRule.setAddress(deliveryStationRule.getAddress());
 		this.deliveryStationRuleService.delete(deliveryStationRuleId);
 		ExecutorService service = Executors.newCachedThreadPool();
 		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteRule.getValue(), this.getUserIp(request), deliveryStationRule, this.bizLogDAO, this.bizLogService, null, null));
@@ -250,7 +255,7 @@ public class DeliveryStationRuleController extends BaseController {
 			bizlog.setDestStationId(targetStationId);
 			bizlog.setSplitCombineAddress(sourceAddressId);
 			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(DeliveryStationRuleController.class, customerId, LogTypeEnum.changeStationRelation.getValue(), this.getUserIp(request), bizlog, this.bizLogDAO, this.bizLogService, null, null));
+			service.execute(new SynInsertBizLogThread(DeliveryStationRuleController.class, customerId, LogTypeEnum.changeStationRelation.getValue(), this.getUserIp(request), bizlog, this.bizLogDAO, this.bizLogService, null, this.deliverySationtService));
 			service.shutdown();
 			//DeliveryStationRuleController.LOGGER
 			//		.info("拆合站：{}", "IP:" + this.getUserIp(request) + "  sourceStationId=" + sourceStationId + "  targetStationId=" + targetStationId + "  sourceAddressId=" + sourceAddressId + "  targetAddressId=" + targetAddressId);

@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.sf.json.JSONArray;
 
@@ -19,21 +21,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.explink.dao.AddressDao;
+import cn.explink.dao.BizLogDAO;
 import cn.explink.dao.CustomerDao;
 import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.domain.Address;
+import cn.explink.domain.BizLog;
 import cn.explink.domain.Customer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Vendor;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
+import cn.explink.domain.enums.LogTypeEnum;
 import cn.explink.domain.fields.AddressIdAndAddressLinePair;
 import cn.explink.gis.GeoCoder;
 import cn.explink.gis.GeoPoint;
 import cn.explink.gis.GeoUtility;
 import cn.explink.modle.ComboBox;
+import cn.explink.util.SynInsertBizLogThread;
+import cn.explink.ws.service.AddressSyncServiceImpl;
 import cn.explink.ws.vo.DeliveryStationVo;
 
 @Service("deliveryStationService")
@@ -53,6 +60,10 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 	private DeliveryStationRuleDao deliveryStationRuleDao;
 	@Autowired
 	private AddressDao addressDao;
+	@Autowired
+	private BizLogService bizLogService;
+	@Autowired
+	private BizLogDAO bizLogDAO;
 
 	public DeliveryStation createDeliveryStation(DeliveryStationVo deliveryStationVo) {
 		Customer customer = this.customerDao.get(deliveryStationVo.getCustomerId());
@@ -69,11 +80,23 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		deliveryStation.setCustomer(customer);
 		deliveryStation.setExternalId(deliveryStationVo.getExternalId());
 		this.deliveryStationDao.save(deliveryStation);
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
 		return deliveryStation;
 	}
 
 	public DeliveryStation updateDeliveryStation(DeliveryStationVo deliveryStationVo) {
 		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
+		BizLog bizlog = new BizLog();
+		bizlog.setOriginStationId(deliveryStation.getId());
+		bizlog.setOriginStationName(deliveryStation.getName());
+		bizlog.setModifideStationId(deliveryStation.getId());
+		bizlog.setModifideStationName(deliveryStationVo.getName());
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
+
 		deliveryStation.setName(deliveryStationVo.getName());
 		deliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
 		this.deliveryStationDao.save(deliveryStation);
@@ -183,6 +206,9 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
 		deliveryStation.setStatus(DeliveryStationStausEnmu.invalid.getValue());
 		this.deliveryStationDao.save(deliveryStation);
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
 		return deliveryStation;
 	}
 
