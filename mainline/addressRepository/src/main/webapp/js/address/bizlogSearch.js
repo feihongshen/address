@@ -4,6 +4,7 @@ $(function(){
 $("#datagrid_logInfo").datagrid({
 	url : "",
 	loadMsg : '数据加载中...',
+	nowrap : false,
 	pagination : true,
 	singleSelect : false,
 	fit : true,
@@ -27,17 +28,17 @@ $("#datagrid_logInfo").datagrid({
 		sortable : false
 	}, {
 		field : 'operationName',
-		width : 150,
+		width : 100,
 		title : '操作类型',
 		sortable : false
 	},{
 		field : 'logText',
-		width : 150,
+		width : 250,
 		title : '日志内容',
 		sortable : false
 	}, {
 		field : 'operationIP',
-		width : 150,
+		width : 100,
 		title : '操作人员IP',
 		sortable : false
 	}, {
