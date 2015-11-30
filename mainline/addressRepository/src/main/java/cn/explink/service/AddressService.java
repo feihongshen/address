@@ -901,4 +901,19 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public List<Address> getAddressByNameList(List<String> nameList) {
 		return this.addressDao.getAddressByNameList(nameList);
 	}
+
+	/**
+	 *
+	 * @Title: getAddressByNameAndPid
+	 * @description 通过父节点id和名字查询地址信息
+	 * @author 刘武强
+	 * @date  2015年11月30日下午2:32:57
+	 * @param  @param nameList
+	 * @param  @return
+	 * @return  List<Address>
+	 * @throws
+	 */
+	public List<Address> getAddressByNameAndPid(List<String> nameList, Long pid) {
+		return this.addressDao.getAddressByNameListAndPid(nameList, pid);
+	}
 }

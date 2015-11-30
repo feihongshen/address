@@ -3,6 +3,7 @@ package cn.explink.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import cn.explink.dao.BizLogDAO;
 import cn.explink.domain.Address;
@@ -84,7 +85,10 @@ public class SynInsertBizLogThread implements Runnable {
 		Date date = new Date();
 		//新增关键词的处理--把关键词名称集合先转化成关键词对象，然后转化为日志对象，然后保存
 		if (this.operationType == LogTypeEnum.addAddress.getValue()) {
-			String addresses = (String) this.obj;
+			Map<String, Object> map = (Map<String, Object>) this.obj;
+
+			String addresses = (String) map.get("addresses");
+			Long parentId = (Long) map.get("parentId");
 			List<Address> addressList = new ArrayList<Address>();
 			List<String> addressNameList = new ArrayList<String>();
 			for (String addressLine : addresses.split("\n")) {
@@ -95,7 +99,7 @@ public class SynInsertBizLogThread implements Runnable {
 				addressNameList.add(addressName);
 			}
 			if (addressNameList.size() > 0) {
-				addressList = this.addressService.getAddressByNameList(addressNameList);
+				addressList = this.addressService.getAddressByNameAndPid(addressNameList, parentId);
 
 				for (Address temp : addressList) {
 					BizLog bizLog = new BizLog();

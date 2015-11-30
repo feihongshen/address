@@ -318,6 +318,29 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		return null;
 	}
 
+	/**
+	 *
+	 * @Title: getAddressByNameListAndPid
+	 * @description 通过name列表和父节点id，找出关键词对象
+	 * @author 刘武强
+	 * @date  2015年11月30日下午3:22:25
+	 * @param  @param name
+	 * @param  @param parentId
+	 * @param  @return
+	 * @return  Address
+	 * @throws
+	 */
+	public List<Address> getAddressByNameListAndPid(List<String> nameList, Long parentId) {
+		Query query = this.getSession().createQuery("from Address  where name in :NameList and  parentId=:parentId  ");
+		query.setParameterList("NameList", nameList);
+		query.setLong("parentId", parentId);
+		List<Address> list = query.list();
+		if ((list != null) && (list.size() > 0)) {
+			return list;
+		}
+		return null;
+	}
+
 	public DeliveryStationRule getStationRuleByAddressAndStation(Long addressId, Long stationId) {
 		String hql = "from DeliveryStationRule where address.id = :addressId and deliveryStation.id = :stationId";
 		Query query = this.getSession().createQuery(hql);

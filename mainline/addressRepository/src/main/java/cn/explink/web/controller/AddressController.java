@@ -539,8 +539,11 @@ public class AddressController extends BaseController {
 			}
 			zList = this.transAddress(list);
 			//输出日志，并且收集保存日志 --刘武强 11.26
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("addresses", addresses);
+			map.put("parentId", parentId);
 			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), addresses, this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), map, this.bizLogDAO, this.bizLogService, this.addressService, null));
 			service.shutdown();
 
 			//AddressController.LOGGER.info("添加关键词：{}", addresses);
