@@ -5,12 +5,16 @@ import java.util.Date;
 import java.util.List;
 
 import cn.explink.dao.BizLogDAO;
+import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Alias;
 import cn.explink.domain.BizLog;
+import cn.explink.domain.DeliveryStation;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.enums.LogTypeEnum;
 import cn.explink.service.AddressService;
 import cn.explink.service.BizLogService;
+import cn.explink.ws.vo.DeliveryStationVo;
 
 public class SynInsertBizLogThread implements Runnable {
 	private Class clazz;
@@ -18,7 +22,7 @@ public class SynInsertBizLogThread implements Runnable {
 	private BizLogDAO bizLogDAO;
 	private BizLogService bizLogService;
 
-	public SynInsertBizLogThread(Class clazz, Long customerId, int operationType, String operationIP, Object obj, BizLogDAO bizLogDAO, BizLogService bizLogService, AddressService addressService) {
+	public SynInsertBizLogThread(Class clazz, Long customerId, int operationType, String operationIP, Object obj, BizLogDAO bizLogDAO, BizLogService bizLogService, AddressService addressService, DeliveryStationDao deliveryStationDao) {
 		super();
 		List<BizLog> bizLogList = new ArrayList<BizLog>();
 		Date date = new Date();
@@ -52,7 +56,7 @@ public class SynInsertBizLogThread implements Runnable {
 			Long addressId = (Long) obj;
 			Address address = addressService.getAddressById(addressId);
 			BizLog bizLog = new BizLog();
-			bizLog.setOperationType(LogTypeEnum.deleteAlias.getValue());
+			bizLog.setOperationType(LogTypeEnum.deleteAddress.getValue());
 			bizLog.setCustomerId(customerId);
 			bizLog.setAddressId(address.getId());
 			bizLog.setAddressName(address.getName());
@@ -64,8 +68,8 @@ public class SynInsertBizLogThread implements Runnable {
 			BizLog bizLog = new BizLog();
 			bizLog.setOperationType(LogTypeEnum.addAlias.getValue());
 			bizLog.setCustomerId(customerId);
-			bizLog.setAddressId(alias.getId());
-			bizLog.setAddressName(alias.getName());
+			bizLog.setAliasId(alias.getId());
+			bizLog.setAliasName(alias.getName());
 			bizLog.setOperationIP(operationIP);
 			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
@@ -74,17 +78,77 @@ public class SynInsertBizLogThread implements Runnable {
 			BizLog bizLog = new BizLog();
 			bizLog.setOperationType(LogTypeEnum.deleteAlias.getValue());
 			bizLog.setCustomerId(customerId);
-			bizLog.setAddressId(alias.getId());
-			bizLog.setAddressName(alias.getName());
+			bizLog.setAliasId(alias.getId());
+			bizLog.setAliasName(alias.getName());
 			bizLog.setOperationIP(operationIP);
 			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.addRule.getValue()) {
+			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.addRule.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
+			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
+			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
+			bizLog.setOriginStationNAME(deliveryStationRule.getDeliveryStation().getName());
+			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
+			bizLog.setRuleExpression(deliveryStationRule.getRuleExpression());
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.deleteRule.getValue()) {
+			DeliveryStationRule deliveryStationRule = (DeliveryStationRule) obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.deleteRule.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setAddressId(deliveryStationRule.getAddress().getId());
+			bizLog.setAddressName(deliveryStationRule.getAddress().getName());
+			bizLog.setOriginStationId(deliveryStationRule.getDeliveryStation().getId());
+			bizLog.setOriginStationNAME(deliveryStationRule.getDeliveryStation().getName());
+			bizLog.setDeliveryStationRuleId(deliveryStationRule.getId());
+			bizLog.setRuleExpression(deliveryStationRule.getRuleExpression());
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.addStation.getValue()) {
+			DeliveryStationVo deliveryStationVo = (DeliveryStationVo) obj;
+			DeliveryStation deliveryStation = deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
+
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.addStation.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setOriginStationId(deliveryStation.getId());
+			bizLog.setOriginStationNAME(deliveryStation.getName());
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.updateStation.getValue()) {
+			DeliveryStationVo deliveryStationVo = (DeliveryStationVo) obj;
+			DeliveryStation deliveryStation = deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.updateStation.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setOriginStationId(deliveryStation.getId());
+			bizLog.setOriginStationNAME(deliveryStation.getName());
+			bizLog.setDestStationId(deliveryStation.getId());
+			bizLog.setDestStationName(deliveryStationVo.getName());
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.deleteStation.getValue()) {
+			DeliveryStation deliveryStation = (DeliveryStation) obj;
+			BizLog bizLog = new BizLog();
+			bizLog.setOperationType(LogTypeEnum.updateStation.getValue());
+			bizLog.setCustomerId(customerId);
+			bizLog.setDestStationId(deliveryStation.getId());
+			bizLog.setDestStationName(deliveryStation.getName());
+			bizLog.setOperationIP(operationIP);
+			bizLog.setOperationTime(date);
+			bizLogList.add(bizLog);
 		} else if (operationType == LogTypeEnum.changeStationRelation.getValue()) {
+			BizLog bizLog = (BizLog) obj;
+			bizLogList.add(bizLog);
 		}
 
 		this.clazz = clazz;

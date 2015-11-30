@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -519,6 +521,9 @@ public class AddressController extends BaseController {
 		return "address/importStationAddress";
 	}
 
+	/*
+	 * 新增关键词
+	 */
 	@RequestMapping("/add")
 	public @ResponseBody AjaxJson add(@RequestParam(value = "stationId") Long stationId, @RequestParam(value = "parentId", required = false) Long parentId, @RequestParam(value = "addresses", required = false) String addresses, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
@@ -534,7 +539,10 @@ public class AddressController extends BaseController {
 			}
 			zList = this.transAddress(list);
 			//输出日志，并且收集保存日志 --刘武强 11.26
-			new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), addresses, this.bizLogDAO, this.bizLogService, this.addressService);
+			ExecutorService service = Executors.newCachedThreadPool();
+			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), addresses, this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.shutdown();
+
 			//AddressController.LOGGER.info("添加关键词：{}", addresses);
 		} catch (Exception e) {
 			aj.setSuccess(false);
@@ -569,7 +577,9 @@ public class AddressController extends BaseController {
 		if ((alias != null) && (addressId != null)) {
 			aj = this.addressService.addAlias(addressId, alias, customerId);
 			//输出日志，并且收集保存日志 --刘武强 11.26
-			new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), aj.getObj(), this.bizLogDAO, this.bizLogService, this.addressService);
+			ExecutorService service = Executors.newCachedThreadPool();
+			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAlias.getValue(), this.getUserIp(request), aj.getObj(), this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.shutdown();
 		}
 		return aj;
 	}
@@ -602,13 +612,14 @@ public class AddressController extends BaseController {
 		this.addressService.deleteAlias(id);
 		//AddressController.LOGGER.info("删除别名：{}", "IP:" + this.getUserIp(request) + " id=" + id);
 		//输出日志，并且收集保存日志 --刘武强 11.26
-		new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAlias.getValue(), this.getUserIp(request), Alias, this.bizLogDAO, this.bizLogService, this.addressService);
-
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAlias.getValue(), this.getUserIp(request), Alias, this.bizLogDAO, this.bizLogService, this.addressService, null));
+		service.shutdown();
 		return aj;
 	}
 
 	/**
-	 * 删除别名
+	 * 删除关键词
 	 *
 	 * @param addressId
 	 * @return
@@ -619,7 +630,9 @@ public class AddressController extends BaseController {
 		aj.setSuccess(true);
 		try {
 			this.addressService.deleteAddress(addressId, this.getCustomerId());
-			new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAddress.getValue(), this.getUserIp(request), addressId, this.bizLogDAO, this.bizLogService, this.addressService);
+			ExecutorService service = Executors.newCachedThreadPool();
+			service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAddress.getValue(), this.getUserIp(request), addressId, this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.shutdown();
 			//AddressController.LOGGER.info("删除关键词：{}", "IP:" + this.getUserIp(request) + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
 			AddressController.LOGGER.error(e.getMessage());

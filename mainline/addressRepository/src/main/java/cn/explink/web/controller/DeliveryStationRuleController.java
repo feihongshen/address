@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +22,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.dao.BizLogDAO;
+import cn.explink.domain.BizLog;
+import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.VendorsAging;
+import cn.explink.domain.enums.LogTypeEnum;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.ComboBox;
 import cn.explink.modle.DataGrid;
 import cn.explink.modle.DataGridReturn;
 import cn.explink.service.AddressService;
+import cn.explink.service.BizLogService;
 import cn.explink.service.DeliveryStationRuleService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.service.VendorService;
+import cn.explink.util.SynInsertBizLogThread;
 import cn.explink.web.vo.DeliveryStationRuleVo;
 import cn.explink.web.vo.VendorsAgingVo;
 import cn.explink.ws.vo.OrderVo;
@@ -50,6 +58,12 @@ public class DeliveryStationRuleController extends BaseController {
 
 	@Autowired
 	private VendorService vendorService;
+
+	@Autowired
+	private BizLogService bizLogService;
+
+	@Autowired
+	private BizLogDAO bizLogDAO;
 
 	@RequestMapping("/deliveryStationRule")
 	public String index(Model model) {
@@ -99,7 +113,7 @@ public class DeliveryStationRuleController extends BaseController {
 				String[] deliveryStationKey = key.split("#");
 				// TODO 批量创建 规则冲突判断
 				try {
-					this.deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1]);
+					this.deliveryStationRuleService.createDeliveryStationRule(addressId, Long.parseLong(deliveryStationKey[0]), customerId, deliveryStationKey[1], this.getUserIp(request));
 				} catch (Exception e) {
 					map.put(deliveryStationKey[1], e.getMessage());
 					aj.setSuccess(false);
@@ -126,7 +140,7 @@ public class DeliveryStationRuleController extends BaseController {
 			List<DeliveryStationRuleVo> list = JSONArray.toList(array, new DeliveryStationRuleVo(), new JsonConfig());
 			Long customerId = this.getCustomerId();
 			if (list != null) {
-				this.deliveryStationRuleService.createDeliveryStationRuleList(list, customerId);
+				this.deliveryStationRuleService.createDeliveryStationRuleList(list, customerId, this.getUserIp(request));
 			}
 		} catch (Exception e) {
 			aj.setSuccess(false);
@@ -202,8 +216,12 @@ public class DeliveryStationRuleController extends BaseController {
 	@RequestMapping("/delete")
 	public @ResponseBody AjaxJson delete(Long deliveryStationRuleId, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
+		DeliveryStationRule deliveryStationRule = this.deliveryStationRuleService.getRuleById(deliveryStationRuleId);
 		this.deliveryStationRuleService.delete(deliveryStationRuleId);
-		DeliveryStationRuleController.LOGGER.info("删除规则结果：{}", "IP:" + this.getUserIp(request) + " deliveryStationRuleId=" + deliveryStationRuleId);
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteRule.getValue(), this.getUserIp(request), deliveryStationRule, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
+		//DeliveryStationRuleController.LOGGER.info("删除规则结果：{}", "IP:" + this.getUserIp(request) + " deliveryStationRuleId=" + deliveryStationRuleId);
 		aj.setSuccess(true);
 		return aj;
 
@@ -219,16 +237,23 @@ public class DeliveryStationRuleController extends BaseController {
 	}
 
 	@RequestMapping("/changeStationRelation")
-	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId, Long targetStationId, String sourceAddressId, String targetAddressId, HttpServletRequest request,
-			HttpServletResponse response) {
+	public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId, Long targetStationId, String sourceAddressId, String targetAddressId, HttpServletRequest request, HttpServletResponse response) {
 		AjaxJson aj = new AjaxJson();
 		// TODO GET CUSTOMER FROM USER
 		Long customerId = this.getCustomerId();
 
 		try {
 			this.deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-			DeliveryStationRuleController.LOGGER.info("拆合站：{}", "IP:" + this.getUserIp(request) + "  sourceStationId=" + sourceStationId + "  targetStationId=" + targetStationId
-					+ "  sourceAddressId=" + sourceAddressId + "  targetAddressId=" + targetAddressId);
+
+			BizLog bizlog = new BizLog();
+			bizlog.setSourceStationId(sourceStationId);
+			bizlog.setDestStationId(targetStationId);
+			bizlog.setSplitCombineAddress(sourceAddressId);
+			ExecutorService service = Executors.newCachedThreadPool();
+			service.execute(new SynInsertBizLogThread(DeliveryStationRuleController.class, customerId, LogTypeEnum.changeStationRelation.getValue(), this.getUserIp(request), bizlog, this.bizLogDAO, this.bizLogService, null, null));
+			service.shutdown();
+			//DeliveryStationRuleController.LOGGER
+			//		.info("拆合站：{}", "IP:" + this.getUserIp(request) + "  sourceStationId=" + sourceStationId + "  targetStationId=" + targetStationId + "  sourceAddressId=" + sourceAddressId + "  targetAddressId=" + targetAddressId);
 		} catch (Exception e) {
 			aj.setSuccess(false);
 			aj.setMsg("异常" + e.getMessage());

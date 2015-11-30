@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.dao.BizLogDAO;
 import cn.explink.domain.Address;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
+import cn.explink.domain.enums.LogTypeEnum;
 import cn.explink.domain.fields.AddressIdAndAddressLinePair;
 import cn.explink.modle.AjaxJson;
 import cn.explink.modle.DataGrid;
@@ -36,9 +38,11 @@ import cn.explink.modle.SortDirection;
 import cn.explink.qbc.CriteriaQuery;
 import cn.explink.quick.QuickSerivce;
 import cn.explink.service.AddressService;
+import cn.explink.service.BizLogService;
 import cn.explink.service.DeliveryStationService;
 import cn.explink.util.HqlGenerateUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.util.SynInsertBizLogThread;
 
 @RequestMapping("/station")
 @Controller
@@ -50,6 +54,12 @@ public class DeliveryStationController extends BaseController {
 	private QuickSerivce quickSerivce;
 	@Autowired
 	private AddressService addressService;
+
+	@Autowired
+	private BizLogService bizLogService;
+
+	@Autowired
+	private BizLogDAO bizLogDAO;
 
 	@RequestMapping("/list")
 	public @ResponseBody DataGridReturn list(DeliveryStation deliveryStation, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
@@ -173,12 +183,15 @@ public class DeliveryStationController extends BaseController {
 		deliveryStation.setMapcenterLat(mapcenterLat);
 		deliveryStation.setMapcenterLng(mapcenterLng);
 		DeliveryStation deliveryStationResult = this.deliveryStationService.updateDeliveryStationByUid(deliveryStation);
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(DeliveryStationController.class, this.getCustomerId(), LogTypeEnum.updateStation.getValue(), this.getUserIp(request), deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
-		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynUpdateDeliveryStationRuleThread(customerId, oldDeliveryStation.getId(), oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
-		service.shutdown();
+		ExecutorService Synservice = Executors.newCachedThreadPool();
+		Synservice.execute(new SynUpdateDeliveryStationRuleThread(customerId, oldDeliveryStation.getId(), oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
+		Synservice.shutdown();
 
 		return aj;
 	}
@@ -201,12 +214,15 @@ public class DeliveryStationController extends BaseController {
 		deliveryStation.setMapcenterLat(mapcenterLat);
 		deliveryStation.setMapcenterLng(mapcenterLng);
 		DeliveryStation deliveryStationResult = this.deliveryStationService.updateDeliveryStationById(deliveryStation);
+		ExecutorService service = Executors.newCachedThreadPool();
+		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.updateStation.getValue(), this.getUserIp(request), deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.shutdown();
 		if (null != deliveryStationResult) {
 			aj.setSuccess(true);
 		}
-		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynUpdateDeliveryStationRuleThread(customerId, id, oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
-		service.shutdown();
+		ExecutorService Synservice = Executors.newCachedThreadPool();
+		Synservice.execute(new SynUpdateDeliveryStationRuleThread(customerId, id, oldCoordinate, coordinate, this.deliveryStationService, this.addressService));
+		Synservice.shutdown();
 
 		return aj;
 	}
@@ -227,8 +243,7 @@ public class DeliveryStationController extends BaseController {
 		private DeliveryStationService deliveryStationService;
 		private AddressService addressService;
 
-		public SynUpdateDeliveryStationRuleThread(Long customerId, Long stationId, String oldCoordinate, String newCoordinate, DeliveryStationService deliveryStationService,
-				AddressService addressService) {
+		public SynUpdateDeliveryStationRuleThread(Long customerId, Long stationId, String oldCoordinate, String newCoordinate, DeliveryStationService deliveryStationService, AddressService addressService) {
 			super();
 			this.customerId = customerId;
 			this.stationId = stationId;

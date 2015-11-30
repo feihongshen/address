@@ -336,9 +336,9 @@ public class BizLog {
 		} else if (this.operationType == LogTypeEnum.deleteAlias.getValue()) {
 			this.logText = "删除别名：" + this.AliasName + "(id=" + this.AliasId + ")";
 		} else if (this.operationType == LogTypeEnum.addRule.getValue()) {
-			this.logText = "新增规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + ")";
+			this.logText = "新增规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationNAME + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
 		} else if (this.operationType == LogTypeEnum.deleteRule.getValue()) {
-			this.logText = "删除规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + ")";
+			this.logText = "删除规则：" + this.ruleExpression + "(id=" + this.deliveryStationRuleId + "),站点：" + this.originStationNAME + "(id=" + this.originStationId + "),关键词：" + this.addressName + "(id=" + this.addressId + ")";
 		} else if (this.operationType == LogTypeEnum.addStation.getValue()) {
 			this.logText = "新增站点：" + this.originStationNAME + "(id=" + this.originStationId + ")";
 		} else if (this.operationType == LogTypeEnum.updateStation.getValue()) {
@@ -346,7 +346,7 @@ public class BizLog {
 		} else if (this.operationType == LogTypeEnum.deleteStation.getValue()) {
 			this.logText = "删除站点：" + this.modifideStationName + "(id=" + this.modifideStationId + ")";
 		} else if (this.operationType == LogTypeEnum.changeStationRelation.getValue()) {
-			this.logText = "拆合站：源站点=" + this.sourceStationName + "(id=" + this.sourceStationId + ");目的站点=" + this.destStationName + "(id=" + this.destStationId + ");移动的关键词=" + allAddressString + ")";
+			this.logText = "拆合站：源站点：" + this.sourceStationName + "(id=" + this.sourceStationId + ");目的站点：" + this.destStationName + "(id=" + this.destStationId + ");移动的关键词：" + allAddressString + ")";
 		}
 	}
 }

@@ -73,7 +73,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
 		if ((NameList != null) && !NameList.isEmpty()) {
 			String hql = "from Address where name in :NameList";
 			Query query = this.getSession().createQuery(hql);
-			query.setParameterList("idList", NameList);
+			query.setParameterList("NameList", NameList);
 			return query.list();
 		} else {
 			return new ArrayList<Address>();

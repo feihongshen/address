@@ -36,9 +36,30 @@ public class DeliveryStationRuleDao extends CommonServiceImpl<DeliveryStationRul
 		return query.list();
 	}
 
+	/**
+	 *
+	 * @Title: getRuleById
+	 * @description 通过id查询配送规则信息
+	 * @author 刘武强
+	 * @date  2015年11月27日下午5:55:00
+	 * @param  @param id
+	 * @param  @return
+	 * @return  Address
+	 * @throws
+	 */
+	public DeliveryStationRule getRuleById(Long id) {
+		if (id != null) {
+			String hql = "from DeliveryStationRule where id=:id";
+			Query query = this.getSession().createQuery(hql);
+			query.setLong("id", id);
+			return (DeliveryStationRule) query.uniqueResult();
+		} else {
+			return null;
+		}
+	}
+
 	public List getByAddressAndStation(Long addressId, Long stationId, Long customerId) {
-		String sql = "SELECT r.id FROM DELIVERY_STATION_RULES r left join DELIVERY_STATIONS" + " s on s.ID=r.DELIVERY_STATION_ID WHERE r.RULE_TYPE=:ruleType AND r.RULE='' "
-				+ " AND s.CUSTOMER_ID=:customerId " + " AND r.ADDRESS_ID=:addressId";
+		String sql = "SELECT r.id FROM DELIVERY_STATION_RULES r left join DELIVERY_STATIONS" + " s on s.ID=r.DELIVERY_STATION_ID WHERE r.RULE_TYPE=:ruleType AND r.RULE='' " + " AND s.CUSTOMER_ID=:customerId " + " AND r.ADDRESS_ID=:addressId";
 		Query query = this.getSession().createSQLQuery(sql);
 		query.setLong("addressId", addressId);
 		query.setLong("customerId", customerId);
