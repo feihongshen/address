@@ -29,11 +29,11 @@ public class DeliveryStationRule {
 	@Column(name = "RULE_TYPE", nullable = false)
 	private Integer ruleType;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ADDRESS_ID")
 	private Address address;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "DELIVERY_STATION_ID")
 	private DeliveryStation deliveryStation;
 

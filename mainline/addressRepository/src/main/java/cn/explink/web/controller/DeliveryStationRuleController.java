@@ -223,6 +223,8 @@ public class DeliveryStationRuleController extends BaseController {
 		DeliveryStationRule deliveryStationRule = this.deliveryStationRuleService.getRuleById(deliveryStationRuleId);
 		deliveryStationRule.setAddress(deliveryStationRule.getAddress());
 		this.deliveryStationRuleService.delete(deliveryStationRuleId);
+
+		System.out.println(deliveryStationRule.getAddress().getName());
 		ExecutorService service = Executors.newCachedThreadPool();
 		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteRule.getValue(), this.getUserIp(request), deliveryStationRule, this.bizLogDAO, this.bizLogService, null, null));
 		service.shutdown();
