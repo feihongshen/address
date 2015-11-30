@@ -94,7 +94,7 @@
 	 	 		</td>
 	 	 		<td>客户IP：</td>
 				<td>
-					<input code="operationIP">
+					<input code="operationIP" maxlength="20">
 	 	 		</td>
 				<td>
 					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" iconCls="icon-search">查询</a>	
