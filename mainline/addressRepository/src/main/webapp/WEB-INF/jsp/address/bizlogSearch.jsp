@@ -79,12 +79,10 @@
   	<div style="margin: 0px; border: 0" id="datagrid_log_toolbar">
 		<table  id="dop_table_deliveryman_query">
 			<tr>
-				<th>&nbsp;&nbsp;&nbsp;</th>
-				<td style="padding-top:15px;">导入日期：
+				<td style="padding-top:15px;">操作日期：
 		        	<input name="beginTime" id="beginTime" class="easyui-datebox"/>
 					至 <input name="endTime" id="endTime" class="easyui-datebox"/>&nbsp;
 	 	 		</td>
-				<th>&nbsp;&nbsp;&nbsp;</th>
 				<td>操作类型：</td>
 				<td>
 					<select name="operationType" id="operationType" style="width:80px;">
@@ -94,12 +92,10 @@
 			 	 		<%}%>
 		 	 		</select>
 	 	 		</td>
-	 	 		<th>&nbsp;&nbsp;&nbsp;</th>
 	 	 		<td>客户IP：</td>
 				<td>
 					<input code="operationIP">
 	 	 		</td>
-	 	 		<th>&nbsp;&nbsp;&nbsp;</th>
 				<td>
 					<a href="javascript:void(0)" class="easyui-linkbutton" id="search" iconCls="icon-search">查询</a>	
 	 	 		</td>

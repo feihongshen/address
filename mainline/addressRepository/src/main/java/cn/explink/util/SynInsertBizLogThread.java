@@ -190,8 +190,8 @@ public class SynInsertBizLogThread implements Runnable {
 			BizLog bizLog = new BizLog();
 			bizLog.setOperationType(LogTypeEnum.deleteStation.getValue());
 			bizLog.setCustomerId(this.customerId);
-			bizLog.setDestStationId(deliveryStation.getId());
-			bizLog.setDestStationName(deliveryStation.getName());
+			bizLog.setModifideStationId(deliveryStation.getId());
+			bizLog.setModifideStationName(deliveryStation.getName());
 			bizLog.setOperationIP(this.operationIP);
 			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
@@ -207,11 +207,7 @@ public class SynInsertBizLogThread implements Runnable {
 			bizLog.setOperationTime(date);
 			bizLogList.add(bizLog);
 		}
-
-		this.clazz = this.clazz;
 		this.bizLogList = bizLogList;
-		this.bizLogDAO = this.bizLogDAO;
-		this.bizLogService = this.bizLogService;
 	}
 
 }

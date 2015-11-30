@@ -1,7 +1,6 @@
 package cn.explink.service;
 
-import static org.junit.Assert.*;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,61 +26,61 @@ public class DeliveryStationServiceTest extends BaseTestCase {
 
 	@Autowired
 	private DeliveryStationDao deliveryStationDao;
-	
+
 	@Autowired
 	private CustomerDao customerDao;
 
 	@Test
 	public void testCreateDeliveryStation() {
-		Customer customer = prepareTestCustomer();
-		DeliveryStationVo deliveryStationVo = prepareDeliveryStation(customer);
-		DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-		assertNotNull("deliveryStation should not be null", deliveryStation);
-		assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
-		assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
-		assertEquals("the name should be same as prepared name", TEST_NAME, deliveryStation.getName());
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		Assert.assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
+		Assert.assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
+		Assert.assertEquals("the name should be same as prepared name", DeliveryStationServiceTest.TEST_NAME, deliveryStation.getName());
 	}
 
 	@Test
 	public void testUpdateDeliveryStation() {
-		Customer customer = prepareTestCustomer();
-		DeliveryStationVo deliveryStationVo = prepareDeliveryStation(customer);
-		DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-		assertNotNull("deliveryStation should not be null", deliveryStation);
-		assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
-		assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
-		assertEquals("the name should be same as prepared name", TEST_NAME, deliveryStation.getName());
-		
-		deliveryStationVo.setName(UPDATED_NAME);
-		deliveryStation = deliveryStationService.updateDeliveryStation(deliveryStationVo);
-		assertNotNull("deliveryStation should not be null", deliveryStation);
-		assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
-		assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
-		assertEquals("the name should be updated", UPDATED_NAME, deliveryStation.getName());
-		
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		Assert.assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
+		Assert.assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
+		Assert.assertEquals("the name should be same as prepared name", DeliveryStationServiceTest.TEST_NAME, deliveryStation.getName());
+
+		deliveryStationVo.setName(DeliveryStationServiceTest.UPDATED_NAME);
+		deliveryStation = this.deliveryStationService.updateDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		Assert.assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
+		Assert.assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
+		Assert.assertEquals("the name should be updated", DeliveryStationServiceTest.UPDATED_NAME, deliveryStation.getName());
+
 	}
 
 	@Test
 	public void testDeleteDeliveryStation() {
-		Customer customer = prepareTestCustomer();
-		DeliveryStationVo deliveryStationVo = prepareDeliveryStation(customer);
-		DeliveryStation deliveryStation = deliveryStationService.createDeliveryStation(deliveryStationVo);
-		assertNotNull("deliveryStation should not be null", deliveryStation);
-		assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
-		assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
-		assertEquals("the name should be same as prepared name", TEST_NAME, deliveryStation.getName());
-		
-		deliveryStation = deliveryStationService.deleteDeliveryStation(deliveryStationVo);
-		assertNotNull("deliveryStation should not be null", deliveryStation);
-		deliveryStation = deliveryStationDao.get(deliveryStation.getId());
-		assertEquals("the deliveryStation should be deleted", DeliveryStationStausEnmu.invalid.getValue(), deliveryStation.getStatus().intValue());
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		Assert.assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
+		Assert.assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
+		Assert.assertEquals("the name should be same as prepared name", DeliveryStationServiceTest.TEST_NAME, deliveryStation.getName());
+
+		deliveryStation = this.deliveryStationService.deleteDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		deliveryStation = this.deliveryStationDao.get(deliveryStation.getId());
+		Assert.assertEquals("the deliveryStation should be deleted", DeliveryStationStausEnmu.invalid.getValue(), deliveryStation.getStatus().intValue());
 	}
-	
+
 	private DeliveryStationVo prepareDeliveryStation(Customer customer) {
 		DeliveryStationVo deliveryStation = new DeliveryStationVo();
 		deliveryStation.setCustomerId(customer.getId());
-		deliveryStation.setExternalId(TEST_EXTERNAL_ID);
-		deliveryStation.setName(TEST_NAME);
+		deliveryStation.setExternalId(DeliveryStationServiceTest.TEST_EXTERNAL_ID);
+		deliveryStation.setName(DeliveryStationServiceTest.TEST_NAME);
 		return deliveryStation;
 	}
 
@@ -89,8 +88,25 @@ public class DeliveryStationServiceTest extends BaseTestCase {
 		Customer customer = new Customer();
 		customer.setName("unit test customer");
 		customer.setStatus(CustomerStausEnmu.valid.getValue());
-		customerDao.save(customer);
-		assertNotNull("customerId should not be null", customer.getId());
+		this.customerDao.save(customer);
+		Assert.assertNotNull("customerId should not be null", customer.getId());
 		return customer;
+	}
+
+	@Test
+	public void testDeleteDeliveryStation1() {
+		int i = 1;
+		Customer customer = this.prepareTestCustomer();
+		DeliveryStationVo deliveryStationVo = this.prepareDeliveryStation(customer);
+		DeliveryStation deliveryStation = this.deliveryStationService.createDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		Assert.assertNotNull("deliveryStationId should not be null", deliveryStation.getId());
+		Assert.assertEquals("the customerId should be same as prepared customerId", customer.getId(), deliveryStation.getCustomer().getId());
+		Assert.assertEquals("the name should be same as prepared name", DeliveryStationServiceTest.TEST_NAME, deliveryStation.getName());
+
+		deliveryStation = this.deliveryStationService.deleteDeliveryStation(deliveryStationVo);
+		Assert.assertNotNull("deliveryStation should not be null", deliveryStation);
+		deliveryStation = this.deliveryStationDao.get(deliveryStation.getId());
+		Assert.assertEquals("the deliveryStation should be deleted", DeliveryStationStausEnmu.invalid.getValue(), deliveryStation.getStatus().intValue());
 	}
 }
