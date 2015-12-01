@@ -79,7 +79,7 @@
   	<div style="margin: 0px; border: 0" id="datagrid_log_toolbar">
 		<table  id="dop_table_deliveryman_query">
 			<tr>
-				<td style="padding-top:15px;">操作日期：
+				<td>操作日期：
 		        	<input name="beginTime" id="beginTime" class="easyui-datebox"/>
 					至 <input name="endTime" id="endTime" class="easyui-datebox"/>&nbsp;
 	 	 		</td>
