@@ -30,7 +30,7 @@ public class BizLogDAO extends BasicHibernateDaoSupport<BizLog, Long> {
 			where.append(" and OPERATION_TIME>='" + beginTime + " 00:00:00'");
 		}
 		if ((endTime != null) && !endTime.isEmpty()) {
-			where.append(" and OPERATION_TIME<='" + endTime + " 00:00:00'");
+			where.append(" and OPERATION_TIME<='" + endTime + " 23:59:59'");
 		}
 		if ((operationIP != null) && !operationIP.isEmpty()) {
 			where.append(" and OPERATOR_IP='" + operationIP + "'");
