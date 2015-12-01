@@ -8,7 +8,7 @@ $("#datagrid_logInfo").datagrid({
 	pagination : true,
 	singleSelect : false,
 	fit : true,
-	pageSize : 10,
+	pageSize : 20,
 	pageList : [10, 20, 30, 40],
 	sortOrder : 'desc',
 	rownumbers : true,
