@@ -16,14 +16,14 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 	/**
 	 * 百度api中必须用的key。此key可以在百度LBS开放平台申请
 	 */
-	private static String apiKey = BaiduApiKeyPool.getRandomKey();
+	private String apiKey = new BaiduApiKeyPool().getRandomKey();
 
 	@Override
 	public GeoPoint GetLocation(String address) {
 		String url = "http://api.map.baidu.com/geocoder/v2/";
 		try {
 			String addressh = URLEncoder.encode(address, "UTF-8");
-			String keywords = "ak=" + BaiduV2GeoCoder.apiKey + "&callback=?&output=json&address=" + addressh;
+			String keywords = "ak=" + this.apiKey + "&callback=?&output=json&address=" + addressh;
 			String result = HttpUtility.sendGet(url, keywords); // 返回结果
 			if (StringUtil.isEmpty(result)) {
 				return null;
@@ -67,7 +67,7 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 		String url = "http://api.map.baidu.com/geocoder/v2/";
 
 		try {
-			String keyWords = "ak=" + BaiduV2GeoCoder.apiKey + "&callback=&location=" + lat + "," + lng + "&output=json&pois=1";
+			String keyWords = "ak=" + this.apiKey + "&callback=&location=" + lat + "," + lng + "&output=json&pois=1";
 
 			String result = HttpUtility.sendGet(url, keyWords);
 			JSONObject json = JSONObject.fromObject(result); // 转成json字符串
@@ -106,7 +106,7 @@ public class BaiduV2GeoCoder implements IGeoCoder {
 		try {
 			String addressh = URLEncoder.encode(address, "UTF-8");
 			String region = "12,73,53,136"; // 表示中国的范围(外包围框)
-			String keywords = "ak=" + BaiduV2GeoCoder.apiKey + "&bounds=" + region + "&output=json&q=" + addressh;
+			String keywords = "ak=" + this.apiKey + "&bounds=" + region + "&output=json&q=" + addressh;
 			String result = HttpUtility.sendGet(url, keywords);
 			if (StringUtil.isEmpty(result)) {
 				return null;

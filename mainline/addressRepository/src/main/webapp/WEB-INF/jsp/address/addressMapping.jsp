@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/easyui/themes/icon.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=<%=BaiduApiKeyPool.getRandomKey() %>"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=<%=new BaiduApiKeyPool().getRandomKey() %>"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/map/map.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mapMatchResult.js"></script>
 <script type="text/javascript">

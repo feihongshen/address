@@ -107,7 +107,7 @@
 	</div>
 
 
-	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=<%=BaiduApiKeyPool.getRandomKey() %>"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=<%=new BaiduApiKeyPool().getRandomKey() %>"></script>
 	<script type="text/javascript"
 		src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
 	<script type="text/javascript" src="${ctx}/js/map/map.js"></script>
