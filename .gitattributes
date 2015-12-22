@@ -22,6 +22,7 @@ mainline/addressRepository/src/main/db/changelog/changelog.xml -text
 mainline/addressRepository/src/main/db/changelog/config_init.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_ahpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_bjpj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_bjyfx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_cqhy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_explink.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_fjfy.sql -text
@@ -42,6 +43,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_hxsj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_hzat.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jcjt.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jlpj.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_jnhm.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jspj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jxfy.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_jxsd.sql -text
@@ -59,6 +61,7 @@ mainline/addressRepository/src/main/db/changelog/customer_init_sypj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_tjcj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_tjpj.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_whfy.sql -text
+mainline/addressRepository/src/main/db/changelog/customer_init_whzn.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_wxpw.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xapx.sql -text
 mainline/addressRepository/src/main/db/changelog/customer_init_xhm.sql -text
