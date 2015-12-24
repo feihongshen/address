@@ -8,7 +8,9 @@ INSERT INTO CLIENT_APPLICATIONS (ID, NAME, PASSWORD, customer_id, STATUS) VALUES
 INSERT INTO USERS (ID, NAME, PASSWORD, STATUS, customer_id) VALUES (50, 'bjyfx', 'bjyfx1234', 0, 50);
 
 -- 与DMP整合参数
-INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '0', '是否开启与dmp4.1整合', '1', '50');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('isDmp4_1', '1', '是否开启与dmp4.1整合', '1', '50');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpVarifyUserUrl', 'http://221.123.178.101/bjyfxk', 'DMP验证用户URL', '1', '50');
+INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ('dmpIndexUrl', 'http://221.123.178.101/bjyfxk', 'DMP主页URL', '1', '50');
 
 -- 新建客户地址权限
 INSERT INTO ADDRESS_PERMISSIONS (address_id, customer_id) VALUES (1, 50);
