@@ -250,22 +250,22 @@
 	<!-- 为配送站点表添加“坐标”，“中心经度”，“中心维度”，“UID”字段，并修改EXTERNAL_ID字段为可空 -->
 	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
 		<sql>
-			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `COORDINATE` varchar(20000) NULL AFTER `NAME` comment '区域坐标';
+			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `COORDINATE` varchar(20000) NULL comment '区域坐标' AFTER `NAME`;
 			ALTER
 			TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LNG` decimal(50,8) NULL DEFAULT
-			NULL AFTER
-			`COORDINATE` comment '地图中心纬度';
+			NULL comment '地图中心纬度' AFTER
+			`COORDINATE`;
 			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LAT`
 			decimal(50,8) NULL
 			DEFAULT
-			NULL AFTER
-			`MAPCENTER_LNG` comment '地图中心经度';
+			NULL comment '地图中心经度' AFTER
+			`MAPCENTER_LNG`;
 			ALTER TABLE DELIVERY_STATIONS
 			ADD COLUMN `UID` varchar(50)
 			CHARACTER SET
 			utf8 COLLATE utf8_bin NULL
-			DEFAULT NULL AFTER
-			`MAPCENTER_LAT` comment '地图唯一标识';
+			DEFAULT NULL comment '地图唯一标识' AFTER
+			`MAPCENTER_LAT`;
 
 			ALTER TABLE
 			DELIVERY_STATIONS MODIFY
