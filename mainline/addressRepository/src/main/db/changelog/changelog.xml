@@ -9,6 +9,7 @@
 		<sqlFile path="address_init_data.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 
+	<!-- quartz框架使用的表 -->
 	<changeSet id="xushiju-2014-07-21-03" author="xushiju">
 		<sqlFile path="quartz_init.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
@@ -18,15 +19,17 @@
 			create table `SCHEDULED_TASKS` (
 			`ID` int(22) primary key not null auto_increment comment
 			'id',
-			`TASK_TYPE` varchar(50) not null,
-			`STATUS` int(2) not null,
-			`REFERENCE_TYPE` varchar(50),
-			`REFERENCE_ID` varchar(32),
-			`FIRE_TIME` DATETIME,
-			`COMPLETED_TIME` DATETIME,
-			`CREATED_AT` DATETIME,
-			`TRY_COUNT` int (10)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+			`TASK_TYPE` varchar(50) not null comment '任务类型',
+			`STATUS` int(2) not null comment '任务状态',
+			`REFERENCE_TYPE` varchar(50) comment '引用类型',
+			`REFERENCE_ID` varchar(32) comment '引用ID',
+			`FIRE_TIME` DATETIME comment '触发时间',
+			`COMPLETED_TIME` DATETIME comment '完成时间',
+			`CREATED_AT`
+			DATETIME comment '创建时间',
+			`TRY_COUNT` int (10) comment '尝试次数'
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8
+			COLLATE=utf8_bin comment '调度任务';
 
 			CREATE INDEX
 			`IDX_TASKS_STATUS_FIRE_TIME` ON `SCHEDULED_TASKS`
@@ -69,28 +72,33 @@
 			CREATE TABLE VENDORS_AGING (
 			`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 			`CUSTOMER_ID`
-			INT (12) NOT NULL,
-			`ADDRESS_ID` INT (12) NOT NULL,
-			`VENDORS_ID` INT (12) NOT NULL,
+			INT (12) NOT NULL comment '客户ID',
+			`ADDRESS_ID` INT (12) NOT NULL comment '地址ID',
+			`VENDORS_ID` INT
+			(12) NOT NULL comment '供应商ID',
 			`AGING` VARCHAR
-			(20)
-			) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
+			(20) comment '时效'
+			) ENGINE = INNODB DEFAULT CHARSET =
+			utf8 COLLATE = utf8_bin comment '供应商时效';
 		</sql>
 	</changeSet>
 
-	<!-- 创建电商时效 -->
+	<!-- 创建地址订单关联表（好像暂时没有用） -->
 	<changeSet id="chenlisheng-2014-09-23-01" author="chenlisheng">
 		<sql>
 			CREATE TABLE ADDRESS_ORDER (
 			`ID` INT (12) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-			`EXTERNAL_ORDER_ID` VARCHAR(100),
-			`CUSTOMER_ID` INT (12) NOT NULL,
-			`ADDRESS_LINE` VARCHAR (200),
-			`DELIVERY_STATION_IDS` VARCHAR(100),
-			`DELIVERER_IDS` VARCHAR(100),
-			`CREATION_DATE` DATETIME
-			) ENGINE
-			= INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin;
+			`EXTERNAL_ORDER_ID` VARCHAR(100) comment 'DMP订单ID',
+			`CUSTOMER_ID` INT (12) NOT NULL comment
+			'客户ID',
+			`ADDRESS_LINE` VARCHAR (200) comment '地址串',
+			`DELIVERY_STATION_IDS` VARCHAR(100) comment
+			'配送站点ID',
+			`DELIVERER_IDS` VARCHAR(100) comment '配送员ID',
+			`CREATION_DATE` DATETIME comment '创建时间'
+			)
+			ENGINE
+			= INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin comment '地址订单关联';
 		</sql>
 	</changeSet>
 	<!-- 为中国创建PARENT_ID -->
@@ -122,22 +130,28 @@
 			CREATE TABLE RAW_ADDRESS (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`NAME` varchar(50) COLLATE
-			utf8_bin NOT NULL,
-			`OLD_NAME` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-			`STATUS` int(2) NOT NULL,
-			`ADDRESS_TYPE_ID` int(2) DEFAULT NULL,
-			`ADDRESS_LEVEL` int(2) DEFAULT NULL,
+			utf8_bin NOT NULL comment '名称',
+			`OLD_NAME` varchar(50) COLLATE utf8_bin DEFAULT NULL comment
+			'原名称',
+			`STATUS` int(2) NOT NULL comment '状态',
+			`ADDRESS_TYPE_ID` int(2) DEFAULT NULL comment
+			'地址类型ID',
+			`ADDRESS_LEVEL` int(2) DEFAULT NULL comment '层级',
 			`PARENT_ID` int(12)
-			DEFAULT NULL,
-			`PATH` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-			`INDEXED` int(1) DEFAULT NULL,
-			`CREATION_TIME` datetime DEFAULT NULL,
+			DEFAULT NULL comment
+			'父级地址ID',
+			`PATH` varchar(100) COLLATE utf8_bin DEFAULT NULL comment '路径',
+			`INDEXED` int(1) DEFAULT
+			NULL comment '是否被索引',
+			`CREATION_TIME` datetime DEFAULT NULL comment '创建时间',
 			PRIMARY KEY (`ID`),
-			KEY `IDX_ADDRESS_NAME` (`NAME`),
+			KEY
+			`IDX_ADDRESS_NAME` (`NAME`),
 			KEY
 			`IDX_ADDRESS_PARENT_ID` (`PARENT_ID`)
-			) ENGINE=InnoDB AUTO_INCREMENT=25596 DEFAULT CHARSET=utf8
-			COLLATE=utf8_bin;
+			) ENGINE=InnoDB
+			AUTO_INCREMENT=25596 DEFAULT CHARSET=utf8
+			COLLATE=utf8_bin comment '粗地址表（用于存储自动拆分后的地址信息）';
 		</sql>
 	</changeSet>
 
@@ -147,13 +161,15 @@
 			CREATE TABLE RAW_ADDRESS_PERMISSIONS (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`RAW_ADDRESS_ID`
-			int(12) NOT NULL,
+			int(12) NOT NULL comment '地址ID',
 			`CUSTOMER_ID` int(12) DEFAULT NULL,
-			PRIMARY KEY (`ID`),
+			PRIMARY KEY (`ID`) comment
+			'客户ID',
 			KEY
 			`IDX_ADDRESS_PERMISSION_ADDRESS_ID` (`RAW_ADDRESS_ID`)
-			) ENGINE=InnoDB AUTO_INCREMENT=54190
-			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+			) ENGINE=InnoDB
+			AUTO_INCREMENT=54190
+			DEFAULT CHARSET=utf8 COLLATE=utf8_bin comment '粗地址权限';
 		</sql>
 	</changeSet>
 
@@ -163,22 +179,29 @@
 			CREATE TABLE RAW_DELIVERY_STATIONS (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`NAME` varchar(20)
-			COLLATE utf8_bin NOT NULL,
-			`COORDINATE` varchar(20000) COLLATE utf8_bin DEFAULT NULL,
-			`MAPCENTER_LNG` decimal(50,8) DEFAULT NULL,
-			`MAPCENTER_LAT` decimal(50,8) DEFAULT NULL,
+			COLLATE utf8_bin NOT NULL comment '站点名称',
+			`COORDINATE` varchar(20000) COLLATE utf8_bin DEFAULT
+			NULL comment '站点坐标',
+			`MAPCENTER_LNG` decimal(50,8) DEFAULT NULL comment '地图中心纬度',
+			`MAPCENTER_LAT`
+			decimal(50,8) DEFAULT NULL comment '地图中心经度',
 			`UID`
-			varchar(50) COLLATE utf8_bin DEFAULT NULL,
-			`EXTERNAL_ID` int(12) DEFAULT NULL,
+			varchar(50) COLLATE utf8_bin DEFAULT NULL
+			comment '地图唯一标识ID',
+			`EXTERNAL_ID` int(12) DEFAULT NULL comment 'DMP中站点ID',
 			`CUSTOMER_ID`
-			int(12) NOT NULL,
-			`STATUS` int(2) NOT NULL,
-			`CREATION_TIME` datetime DEFAULT NULL,
+			int(12) NOT
+			NULL comment '客户ID',
+			`STATUS` int(2) NOT NULL comment '站点状态',
+			`CREATION_TIME` datetime DEFAULT NULL
+			comment '创建时间',
 			PRIMARY KEY
 			(`ID`),
-			UNIQUE KEY `IDX_DELIVERY_STATION_EXTERNAL_ID` (`EXTERNAL_ID`,`CUSTOMER_ID`)
+			UNIQUE KEY `IDX_DELIVERY_STATION_EXTERNAL_ID`
+			(`EXTERNAL_ID`,`CUSTOMER_ID`)
 			) ENGINE=InnoDB
-			AUTO_INCREMENT=218 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+			AUTO_INCREMENT=218 DEFAULT CHARSET=utf8
+			COLLATE=utf8_bin comment '粗站点';
 		</sql>
 	</changeSet>
 
@@ -188,18 +211,22 @@
 			CREATE TABLE RAW_DELIVERY_STATION_RULES (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`RULE`
-			varchar(100) COLLATE utf8_bin DEFAULT NULL,
-			`RULE_EXPRESSION` varchar(1000) COLLATE utf8_bin
-			DEFAULT NULL,
-			`RULE_TYPE` int(2) NOT NULL,
-			`RAW_ADDRESS_ID` int(12) NOT NULL,
-			`RAW_DELIVERY_STATION_ID` int(12) NOT NULL,
-			`CREATION_TIME` datetime DEFAULT NULL,
+			varchar(100) COLLATE utf8_bin DEFAULT NULL comment '规则',
+			`RULE_EXPRESSION` varchar(1000) COLLATE
+			utf8_bin
+			DEFAULT NULL comment '规则表达式',
+			`RULE_TYPE` int(2) NOT NULL comment '规则类型',
+			`RAW_ADDRESS_ID`
+			int(12) NOT NULL comment '地址ID',
+			`RAW_DELIVERY_STATION_ID` int(12) NOT NULL comment '站点ID',
+			`CREATION_TIME` datetime DEFAULT NULL comment '创建时间',
 			PRIMARY KEY
 			(`ID`),
-			KEY `IDX_DS_RULE_ADDRESS_ID` (`RAW_ADDRESS_ID`)
+			KEY
+			`IDX_DS_RULE_ADDRESS_ID` (`RAW_ADDRESS_ID`)
 			) ENGINE=InnoDB AUTO_INCREMENT=12691
-			DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+			DEFAULT
+			CHARSET=utf8 COLLATE=utf8_bin comment '粗配送站点规则';
 		</sql>
 	</changeSet>
 
@@ -209,11 +236,13 @@
 			CREATE TABLE KEYWORD_SUFFIX (
 			`ID` int(12) NOT NULL AUTO_INCREMENT,
 			`CUSTOMER_ID` int(12)
-			DEFAULT NULL,
-			`NAME` varchar(50) COLLATE utf8_bin NOT NULL,
-			PRIMARY KEY (`ID`)
+			DEFAULT NULL comment '客户ID',
+			`NAME` varchar(50) COLLATE utf8_bin NOT NULL comment '名称',
+			PRIMARY KEY
+			(`ID`)
 			) ENGINE=InnoDB
-			AUTO_INCREMENT=241 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+			AUTO_INCREMENT=241 DEFAULT CHARSET=utf8 COLLATE=utf8_bin comment
+			'关键词后缀（用于自动拆分地址）';
 		</sql>
 	</changeSet>
 
@@ -221,22 +250,28 @@
 	<!-- 为配送站点表添加“坐标”，“中心经度”，“中心维度”，“UID”字段，并修改EXTERNAL_ID字段为可空 -->
 	<changeSet id="songkaojun-2015-04-07-07" author="songkaojun">
 		<sql>
-			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `COORDINATE` varchar(20000) NULL AFTER `NAME`;
+			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `COORDINATE` varchar(20000) NULL AFTER `NAME`
+			comment '区域坐标';
 			ALTER
-			TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LNG` decimal(50,8) NULL DEFAULT NULL AFTER
-			`COORDINATE`;
-			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LAT` decimal(50,8) NULL
+			TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LNG` decimal(50,8) NULL DEFAULT
+			NULL AFTER
+			`COORDINATE` comment '地图中心纬度';
+			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `MAPCENTER_LAT`
+			decimal(50,8) NULL
 			DEFAULT
 			NULL AFTER
-			`MAPCENTER_LNG`;
-			ALTER TABLE DELIVERY_STATIONS ADD COLUMN `UID` varchar(50)
+			`MAPCENTER_LNG` comment '地图中心经度';
+			ALTER TABLE DELIVERY_STATIONS
+			ADD COLUMN `UID` varchar(50)
 			CHARACTER SET
 			utf8 COLLATE utf8_bin NULL
-			DEFAULT NULL AFTER `MAPCENTER_LAT`;
+			DEFAULT NULL AFTER
+			`MAPCENTER_LAT` comment '地图唯一标识';
 
 			ALTER TABLE
 			DELIVERY_STATIONS MODIFY
-			COLUMN `EXTERNAL_ID` int(12) NULL AFTER `UID`;
+			COLUMN `EXTERNAL_ID` int(12)
+			NULL AFTER `UID`;
 		</sql>
 	</changeSet>
 
@@ -244,24 +279,30 @@
 	<changeSet id="songkaojun-2015-04-21-01" author="songkaojun">
 		<sql>
 			CREATE TABLE ADDRESS_DETAIL (
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-			`province` varchar(255)
-			DEFAULT NULL,
-			`city` varchar(255) DEFAULT NULL,
-			`district` varchar(255) DEFAULT NULL,
+			`id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+			`province`
+			varchar(255)
+			DEFAULT NULL COMMENT '省名称',
+			`city` varchar(255) DEFAULT NULL COMMENT '市名称',
+			`district`
+			varchar(255) DEFAULT NULL COMMENT '区名称',
 			`address_id1`
-			int(20) DEFAULT NULL,
-			`address_name1` varchar(255) DEFAULT NULL,
+			int(20) DEFAULT NULL COMMENT '关键词1的名称',
+			`address_name1` varchar(255) DEFAULT NULL COMMENT
+			'关键词1的名称',
 			`address_id2` int(20) DEFAULT
-			NULL,
-			`address_name2` varchar(255) DEFAULT NULL,
-			`address_id3` int(255) DEFAULT NULL,
-			`address_name3` varchar(255) DEFAULT NULL,
-			`delivery_station_name` varchar(255) DEFAULT NULL,
-			`customer_id` int(11) DEFAULT NULL,
-			PRIMARY KEY (`id`)
+			NULL COMMENT '关键词2的id',
+			`address_name2` varchar(255)
+			DEFAULT NULL COMMENT '关键词2的名称',
+			`address_id3` int(255) DEFAULT NULL COMMENT '关键词3的id',
+			`address_name3` varchar(255) DEFAULT NULL COMMENT '关键词3的名称',
+			`delivery_station_name` varchar(255)
+			DEFAULT NULL COMMENT '配送站点名称',
+			`customer_id` int(11) DEFAULT NULL COMMENT '所对应的用户id',
+			PRIMARY KEY
+			(`id`)
 			) ENGINE=InnoDB AUTO_INCREMENT=142942
-			DEFAULT CHARSET=utf8;
+			DEFAULT CHARSET=utf8 comment '地址详细信息表（用于拆分结果的展现）';
 		</sql>
 	</changeSet>
 
@@ -278,31 +319,43 @@
 		<sql>
 			CREATE TABLE BIZ_LOG (
 			`ID` INT (11) NOT NULL AUTO_INCREMENT,
-			`CUSTOMER_ID` INT (11) NOT NULL COMMENT '客户ID',
+			`CUSTOMER_ID` INT (11) NOT NULL
+			COMMENT '客户ID',
 			`OPERATION_TYPE` INT (11) NOT NULL COMMENT '操作类型',
-			`ADDRESS_ID` INT (11) DEFAULT NULL COMMENT '关键词ID',
+			`ADDRESS_ID` INT (11) DEFAULT
+			NULL COMMENT '关键词ID',
 			`ADDRESS_NAME` VARCHAR (255) DEFAULT NULL COMMENT '关键词名称',
-			`ALIAS_ID` INT (11) DEFAULT NULL COMMENT '别名ID',
+			`ALIAS_ID` INT
+			(11) DEFAULT NULL COMMENT '别名ID',
 			`ALIAS_NAME` VARCHAR (255) DEFAULT NULL COMMENT '别名名称',
 			`DELIVERY_STATION_RULE_ID` INT (11) DEFAULT NULL COMMENT '规则ID',
-			`RULE_EXPRESSION` VARCHAR (1000) DEFAULT NULL COMMENT '规则表达式',
+			`RULE_EXPRESSION` VARCHAR (1000)
+			DEFAULT NULL COMMENT '规则表达式',
 			`ORIGIN_STATION_ID` INT (11) DEFAULT NULL COMMENT '原站点ID',
 			`ORIGIN_STATION_NAME` VARCHAR (255) DEFAULT NULL COMMENT '原站点名称',
-			`MODIFIED_STATION_ID` INT (11) DEFAULT NULL COMMENT '修改后站点ID',
-			`MODIFIED_STATION_NAME` VARCHAR (255) DEFAULT NULL COMMENT '修改后站点名称',
+			`MODIFIED_STATION_ID` INT (11)
+			DEFAULT NULL COMMENT '修改后站点ID',
+			`MODIFIED_STATION_NAME` VARCHAR (255) DEFAULT NULL COMMENT
+			'修改后站点名称',
 			`SOURCE_STATION_ID` INT (11) DEFAULT NULL COMMENT '源站点ID',
-			`SOURCE_STATION_NAME` VARCHAR (255) DEFAULT NULL COMMENT '源站点名称',
+			`SOURCE_STATION_NAME` VARCHAR
+			(255) DEFAULT NULL COMMENT '源站点名称',
 			`DEST_STATION_ID` INT (11) DEFAULT NULL COMMENT '目的站点ID',
 			`DEST_STATION_NAME` VARCHAR (255) DEFAULT NULL COMMENT '目的站点名称',
-			`SPLIT_COMBINE_ADDRESS` text COMMENT '拆合关键词ID列表',
+			`SPLIT_COMBINE_ADDRESS` text
+			COMMENT '拆合关键词ID列表',
 			`OPERATOR_IP` VARCHAR (255) DEFAULT NULL COMMENT '操作人IP',
-			`OPERATION_TIME` datetime DEFAULT NULL COMMENT '操作时间',
+			`OPERATION_TIME`
+			datetime DEFAULT NULL COMMENT '操作时间',
 			PRIMARY KEY (`ID`),
-			KEY `IDX_OPERATION_TYPE` (`OPERATION_TYPE`) USING BTREE,
+			KEY `IDX_OPERATION_TYPE`
+			(`OPERATION_TYPE`) USING BTREE,
 			KEY `IDX_OPERATOR_IP` (`OPERATOR_IP`) USING BTREE,
-			KEY `IDX_OPERATION_TIME` (`OPERATION_TIME`) USING BTREE,
+			KEY
+			`IDX_OPERATION_TIME` (`OPERATION_TIME`) USING BTREE,
 			KEY `IDX_CUSTOMER_ID` (`CUSTOMER_ID`)
-			) ENGINE = INNODB AUTO_INCREMENT = 151 DEFAULT CHARSET = utf8;
+			) ENGINE
+			= INNODB AUTO_INCREMENT = 151 DEFAULT CHARSET = utf8 comment '业务日志';
 		</sql>
 	</changeSet>
 
@@ -509,18 +562,18 @@
 	<!-- <changeSet id="liuwuqiang-2015-10-21-01" author="liuwuqiang"> -->
 	<!-- <sqlFile path="customer_init_zzyt.sql" encoding="UTF-8" relativeToChangelogFile="true" /> -->
 	<!-- </changeSet> -->
-	
+
 	<!-- 创建济南黑猫速运客户 -->
 	<changeSet id="songkaojun-2015-12-22-02" author="songkaojun">
-	     <sqlFile path="customer_init_jnhm.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_jnhm.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 	<!-- 北京燕方鑫科技发展有限公司 -->
 	<changeSet id="songkaojun-2015-12-22-03" author="songkaojun">
-	     <sqlFile path="customer_init_bjyfx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_bjyfx.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
 	<!-- 武汉中诺物流 -->
 	<changeSet id="songkaojun-2015-12-22-04" author="songkaojun">
-	     <sqlFile path="customer_init_whzn.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+		<sqlFile path="customer_init_whzn.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
-	
+
 </databaseChangeLog>
