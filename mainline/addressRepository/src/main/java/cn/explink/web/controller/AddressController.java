@@ -588,6 +588,33 @@ public class AddressController extends BaseController {
 	}
 
 	/**
+	 *
+	 * @Title: createAliasIndex
+	 * @description 给所有的别名生成索引（当客户的索引需要重新生成的时候，定时任务只能完成关键词的索引生成，而不能生成别名的索引）
+	 * @author 刘武强
+	 * @date  2016年1月4日下午4:44:41
+	 * @param  @param request
+	 * @param  @return
+	 * @return  AjaxJson
+	 * @throws
+	 */
+	@RequestMapping("/createAliasIndex")
+	public @ResponseBody AjaxJson createAliasIndex(HttpServletRequest request) {
+		AjaxJson aj = null;
+		List<Alias> aliasList = new ArrayList<Alias>();
+		aliasList = this.addressService.getListAliasByCustomerId(5L);
+		for (Alias alias : aliasList) {
+			try {
+				this.addressService.updateIndexRightNow(null, alias.getId());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return aj;
+	}
+
+	/**
 	 * 获取别名
 	 *
 	 * @param addressId

@@ -56,6 +56,17 @@ public class AliasDao extends BasicHibernateDaoSupport<Alias, Long> {
 		}
 	}
 
+	public List<Alias> getAliasByCustomerId(Long customerId) {
+		if (customerId != null) {
+			String hql = "from Alias where customerId=:customerId";
+			Query query = this.getSession().createQuery(hql);
+			query.setLong("customerId", customerId);
+			return  (List<Alias>)query.list();
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 *
 	 * @Title: getAddressById

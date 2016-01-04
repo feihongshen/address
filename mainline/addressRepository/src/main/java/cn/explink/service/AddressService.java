@@ -114,6 +114,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return this.addressDao.getZTree(customerId, null, null);
 	}
 
+	public List<Alias> getListAliasByCustomerId(Long customerId) {
+		return this.aliasDao.getAliasByCustomerId(customerId);
+	}
+
 	/**
 	 * 创建或更新地址
 	 *
@@ -150,7 +154,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return address;
 	}
 
-	private void updateIndexRightNow(Long addressId, Long aliasId) throws IOException {
+	public void updateIndexRightNow(Long addressId, Long aliasId) throws IOException {
 		List<Long> addressIdList = new ArrayList<Long>();
 		List<Long> aliasIdList = new ArrayList<Long>();
 		if (null != addressId) {
