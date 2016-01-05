@@ -20,10 +20,6 @@
 		<poi.version>3.10-FINAL</poi.version>
 	</properties>
 	<repositories>
-		<!-- <repository> <id>explink</id> <name>explink Repository</name> <url>http://gradle.artifactoryonline.com/gradle/libs/</url> 
-			</repository> -->
-		<!-- <repository> <id>goolecode</id> <name>goolecode Repository</name> <url>https://m2repos.googlecode.com/svn/nexus/</url> 
-			</repository> -->
 		<repository>
 			<id>spring-maven-release</id>
 			<name>Spring Maven Release Repository</name>
@@ -34,9 +30,6 @@
 			<name>explink Repository</name>
 			<url>http://192.168.0.217:8081/nexus/content/repositories/</url>
 		</repository>
-		<!-- <repository> <id>spring-maven-milestone</id> <name>Spring Maven Milestone Repository</name> <url>http://maven.springframework.org/milestone</url> 
-			</repository> <repository> <id>momoplan-maven-release</id> <name>momoplan maven release</name> <url>https://raw.github.com/momoplan/maven-repository/master/releases</url> 
-			</repository> -->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -44,8 +37,6 @@
 			<name>Spring Maven Release Repository</name>
 			<url>http://maven.springframework.org/release</url>
 		</pluginRepository>
-		<!-- <pluginRepository> <id>spring-maven-milestone</id> <name>Spring Maven Milestone Repository</name> 
-			<url>http://maven.springframework.org/milestone</url> </pluginRepository> -->
 	</pluginRepositories>
 	<dependencies>
 		<dependency>
@@ -261,8 +252,6 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.aspectj</groupId> <artifactId>aspectjrt</artifactId> <version>${aspectj.version}</version> 
-			</dependency> -->
 		<dependency>
 			<groupId>opensymphony</groupId>
 			<artifactId>quartz-all</artifactId>
@@ -363,8 +352,6 @@
 			<artifactId>lucene-memory</artifactId>
 			<version>${lucene.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.wltea</groupId> <artifactId>IKAnalyzer</artifactId> <version>2012_u6</version> 
-			<scope>system</scope> <systemPath>E:/repositories/IKAnalyzer2012_u6.jar</systemPath> </dependency> -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
@@ -389,10 +376,6 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
-				<version>1.0-alpha-2</version> <configuration> <files> <file>src/main/resources/META-INF/spring/dev.properties</file> 
-				</files> </configuration> <executions> <execution> <phase>initialize</phase> <goals> <goal>read-project-properties</goal> 
-				</goals> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -504,7 +487,7 @@
 			<properties>
 				<tomcat.manager.url></tomcat.manager.url>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/sypj_dmp_test_1125?characterEncoding=utf8</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_cqhy_0104?characterEncoding=utf8</jdbc.url>
 				<jdbc.user>eap</jdbc.user>
 				<jdbc.password>explink</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -519,8 +502,8 @@
 				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
-				<luceneIndexPath>e:/address/lucene/index</luceneIndexPath>
-				<luceneDictPath>e:/address/lucene/dict</luceneDictPath>
+				<luceneIndexPath>f:/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>f:/address/lucene/dict</luceneDictPath>
 				<label>dev</label>
 			</properties>
 		</profile>
