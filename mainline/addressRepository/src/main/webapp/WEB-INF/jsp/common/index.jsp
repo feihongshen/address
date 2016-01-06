@@ -63,7 +63,7 @@
 				<ul>
 					<li><a href="#" onclick="addTab('关键词批量导入','address/addressImportPage')">关键词批量导入</a></li>
 					<li><a href="#" onclick="addTab('关键词树状维护','address/addressEditPage')">关键词树状维护</a></li>
-					<li><a href="#" onclick="addTab('拆分结果维护','keyword/keywordMaintain')">拆分结果维护</a></li>
+<!-- 					<li><a href="#" onclick="addTab('拆分结果维护','keyword/keywordMaintain')">拆分结果维护</a></li> -->
 				</ul></li>
 			<li><span>关联设置</span>
 				<ul>

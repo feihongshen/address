@@ -199,10 +199,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @Title: getAliasById
 	 * @description 通过id，获取别名对象
 	 * @author 刘武强
-	 * @date  2015年11月27日下午3:01:10
-	 * @param  @param aliasIdList
-	 * @param  @return
-	 * @return  Alias
+	 * @date 2015年11月27日下午3:01:10
+	 * @param @param aliasIdList
+	 * @param @return
+	 * @return Alias
 	 * @throws
 	 */
 	public Alias getAliasById(Long aliasId) {
@@ -214,10 +214,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @Title: getAddressById
 	 * @description 通过id获取关键词对象
 	 * @author 刘武强
-	 * @date  2015年11月27日下午3:33:29
-	 * @param  @param addressId
-	 * @param  @return
-	 * @return  Alias
+	 * @date 2015年11月27日下午3:33:29
+	 * @param @param addressId
+	 * @param @return
+	 * @return Alias
 	 * @throws
 	 */
 	public Address getAddressById(Long addressId) {
@@ -332,18 +332,19 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			SingleAddressMappingResult singleResult = this.search(orderVo, true);
 
 			// 调用地图匹配逻辑 （开始）
-			switch (singleResult.getResult()) {
-			case zeroResult:
-			case exceptionResult:
-				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
-				singleResult.setRelatedAddressList(new ArrayList<Address>());
-				singleResult.setDeliveryStationList(deliveryStationList);
-
-				// 数字地图匹配到单个站点，则进行拆分操作
-				if (1 == deliveryStationList.size()) {
-					this.splitAndImport(orderVo, deliveryStationList);
-				}
-			}
+			// switch (singleResult.getResult()) {
+			// case zeroResult:
+			// case exceptionResult:
+			// List<DeliveryStation> deliveryStationList =
+			// this.searchByGis(orderVo);
+			// singleResult.setRelatedAddressList(new ArrayList<Address>());
+			// singleResult.setDeliveryStationList(deliveryStationList);
+			//
+			// // 数字地图匹配到单个站点，则进行拆分操作
+			// if (1 == deliveryStationList.size()) {
+			// this.splitAndImport(orderVo, deliveryStationList);
+			// }
+			// }
 			// 调用地图匹配逻辑 （结束）
 
 			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
@@ -390,7 +391,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
 	private void splitAndImport(OrderVo orderVo, List<DeliveryStation> deliveryStationList) {
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService, this.rawAddressService, this.keywordSuffixService, this.addressDetailService));
+		service.execute(new SplitAndImportRawAddressThread(orderVo.getCustomerId(), orderVo.getAddressLine(), deliveryStationList.get(0).getName(), this.rawDeliveryStationService,
+				this.rawAddressService, this.keywordSuffixService, this.addressDetailService));
 		service.shutdown();
 	}
 
@@ -418,25 +420,26 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			SingleAddressMappingResult singleResult = this.search(orderVo, false);
 
 			// 调用地图匹配逻辑 （开始）
-			switch (singleResult.getResult()) {
-			case zeroResult:
-			case exceptionResult:
-				// 将被地图匹配的地址收集起来
-				mapAddressList.add(orderVo.getAddressLine());
-				// 调用地图匹配
-				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
-
-				if (deliveryStationList.isEmpty()) {
-					singleResult.setResult(AddressMappingResultEnum.zeroResult);
-				} else if (1 == deliveryStationList.size()) {
-					singleResult.setResult(AddressMappingResultEnum.singleResult);
-
-					this.splitAndImport(orderVo, deliveryStationList);
-				} else {
-					singleResult.setResult(AddressMappingResultEnum.multipleResult);
-				}
-				singleResult.setDeliveryStationList(deliveryStationList);
-			}
+			// switch (singleResult.getResult()) {
+			// case zeroResult:
+			// case exceptionResult:
+			// // 将被地图匹配的地址收集起来
+			// mapAddressList.add(orderVo.getAddressLine());
+			// // 调用地图匹配
+			// List<DeliveryStation> deliveryStationList =
+			// this.searchByGis(orderVo);
+			//
+			// if (deliveryStationList.isEmpty()) {
+			// singleResult.setResult(AddressMappingResultEnum.zeroResult);
+			// } else if (1 == deliveryStationList.size()) {
+			// singleResult.setResult(AddressMappingResultEnum.singleResult);
+			//
+			// this.splitAndImport(orderVo, deliveryStationList);
+			// } else {
+			// singleResult.setResult(AddressMappingResultEnum.multipleResult);
+			// }
+			// singleResult.setDeliveryStationList(deliveryStationList);
+			// }
 			// 调用地图匹配逻辑 （结束）
 
 			BeanVo b = new BeanVo();
@@ -748,7 +751,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		Map<String, BigInteger> map = new HashMap<String, BigInteger>();
 		String keysql = " select count(1)  from ADDRESS_PERMISSIONS p inner join ADDRESS a on a.id=p.ADDRESS_ID where a.ADDRESS_LEVEL>3 and p.CUSTOMER_ID=" + customerId;
 		BigInteger keys = (BigInteger) this.getSession().createSQLQuery(keysql).uniqueResult();
-		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r inner join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID=" + customerId;
+		String bindSql = " select count(DISTINCT  r.ADDRESS_ID) from DELIVERY_STATION_RULES r inner join DELIVERY_STATIONS d on r.DELIVERY_STATION_ID=d.ID where d.STATUS=1 and d.CUSTOMER_ID="
+				+ customerId;
 		BigInteger binds = (BigInteger) this.getSession().createSQLQuery(bindSql).uniqueResult();
 		map.put("keys", keys);
 		map.put("binds", binds);
@@ -811,7 +815,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		private KeywordSuffixService keywordSuffixService;
 		private AddressDetailService addressDetailService;
 
-		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService, KeywordSuffixService keywordSuffixService, AddressDetailService addressDetailService) {
+		public SplitAndImportRawAddressThread(Long customerId, String addressLine, String stationName, RawDeliveryStationService rawDeliveryStationService, RawAddressService rawAddressService,
+				KeywordSuffixService keywordSuffixService, AddressDetailService addressDetailService) {
 			super();
 			this.customerId = customerId;
 			this.addressLine = addressLine;
@@ -896,10 +901,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @Title: getAddressByNameList
 	 * @description 通过
 	 * @author 刘武强
-	 * @date  2015年11月26日下午7:35:46
-	 * @param  @param idList
-	 * @param  @return
-	 * @return  List<Address>
+	 * @date 2015年11月26日下午7:35:46
+	 * @param @param idList
+	 * @param @return
+	 * @return List<Address>
 	 * @throws
 	 */
 	public List<Address> getAddressByNameList(List<String> nameList) {
@@ -911,10 +916,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	 * @Title: getAddressByNameAndPid
 	 * @description 通过父节点id和名字查询地址信息
 	 * @author 刘武强
-	 * @date  2015年11月30日下午2:32:57
-	 * @param  @param nameList
-	 * @param  @return
-	 * @return  List<Address>
+	 * @date 2015年11月30日下午2:32:57
+	 * @param @param nameList
+	 * @param @return
+	 * @return List<Address>
 	 * @throws
 	 */
 	public List<Address> getAddressByNameAndPid(List<String> nameList, Long pid) {

@@ -122,7 +122,7 @@ function setKeywords(){
 			</div>
 		</td>
 	</div>
-	<div id="mapMatchedResult" style="width: 50%; height: 600px; float: right;"></div>
+<!-- 	<div id="mapMatchedResult" style="width: 50%; height: 600px; float: right;"></div> -->
 
 </body>
 </html>
