@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>地址库维护</title>
+<title>关键词树状维护</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/addressEditPage.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/fuzzySearch.js"></script>

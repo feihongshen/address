@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>关键词匹配</title>
+<title>匹配情况分析</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <style type="text/css">
 .keyword {

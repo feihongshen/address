@@ -14,25 +14,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript">
-	/**
-	$(function() {
-		addTab('地址匹配','${pageContext.request.contextPath}/address/index');
-	});
-	function addTab(title, url) {
-		if ($('#centerTabs').tabs('exists', title)) {
-			$('#centerTabs').tabs('select', title);
-		} else {
-			var content = '<iframe scrolling="auto" frameborder="0" src="' + url + '" style="width:100%;height:100%;"></iframe>';
-			$('#centerTabs').tabs('add', {
-				title : title,
-				content : content,
-				closable : true
-			});
-		}
-	}
-	*/
-</script>
 <style type="text/css">
 #fm {
 	margin: 0;
