@@ -332,19 +332,18 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			SingleAddressMappingResult singleResult = this.search(orderVo, true);
 
 			// 调用地图匹配逻辑 （开始）
-			// switch (singleResult.getResult()) {
-			// case zeroResult:
-			// case exceptionResult:
-			// List<DeliveryStation> deliveryStationList =
-			// this.searchByGis(orderVo);
-			// singleResult.setRelatedAddressList(new ArrayList<Address>());
-			// singleResult.setDeliveryStationList(deliveryStationList);
-			//
-			// // 数字地图匹配到单个站点，则进行拆分操作
-			// if (1 == deliveryStationList.size()) {
-			// this.splitAndImport(orderVo, deliveryStationList);
-			// }
-			// }
+			switch (singleResult.getResult()) {
+			case zeroResult:
+			case exceptionResult:
+				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+				singleResult.setRelatedAddressList(new ArrayList<Address>());
+				singleResult.setDeliveryStationList(deliveryStationList);
+
+				// 数字地图匹配到单个站点，则进行拆分操作
+				if (1 == deliveryStationList.size()) {
+					this.splitAndImport(orderVo, deliveryStationList);
+				}
+			}
 			// 调用地图匹配逻辑 （结束）
 
 			OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
@@ -420,26 +419,25 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			SingleAddressMappingResult singleResult = this.search(orderVo, false);
 
 			// 调用地图匹配逻辑 （开始）
-			// switch (singleResult.getResult()) {
-			// case zeroResult:
-			// case exceptionResult:
-			// // 将被地图匹配的地址收集起来
-			// mapAddressList.add(orderVo.getAddressLine());
-			// // 调用地图匹配
-			// List<DeliveryStation> deliveryStationList =
-			// this.searchByGis(orderVo);
-			//
-			// if (deliveryStationList.isEmpty()) {
-			// singleResult.setResult(AddressMappingResultEnum.zeroResult);
-			// } else if (1 == deliveryStationList.size()) {
-			// singleResult.setResult(AddressMappingResultEnum.singleResult);
-			//
-			// this.splitAndImport(orderVo, deliveryStationList);
-			// } else {
-			// singleResult.setResult(AddressMappingResultEnum.multipleResult);
-			// }
-			// singleResult.setDeliveryStationList(deliveryStationList);
-			// }
+			switch (singleResult.getResult()) {
+			case zeroResult:
+			case exceptionResult:
+				// 将被地图匹配的地址收集起来
+				mapAddressList.add(orderVo.getAddressLine());
+				// 调用地图匹配
+				List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+
+				if (deliveryStationList.isEmpty()) {
+					singleResult.setResult(AddressMappingResultEnum.zeroResult);
+				} else if (1 == deliveryStationList.size()) {
+					singleResult.setResult(AddressMappingResultEnum.singleResult);
+
+					this.splitAndImport(orderVo, deliveryStationList);
+				} else {
+					singleResult.setResult(AddressMappingResultEnum.multipleResult);
+				}
+				singleResult.setDeliveryStationList(deliveryStationList);
+			}
 			// 调用地图匹配逻辑 （结束）
 
 			BeanVo b = new BeanVo();
