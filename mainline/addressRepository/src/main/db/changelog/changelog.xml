@@ -587,5 +587,9 @@
 	<changeSet id="songkaojun-2016-01-15-01" author="songkaojun">
 		<sqlFile path="customer_init_tjmsf.sql" encoding="UTF-8" relativeToChangelogFile="true" />
 	</changeSet>
+	<!-- 中浩途胜 -->
+	<changeSet id="liuwuqiang-2016-01-19-01" author="liuwuqiang">
+		<sqlFile path="customer_init_zhts.sql" encoding="UTF-8" relativeToChangelogFile="true" />
+	</changeSet>
 
 </databaseChangeLog>
