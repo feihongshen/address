@@ -59,7 +59,7 @@ $(function(){
 				tableData=usedData['dList'];
 				usedTable=$("#dtable");
 				break;
-			case '命中关键字未匹配站点':
+			case '命中关键词未匹配站点':
 				tableData=usedData['kList'];
 				usedTable=$("#keytable");
 				break;
@@ -150,9 +150,9 @@ $(function(){
         </thead>
       </table>
     </div>
-<!--     <div title="地图匹配情况" style="padding:10px"> -->
-<!-- 	    <div id="mapMatchedResult" style="width: 100%; height: 600px; float: right;"></div> -->
-<!--     </div> -->
+    <div title="地图匹配情况" style="padding:10px">
+	    <div id="mapMatchedResult" style="width: 100%; height: 600px; float: right;"></div>
+    </div>
   </div>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package cn.explink.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = -5613879653685264592L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +36,7 @@ public class User {
 	private Customer customer;
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -40,7 +44,7 @@ public class User {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -48,7 +52,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
@@ -56,7 +60,7 @@ public class User {
 	}
 
 	public Integer getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(Integer status) {
@@ -64,7 +68,7 @@ public class User {
 	}
 
 	public Customer getCustomer() {
-		return customer;
+		return this.customer;
 	}
 
 	public void setCustomer(Customer customer) {
@@ -75,18 +79,23 @@ public class User {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("User [");
-		if (id != null)
-			builder.append("id=").append(id).append(", ");
-		if (name != null)
-			builder.append("name=").append(name).append(", ");
-		if (password != null)
-			builder.append("password=").append(password).append(", ");
-		if (status != null)
-			builder.append("status=").append(status).append(", ");
-		if (customer != null)
-			builder.append("customer=").append(customer);
+		if (this.id != null) {
+			builder.append("id=").append(this.id).append(", ");
+		}
+		if (this.name != null) {
+			builder.append("name=").append(this.name).append(", ");
+		}
+		if (this.password != null) {
+			builder.append("password=").append(this.password).append(", ");
+		}
+		if (this.status != null) {
+			builder.append("status=").append(this.status).append(", ");
+		}
+		if (this.customer != null) {
+			builder.append("customer=").append(this.customer);
+		}
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 }

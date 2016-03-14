@@ -290,7 +290,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.18</version>
+			<version>5.1.38</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ws.commons.schema</groupId>
@@ -479,7 +479,7 @@
 		</plugins>
 	</build>
 	<profiles>
-	<profile>
+		<profile>
 			<id>local</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -487,7 +487,7 @@
 			<properties>
 				<tomcat.manager.url></tomcat.manager.url>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_cqhy_0104?characterEncoding=utf8</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_wxpw_0128?characterEncoding=utf8</jdbc.url>
 				<jdbc.user>eap</jdbc.user>
 				<jdbc.password>explink</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -495,7 +495,7 @@
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
 				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
 				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
-				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.show_sql>true</hibernate.show_sql>
 				<hibernate.format_sql>true</hibernate.format_sql>
 				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
 				<hibernate.auto_close_session>true</hibernate.auto_close_session>
@@ -516,7 +516,7 @@
 				<tomcat.password>admin</tomcat.password>
 				<tomcat.path>/address</tomcat.path>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_shpj_0915?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://192.168.0.217:3306/ar_pj_test?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>eap</jdbc.user>
 				<jdbc.password>explink</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -642,7 +642,7 @@
 			<id>NXPJ</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.70.37:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://172.20.200.109:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -711,12 +711,60 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>SYPJ</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://localhost:3306/addressRepository_cqhy?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password></jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address_cqhy/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address_cqhy/lucene/dict</luceneDictPath>
+				<label>prod</label>
+			</properties>
+		</profile>
+		<profile>
+			<id>HLJPJ</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://172.20.200.24:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password></jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>prod</label>
+			</properties>
+		</profile>
+		<profile>
 			<id>CQHY</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.0.217:3306/cqhy_address?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
-				<jdbc.user>eap</jdbc.user>
-				<jdbc.password>explink</jdbc.password>
+				<jdbc.url>jdbc:mysql://172.20.200.35:3306/addresscqhy?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
@@ -729,11 +777,11 @@
 				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
-				<luceneIndexPath>/home/appusr/address_cqhy/lucene/index</luceneIndexPath>
-				<luceneDictPath>/home/appusr/address_cqhy/lucene/dict</luceneDictPath>				
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>QHPJ</id>
 			<properties>
@@ -758,7 +806,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>XHM</id>
 			<properties>
@@ -783,7 +831,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>JLPJ</id>
 			<properties>
@@ -808,7 +856,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>JXSD</id>
 			<properties>
@@ -833,7 +881,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>GZTL_42</id>
 			<properties>
@@ -858,7 +906,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>WXPW</id>
 			<properties>
@@ -913,7 +961,7 @@
 			<id>GXPX</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.70.37:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://172.20.200.110:3306/addressRepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -933,7 +981,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>ADDRESSF</id>
 			<properties>
@@ -958,7 +1006,7 @@
 				<label>prod</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>ADDRESSG</id>
 			<properties>
@@ -982,7 +1030,7 @@
 				<luceneDictPath>/home/apps/addressg/lucene/dict</luceneDictPath>
 				<label>ADDRESSG</label>
 			</properties>
-		</profile>		
+		</profile>
 		<profile>
 			<id>SHPJ</id>
 			<properties>
@@ -1010,7 +1058,7 @@
 				<luceneDictPath>/home/appusr/address_train_self/lucene/dict</luceneDictPath>
 				<label>SHPJ</label>
 			</properties>
-		</profile>		
+		</profile>
 		<profile>
 			<id>zjfy</id>
 			<properties>
@@ -1035,7 +1083,7 @@
 				<luceneDictPath>e:/address/lucene/dict</luceneDictPath>
 				<label>dev</label>
 			</properties>
-		</profile>			
+		</profile>
 		<profile>
 			<id>gztl</id>
 			<properties>
@@ -1060,7 +1108,7 @@
 				<luceneDictPath>e:/address/lucene/dict</luceneDictPath>
 				<label>dev</label>
 			</properties>
-		</profile>					
+		</profile>
 		<profile>
 			<id>ADDRESSH</id>
 			<properties>
@@ -1089,7 +1137,7 @@
 			<id>FJJXFY</id>
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
-				<jdbc.url>jdbc:mysql://192.168.70.38:3306/addressrepository?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.url>jdbc:mysql://172.20.200.44:3306/addressmatchfjfy?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>explinkvipshop</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
@@ -1104,9 +1152,9 @@
 				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
 				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
-				<luceneIndexPath>/home/appusr/address/lucene/index</luceneIndexPath>
-				<luceneDictPath>/home/appusr/address/lucene/dict</luceneDictPath>
-				<label>prod</label>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>FJJXFY</label>
 			</properties>
 		</profile>
 
@@ -1182,7 +1230,7 @@
 				<label>WHZNBJFYXK</label>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>ADDTJMSF</id>
 			<properties>
@@ -1236,8 +1284,8 @@
 			<properties>
 				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
 				<jdbc.url>jdbc:mysql://172.20.200.111:3306/addresssc?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
-				<jdbc.user>root</jdbc.user>
-				<jdbc.password></jdbc.password>
+				<jdbc.user>apps</jdbc.user>
+				<jdbc.password>apps@pjbest*</jdbc.password>
 				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
 				<c3p0.minPoolSize>5</c3p0.minPoolSize>
 				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
@@ -1423,6 +1471,103 @@
 				<label>ADDRESSYN</label>
 			</properties>
 		</profile>
-		
+		<profile>
+			<id>GSGD_ADDRESS</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://192.168.61.20:3306/gsgd_address?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>apps</jdbc.user>
+				<jdbc.password>explinkvipshop</jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>GSGD_ADDRESS</label>
+			</properties>
+		</profile>
+		<profile>
+			<id>BJRB_ADDRESS</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://127.0.0.1:3306/bjrb_address?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password></jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>BJRB_ADDRESS</label>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>NMGSC_ADDRESS</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://127.0.0.1:3306/nmgsc_address?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>apps</jdbc.user>
+				<jdbc.password>explinkvipshop</jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/address/lucene/dict</luceneDictPath>
+				<label>NMGSC_ADDRESS</label>
+			</properties>
+		</profile>
+		<profile>
+			<id>PHHTEST</id>
+			<properties>
+				<jdbc.drivers>com.mysql.jdbc.Driver</jdbc.drivers>
+				<jdbc.url>jdbc:mysql://192.168.0.225:3306/pphtest_address?characterEncoding=utf8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false&amp;amp;useCursorFetch=true&amp;amp;defaultFetchSize=1000</jdbc.url>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password></jdbc.password>
+				<c3p0.acquireIncrement>5</c3p0.acquireIncrement>
+				<c3p0.minPoolSize>5</c3p0.minPoolSize>
+				<c3p0.maxPoolSize>60</c3p0.maxPoolSize>
+				<c3p0.maxIdleTime>10000</c3p0.maxIdleTime>
+				<hibernate.dialect>cn.explink.db.dialect.MySQLLocalDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+				<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+				<hibernate.auto_close_session>true</hibernate.auto_close_session>
+				<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+				<hibernate.transaction.factory_class>org.hibernate.transaction.JDBCTransactionFactory</hibernate.transaction.factory_class>
+				<hibernate.current_session_context_class>org.springframework.orm.hibernate4.SpringSessionContext</hibernate.current_session_context_class>
+				<luceneIndexPath>/home/apps/phhtest_address/lucene/index</luceneIndexPath>
+				<luceneDictPath>/home/apps/phhtest_address/lucene/dict</luceneDictPath>
+				<label>PHHTEST</label>
+			</properties>
+		</profile>
+
 	</profiles>
 </project>

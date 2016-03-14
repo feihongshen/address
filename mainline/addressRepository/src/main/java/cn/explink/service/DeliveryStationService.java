@@ -48,7 +48,6 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 
 	public DeliveryStationService() {
 		super(DeliveryStation.class);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Autowired
@@ -81,7 +80,8 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		deliveryStation.setExternalId(deliveryStationVo.getExternalId());
 		this.deliveryStationDao.save(deliveryStation);
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO,
+				this.bizLogService, null, null));
 		service.shutdown();
 		return deliveryStation;
 	}
@@ -94,7 +94,8 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		bizlog.setModifideStationId(deliveryStation.getId());
 		bizlog.setModifideStationName(deliveryStationVo.getName());
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO,
+				this.bizLogService, null, null));
 		service.shutdown();
 
 		deliveryStation.setName(deliveryStationVo.getName());
@@ -207,7 +208,8 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 		deliveryStation.setStatus(DeliveryStationStausEnmu.invalid.getValue());
 		this.deliveryStationDao.save(deliveryStation);
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
+		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO,
+				this.bizLogService, null, null));
 		service.shutdown();
 		return deliveryStation;
 	}
@@ -311,5 +313,4 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
 	public List<Vendor> listAllVendor(Long customerId) {
 		return this.deliveryStationDao.listAllVendor(customerId);
 	}
-
 }

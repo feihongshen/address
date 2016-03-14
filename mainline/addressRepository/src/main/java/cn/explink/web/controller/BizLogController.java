@@ -12,7 +12,7 @@ import cn.explink.service.BizLogService;
 
 @RequestMapping("/bizLogController")
 @Controller
-public class BizLogController {
+public class BizLogController extends BaseController {
 	@Autowired
 	private BizLogService bizLogService;
 
@@ -52,7 +52,7 @@ public class BizLogController {
 	@RequestMapping("/list")
 	@ResponseBody
 	public Map<String, Object> list(Model model, int operationType, String beginTime, String endTime, String operationIP, int pageNum, int pageSize) {
-		Map<String, Object> map = this.bizLogService.findInfo(operationType, beginTime, endTime, operationIP, pageNum, pageSize);
+		Map<String, Object> map = this.bizLogService.findInfo(operationType, beginTime, endTime, operationIP, pageNum, pageSize, this.getCustomerId());
 		return map;
 	}
 }

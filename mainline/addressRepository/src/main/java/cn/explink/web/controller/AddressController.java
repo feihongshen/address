@@ -42,6 +42,7 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.domain.enums.LogTypeEnum;
+import cn.explink.domain.enums.SearchTypeEnum;
 import cn.explink.gis.GeoCoder;
 import cn.explink.gis.GeoPoint;
 import cn.explink.modle.AjaxJson;
@@ -129,7 +130,8 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getAddressTree")
-	public @ResponseBody List<ZTreeNode> getAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "ids", required = false) String ids, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+	public @ResponseBody List<ZTreeNode> getAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "ids", required = false) String ids,
+			@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		Long customerId = this.getCustomerId();
 		List<ZTreeNode> list = this.addressService.getAsyncAddressPage(customerId, parentId, ids, page, pageSize);
 		if (StringUtils.isNotBlank(ids)) {
@@ -145,7 +147,8 @@ public class AddressController extends BaseController {
 	}
 
 	@RequestMapping("/getStationAddressTreePage")
-	public @ResponseBody List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "level", required = false) Long level, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+	public @ResponseBody List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId, @RequestParam(value = "level", required = false) Long level,
+			@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		Long customerId = this.getCustomerId();
 		return this.addressService.getStationAddressTreePage(customerId, parentId, page, pageSize);
 	}
@@ -455,12 +458,28 @@ public class AddressController extends BaseController {
 	 * @throws ParseException
 	 */
 	@RequestMapping("/matchKeyword")
-	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+	public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched) throws IOException, ParseException {
 		Long customerId = this.getCustomerId();
 		if (StringUtil.isEmpty(needMatched)) {
 			return null;
 		}
 		KeywordMatchedResult result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
+		this.addressService.appendStation(customerId, result.getzTreeNodeList());
+		return result;
+	}
+
+	@RequestMapping("/searchByKeywordOrStation")
+	public @ResponseBody KeywordMatchedResult searchByKeywordOrStation(int searchType, String needMatched) throws IOException, ParseException {
+		KeywordMatchedResult result = new KeywordMatchedResult();
+		Long customerId = this.getCustomerId();
+		if (StringUtil.isEmpty(needMatched)) {
+			return null;
+		}
+		if (searchType == SearchTypeEnum.keyword.getValue()) {
+			result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
+		} else {
+			result = this.luceneService.fuzzySearchByStationName(needMatched, customerId);
+		}
 		this.addressService.appendStation(customerId, result.getzTreeNodeList());
 		return result;
 	}
@@ -525,7 +544,8 @@ public class AddressController extends BaseController {
 	 * 新增关键词
 	 */
 	@RequestMapping("/add")
-	public @ResponseBody AjaxJson add(@RequestParam(value = "stationId") Long stationId, @RequestParam(value = "parentId", required = false) Long parentId, @RequestParam(value = "addresses", required = false) String addresses, HttpServletRequest request) {
+	public @ResponseBody AjaxJson add(@RequestParam(value = "stationId") Long stationId, @RequestParam(value = "parentId", required = false) Long parentId,
+			@RequestParam(value = "addresses", required = false) String addresses, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		Long customerId = this.getCustomerId();
@@ -538,15 +558,16 @@ public class AddressController extends BaseController {
 				list = this.addressService.addAddress(parentId, addresses, customerId);
 			}
 			zList = this.transAddress(list);
-			//输出日志，并且收集保存日志 --刘武强 11.26
+			// 输出日志，并且收集保存日志 --刘武强 11.26
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("addresses", addresses);
 			map.put("parentId", parentId);
 			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), map, this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAddress.getValue(), this.getUserIp(request), map, this.bizLogDAO, this.bizLogService,
+					this.addressService, null));
 			service.shutdown();
 
-			//AddressController.LOGGER.info("添加关键词：{}", addresses);
+			// AddressController.LOGGER.info("添加关键词：{}", addresses);
 		} catch (Exception e) {
 			aj.setSuccess(false);
 			aj.setMsg(e.getMessage());
@@ -579,9 +600,10 @@ public class AddressController extends BaseController {
 		Long customerId = this.getCustomerId();
 		if ((alias != null) && (addressId != null)) {
 			aj = this.addressService.addAlias(addressId, alias, customerId);
-			//输出日志，并且收集保存日志 --刘武强 11.26
+			// 输出日志，并且收集保存日志 --刘武强 11.26
 			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAlias.getValue(), this.getUserIp(request), aj.getObj(), this.bizLogDAO, this.bizLogService, this.addressService, null));
+			service.execute(new SynInsertBizLogThread(AddressController.class, customerId, LogTypeEnum.addAlias.getValue(), this.getUserIp(request), aj.getObj(), this.bizLogDAO, this.bizLogService,
+					this.addressService, null));
 			service.shutdown();
 		}
 		return aj;
@@ -592,10 +614,10 @@ public class AddressController extends BaseController {
 	 * @Title: createAliasIndex
 	 * @description 给所有的别名生成索引（当客户的索引需要重新生成的时候，定时任务只能完成关键词的索引生成，而不能生成别名的索引）
 	 * @author 刘武强
-	 * @date  2016年1月4日下午4:44:41
-	 * @param  @param request
-	 * @param  @return
-	 * @return  AjaxJson
+	 * @date 2016年1月4日下午4:44:41
+	 * @param @param request
+	 * @param @return
+	 * @return AjaxJson
 	 * @throws
 	 */
 	@RequestMapping("/createAliasIndex")
@@ -637,13 +659,15 @@ public class AddressController extends BaseController {
 	public @ResponseBody AjaxJson delAlias(@RequestParam(value = "id") Long id, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
-		//获取别名对象 --刘武强 11.27
+		// 获取别名对象 --刘武强 11.27
 		Alias Alias = this.addressService.getAliasById(id);
 		this.addressService.deleteAlias(id);
-		//AddressController.LOGGER.info("删除别名：{}", "IP:" + this.getUserIp(request) + " id=" + id);
-		//输出日志，并且收集保存日志 --刘武强 11.26
+		// AddressController.LOGGER.info("删除别名：{}", "IP:" +
+		// this.getUserIp(request) + " id=" + id);
+		// 输出日志，并且收集保存日志 --刘武强 11.26
 		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAlias.getValue(), this.getUserIp(request), Alias, this.bizLogDAO, this.bizLogService, this.addressService, null));
+		service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAlias.getValue(), this.getUserIp(request), Alias, this.bizLogDAO,
+				this.bizLogService, this.addressService, null));
 		service.shutdown();
 		return aj;
 	}
@@ -655,15 +679,18 @@ public class AddressController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/delAddress")
-	public @ResponseBody AjaxJson delAddress(Long addressId, HttpServletRequest request) {
+	public @ResponseBody AjaxJson delAddress(@RequestParam(value = "addressIdList[]") List<Long> addressIdList, HttpServletRequest request) {
 		AjaxJson aj = new AjaxJson();
 		aj.setSuccess(true);
 		try {
-			this.addressService.deleteAddress(addressId, this.getCustomerId());
+			this.addressService.deleteAddressList(addressIdList, this.getCustomerId());
+			// 记录删除日志
 			ExecutorService service = Executors.newCachedThreadPool();
-			service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAddress.getValue(), this.getUserIp(request), addressId, this.bizLogDAO, this.bizLogService, this.addressService, null));
+			for (Long addressId : addressIdList) {
+				service.execute(new SynInsertBizLogThread(AddressController.class, this.getCustomerId(), LogTypeEnum.deleteAddress.getValue(), this.getUserIp(request), addressId, this.bizLogDAO,
+						this.bizLogService, this.addressService, null));
+			}
 			service.shutdown();
-			//AddressController.LOGGER.info("删除关键词：{}", "IP:" + this.getUserIp(request) + " customerId=" + this.getCustomerId() + " addressId=" + addressId);
 		} catch (Exception e) {
 			AddressController.LOGGER.error(e.getMessage());
 			aj.setSuccess(false);

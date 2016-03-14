@@ -35,9 +35,11 @@ import org.wltea.analyzer.dic.Dictionary;
 
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AliasDao;
+import cn.explink.dao.DeliveryStationDao;
 import cn.explink.dao.OrderDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Alias;
+import cn.explink.domain.DeliveryStation;
 import cn.explink.lucene.AddressFilter;
 import cn.explink.lucene.Constants;
 import cn.explink.lucene.DictChange;
@@ -60,6 +62,9 @@ public class LuceneService {
 
 	@Autowired
 	private OrderDao orderDao;
+
+	@Autowired
+	private DeliveryStationDao deliveryStationDao;
 
 	/**
 	 * 初始化lucene和IKAnalyzer，服务启动时被调用一次，其他时期不应当调用次方法。
@@ -363,6 +368,27 @@ public class LuceneService {
 		}
 		this.fillKeyWord(result, matchAddrList);
 		this.fillTreeNode(result, matchAddrList);
+
+		return result;
+	}
+
+	public KeywordMatchedResult fuzzySearchByStationName(String deliveryStationName, Long customerId) {
+		KeywordMatchedResult result = new KeywordMatchedResult();
+		if (StringUtil.isEmpty(deliveryStationName)) {
+			return result;
+		}
+		List<DeliveryStation> deliveryStationList = this.deliveryStationDao.fuzzySearchByNameAndCustomerId("%" + deliveryStationName + "%", customerId);
+		if ((deliveryStationList == null) || deliveryStationList.isEmpty()) {
+			return result;
+		}
+		List<Address> matchedAddressList = new ArrayList<Address>();
+		for (DeliveryStation deliveryStation : deliveryStationList) {
+			matchedAddressList.addAll(this.deliveryStationDao.getAddress(deliveryStation.getId()));
+		}
+		if ((matchedAddressList == null) || matchedAddressList.isEmpty()) {
+			return result;
+		}
+		this.fillTreeNode(result, matchedAddressList);
 
 		return result;
 	}

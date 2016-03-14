@@ -1844,8 +1844,8 @@ public class StringUtil {
 		boolean isBaseClass = false;
 		if (clazz.isArray()) {
 			isBaseClass = false;
-		} else if (clazz.isPrimitive() || (clazz.getPackage() == null) || clazz.getPackage().getName().equals("java.lang") || clazz.getPackage().getName().equals("java.math") || clazz.getPackage()
-				.getName().equals("java.util")) {
+		} else if (clazz.isPrimitive() || (clazz.getPackage() == null) || clazz.getPackage().getName().equals("java.lang") || clazz.getPackage().getName().equals("java.math")
+				|| clazz.getPackage().getName().equals("java.util")) {
 			isBaseClass = true;
 		}
 		return isBaseClass;

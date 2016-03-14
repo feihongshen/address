@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.AliasDao;
+import cn.explink.dao.BizLogDAO;
 import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
@@ -104,6 +105,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	private KeywordSuffixService keywordSuffixService;
 	@Autowired
 	private AddressDetailService addressDetailService;
+	@Autowired
+	private BizLogService bizLogService;
+	@Autowired
+	private BizLogDAO bizLogDAO;
 
 	public void listAddress() {
 		List<Address> addressList = this.addressDao.getAllAddresses();
@@ -232,23 +237,30 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 		return addressList;
 	}
 
-	public void deleteAddress(Long addressId, Long customerId) {
-		Address a = this.addressDao.get(addressId);
-		String pathLike = "";
-		if (StringUtil.isEmpty(a.getPath())) {
-			pathLike = "%";
-		} else {
-			pathLike = a.getPath() + "-" + a.getId() + "-%";
-		}
-		List<Address> list = this.addressDao.getChildAllAddress(customerId, a.getPath() + "-" + a.getId(), pathLike);
-		List<Long> ids = new ArrayList<Long>();
-		ids.add(a.getId());
-		if ((list != null) && !list.isEmpty()) {
-			for (Address ad : list) {
-				ids.add(ad.getId());
+	public void deleteAddressList(List<Long> addressIdList, Long customerId) {
+		this.doDeleteAddress(addressIdList, customerId);
+	}
+
+	public void doDeleteAddress(List<Long> addressIdList, Long customerId) {
+		List<Address> addressList = this.addressDao.getAddressByIdList(addressIdList);
+		List<Long> toDeleteAddressIdList = new ArrayList<Long>();
+		for (Address address : addressList) {
+			String pathLike = "";
+			if (StringUtil.isEmpty(address.getPath())) {
+				pathLike = "%";
+			} else {
+				pathLike = address.getPath() + "-" + address.getId() + "-%";
+			}
+			List<Address> list = this.addressDao.getChildAllAddress(customerId, address.getPath() + "-" + address.getId(), pathLike);
+			toDeleteAddressIdList.add(address.getId());
+			if ((list != null) && !list.isEmpty()) {
+				for (Address ad : list) {
+					toDeleteAddressIdList.add(ad.getId());
+				}
 			}
 		}
-		this.batchUnbindAddress(ids, customerId);
+
+		this.batchUnbindAddress(toDeleteAddressIdList, customerId);
 	}
 
 	/**
@@ -501,9 +513,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 			// 执行供应商匹配.
 			this.matchVender(result, addrList, order, orderVO);
 
-			if ((addrList == null) || (addrList.size() == 0) || (result.getDeliveryStationList().size() == 0)) {
+			if ((addrList == null) || (addrList.size() == 0)) {
 				result.setResult(AddressMappingResultEnum.zeroResult);
-			} else if ((result.getDeliveryStationList().size() == 1)) {
+			} else if ((result.getDeliveryStationList().size() <= 1)) {
 				result.setResult(AddressMappingResultEnum.singleResult);
 			} else {
 				result.setResult(AddressMappingResultEnum.multipleResult);
@@ -923,4 +935,5 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 	public List<Address> getAddressByNameAndPid(List<String> nameList, Long pid) {
 		return this.addressDao.getAddressByNameListAndPid(nameList, pid);
 	}
+
 }

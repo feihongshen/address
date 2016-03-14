@@ -16,7 +16,7 @@ public class BizLogDAO extends BasicHibernateDaoSupport<BizLog, Long> {
 		super(BizLog.class);
 	}
 
-	public Map<String, Object> findInfo(int operationType, String beginTime, String endTime, String operationIP, int page, int pageNumber) {
+	public Map<String, Object> findInfo(int operationType, String beginTime, String endTime, String operationIP, int page, int pageNumber, Long customerId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		StringBuffer countsql = new StringBuffer();
@@ -34,6 +34,9 @@ public class BizLogDAO extends BasicHibernateDaoSupport<BizLog, Long> {
 		}
 		if ((operationIP != null) && !operationIP.isEmpty()) {
 			where.append(" and OPERATOR_IP='" + operationIP + "'");
+		}
+		if (customerId != 0) {
+			where.append(" and CUSTOMER_ID=" + customerId);
 		}
 		where.append(" order by OPERATION_TIME desc ");
 		sql.append(where);
