@@ -1,3 +1,5 @@
 mainline/addressRepository/catalina.base_IS_UNDEFINED
 mainline/addressRepository/lucene
 mainline/addressRepository/target
+/mainline/addressRepository/.classpath
+/mainline/addressRepository/.settings
