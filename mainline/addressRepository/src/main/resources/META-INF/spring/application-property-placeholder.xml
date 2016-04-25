@@ -8,7 +8,7 @@
 
     <!-- Redis配置，如果有本地配置，则读取本地配置，否则读取classpath下的配置 -->
     <bean id="propertyPlaceHolder" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations" value="file:/apps/javaconf/tps/tps-webapp.properties" />
+        <property name="locations" value="file:/apps/javaconf/address/address.properties" />
         <property name="ignoreResourceNotFound" value="true" />
         <property name="fileEncoding" value="UTF-8" />
     </bean>

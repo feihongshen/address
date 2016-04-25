@@ -9,6 +9,19 @@ public class DeliveryStationVo {
 
     private Long customerId;
 
+    /**
+     * 站点编码
+     */
+    private String stationCode;
+
+    public String getStationCode() {
+        return this.stationCode;
+    }
+
+    public void setStationCode(String stationCode) {
+        this.stationCode = stationCode;
+    }
+
     public Long getExternalId() {
         return this.externalId;
     }
@@ -33,22 +46,6 @@ public class DeliveryStationVo {
         this.customerId = customerId;
     }
 
-    private String tpsBranchCode;
-
-    /**
-     * @return the tpsBranchCode
-     */
-    public String getTpsBranchCode() {
-        return this.tpsBranchCode;
-    }
-
-    /**
-     * @param tpsBranchCode the tpsBranchCode to set
-     */
-    public void setTpsBranchCode(String tpsBranchCode) {
-        this.tpsBranchCode = tpsBranchCode;
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -61,9 +58,6 @@ public class DeliveryStationVo {
         }
         if (this.customerId != null) {
             builder.append("customerId=").append(this.customerId);
-        }
-        if (this.tpsBranchCode != null) {
-            builder.append("tpsBranchCode=").append(this.tpsBranchCode);
         }
         builder.append("]");
         return builder.toString();

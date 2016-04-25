@@ -1,3 +1,4 @@
+
 package cn.explink.service;
 
 import java.util.ArrayList;
@@ -46,270 +47,303 @@ import cn.explink.ws.vo.DeliveryStationVo;
 @Service("deliveryStationService")
 public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, Long> {
 
-	public DeliveryStationService() {
-		super(DeliveryStation.class);
-		// TODO Auto-generated constructor stub
-	}
+    public DeliveryStationService() {
+        super(DeliveryStation.class);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Autowired
-	private DeliveryStationDao deliveryStationDao;
+    @Autowired
+    private DeliveryStationDao deliveryStationDao;
 
-	@Autowired
-	private CustomerDao customerDao;
-	@Autowired
-	private DeliveryStationRuleDao deliveryStationRuleDao;
-	@Autowired
-	private AddressDao addressDao;
-	@Autowired
-	private BizLogService bizLogService;
-	@Autowired
-	private BizLogDAO bizLogDAO;
+    @Autowired
+    private CustomerDao customerDao;
 
-	public DeliveryStation createDeliveryStation(DeliveryStationVo deliveryStationVo) {
-		Customer customer = this.customerDao.get(deliveryStationVo.getCustomerId());
-		if (customer == null) {
-			throw new RuntimeException("customer is not exist");
-		}
+    @Autowired
+    private DeliveryStationRuleDao deliveryStationRuleDao;
 
-		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
-		if (deliveryStation == null) {
-			deliveryStation = new DeliveryStation();
-		}
-		deliveryStation.setName(deliveryStationVo.getName());
-		deliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
-		deliveryStation.setCustomer(customer);
-		deliveryStation.setExternalId(deliveryStationVo.getExternalId());
-		this.deliveryStationDao.save(deliveryStation);
-		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
-		service.shutdown();
-		return deliveryStation;
-	}
+    @Autowired
+    private AddressDao addressDao;
 
-	public DeliveryStation updateDeliveryStation(DeliveryStationVo deliveryStationVo) {
-		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
-		BizLog bizlog = new BizLog();
-		bizlog.setOriginStationId(deliveryStation.getId());
-		bizlog.setOriginStationName(deliveryStation.getName());
-		bizlog.setModifideStationId(deliveryStation.getId());
-		bizlog.setModifideStationName(deliveryStationVo.getName());
-		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
-		service.shutdown();
+    @Autowired
+    private BizLogService bizLogService;
 
-		deliveryStation.setName(deliveryStationVo.getName());
-		deliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
-		this.deliveryStationDao.save(deliveryStation);
-		return deliveryStation;
-	}
+    @Autowired
+    private BizLogDAO bizLogDAO;
 
-	public DeliveryStation updateDeliveryStationByUid(DeliveryStation deliveryStationParam) {
-		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationByUid(deliveryStationParam.getUid());
-		deliveryStation.setCoordinate(deliveryStationParam.getCoordinate());
-		deliveryStation.setMapcenterLng(deliveryStationParam.getMapcenterLng());
-		deliveryStation.setMapcenterLat(deliveryStationParam.getMapcenterLat());
+    /**
+     * 新增配送站点方法
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param deliveryStationVo
+     * @return
+     * @since 1.0
+     */
+    public DeliveryStation createDeliveryStation(DeliveryStationVo deliveryStationVo) {
+        Customer customer = this.customerDao.get(deliveryStationVo.getCustomerId());
+        if (customer == null) {
+            throw new RuntimeException("customer is not exist");
+        }
 
-		return this.deliveryStationDao.save(deliveryStation);
-	}
+        DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(),
+                deliveryStationVo.getExternalId());
+        if (deliveryStation == null) {
+            deliveryStation = new DeliveryStation();
+        }
+        deliveryStation.setName(deliveryStationVo.getName());
+        deliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
+        deliveryStation.setCustomer(customer);
+        deliveryStation.setExternalId(deliveryStationVo.getExternalId());
+        deliveryStation.setStationCode(deliveryStationVo.getStationCode());
+        this.deliveryStationDao.save(deliveryStation);
+        // 新开线程执行业务日志记录
+        ExecutorService service = Executors.newCachedThreadPool();
+        service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(),
+                LogTypeEnum.addStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null,
+                null));
+        service.shutdown();
+        return deliveryStation;
+    }
 
-	public DeliveryStation getDeliveryStationByUid(String uid) {
-		return this.deliveryStationDao.getDeliveryStationByUid(uid);
-	}
+    /**
+     * 更新配送站点
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param deliveryStationVo
+     * @return
+     * @since 1.0
+     */
+    public DeliveryStation updateDeliveryStation(DeliveryStationVo deliveryStationVo) {
+        DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(),
+                deliveryStationVo.getExternalId());
+        // 暂时不加stationCode的更新记录
+        BizLog bizlog = new BizLog();
+        bizlog.setOriginStationId(deliveryStation.getId());
+        bizlog.setOriginStationName(deliveryStation.getName());
+        bizlog.setModifideStationId(deliveryStation.getId());
+        bizlog.setModifideStationName(deliveryStationVo.getName());
+        ExecutorService service = Executors.newCachedThreadPool();
+        service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(),
+                LogTypeEnum.updateStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null,
+                null));
+        service.shutdown();
+        deliveryStation.setStationCode(deliveryStationVo.getStationCode());
+        deliveryStation.setName(deliveryStationVo.getName());
+        deliveryStation.setStatus(DeliveryStationStausEnmu.valid.getValue());
+        this.deliveryStationDao.save(deliveryStation);
+        return deliveryStation;
+    }
 
-	public DeliveryStation getDeliveryStationById(Long id) {
-		return this.deliveryStationDao.getDeliveryStationById(id);
-	}
+    public DeliveryStation updateDeliveryStationByUid(DeliveryStation deliveryStationParam) {
+        DeliveryStation deliveryStation = this.deliveryStationDao
+                .getDeliveryStationByUid(deliveryStationParam.getUid());
+        deliveryStation.setCoordinate(deliveryStationParam.getCoordinate());
+        deliveryStation.setMapcenterLng(deliveryStationParam.getMapcenterLng());
+        deliveryStation.setMapcenterLat(deliveryStationParam.getMapcenterLat());
 
-	public DeliveryStation updateDeliveryStationById(DeliveryStation deliveryStationParam) {
-		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationById(deliveryStationParam.getId());
-		deliveryStation.setName(deliveryStationParam.getName());
-		deliveryStation.setCoordinate(deliveryStationParam.getCoordinate());
-		deliveryStation.setMapcenterLng(deliveryStationParam.getMapcenterLng());
-		deliveryStation.setMapcenterLat(deliveryStationParam.getMapcenterLat());
-		deliveryStation.setUid(deliveryStationParam.getUid());
+        return this.deliveryStationDao.save(deliveryStation);
+    }
 
-		return this.deliveryStationDao.save(deliveryStation);
-	}
+    public DeliveryStation getDeliveryStationByUid(String uid) {
+        return this.deliveryStationDao.getDeliveryStationByUid(uid);
+    }
 
-	/**
-	 * 同步更新关键字-站点关联关系
-	 */
-	public void synUpdateDeliveryStationRule(List<AddressIdAndAddressLinePair> addressIdAndAddressLinePairList, String oldCoordinate, String newCoordinate, Long customerId, Long stationId) {
-		List<Long> toDeleteAddressIdList = new ArrayList<Long>();
-		for (AddressIdAndAddressLinePair addressIdAndAddressLinePair : addressIdAndAddressLinePairList) {
-			// AddressIdAndAddressLinePair idAndLinePair =
-			// this.combineAddressLine(fullAddrStationPair.getAddrList());
-			boolean inOldArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), oldCoordinate);
-			boolean inNewArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), newCoordinate);
-			// 在修改前区域，不在修改后区域，则解除绑定
-			if (inOldArea && !inNewArea) {
-				toDeleteAddressIdList.add(addressIdAndAddressLinePair.getAddressId());
-			}
-			// 不在修改前区域，在修改后区域，则新增绑定
-			if (!inOldArea && inNewArea) {
-				this.createDeliveryStationRule(addressIdAndAddressLinePair.getAddressId(), stationId, customerId);
-			}
-			// 其他情况不需要处理
-		}
-		if (toDeleteAddressIdList.size() > 0) {
-			this.deliveryStationRuleDao.deleteRuleByIds(toDeleteAddressIdList, customerId);
-		}
-	}
+    public DeliveryStation getDeliveryStationById(Long id) {
+        return this.deliveryStationDao.getDeliveryStationById(id);
+    }
 
-	private DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId) {
-		Address address = this.addressDao.get(addressId);
-		DeliveryStation deliveryStation = this.deliveryStationDao.get(deliveryStationId);
+    public DeliveryStation updateDeliveryStationById(DeliveryStation deliveryStationParam) {
+        DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationById(deliveryStationParam.getId());
+        deliveryStation.setName(deliveryStationParam.getName());
+        deliveryStation.setCoordinate(deliveryStationParam.getCoordinate());
+        deliveryStation.setMapcenterLng(deliveryStationParam.getMapcenterLng());
+        deliveryStation.setMapcenterLat(deliveryStationParam.getMapcenterLat());
+        deliveryStation.setUid(deliveryStationParam.getUid());
 
-		DeliveryStationRule deliveryStationRule = new DeliveryStationRule();
-		address.getDeliveryStationRules().add(deliveryStationRule);
-		deliveryStationRule.setAddress(address);
-		deliveryStationRule.setDeliveryStation(deliveryStation);
-		deliveryStationRule.setCreationTime(new Date());
-		deliveryStationRule.setRuleType(DeliveryStationRuleTypeEnum.fallback.getValue());
-		this.deliveryStationRuleDao.save(deliveryStationRule);
+        return this.deliveryStationDao.save(deliveryStation);
+    }
 
-		return deliveryStationRule;
-	}
+    /**
+     * 同步更新关键字-站点关联关系
+     */
+    public void synUpdateDeliveryStationRule(List<AddressIdAndAddressLinePair> addressIdAndAddressLinePairList,
+            String oldCoordinate, String newCoordinate, Long customerId, Long stationId) {
+        List<Long> toDeleteAddressIdList = new ArrayList<Long>();
+        for (AddressIdAndAddressLinePair addressIdAndAddressLinePair : addressIdAndAddressLinePairList) {
+            // AddressIdAndAddressLinePair idAndLinePair =
+            // this.combineAddressLine(fullAddrStationPair.getAddrList());
+            boolean inOldArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), oldCoordinate);
+            boolean inNewArea = this.containsAddress(addressIdAndAddressLinePair.getAddressLine(), newCoordinate);
+            // 在修改前区域，不在修改后区域，则解除绑定
+            if (inOldArea && !inNewArea) {
+                toDeleteAddressIdList.add(addressIdAndAddressLinePair.getAddressId());
+            }
+            // 不在修改前区域，在修改后区域，则新增绑定
+            if (!inOldArea && inNewArea) {
+                this.createDeliveryStationRule(addressIdAndAddressLinePair.getAddressId(), stationId, customerId);
+            }
+            // 其他情况不需要处理
+        }
+        if (toDeleteAddressIdList.size() > 0) {
+            this.deliveryStationRuleDao.deleteRuleByIds(toDeleteAddressIdList, customerId);
+        }
+    }
 
-	private List<GeoPoint> getGeoPointListByCoordinate(String coorString) {
-		@SuppressWarnings("unchecked")
-		List<GeoPoint> pts = (List<GeoPoint>) JSONArray.toCollection(JSONArray.fromObject(coorString), GeoPoint.class);
-		return pts;
-	}
+    private DeliveryStationRule createDeliveryStationRule(Long addressId, Long deliveryStationId, Long customerId) {
+        Address address = this.addressDao.get(addressId);
+        DeliveryStation deliveryStation = this.deliveryStationDao.get(deliveryStationId);
 
-	private String getPathFromCoordinate(String coorString) {
-		coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
-		return coorString;
-	}
+        DeliveryStationRule deliveryStationRule = new DeliveryStationRule();
+        address.getDeliveryStationRules().add(deliveryStationRule);
+        deliveryStationRule.setAddress(address);
+        deliveryStationRule.setDeliveryStation(deliveryStation);
+        deliveryStationRule.setCreationTime(new Date());
+        deliveryStationRule.setRuleType(DeliveryStationRuleTypeEnum.fallback.getValue());
+        this.deliveryStationRuleDao.save(deliveryStationRule);
 
-	private boolean containsAddress(String addressLine, String coordinate) {
-		GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
-		// 地理编码+POI检索失败
-		if (position == null) {
-			return false;
-		}
-		coordinate = this.getPathFromCoordinate(coordinate);
-		List<GeoPoint> geoPointList = this.getGeoPointListByCoordinate(coordinate);
-		if (geoPointList == null) {
-			return false;
-		}
+        return deliveryStationRule;
+    }
 
-		// 空间检索
-		GeoPoint[] polygon = new GeoPoint[geoPointList.size()];
-		if (GeoUtility.isInPolygon(position, geoPointList.toArray(polygon))) {
-			return true;
-		}
-		return false;
-	}
+    private List<GeoPoint> getGeoPointListByCoordinate(String coorString) {
+        @SuppressWarnings("unchecked")
+        List<GeoPoint> pts = (List<GeoPoint>) JSONArray.toCollection(JSONArray.fromObject(coorString), GeoPoint.class);
+        return pts;
+    }
 
-	public DeliveryStation deleteDeliveryStation(DeliveryStationVo deliveryStationVo) {
-		DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(), deliveryStationVo.getExternalId());
-		deliveryStation.setStatus(DeliveryStationStausEnmu.invalid.getValue());
-		this.deliveryStationDao.save(deliveryStation);
-		ExecutorService service = Executors.newCachedThreadPool();
-		service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(), LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null, null));
-		service.shutdown();
-		return deliveryStation;
-	}
+    private String getPathFromCoordinate(String coorString) {
+        coorString = coorString.substring(coorString.indexOf("path") + 6, coorString.indexOf("}]") + 2);
+        return coorString;
+    }
 
-	/**
-	 * 生成关键词列表
-	 *
-	 * @param headerNameList
-	 * @return
-	 */
-	public XSSFWorkbook createAddressFile(List<String> headerNameList, List<List<String>> address) {
-		XSSFWorkbook wookbook = new XSSFWorkbook();
-		XSSFSheet sheet = wookbook.createSheet();
-		XSSFRow row = sheet.createRow(0);
-		int columnIndex = 0;
-		for (String headerName : headerNameList) {
-			XSSFCell cell = row.createCell(columnIndex);
-			cell.setCellValue(headerName);
-			columnIndex++;
-		}
-		for (int i = 0; i < address.size(); i++) {
-			columnIndex = 0;
-			row = sheet.createRow(i + 1);
-			for (int j = 1; j < address.get(i).size(); j++) {
-				XSSFCell cell = row.createCell(columnIndex);
-				cell.setCellValue(address.get(i).get(j));
-				columnIndex++;
-			}
-		}
+    private boolean containsAddress(String addressLine, String coordinate) {
+        GeoPoint position = GeoCoder.getInstance().getGeoCoder().GetLocationDetails(addressLine);
+        // 地理编码+POI检索失败
+        if (position == null) {
+            return false;
+        }
+        coordinate = this.getPathFromCoordinate(coordinate);
+        List<GeoPoint> geoPointList = this.getGeoPointListByCoordinate(coordinate);
+        if (geoPointList == null) {
+            return false;
+        }
 
-		return wookbook;
-	}
+        // 空间检索
+        GeoPoint[] polygon = new GeoPoint[geoPointList.size()];
+        if (GeoUtility.isInPolygon(position, geoPointList.toArray(polygon))) {
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * 查询站点
-	 *
-	 * @param id
-	 * @return
-	 */
-	public DeliveryStation getById(Long id) {
-		return this.deliveryStationDao.get(id);
-	}
+    public DeliveryStation deleteDeliveryStation(DeliveryStationVo deliveryStationVo) {
+        DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStation(deliveryStationVo.getCustomerId(),
+                deliveryStationVo.getExternalId());
+        deliveryStation.setStatus(DeliveryStationStausEnmu.invalid.getValue());
+        this.deliveryStationDao.save(deliveryStation);
+        ExecutorService service = Executors.newCachedThreadPool();
+        service.execute(new SynInsertBizLogThread(AddressSyncServiceImpl.class, deliveryStationVo.getCustomerId(),
+                LogTypeEnum.deleteStation.getValue(), null, deliveryStation, this.bizLogDAO, this.bizLogService, null,
+                null));
+        service.shutdown();
+        return deliveryStation;
+    }
 
-	/**
-	 * 根据站点ID查询所有关键词
-	 *
-	 * @param id
-	 * @return
-	 */
-	public List<List<String>> getAddressById(Long id, String stationName) {
-		List<Address> list = this.deliveryStationDao.getAddress(id);
-		Map<Long, String> addMap = new HashMap<Long, String>();
-		Set<Long> addIds = new HashSet<Long>();
-		for (Address a : list) {
-			if (a.getPath() != null) {
-				String[] ids = a.getPath().split("-");
-				for (int i = 0; i < ids.length; i++) {
-					if (StringUtils.isNotBlank(ids[i])) {
-						addIds.add(Long.parseLong(ids[i]));
-					}
-				}
-			}
-		}
-		List<Address> addressList = this.deliveryStationDao.getAddressByIds(addIds);
-		for (Address a : addressList) {
-			addMap.put(a.getId(), a.getName());
-		}
-		List<List<String>> result = new ArrayList<List<String>>();
-		for (Address a : list) {
-			List<String> row = new ArrayList<String>();
-			if (a.getPath() != null) {
-				String[] ids = a.getPath().split("-");
-				for (int i = 0; i < ids.length; i++) {
-					if (StringUtils.isNotBlank(ids[i])) {
-						row.add(addMap.get(Long.parseLong(ids[i])));
-					}
-				}
-				row.add(a.getName());
-				for (int i = ids.length + 1; i < 7; i++) {
-					row.add(" ");
-				}
-				row.add(stationName);
-			}
-			result.add(row);
-		}
-		return result;
-	}
+    /**
+     * 生成关键词列表
+     * @param headerNameList
+     * @return
+     */
+    public XSSFWorkbook createAddressFile(List<String> headerNameList, List<List<String>> address) {
+        XSSFWorkbook wookbook = new XSSFWorkbook();
+        XSSFSheet sheet = wookbook.createSheet();
+        XSSFRow row = sheet.createRow(0);
+        int columnIndex = 0;
+        for (String headerName : headerNameList) {
+            XSSFCell cell = row.createCell(columnIndex);
+            cell.setCellValue(headerName);
+            columnIndex++;
+        }
+        for (int i = 0; i < address.size(); i++) {
+            columnIndex = 0;
+            row = sheet.createRow(i + 1);
+            for (int j = 1; j < address.get(i).size(); j++) {
+                XSSFCell cell = row.createCell(columnIndex);
+                cell.setCellValue(address.get(i).get(j));
+                columnIndex++;
+            }
+        }
 
-	public List<DeliveryStation> listAll(Long customerId) {
-		return this.deliveryStationDao.listAll(customerId);
-	}
+        return wookbook;
+    }
 
-	public List<ComboBox> getAllSationt(Long customerId) {
-		return this.deliveryStationDao.getComBoxDeliveryStation(customerId);
-	}
+    /**
+     * 查询站点
+     * @param id
+     * @return
+     */
+    public DeliveryStation getById(Long id) {
+        return this.deliveryStationDao.get(id);
+    }
 
-	public DeliveryStation getByNameAndCustomerId(String deliveryStationName, Long customerId) {
-		return this.deliveryStationDao.getByNameAndCustomerId(deliveryStationName, customerId);
-	}
+    /**
+     * 根据站点ID查询所有关键词
+     * @param id
+     * @return
+     */
+    public List<List<String>> getAddressById(Long id, String stationName) {
+        List<Address> list = this.deliveryStationDao.getAddress(id);
+        Map<Long, String> addMap = new HashMap<Long, String>();
+        Set<Long> addIds = new HashSet<Long>();
+        for (Address a : list) {
+            if (a.getPath() != null) {
+                String[] ids = a.getPath().split("-");
+                for (int i = 0; i < ids.length; i++) {
+                    if (StringUtils.isNotBlank(ids[i])) {
+                        addIds.add(Long.parseLong(ids[i]));
+                    }
+                }
+            }
+        }
+        List<Address> addressList = this.deliveryStationDao.getAddressByIds(addIds);
+        for (Address a : addressList) {
+            addMap.put(a.getId(), a.getName());
+        }
+        List<List<String>> result = new ArrayList<List<String>>();
+        for (Address a : list) {
+            List<String> row = new ArrayList<String>();
+            if (a.getPath() != null) {
+                String[] ids = a.getPath().split("-");
+                for (int i = 0; i < ids.length; i++) {
+                    if (StringUtils.isNotBlank(ids[i])) {
+                        row.add(addMap.get(Long.parseLong(ids[i])));
+                    }
+                }
+                row.add(a.getName());
+                for (int i = ids.length + 1; i < 7; i++) {
+                    row.add(" ");
+                }
+                row.add(stationName);
+            }
+            result.add(row);
+        }
+        return result;
+    }
 
-	public List<Vendor> listAllVendor(Long customerId) {
-		return this.deliveryStationDao.listAllVendor(customerId);
-	}
+    public List<DeliveryStation> listAll(Long customerId) {
+        return this.deliveryStationDao.listAll(customerId);
+    }
+
+    public List<ComboBox> getAllSationt(Long customerId) {
+        return this.deliveryStationDao.getComBoxDeliveryStation(customerId);
+    }
+
+    public DeliveryStation getByNameAndCustomerId(String deliveryStationName, Long customerId) {
+        return this.deliveryStationDao.getByNameAndCustomerId(deliveryStationName, customerId);
+    }
+
+    public List<Vendor> listAllVendor(Long customerId) {
+        return this.deliveryStationDao.listAllVendor(customerId);
+    }
 
 }

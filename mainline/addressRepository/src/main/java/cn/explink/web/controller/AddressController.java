@@ -1095,7 +1095,7 @@ public class AddressController extends BaseController {
                                 DeliveryStationVo stationVo = mapResult.getDeliveryStationList().get(0);
                                 responItem.setNetid(stationVo.getExternalId() + "");
                                 responItem.setNetpoint(stationVo.getName());
-                                responItem.setTpsnetpoint(stationVo.getTpsBranchCode());
+                                responItem.setTpsnetpoint(stationVo.getStationCode());
                             } else if (mapResult.getDeliveryStationList().size() > 1) {
                                 // todo 匹配多站
                                 msgBuilder.append("匹配多个站点:");
