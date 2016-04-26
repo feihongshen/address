@@ -44,6 +44,8 @@
 		<property name="propertyCycle" value="600" />
 		<property name="testConnectionOnCheckin" value="false"/>
     	<property name="preferredTestQuery" value="select 1" />
+    	<property name="idleConnectionTestPeriod" value="60" />
+    	
 	</bean>
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
