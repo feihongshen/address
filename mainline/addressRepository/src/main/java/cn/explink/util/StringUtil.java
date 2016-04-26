@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1724,6 +1725,31 @@ public class StringUtil {
         } else {
             return "";
         }
+    }
+
+    /**
+     * 签名运算
+     * @param parameter
+     * @return MD5加密后的字符串
+     */
+    public static String MD5(String parameter) {
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            byte[] digestResult = md.digest(StringUtils.defaultString(parameter).getBytes("UTF-8"));
+
+            StringBuffer hexValue = new StringBuffer();
+
+            for (byte element : digestResult) {
+                int val = (element) & 0xff;
+                hexValue.append(StringUtils.leftPad(Integer.toHexString(val), 2, '0'));
+            }
+            return hexValue.toString().toUpperCase();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return parameter;
     }
 
     public static void main(String[] args) {

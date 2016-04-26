@@ -50,6 +50,7 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.domain.enums.LogTypeEnum;
+import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.gis.GeoCoder;
 import cn.explink.gis.GeoPoint;
 import cn.explink.modle.AjaxJson;
@@ -1059,21 +1060,30 @@ public class AddressController extends BaseController {
             // todo 请求参数不能为空
             head.setMsg("请求参数不能为空");
         } else {
+            head.setMsg("");
             String xml = new String(request.getParameter("data"));
             request.setCharacterEncoding("UTF-8");
-            LOGGER.info("請求站點匹配, matchAddress.request={} ", xml);
+            LOGGER.info("請求站點匹配  matchAddress.request={} ", xml);
             try {
 
                 requstVo = this.decodeRequest(xml);
 
                 ApplicationVo applicationVo = new ApplicationVo();
-                applicationVo.setCustomerId(Long.parseLong(requstVo.getHead().getUsercode()));
-                applicationVo.setPassword(requstVo.getHead().getKey());
-                ClientApplication application = this.applicationService.validateClientApplication(
-                        applicationVo.getCustomerId(), applicationVo.getPassword());
-                List<OrderVo> orderList = new ArrayList<OrderVo>();
+                applicationVo.setId(Long.parseLong(requstVo.getHead().getUsercode()));
+
+                ClientApplication application = this.applicationService.getClientApplicationById(applicationVo.getId());
+                String md5Key = StringUtil.MD5(application.getId() + application.getPassword()
+                        + requstVo.getHead().getBatchno().toLowerCase());
+                if (!md5Key.toLowerCase().equals(requstVo.getHead().getKey().toLowerCase())) {
+                    throw new ExplinkRuntimeException(" MD5校验失败,请求key:[" + requstVo.getHead().getKey() + "],解析:["
+                            + md5Key + "]");
+                }
+                applicationVo.setCustomerId(application.getCustomerId());
                 if (requstVo.getItems() != null) {
                     for (ItemVo itemVo : requstVo.getItems()) {
+                        List<OrderVo> orderList = new ArrayList<OrderVo>();
+                        CarrierMatchPointResponseItemVO responItem = new CarrierMatchPointResponseItemVO();
+
                         OrderVo vo = new OrderVo();
                         vo.setAddressLine(itemVo.getProvince() + itemVo.getCity() + itemVo.getArea() + itemVo.getTown()
                                 + itemVo.getAddress());
@@ -1081,44 +1091,22 @@ public class AddressController extends BaseController {
                         vo.setOrderId(itemVo.getItemno() + "");
                         vo.setVendorId(applicationVo.getCustomerId());
                         orderList.add(vo);
-                    }
-                    AddressMappingResult result = this.mappingAddress(applicationVo, orderList);
-                    Map<String, OrderAddressMappingResult> resultMap = result.getResultMap();
-                    for (String keys : resultMap.keySet()) {
-                        CarrierMatchPointResponseItemVO responItem = new CarrierMatchPointResponseItemVO();
-                        OrderAddressMappingResult mapResult = resultMap.get(keys);
-                        responItem.setItemno(Integer.valueOf(keys));
-                        StringBuilder msgBuilder = new StringBuilder();
-                        if ((mapResult.getDeliveryStationList() != null)
-                                && (mapResult.getDeliveryStationList().size() > 0)) {
-                            if (mapResult.getDeliveryStationList().size() == 1) {
-                                DeliveryStationVo stationVo = mapResult.getDeliveryStationList().get(0);
-                                responItem.setNetid(stationVo.getExternalId() + "");
-                                responItem.setNetpoint(stationVo.getName());
-                                responItem.setTpsnetpoint(stationVo.getStationCode());
-                            } else if (mapResult.getDeliveryStationList().size() > 1) {
-                                // todo 匹配多站
-                                msgBuilder.append("匹配多个站点:");
-                                for (DeliveryStationVo stationVo : mapResult.getDeliveryStationList()) {
-                                    msgBuilder.append(stationVo.getName() + ",");
-                                }
-                            }
+                        long start = System.currentTimeMillis();
+                        LOGGER.info(" 匹配开始  地址={} ,remark={} ", vo.getAddressLine(), itemVo.getRemark());
+                        AddressMappingResult result = this.mappingAddress(applicationVo, orderList);
+                        if (result != null) {
+                            Map<String, OrderAddressMappingResult> resultMap = result.getResultMap();
+
+                            OrderAddressMappingResult mapResult = resultMap.get(vo.getOrderId());
+                            responItem.setItemno(itemVo.getItemno());
+                            responItems.add(this.handResult(responItem, mapResult));
                         } else {
-                            // 匹配站点失败
-                            if ((mapResult.getAddressList() == null)
-                                    || CollectionUtils.isEmpty(mapResult.getAddressList())) {
-                                msgBuilder.append("该地址无法匹配关键词,请维护关键词");
-                            } else {
-                                msgBuilder.append("关键词[");
-                                for (AddressVo addressVo : mapResult.getAddressList()) {
-                                    msgBuilder.append(addressVo.getName() + ",");
-                                }
-                                msgBuilder.append("]没有维护站点");
-                            }
+                            LOGGER.warn(" 匹配开始  地址={} 失败 ", vo.getAddressLine());
                         }
-                        responItem.setRemark(msgBuilder.toString());
-                        responItems.add(responItem);
+                        LOGGER.info(" 匹配开始  地址={} ,result={},time= " + (System.currentTimeMillis() - start),
+                                vo.getAddressLine(), responItem.toString());
                     }
+
                 }
             } catch (Exception e) {
                 LOGGER.error("匹配异常:" + e.toString(), e);
@@ -1126,6 +1114,52 @@ public class AddressController extends BaseController {
             }
         }
         return this.returnXml(head, responItems);
+    }
+
+    /**
+     * 方法概要
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param responItems
+     * @param responItem
+     * @param mapResult
+     * @param msgBuilder
+     * @since 1.0
+     */
+    private CarrierMatchPointResponseItemVO handResult(CarrierMatchPointResponseItemVO responItem,
+            OrderAddressMappingResult mapResult) {
+
+        StringBuilder msgBuilder = new StringBuilder();
+        msgBuilder.append("");
+        if ((mapResult.getDeliveryStationList() != null) && (mapResult.getDeliveryStationList().size() > 0)) {
+            if (mapResult.getDeliveryStationList().size() == 1) {
+                DeliveryStationVo stationVo = mapResult.getDeliveryStationList().get(0);
+                responItem.setNetid(stationVo.getExternalId() + "");
+                responItem.setNetpoint(stationVo.getName());
+                responItem.setTpsnetpoint(stationVo.getStationCode());
+
+            } else if (mapResult.getDeliveryStationList().size() > 1) {
+                // todo 匹配多站
+                msgBuilder.append("匹配多个站点:");
+                for (DeliveryStationVo stationVo : mapResult.getDeliveryStationList()) {
+                    msgBuilder.append(stationVo.getName() + ",");
+                }
+            }
+        } else {
+            // 匹配站点失败
+            if ((mapResult.getAddressList() == null) || CollectionUtils.isEmpty(mapResult.getAddressList())) {
+                msgBuilder.append("该地址无法匹配关键词,请维护关键词");
+            } else {
+                msgBuilder.append("关键词[");
+                for (AddressVo addressVo : mapResult.getAddressList()) {
+                    msgBuilder.append(addressVo.getName() + ",");
+                }
+                msgBuilder.append("]没有维护站点");
+            }
+        }
+        responItem.setRemark(msgBuilder.toString());
+        return responItem;
     }
 
     protected ClientApplication validateApplication(ApplicationVo applicationVo) {

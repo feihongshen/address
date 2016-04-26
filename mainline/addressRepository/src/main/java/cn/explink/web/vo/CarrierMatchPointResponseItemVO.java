@@ -13,6 +13,27 @@ public class CarrierMatchPointResponseItemVO {
 
     private String remark;
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (this.itemno != null) {
+            sb.append("itemno=" + this.itemno);
+        }
+        if (this.netid != null) {
+            sb.append("netid=" + this.netid);
+        }
+        if (this.netpoint != null) {
+            sb.append("netpoint=" + this.netpoint);
+        }
+        if (this.tpsnetpoint != null) {
+            sb.append("tpsnetpoint=" + this.tpsnetpoint);
+        }
+        if (this.remark != null) {
+            sb.append("remark=" + this.remark);
+        }
+        return sb.toString();
+    }
+
     public String getRemark() {
         return this.remark;
     }

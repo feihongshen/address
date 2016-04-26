@@ -36,6 +36,16 @@ public class ApplicationService {
         return application;
     }
 
+    public ClientApplication getClientApplicationById(long id) {
+
+        ClientApplication application = this.clientApplicationDao.get(id);
+        if (application == null) {
+            throw new ExplinkRuntimeException("通过id=" + id + "查找应用客户失败");
+        }
+
+        return application;
+    }
+
     public ClientApplication validateClientApplication(Long customId, String pwd) {
         if ((customId == null) || (customId.intValue() == 0)) {
             throw new ExplinkRuntimeException("customId  is null");
