@@ -34,7 +34,10 @@
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+	<bean id="resourceBundleUtil" class="cn.explink.util.ResourceBundleUtil" scope="singleton" >
+			<property name="luceneIndexPath" value="${luceneIndexPath}" />
+			 <property name="luceneDictPath" value="${luceneDictPath}" />
+		</bean>
 	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton"
 		init-method="initLucene" />
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
