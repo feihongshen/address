@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -519,7 +520,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                 result.setResult(AddressMappingResultEnum.multipleResult);
             }
             result.setRelatedAddressList(addrList);
-
+            AddressService.LOGGER.info("该地址：" + orderVO.getAddressLine() + "匹配完成，结果是：" + result.getResult());
         } catch (Exception e) {
             AddressService.LOGGER.error("search address failed due to {}", e.getMessage(), e);
             result.setResult(AddressMappingResultEnum.exceptionResult);
@@ -545,6 +546,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         Set<DeliveryStation> delStatSet = new HashSet<DeliveryStation>();
         List<DeliveryStationRule> delRuleList = this.deliverStationRuleService.search(addrList, orderVo);
         Set<Long> idSet = new HashSet<Long>();
+        if (CollectionUtils.isEmpty(delRuleList)) {
+            AddressService.LOGGER.info("该orderId：" + orderVo.getOrderId() + "没有匹配到站点");
+        }
         for (DeliveryStationRule rule : delRuleList) {
             DeliveryStation station = rule.getDeliveryStation();
             AddressService.LOGGER.info("该orderId：" + orderVo.getOrderId() + "匹配到的站点为：" + station.getName());
