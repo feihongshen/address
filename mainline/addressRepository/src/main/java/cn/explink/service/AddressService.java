@@ -392,6 +392,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             if (deliveryStationList.size() > 1) {
                 orderResult.setResult(AddressMappingResultEnum.multipleResult);
             }
+            AddressService.LOGGER.info("该地址：" + orderVo.getAddressLine() + "匹配操作结束，结果是：" + orderResult.getResult());
 
             orderResult.setTimeLimitList(singleResult.getTimeLimitList());
             result.put(orderVo.getOrderId(), orderResult);
@@ -520,7 +521,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                 result.setResult(AddressMappingResultEnum.multipleResult);
             }
             result.setRelatedAddressList(addrList);
-            AddressService.LOGGER.info("该地址：" + orderVO.getAddressLine() + "匹配完成，结果是：" + result.getResult());
+            AddressService.LOGGER.info("该地址：" + orderVO.getAddressLine() + "在地址库匹配关键词和站点完成，结果是：" + result.getResult());
         } catch (Exception e) {
             AddressService.LOGGER.error("search address failed due to {}", e.getMessage(), e);
             result.setResult(AddressMappingResultEnum.exceptionResult);
