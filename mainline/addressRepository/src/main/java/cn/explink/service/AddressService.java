@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.KeywordSuffix;
 import cn.explink.domain.Order;
+import cn.explink.domain.SystemConfig;
 import cn.explink.domain.VendorsAging;
 import cn.explink.domain.enums.AddressStatusEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
@@ -114,6 +116,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
 
     @Autowired
     private AddressDetailService addressDetailService;
+
+    @Autowired
+    private SystemConfigService systemConfigService;
 
     public void listAddress() {
         List<Address> addressList = this.addressDao.getAllAddresses();
@@ -334,21 +339,24 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             orderVo.setCustomerId(customerId);
             SingleAddressMappingResult singleResult = this.search(orderVo, true);
 
-            // 调用地图匹配逻辑 （开始）
-            switch (singleResult.getResult()) {
-                case zeroResult:
-                case exceptionResult:
-                    List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
-                    singleResult.setRelatedAddressList(new ArrayList<Address>());
-                    singleResult.setDeliveryStationList(deliveryStationList);
+            // 增加系统参数控制地图匹配的开关
+            SystemConfig config = this.systemConfigService.getConfigByNameAndCustomerId("isOpenGisSearch", customerId);
+            if ((config == null) || config.getValue().equals("1")) {
+                // 调用地图匹配逻辑 （开始）
+                switch (singleResult.getResult()) {
+                    case zeroResult:
+                    case exceptionResult:
+                        List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+                        singleResult.setRelatedAddressList(new ArrayList<Address>());
+                        singleResult.setDeliveryStationList(deliveryStationList);
 
-                    // 数字地图匹配到单个站点，则进行拆分操作
-                    if (1 == deliveryStationList.size()) {
-                        this.splitAndImport(orderVo, deliveryStationList);
-                    }
+                        // 数字地图匹配到单个站点，则进行拆分操作
+                        if (1 == deliveryStationList.size()) {
+                            this.splitAndImport(orderVo, deliveryStationList);
+                        }
+                }
+                // 调用地图匹配逻辑 （结束）
             }
-            // 调用地图匹配逻辑 （结束）
-
             OrderAddressMappingResult orderResult = new OrderAddressMappingResult();
 
             List<AddressVo> addressList = new ArrayList<AddressVo>();
@@ -384,6 +392,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             if (deliveryStationList.size() > 1) {
                 orderResult.setResult(AddressMappingResultEnum.multipleResult);
             }
+            AddressService.LOGGER.info("该地址：" + orderVo.getAddressLine() + "匹配操作结束，结果是：" + orderResult.getResult());
 
             orderResult.setTimeLimitList(singleResult.getTimeLimitList());
             result.put(orderVo.getOrderId(), orderResult);
@@ -512,7 +521,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                 result.setResult(AddressMappingResultEnum.multipleResult);
             }
             result.setRelatedAddressList(addrList);
-
+            AddressService.LOGGER.info("该地址：" + orderVO.getAddressLine() + "在地址库匹配关键词和站点完成，结果是：" + result.getResult());
         } catch (Exception e) {
             AddressService.LOGGER.error("search address failed due to {}", e.getMessage(), e);
             result.setResult(AddressMappingResultEnum.exceptionResult);
@@ -538,11 +547,16 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         Set<DeliveryStation> delStatSet = new HashSet<DeliveryStation>();
         List<DeliveryStationRule> delRuleList = this.deliverStationRuleService.search(addrList, orderVo);
         Set<Long> idSet = new HashSet<Long>();
+        if (CollectionUtils.isEmpty(delRuleList)) {
+            AddressService.LOGGER.info("该orderId：" + orderVo.getOrderId() + "没有匹配到站点");
+        }
         for (DeliveryStationRule rule : delRuleList) {
             DeliveryStation station = rule.getDeliveryStation();
+            AddressService.LOGGER.info("该orderId：" + orderVo.getOrderId() + "匹配到的站点为：" + station.getName());
             delStatSet.add(station);
             idSet.add(station.getId());
         }
+
         result.setDeliveryStationList(new ArrayList<DeliveryStation>(delStatSet));
         order.setDeliveryStationIds(AddressUtil.getInPara(idSet));
     }
