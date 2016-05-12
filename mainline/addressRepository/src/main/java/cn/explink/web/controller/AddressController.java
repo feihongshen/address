@@ -1008,22 +1008,6 @@ public class AddressController extends BaseController {
             sb.append("<items>");
 
             for (CarrierMatchPointResponseItemVO responseItem : responseItems) {
-                String itemNo = "";
-                String netPoint = "";
-                String tpsNetPoint = "";
-                String remark = "";
-                if (responseItem.getItemno() != null) {
-                    itemNo = responseItem.getItemno().toString();
-                }
-                if (StringUtils.isNotEmpty(responseItem.getNetpoint())) {
-                    netPoint = responseItem.getNetpoint();
-                }
-                if (StringUtils.isNotEmpty(responseItem.getTpsnetpoint())) {
-                    tpsNetPoint = responseItem.getTpsnetpoint();
-                }
-                if (StringUtils.isNotEmpty(responseItem.getRemark())) {
-                    remark = responseItem.getRemark();
-                }
                 sb.append("<item>" + "<itemno>" + itemNo + "</itemno>" + "<netid>" + responseItem.getNetid()
                         + "</netid>" + "<netpoint><![CDATA[" + netPoint + "]]></netpoint>" + "<tpsnetpoint><![CDATA["
                         + tpsNetPoint + "]]></tpsnetpoint>" + "<remark><![CDATA[" + remark + "]]></remark>" + "</item>");
