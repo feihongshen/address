@@ -1078,7 +1078,10 @@ public class AddressController extends BaseController {
                     for (ItemVo itemVo : requstVo.getItems()) {
                         List<OrderVo> orderList = new ArrayList<OrderVo>();
                         CarrierMatchPointResponseItemVO responItem = new CarrierMatchPointResponseItemVO();
-
+                        responItem.setNetid("");
+                        responItem.setNetpoint("");
+                        responItem.setRemark("");
+                        responItem.setTpsnetpoint("");
                         OrderVo vo = new OrderVo();
                         vo.setAddressLine(itemVo.getProvince() + itemVo.getCity() + itemVo.getArea() + itemVo.getTown()
                                 + itemVo.getAddress());
