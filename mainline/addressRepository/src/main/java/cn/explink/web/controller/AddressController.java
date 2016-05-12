@@ -154,8 +154,7 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getAddressTree")
-    public @ResponseBody
-    List<ZTreeNode> getAddressTree(@RequestParam(value = "id", required = false) Long parentId,
+    public @ResponseBody List<ZTreeNode> getAddressTree(@RequestParam(value = "id", required = false) Long parentId,
             @RequestParam(value = "ids", required = false) String ids,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
@@ -168,16 +167,16 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getStationAddressTree")
-    public @ResponseBody
-    List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId,
+    public @ResponseBody List<ZTreeNode> getStationAddressTree(
+            @RequestParam(value = "id", required = false) Long parentId,
             @RequestParam(value = "level", required = false) Long level) {
         Long customerId = this.getCustomerId();
         return this.addressService.getStationAddressTree(customerId, parentId);
     }
 
     @RequestMapping("/getStationAddressTreePage")
-    public @ResponseBody
-    List<ZTreeNode> getStationAddressTree(@RequestParam(value = "id", required = false) Long parentId,
+    public @ResponseBody List<ZTreeNode> getStationAddressTree(
+            @RequestParam(value = "id", required = false) Long parentId,
             @RequestParam(value = "level", required = false) Long level,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
@@ -186,15 +185,13 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getZTree")
-    public @ResponseBody
-    List<ZTreeNode> getZTree(String name, Integer band) {
+    public @ResponseBody List<ZTreeNode> getZTree(String name, Integer band) {
         Long customerId = this.getCustomerId();
         return this.addressService.getZAddress(customerId, name, band);
     }
 
     @RequestMapping("/getAllAddress")
-    public @ResponseBody
-    List<ZTreeNode> getAllAddress() {
+    public @ResponseBody List<ZTreeNode> getAllAddress() {
         Long customerId = this.getCustomerId();
         List<ZTreeNode> result = this.addressService.getAllAddress(customerId);
         this.addressService.appendStation(customerId, result);
@@ -202,8 +199,7 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getAdressByStation")
-    public @ResponseBody
-    List<ZTreeNode> getAdressByStation(String stationId) {
+    public @ResponseBody List<ZTreeNode> getAdressByStation(String stationId) {
         Long customerId = this.getCustomerId();
         return this.addressService.getAdressByStation(customerId, stationId);
     }
@@ -262,9 +258,8 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/importAddress")
-    public @ResponseBody
-    AjaxJson importAddress(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
-            Integer importType, Long stationId) {
+    public @ResponseBody AjaxJson importAddress(HttpServletRequest request, HttpServletResponse response,
+            MultipartFile file, Integer importType, Long stationId) {
         if (importType == null) {
             importType = AddressImportTypeEnum.init.getValue();
         }
@@ -307,8 +302,8 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/moveAddress")
-    public @ResponseBody
-    AjaxJson moveAddress(HttpServletRequest request, HttpServletResponse response, MultipartFile file) {
+    public @ResponseBody AjaxJson moveAddress(HttpServletRequest request, HttpServletResponse response,
+            MultipartFile file) {
         InputStream in = null;
         AjaxJson aj = new AjaxJson();
         try {
@@ -333,8 +328,7 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getPromtInfo")
-    public @ResponseBody
-    AjaxJson getPromtInfo(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody AjaxJson getPromtInfo(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson aj = new AjaxJson();
         Long customerId = this.getCustomerId();
         Map map = this.addressService.getAdressPromtInfo(customerId);
@@ -344,8 +338,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getImportDetail")
-    public @ResponseBody
-    List<AddressImportDetail> getImportDetail(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody List<AddressImportDetail> getImportDetail(HttpServletRequest request,
+            HttpServletResponse response) {
         Set<AddressImportDetail> set = (HashSet<AddressImportDetail>) request.getSession().getAttribute("list");
         if (set != null) {
             return new ArrayList<AddressImportDetail>((HashSet) request.getSession().getAttribute("list"));
@@ -361,8 +355,7 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/getImportProc")
-    public @ResponseBody
-    ImportProcessJson getImportProc(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody ImportProcessJson getImportProc(HttpServletRequest request, HttpServletResponse response) {
         if (request.getSession().getAttribute("proc") != null) {
             ImportProcessJson pr = (ImportProcessJson) request.getSession().getAttribute("proc");
             pr.cal();
@@ -377,9 +370,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/deleteImportAddressResult")
-    public @ResponseBody
-    AjaxJson deleteImportAddressResult(Model model, @RequestParam(value = "id", required = false) Long id,
-            HttpServletRequest request) {
+    public @ResponseBody AjaxJson deleteImportAddressResult(Model model,
+            @RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {
         AjaxJson aj = new AjaxJson();
         this.addressImportService.deleteImportAddressResult(id, this.getCustomerId());
         AddressController.LOGGER.info("删除导入结果：{}", "IP:" + this.getUserIp(request) + " id=" + id);
@@ -416,8 +408,7 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/datagrid")
-    public @ResponseBody
-    DataGridReturn datagrid(AddressImportDetail addressImportDetail, HttpServletRequest request,
+    public @ResponseBody DataGridReturn datagrid(AddressImportDetail addressImportDetail, HttpServletRequest request,
             HttpServletResponse response, DataGrid dataGrid) {
         CriteriaQuery cq = new CriteriaQuery(AddressImportDetail.class, dataGrid);
         AddressImportResult addressImportResult = new AddressImportResult();
@@ -428,9 +419,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/subdatagrid")
-    public @ResponseBody
-    DataGridReturn subdatagrid(AddressImportResult addressImportResult, HttpServletRequest request,
-            HttpServletResponse response, DataGrid dataGrid) {
+    public @ResponseBody DataGridReturn subdatagrid(AddressImportResult addressImportResult,
+            HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
         if (StringUtils.isBlank(dataGrid.getSort())) {
             dataGrid.setSort("importDate");
         }
@@ -458,9 +448,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/del")
-    public @ResponseBody
-    AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request, HttpServletResponse response,
-            DataGrid dataGrid) {
+    public @ResponseBody AjaxJson del(AddressImportResult addressImportResult, HttpServletRequest request,
+            HttpServletResponse response, DataGrid dataGrid) {
         AjaxJson aj = new AjaxJson();
         this.addressImportResultService.delete(addressImportResult.getId());
         AddressController.LOGGER.info("删除导入结果：{}",
@@ -471,8 +460,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/parseAdress")
-    public @ResponseBody
-    AjaxJson parseAdress(String needMatched, HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody AjaxJson parseAdress(String needMatched, HttpServletRequest request,
+            HttpServletResponse response) {
         AjaxJson aj = new AjaxJson();
         Long customerId = this.getCustomerId();
         List<OrderVo> list = new ArrayList<OrderVo>();
@@ -510,9 +499,8 @@ public class AddressController extends BaseController {
      * @throws ParseException
      */
     @RequestMapping("/matchKeyword")
-    public @ResponseBody
-    KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ParseException {
+    public @ResponseBody KeywordMatchedResult matchKeyword(String needMatched, HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ParseException {
         Long customerId = this.getCustomerId();
         if (StringUtil.isEmpty(needMatched)) {
             return null;
@@ -523,9 +511,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getPointByAddress")
-    public @ResponseBody
-    List<AddressPosition> getPointByAddress(String needMatched, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ParseException {
+    public @ResponseBody List<AddressPosition> getPointByAddress(String needMatched, HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ParseException {
         List<AddressPosition> addressPositionList = new ArrayList<AddressPosition>();
         if (StringUtil.isEmpty(needMatched)) {
             return null;
@@ -550,9 +537,8 @@ public class AddressController extends BaseController {
     }
 
     @RequestMapping("/getUnbindInfo")
-    public @ResponseBody
-    KeywordMatchedResult getUnbindInfo(HttpServletRequest request, HttpServletResponse response) throws IOException,
-            ParseException {
+    public @ResponseBody KeywordMatchedResult getUnbindInfo(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ParseException {
         Long customerId = this.getCustomerId();
 
         // TODO
@@ -584,8 +570,7 @@ public class AddressController extends BaseController {
      * 新增关键词
      */
     @RequestMapping("/add")
-    public @ResponseBody
-    AjaxJson add(@RequestParam(value = "stationId") Long stationId,
+    public @ResponseBody AjaxJson add(@RequestParam(value = "stationId") Long stationId,
             @RequestParam(value = "parentId", required = false) Long parentId,
             @RequestParam(value = "addresses", required = false) String addresses, HttpServletRequest request) {
         AjaxJson aj = new AjaxJson();
@@ -637,8 +622,7 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/addAlias")
-    public @ResponseBody
-    AjaxJson addAlias(@RequestParam(value = "addressId") Long addressId,
+    public @ResponseBody AjaxJson addAlias(@RequestParam(value = "addressId") Long addressId,
             @RequestParam(value = "alias", required = false) String alias, HttpServletRequest request) {
         AjaxJson aj = null;
         Long customerId = this.getCustomerId();
@@ -665,8 +649,7 @@ public class AddressController extends BaseController {
      * @throws
      */
     @RequestMapping("/createAliasIndex")
-    public @ResponseBody
-    AjaxJson createAliasIndex(HttpServletRequest request) {
+    public @ResponseBody AjaxJson createAliasIndex(HttpServletRequest request) {
         AjaxJson aj = null;
         List<Alias> aliasList = new ArrayList<Alias>();
         aliasList = this.addressService.getListAliasByCustomerId(5L);
@@ -688,8 +671,7 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/getAlias")
-    public @ResponseBody
-    List<Alias> getAlias(@RequestParam(value = "addressId") Long addressId) {
+    public @ResponseBody List<Alias> getAlias(@RequestParam(value = "addressId") Long addressId) {
         Long customerId = this.getCustomerId();
         return this.addressService.getAliasByAddressId(addressId, customerId);
     }
@@ -700,8 +682,7 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/delAlias")
-    public @ResponseBody
-    AjaxJson delAlias(@RequestParam(value = "id") Long id, HttpServletRequest request) {
+    public @ResponseBody AjaxJson delAlias(@RequestParam(value = "id") Long id, HttpServletRequest request) {
         AjaxJson aj = new AjaxJson();
         aj.setSuccess(true);
         // 获取别名对象 --刘武强 11.27
@@ -723,8 +704,7 @@ public class AddressController extends BaseController {
      * @return
      */
     @RequestMapping("/delAddress")
-    public @ResponseBody
-    AjaxJson delAddress(Long addressId, HttpServletRequest request) {
+    public @ResponseBody AjaxJson delAddress(Long addressId, HttpServletRequest request) {
         AjaxJson aj = new AjaxJson();
         aj.setSuccess(true);
         try {
@@ -1026,12 +1006,27 @@ public class AddressController extends BaseController {
         sb.append("<response><head>" + "<msg><![CDATA[" + head.getMsg() + "]]></msg>" + "</head>");
         if ((responseItems != null) && (responseItems.size() > 0)) {
             sb.append("<items>");
+
             for (CarrierMatchPointResponseItemVO responseItem : responseItems) {
-                sb.append("<item>" + "<itemno>" + responseItem.getItemno() + "</itemno>" + "<netid>"
-                        + responseItem.getNetid() + "</netid>" + "<netpoint><![CDATA[" + responseItem.getNetpoint()
-                        + "]]></netpoint>" + "<tpsnetpoint><![CDATA[" + responseItem.getTpsnetpoint()
-                        + "]]></tpsnetpoint>" + "<remark><![CDATA[" + responseItem.getRemark() + "]]></remark>"
-                        + "</item>");
+                String itemNo = "";
+                String netPoint = "";
+                String tpsNetPoint = "";
+                String remark = "";
+                if (responseItem.getItemno() != null) {
+                    itemNo = responseItem.getItemno().toString();
+                }
+                if (StringUtils.isNotEmpty(responseItem.getNetpoint())) {
+                    netPoint = responseItem.getNetpoint();
+                }
+                if (StringUtils.isNotEmpty(responseItem.getTpsnetpoint())) {
+                    tpsNetPoint = responseItem.getTpsnetpoint();
+                }
+                if (StringUtils.isNotEmpty(responseItem.getRemark())) {
+                    remark = responseItem.getRemark();
+                }
+                sb.append("<item>" + "<itemno>" + itemNo + "</itemno>" + "<netid>" + responseItem.getNetid()
+                        + "</netid>" + "<netpoint><![CDATA[" + netPoint + "]]></netpoint>" + "<tpsnetpoint><![CDATA["
+                        + tpsNetPoint + "]]></tpsnetpoint>" + "<remark><![CDATA[" + remark + "]]></remark>" + "</item>");
 
             }
             sb.append("</items>");
