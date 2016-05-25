@@ -12,7 +12,7 @@ public class DeliveryStationVo {
     /**
      * 站点编码
      */
-    private String stationCode;
+    private String stationCode = "";
 
     public String getStationCode() {
         return this.stationCode;
