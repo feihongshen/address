@@ -6,10 +6,6 @@ INSERT INTO system_config (name,value,description,editable,customer_id)
 VALUES ('isOpenGisSearch','0','是否开启电子地图','1','6');
 
 
--- 验证脚本
-select station_code from delivery_stations limit 10;
-select * from system_config where `name` = 'isOpenGisSearch';
 
--- 回滚脚本
-alter table delivery_stations drop column STATION_CODE;
-delete from system_config where `name` = 'isOpenGisSearch';
+
+
