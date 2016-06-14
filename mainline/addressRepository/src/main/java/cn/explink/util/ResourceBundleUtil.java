@@ -1,20 +1,46 @@
+
 package cn.explink.util;
 
-import java.util.ResourceBundle;
-
 /**
- * 
  * 读取文件路径配置文件
- * 
  */
+
 public class ResourceBundleUtil {
 
-	private static ResourceBundle addressResourceBundle = ResourceBundle.getBundle("address");
+    // lucene索引目录
+    private String luceneIndexPath;
 
-	// lucene索引目录
-	public static final String LUCENE_INDEX_PATH = addressResourceBundle.getString("luceneIndexPath");
+    // addressResourceBundle.getString("luceneIndexPath");
 
-	// lucene词典目录
-	public static final String LUCENE_DICT_PATH = addressResourceBundle.getString("luceneDictPath");
+    // lucene词典目录
+    private String luceneDictPath;
+
+    /**
+     * @return the luceneIndexPath
+     */
+    public String getLuceneIndexPath() {
+        return this.luceneIndexPath;
+    }
+
+    /**
+     * @param luceneIndexPath the luceneIndexPath to set
+     */
+    public void setLuceneIndexPath(String luceneIndexPath) {
+        this.luceneIndexPath = luceneIndexPath;
+    }
+
+    /**
+     * @return the luceneDictPath
+     */
+    public String getLuceneDictPath() {
+        return this.luceneDictPath;
+    }
+
+    /**
+     * @param luceneDictPath the luceneDictPath to set
+     */
+    public void setLuceneDictPath(String luceneDictPath) {
+        this.luceneDictPath = luceneDictPath;
+    }
 
 }

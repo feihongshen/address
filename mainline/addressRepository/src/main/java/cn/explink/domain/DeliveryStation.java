@@ -1,3 +1,4 @@
+
 package cn.explink.domain;
 
 import java.math.BigDecimal;
@@ -21,139 +22,151 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "customer" })
 public class DeliveryStation {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "NAME", length = 50, nullable = false)
-	private String name;
+    @Column(name = "NAME", length = 50, nullable = false)
+    private String name;
 
-	@Column(name = "COORDINATE")
-	private String coordinate;
+    @Column(name = "COORDINATE")
+    private String coordinate;
 
-	@Column(name = "MAPCENTER_LNG")
-	private BigDecimal mapcenterLng;
+    @Column(name = "MAPCENTER_LNG")
+    private BigDecimal mapcenterLng;
 
-	@Column(name = "MAPCENTER_LAT")
-	private BigDecimal mapcenterLat;
+    @Column(name = "MAPCENTER_LAT")
+    private BigDecimal mapcenterLat;
 
-	@Column(name = "UID")
-	private String uid;
+    @Column(name = "UID")
+    private String uid;
 
-	@Column(name = "STATUS", nullable = false)
-	private Integer status;
+    @Column(name = "STATUS", nullable = false)
+    private Integer status;
 
-	@Column(name = "EXTERNAL_ID", nullable = false)
-	private Long externalId;
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CUSTOMER_ID")
-	private Customer customer;
+    @Column(name = "EXTERNAL_ID", nullable = false)
+    private Long externalId;
 
-	@Column(name = "CREATION_TIME")
-	private Date creationTime;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
 
-	public Long getId() {
-		return this.id;
-	}
+    @Column(name = "CREATION_TIME")
+    private Date creationTime;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(name = "STATION_CODE")
+    private String stationCode;
 
-	public String getName() {
-		return this.name;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getCoordinate() {
-		return this.coordinate;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setCoordinate(String coordinate) {
-		this.coordinate = coordinate;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public BigDecimal getMapcenterLng() {
-		return this.mapcenterLng;
-	}
+    public String getCoordinate() {
+        return this.coordinate;
+    }
 
-	public void setMapcenterLng(BigDecimal mapcenterLng) {
-		this.mapcenterLng = mapcenterLng;
-	}
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
+    }
 
-	public BigDecimal getMapcenterLat() {
-		return this.mapcenterLat;
-	}
+    public BigDecimal getMapcenterLng() {
+        return this.mapcenterLng;
+    }
 
-	public void setMapcenterLat(BigDecimal mapcenterLat) {
-		this.mapcenterLat = mapcenterLat;
-	}
+    public void setMapcenterLng(BigDecimal mapcenterLng) {
+        this.mapcenterLng = mapcenterLng;
+    }
 
-	public String getUid() {
-		return this.uid;
-	}
+    public BigDecimal getMapcenterLat() {
+        return this.mapcenterLat;
+    }
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+    public void setMapcenterLat(BigDecimal mapcenterLat) {
+        this.mapcenterLat = mapcenterLat;
+    }
 
-	public Integer getStatus() {
-		return this.status;
-	}
+    public String getUid() {
+        return this.uid;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
-	public Long getExternalId() {
-		return this.externalId;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public void setExternalId(Long externalId) {
-		this.externalId = externalId;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Customer getCustomer() {
-		return this.customer;
-	}
+    public Long getExternalId() {
+        return this.externalId;
+    }
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
 
-	public Date getCreationTime() {
-		return this.creationTime;
-	}
+    public Customer getCustomer() {
+        return this.customer;
+    }
 
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
-	}
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		if (this == o) {
-			return true;
-		}
-		if (this.getClass() != o.getClass()) {
-			return false;
-		}
-		DeliveryStation oStat = (DeliveryStation) o;
+    public Date getCreationTime() {
+        return this.creationTime;
+    }
 
-		return this.getId().equals(oStat.getId());
-	}
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
 
-	@Override
-	public int hashCode() {
-		if (this.getId() == null) {
-			return super.hashCode();
-		}
-		return this.getId().hashCode();
-	}
+    public String getStationCode() {
+        return this.stationCode;
+    }
+
+    public void setStationCode(String stationCode) {
+        this.stationCode = stationCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (this == o) {
+            return true;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        DeliveryStation oStat = (DeliveryStation) o;
+
+        return this.getId().equals(oStat.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.getId() == null) {
+            return super.hashCode();
+        }
+        return this.getId().hashCode();
+    }
 }

@@ -42,8 +42,10 @@
 		<property name="maxStatementsPerConnection" value="0" />
 		<property name="numHelperThreads" value="3" />
 		<property name="propertyCycle" value="600" />
-		<property name="preferredTestQuery" value="select id from c3p0_connection_test where id=1" />
-		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="testConnectionOnCheckin" value="false"/>
+    	<property name="preferredTestQuery" value="select 1" />
+    	<property name="idleConnectionTestPeriod" value="60" />
+    	
 	</bean>
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
