@@ -424,33 +424,38 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         List<BeanVo> unList = new ArrayList<BeanVo>();
         List<BeanVo> dList = new ArrayList<BeanVo>();
         List<BeanVo> kList = new ArrayList<BeanVo>();
+        List<BeanVo> disList = new ArrayList<BeanVo>();
         List<String> mapAddressList = new ArrayList<String>();
         List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
         for (OrderVo orderVo : orderList) {
             orderVo.setCustomerId(customerId);
             SingleAddressMappingResult singleResult = this.search(orderVo, false);
 
-            // 调用地图匹配逻辑 （开始）
-            switch (singleResult.getResult()) {
-                case zeroResult:
-                case exceptionResult:
-                    // 将被地图匹配的地址收集起来
-                    mapAddressList.add(orderVo.getAddressLine());
-                    // 调用地图匹配
-                    List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
+            // 增加系统参数控制地图匹配的开关
+            SystemConfig config = this.systemConfigService.getConfigByNameAndCustomerId("isOpenGisSearch", customerId);
+            if ((config == null) || config.getValue().equals("1")) {
+                // 调用地图匹配逻辑 （开始）
+                switch (singleResult.getResult()) {
+                    case zeroResult:
+                    case exceptionResult:
+                        // 将被地图匹配的地址收集起来
+                        mapAddressList.add(orderVo.getAddressLine());
+                        // 调用地图匹配
+                        List<DeliveryStation> deliveryStationList = this.searchByGis(orderVo);
 
-                    if (deliveryStationList.isEmpty()) {
-                        singleResult.setResult(AddressMappingResultEnum.zeroResult);
-                    } else if (1 == deliveryStationList.size()) {
-                        singleResult.setResult(AddressMappingResultEnum.singleResult);
+                        if (deliveryStationList.isEmpty()) {
+                            singleResult.setResult(AddressMappingResultEnum.zeroResult);
+                        } else if (1 == deliveryStationList.size()) {
+                            singleResult.setResult(AddressMappingResultEnum.singleResult);
 
-                        this.splitAndImport(orderVo, deliveryStationList);
-                    } else {
-                        singleResult.setResult(AddressMappingResultEnum.multipleResult);
-                    }
-                    singleResult.setDeliveryStationList(deliveryStationList);
+                            this.splitAndImport(orderVo, deliveryStationList);
+                        } else {
+                            singleResult.setResult(AddressMappingResultEnum.multipleResult);
+                        }
+                        singleResult.setDeliveryStationList(deliveryStationList);
+                }
+                // 调用地图匹配逻辑 （结束）
             }
-            // 调用地图匹配逻辑 （结束）
 
             BeanVo b = new BeanVo();
             b.setKey(orderVo.getAddressLine());
@@ -466,6 +471,15 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                     } else {
                         b.setVal(singleResult.getDeliveryStationList().get(0).getName());
                         suList.add(b);
+                        // 判断是否匹配了小件员
+                        if (singleResult.getDelivererList().isEmpty()) {
+                            b.setVal("未匹配");
+                            disList.add(b);
+                        } else {
+                            b.setVal(singleResult.getDeliveryStationList().get(0).getName());
+                            b.setDistributer(singleResult.getDelivererList().get(0).getName());
+                            disList.add(b);
+                        }
                     }
                     break;
                 case multipleResult:
@@ -490,10 +504,12 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         attributes.put("unsum", unList.size());
         attributes.put("dsum", dList.size());
         attributes.put("pper", pper);
+        attributes.put("dssum", disList.size());
         attributes.put("dList", dList);
         attributes.put("unList", unList);
         attributes.put("suList", suList);
         attributes.put("kList", kList);
+        attributes.put("disList", disList);
         attributes.put("mapAddressList", mapAddressList);
         return attributes;
     }

@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mapMatchResult.js"></script>
 <script type="text/javascript">
 var ctx = '<%=request.getContextPath() %>';
-var arrsum=['insum','unsum','susum','dsum','ksum','pper'];
+var arrsum=['insum','unsum','susum','dsum','ksum','pper','dssum'];
 var usedData;
 var tableData;
 $(function(){
@@ -62,6 +62,10 @@ $(function(){
 			case '命中关键词未匹配站点':
 				tableData=usedData['kList'];
 				usedTable=$("#keytable");
+				break;
+			case '小件员匹配成功':
+				tableData=usedData['disList'];
+				usedTable=$("#distable");
 				break;
 			case '地图匹配情况':
 			    var mapAddressList=	usedData['mapAddressList'];
@@ -145,6 +149,20 @@ $(function(){
             <th align="center" bgcolor="#f1f1f1">序号</th>
             <th align="center" bgcolor="#f1f1f1">关键字</th>
             <th align="center" bgcolor="#f1f1f1">站点</th>
+          </tr>
+         
+        </thead>
+      </table>
+    </div>
+    <div title="小件员匹配成功" style="padding:10px">
+      <h2 align="right">小件员匹配成功<span class="dssum">0</span>条</h2>
+      <table id="distable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
+        <thead>
+          <tr>
+            <th align="center" bgcolor="#f1f1f1">序号</th>
+            <th align="center" bgcolor="#f1f1f1">地址</th>
+            <th align="center" bgcolor="#f1f1f1">站点</th>
+            <th align="center" bgcolor="#f1f1f1">小件员</th>
           </tr>
          
         </thead>
