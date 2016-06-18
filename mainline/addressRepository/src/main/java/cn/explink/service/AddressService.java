@@ -60,6 +60,7 @@ import cn.explink.ws.vo.ApplicationVo;
 import cn.explink.ws.vo.BeanVo;
 import cn.explink.ws.vo.DelivererVo;
 import cn.explink.ws.vo.DeliveryStationVo;
+import cn.explink.ws.vo.DistributerBeanVo;
 import cn.explink.ws.vo.OrderAddressMappingResult;
 import cn.explink.ws.vo.OrderVo;
 import cn.explink.ws.vo.ResultCodeEnum;
@@ -424,7 +425,8 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         List<BeanVo> unList = new ArrayList<BeanVo>();
         List<BeanVo> dList = new ArrayList<BeanVo>();
         List<BeanVo> kList = new ArrayList<BeanVo>();
-        List<BeanVo> disList = new ArrayList<BeanVo>();
+        List<DistributerBeanVo> disList = new ArrayList<DistributerBeanVo>();
+        List<DistributerBeanVo> undisList = new ArrayList<DistributerBeanVo>();
         List<String> mapAddressList = new ArrayList<String>();
         List<SingleAddressMappingResult> result = new ArrayList<SingleAddressMappingResult>();
         for (OrderVo orderVo : orderList) {
@@ -471,14 +473,27 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                     } else {
                         b.setVal(singleResult.getDeliveryStationList().get(0).getName());
                         suList.add(b);
+                        DistributerBeanVo c = new DistributerBeanVo();
+                        c.setKey(orderVo.getAddressLine());
                         // 判断是否匹配了小件员
                         if (singleResult.getDelivererList().isEmpty()) {
-                            b.setVal("未匹配");
-                            disList.add(b);
-                        } else {
-                            b.setVal(singleResult.getDeliveryStationList().get(0).getName());
-                            b.setDistributer(singleResult.getDelivererList().get(0).getName());
-                            disList.add(b);
+                            c.setVal(singleResult.getDeliveryStationList().get(0).getName());
+                            c.setDistributer("");
+                            undisList.add(c);
+                            // 多个情况
+                        } else if ((singleResult.getDelivererList() != null)
+                                && (singleResult.getDelivererList().size() > 1)) {
+                            c.setVal(singleResult.getDeliveryStationList().get(0).getName());
+                            StringBuffer distributers = new StringBuffer();
+                            for (Deliverer deliverer : singleResult.getDelivererList()) {
+                                distributers.append(deliverer.getName() + ",");
+                            }
+                            c.setDistributer(distributers.substring(0, distributers.length() - 1).toString());
+                            undisList.add(c);
+                        } else {// 有且只有一个，才算匹配成功
+                            c.setVal(singleResult.getDeliveryStationList().get(0).getName());
+                            c.setDistributer(singleResult.getDelivererList().get(0).getName());
+                            disList.add(c);
                         }
                     }
                     break;
@@ -504,12 +519,14 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
         attributes.put("unsum", unList.size());
         attributes.put("dsum", dList.size());
         attributes.put("pper", pper);
-        attributes.put("dssum", disList.size());
+        attributes.put("dissum", disList.size());
+        attributes.put("undissum", undisList.size());
         attributes.put("dList", dList);
         attributes.put("unList", unList);
         attributes.put("suList", suList);
         attributes.put("kList", kList);
         attributes.put("disList", disList);
+        attributes.put("undisList", undisList);
         attributes.put("mapAddressList", mapAddressList);
         return attributes;
     }

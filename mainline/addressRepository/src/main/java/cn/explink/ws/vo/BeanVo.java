@@ -16,16 +16,6 @@ public class BeanVo {
 
     private String val;
 
-    private String distributer;
-
-    public String getDistributer() {
-        return this.distributer;
-    }
-
-    public void setDistributer(String distributer) {
-        this.distributer = distributer;
-    }
-
     public String getKey() {
         return this.key;
     }
