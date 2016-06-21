@@ -84,8 +84,15 @@ $(function(){
 			$(".tr"+title).remove();
 			if(usedTable){
 				for(var i=0;i<tableData.length;i++){
-					var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+
-					"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td><td align='center' bgcolor='#FFFFFF'>"+tableData[i]['distributer']+"</td>"
+					var distributer ;
+					var tr ;
+					if(tableData[i]['distributer']=='' || tableData[i]['distributer'] == null){
+						 tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+
+							"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>";
+					}else{
+						 tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+
+						"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td><td align='center' bgcolor='#FFFFFF'>"+tableData[i]['distributer']+"</td>";
+					}
 					usedTable.append(tr);
 				}
 			}

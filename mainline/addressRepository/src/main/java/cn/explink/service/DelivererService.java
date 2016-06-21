@@ -15,6 +15,7 @@ import cn.explink.domain.Customer;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.enums.DelivererStausEnmu;
+import cn.explink.modle.ComboBox;
 import cn.explink.ws.vo.DelivererVo;
 
 @Service
@@ -82,6 +83,19 @@ public class DelivererService {
 
     public List<Deliverer> listAll(Long customerId) {
         return this.delivererDao.listAll(customerId);
+    }
+
+    /**
+     * 根据站点id获取list-小件员
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param stationId
+     * @return
+     * @since 1.0
+     */
+    public List<ComboBox> getDelivererComBoxByStation(String stationId, Long customerId) {
+        return this.delivererDao.getDelivererComBoxByStation(Long.valueOf(stationId), customerId);
     }
 
 }

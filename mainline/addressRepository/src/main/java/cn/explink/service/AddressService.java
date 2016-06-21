@@ -478,7 +478,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                         // 判断是否匹配了小件员
                         if (singleResult.getDelivererList().isEmpty()) {
                             c.setVal(singleResult.getDeliveryStationList().get(0).getName());
-                            c.setDistributer("");
+                            c.setDistributer("未匹配");
                             undisList.add(c);
                             // 多个情况
                         } else if ((singleResult.getDelivererList() != null)
@@ -772,7 +772,9 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
     }
 
     public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
+        // 首先根据客户编码、站点id联表站点表、客户id查找对应的关键词信息。
         List<ZTreeNode> address = this.deliverStationRuleService.getAdressByStation(customerId, stationId);
+        // 根据address的全路径path属性，获取它所有的父级关键词
         Set<String> set = new HashSet<String>();
         if ((null != address) && (address.size() > 0)) {
             StringBuffer aIds = new StringBuffer();
@@ -789,8 +791,25 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                 aIds.append(string + ",");
             }
             aIds.setLength(aIds.length() - 1);
+            // 根据拼好的所有addressId获取对应的name
+            address.clear();
+            address = this.addressDao.getZTreeNodeByIdListAndCustomerId(aIds.toString(), customerId);
+            // v1.02 增加小件员名称显示
+            for (ZTreeNode node : address) {
+                // 根据address_id，stationId，customerId查找小件员表，
+                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRule(customerId,
+                        Long.valueOf(stationId), Long.valueOf(node.getId()));
+                // 如果不为空,拼接address名称到站点后面,--分隔
+                if (CollectionUtils.isNotEmpty(delivererRules)) {
+                    StringBuffer deliverer = new StringBuffer();
+                    for (DelivererRule rule : delivererRules) {
+                        deliverer.append(rule.getDeliverer().getName() + "|");
+                    }
+                    node.setName(node.getName() + "----" + deliverer.substring(0, deliverer.length() - 1).toString());
+                }
+            }
 
-            return this.addressDao.getZTreeNodeByIdListAndCustomerId(aIds.toString(), customerId);
+            return address;
         }
 
         else {
@@ -1019,5 +1038,62 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             result.setMessage(e.toString());
         }
         return result;
+    }
+
+    /**
+     * 根据客户id+站点id+派送员id获取关键词
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param delivererId
+     * @return
+     * @since 1.0
+     */
+    public List<ZTreeNode> getAdressByDeliverer(Long customerId, String stationId, String delivererId) {
+        // 首先根据客户编码、站点id联表站点表、客户id查找对应的关键词信息。
+        List<ZTreeNode> address = this.delivererRuleService.getAddressByDeliverer(customerId, stationId, delivererId);
+        // 根据address的全路径path属性，获取它所有的父级关键词
+        Set<String> set = new HashSet<String>();
+        if ((null != address) && (address.size() > 0)) {
+            StringBuffer aIds = new StringBuffer();
+            for (ZTreeNode a : address) {
+                aIds.append(a.getId() + "-" + a.getT() + "-");
+            }
+            String[] ids = aIds.toString().split("-");
+            for (String id : ids) {
+                set.add(id);
+            }
+            set.remove("");
+            aIds.setLength(0);
+            for (String string : set) {
+                aIds.append(string + ",");
+            }
+            aIds.setLength(aIds.length() - 1);
+            // 根据拼好的所有addressId获取对应的name
+            address.clear();
+            address = this.addressDao.getZTreeNodeByIdListAndCustomerId(aIds.toString(), customerId);
+            // v1.02 增加小件员名称显示
+            for (ZTreeNode node : address) {
+                // 根据address_id，stationId，customerId查找小件员表，
+                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRule(customerId,
+                        Long.valueOf(stationId), Long.valueOf(node.getId()));
+                // 如果不为空,拼接address名称到站点后面,--分隔
+                if (CollectionUtils.isNotEmpty(delivererRules)) {
+                    StringBuffer deliverer = new StringBuffer();
+                    for (DelivererRule rule : delivererRules) {
+                        deliverer.append(rule.getDeliverer().getName() + "|");
+                    }
+                    node.setName(node.getName() + "----" + deliverer.substring(0, deliverer.length() - 1).toString());
+                }
+            }
+
+            return address;
+        }
+
+        else {
+            return null;
+        }
     }
 }

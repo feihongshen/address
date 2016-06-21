@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
+import cn.explink.tree.ZTreeNode;
 
 @Repository
 public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Long> {
@@ -52,4 +53,38 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
         return query.list();
     }
 
+    /**
+     * 根据客户编码+站点编码+addressId获取对应的小件员匹配信息
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param id
+     * @return
+     * @since 1.0
+     */
+    public List<DelivererRule> getDelivererRule(Long customerId, Long stationId, Long addressId) {
+        Query query = this
+                .getSession()
+                .createQuery(
+                        "select dr from DelivererRule dr where dr.deliverer.status=1 and dr.address.id =:aId and dr.deliverer.customer.id=:customerId "
+                                + "and dr.deliveryStation.id=:sId ");
+        query.setLong("customerId", customerId);
+        query.setLong("aId", addressId);
+        query.setLong("sId", stationId);
+        return query.list();
+    }
+
+    public List<ZTreeNode> getAddressByDeliverer(Long customerId, String stationId, String delivererId) {
+        Query query = this
+                .getSession()
+                .createQuery(
+                        "select new cn.explink.tree.ZTreeNode( dsr.address.name,dsr.address.id,dsr.address.parentId,dsr.address.addressLevel,dsr.address.path ) from DelivererRule dsr where  dsr.deliveryStation.id=:stationId and dsr.deliveryStation.customer.id=:customerId and dsr.deliverer.id=:delivererId "
+                                + "group by dsr.deliveryStation,dsr.deliverer,dsr.address");
+        query.setLong("customerId", customerId);
+        query.setLong("stationId", Long.parseLong(stationId));
+        query.setLong("delivererId", Long.parseLong(delivererId));
+        return query.list();
+    }
 }

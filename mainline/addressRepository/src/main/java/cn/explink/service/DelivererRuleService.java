@@ -23,6 +23,7 @@ import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
 import cn.explink.ws.vo.DelivererRuleVo;
@@ -241,6 +242,47 @@ public class DelivererRuleService extends RuleService {
         for (Integer l : list) {
             this.delete(Long.parseLong(l + ""));
         }
+
+    }
+
+    /**
+     * 根据客户编码+站点编码+addressId获取对应的小件员匹配信息
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param id
+     * @return
+     * @since 1.0
+     */
+    public List<DelivererRule> getDelivererRule(Long customerId, Long stationId, Long addressId) {
+        if (addressId == null) {
+            return null;
+        }
+        List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRule(customerId, stationId, addressId);
+        List<DelivererRule> resultList = new ArrayList<DelivererRule>();
+        for (DelivererRule rule : ruleList) {
+            if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
+                resultList.add(rule);
+            }
+        }
+        return resultList;
+    }
+
+    /**
+     * 根据客户id+站点id+配送员id获取前端所需要的树形结构
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param delivererId
+     * @return
+     * @since 1.0
+     */
+    public List<ZTreeNode> getAddressByDeliverer(Long customerId, String stationId, String delivererId) {
+        return this.delivererRuleDao.getAddressByDeliverer(customerId, stationId, delivererId);
 
     }
 
