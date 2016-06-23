@@ -259,14 +259,15 @@ public class DeliveryStationRuleController extends BaseController {
 
     @RequestMapping("/changeStationRelation")
     public @ResponseBody AjaxJson changeStationRelation(Long sourceStationId, Long targetStationId,
-            String sourceAddressId, String targetAddressId, HttpServletRequest request, HttpServletResponse response) {
+            Long sourceDelivererId, Long targetDelivererId, String sourceAddressId, String targetAddressId,
+            HttpServletRequest request, HttpServletResponse response) {
         AjaxJson aj = new AjaxJson();
         // TODO GET CUSTOMER FROM USER
         Long customerId = this.getCustomerId();
 
         try {
-            this.deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceAddressId,
-                    targetAddressId);
+            this.deliveryStationRuleService.changeStationRelation(sourceStationId, targetStationId, sourceDelivererId,
+                    targetDelivererId, sourceAddressId, targetAddressId);
 
             BizLog bizlog = new BizLog();
             bizlog.setSourceStationId(sourceStationId);

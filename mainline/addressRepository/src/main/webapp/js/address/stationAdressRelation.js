@@ -87,6 +87,12 @@ function initDemoTree(stationName){
 function saveRelation(){
 	var sourceStationId=$("#sourceStation").val();
 	var targetStationId=$("#targetStation").val();
+	var sourceDelivererId = $("#sourceDeliverer").val();
+	var targetDelivererId = $("#targetDeliverer").val();
+	if(sourceStationId == targetStationId){
+		alertTip("不可操作相同站点");
+		return;
+	}
 	var leftDiv="";
     var leftDivStrArray = eval(leftDivStr);
     for(var i = 0;i<leftDivStrArray.length;i++){
@@ -102,7 +108,7 @@ function saveRelation(){
     $.ajax({
 		 type: "POST",
 			url:ctx+"/deliveryStationRule/changeStationRelation",
-			data:{"sourceStationId":sourceStationId,"targetStationId":targetStationId,"sourceAddressId":leftDiv,"targetAddressId":rightDiv},
+			data:{"sourceStationId":sourceStationId,"targetStationId":targetStationId,"sourceDelivererId":sourceDelivererId,"targetDelivererId":targetDelivererId,"sourceAddressId":leftDiv,"targetAddressId":rightDiv},
 			success:function(optionData){
 				if(optionData.success){
 					$('.easyui-layout').layout('expand','north');

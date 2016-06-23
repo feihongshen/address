@@ -42,6 +42,29 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
         // return query.list();
     }
 
+    /**
+     * 根据小件员id+站点id+关键词id获取对应的匹配规则
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param addressId
+     * @return
+     * @since 1.0
+     */
+    public DelivererRule getDelivererRuleList(Long sourceDelivererId, Long stationId, Long addressId) {
+        Query query = this
+                .getSession()
+                .createQuery(
+                        "select dr from DelivererRule dr where dr.deliverer.status=1 and dr.address.id =:aId and dr.deliverer.id=:sourceDelivererId "
+                                + " and dr.deliveryStation.id=:stationId");
+        query.setLong("sourceDelivererId", sourceDelivererId);
+        query.setLong("aId", addressId);
+        query.setLong("stationId", stationId);
+        return (DelivererRule) query.uniqueResult();
+    }
+
     public List getByAddressAndDeliverer(Long addressId, Long did, Long customerId) {
         String sql = "SELECT r.id FROM DELIVERER_RULES r left join DELIVERERS"
                 + " s on r.DELIVERER_ID=s.ID WHERE r.RULE_TYPE=:ruleType AND r.RULE='' "
