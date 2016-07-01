@@ -17,7 +17,7 @@
 		http://cxf.apache.org/schemas/jaxws.xsd">
 		
 	<bean id="propertyPlaceHolder" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations" value="file:/apps/conf/javaconf/address/address.properties" />
+        <property name="locations" value="file:/apps/conf/javaconf/${sysname}/address/address.properties" />
         <property name="ignoreResourceNotFound" value="true" />
         <property name="fileEncoding" value="UTF-8" />
     </bean>
