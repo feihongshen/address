@@ -60,7 +60,8 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 	}
 
 	public List<ComboBox> getComBoxDeliveryStation(Long customerId) {
-		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId and status=" + DeliveryStationStausEnmu.valid.getValue() + " order by ds.name ";
+		String hql = "select new cn.explink.modle.ComboBox(ds.id,ds.name) from DeliveryStation ds where customer.id = :customerId and status=" + DeliveryStationStausEnmu.valid.getValue()
+				+ " order by ds.name ";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong("customerId", customerId);
 		return query.list();
@@ -72,6 +73,14 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
 		query.setLong("customerId", customerId);
 		query.setString("name", deliveryStationName);
 		return (DeliveryStation) query.uniqueResult();
+	}
+
+	public List<DeliveryStation> fuzzySearchByNameAndCustomerId(String deliveryStationName, Long customerId) {
+		String hql = "from DeliveryStation where customer.id = :customerId and name like:name ";
+		Query query = this.getSession().createQuery(hql);
+		query.setLong("customerId", customerId);
+		query.setString("name", deliveryStationName);
+		return query.list();
 	}
 
 	public List<Vendor> listAllVendor(Long customerId) {

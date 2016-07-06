@@ -13,9 +13,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
 
 <script>
-	$(function() {
-	});
-	
 	function login() {		
 		setTimeout(function(){
 			if($("#username").val()==""){

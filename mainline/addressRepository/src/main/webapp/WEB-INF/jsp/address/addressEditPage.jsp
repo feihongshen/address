@@ -5,8 +5,8 @@
 <title>关键词树状维护</title>
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/addressEditPage.js"></script>
+<script type="text/javascript" src="${ctx}/js/address/maskUtil.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/fuzzySearch.js"></script>
-
 <style type="text/css">
 .alias>li {
 	float: left;
@@ -53,13 +53,31 @@ span.button.lastPage {
 	vertical-align: top;
 	*vertical-align: middle
 }
+
+div#rMenu {
+	position: absolute;
+	visibility: hidden;
+	top: 0;
+/* 	background-color: #555; */
+	text-align: left;
+/* 	padding: 2px; */
+}
+
+div#rMenu ul li {
+	margin: 1px 0;
+	padding: 0 5px;
+	cursor: pointer;
+	list-style: none outside none;
+	background-color: #DFDFDF;
+}
 </style>
 </head>
 <body>
 	<div class="easyui-layout" style="height: 540px;">
-		<div data-options="region:'west',split:true" title="条件搜索" style="width: 450px;">
+		<div data-options="region:'west',split:true" title="条件搜索" style="width: 500px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="10">
 				<tr>
+					<td align="left"><select id="searchType"><option value="1" >关键词</option><option value="2" >站点</option></select></td>
 					<td align="left"><input style="width: 180px" id="searchA"
 						onkeydown="searchByKeyword('searchA','tree');" /></td>
 					<td align="left" width="160px;"><a href="javascript:void(0)" id="collapseAllBtn"
@@ -67,7 +85,7 @@ span.button.lastPage {
 						class="easyui-linkbutton">刷新</a></td>
 				</tr>
 				<tr>
-					<td colspan=2><div id="promtInfo"></div> <!--         上面div样式   style="float:left" --> <!--           <a id="unbind" href="#" onclick="getUnbindInfo();return false;" ></a>个 -->
+					<td colspan=4><div id="promtInfo"></div>
 						<ul id="tree" class="ztree" style="width: auto; height: auto; overflow: auto;"></ul></td>
 				</tr>
 			</table>
@@ -113,6 +131,11 @@ span.button.lastPage {
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="rMenu">
+		<ul>
+			<a href="javascript:void(0)" id="m_del" class="easyui-linkbutton" onclick="removeTreeNode();">批量删除关键词</a>
+		</ul>
 	</div>
 </body>
 </html>
