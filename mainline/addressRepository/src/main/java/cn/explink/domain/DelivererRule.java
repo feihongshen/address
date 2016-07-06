@@ -1,3 +1,4 @@
+
 package cn.explink.domain;
 
 import java.util.Date;
@@ -16,101 +17,113 @@ import javax.persistence.Table;
 @Table(name = "DELIVERER_RULES")
 public class DelivererRule {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "RULE", length = 100)
-	private String rule;
+    @Column(name = "RULE", length = 100)
+    private String rule;
 
-	@Column(name = "RULE_EXPRESSION", length = 1000)
-	private String ruleExpression;
+    @Column(name = "RULE_EXPRESSION", length = 1000)
+    private String ruleExpression;
 
-	@Column(name = "RULE_TYPE", nullable = false)
-	private Integer ruleType;
+    @Column(name = "RULE_TYPE", nullable = false)
+    private Integer ruleType;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ADDRESS_ID")
-	private Address address;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DELIVERER_ID")
-	private Deliverer deliverer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DELIVERER_ID")
+    private Deliverer deliverer;
 
-	@Column(name = "CREATION_TIME")
-	private Date creationTime;
+    @Column(name = "CREATION_TIME")
+    private Date creationTime;
 
-	public DelivererRule() {
-		super();
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DELIVERY_STATION_ID")
+    private DeliveryStation deliveryStation;
 
-	public DelivererRule(Long id, String rule) {
-		super();
-		this.id = id;
-		this.rule = rule;
-	}
+    public DelivererRule() {
+        super();
+    }
 
-	public DelivererRule(Long id, String rule, Deliverer deliverer) {
-		super();
-		this.id = id;
-		this.rule = rule;
-		this.deliverer = deliverer;
-	}
+    public DelivererRule(Long id, String rule) {
+        super();
+        this.id = id;
+        this.rule = rule;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public DelivererRule(Long id, String rule, Deliverer deliverer) {
+        super();
+        this.id = id;
+        this.rule = rule;
+        this.deliverer = deliverer;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public String getRule() {
-		return rule;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setRule(String rule) {
-		this.rule = rule;
-	}
+    public String getRule() {
+        return this.rule;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public Address getAddress() {
+        return this.address;
+    }
 
-	public Date getCreationTime() {
-		return creationTime;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
-	}
+    public DeliveryStation getDeliveryStation() {
+        return this.deliveryStation;
+    }
 
-	public Integer getRuleType() {
-		return ruleType;
-	}
+    public void setDeliveryStation(DeliveryStation deliveryStation) {
+        this.deliveryStation = deliveryStation;
+    }
 
-	public void setRuleType(Integer ruleType) {
-		this.ruleType = ruleType;
-	}
+    public Date getCreationTime() {
+        return this.creationTime;
+    }
 
-	public Deliverer getDeliverer() {
-		return deliverer;
-	}
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
 
-	public void setDeliverer(Deliverer deliverer) {
-		this.deliverer = deliverer;
-	}
+    public Integer getRuleType() {
+        return this.ruleType;
+    }
 
-	public String getRuleExpression() {
-		return ruleExpression;
-	}
+    public void setRuleType(Integer ruleType) {
+        this.ruleType = ruleType;
+    }
 
-	public void setRuleExpression(String ruleExpression) {
-		this.ruleExpression = ruleExpression;
-	}
+    public Deliverer getDeliverer() {
+        return this.deliverer;
+    }
+
+    public void setDeliverer(Deliverer deliverer) {
+        this.deliverer = deliverer;
+    }
+
+    public String getRuleExpression() {
+        return this.ruleExpression;
+    }
+
+    public void setRuleExpression(String ruleExpression) {
+        this.ruleExpression = ruleExpression;
+    }
 
 }

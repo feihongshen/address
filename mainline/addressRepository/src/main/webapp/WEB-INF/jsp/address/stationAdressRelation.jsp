@@ -156,6 +156,14 @@ span.button.lastPage {
 		$(".targetStation4combobox").change(function() {
 			initDemoTree('targetStation');
 		})
+		
+		
+		$(".sourceDeliverer4combobox").change(function(){
+			getDeliveryTree('sourceDeliverer');
+		})
+		$(".targetDeliverer4combobox").change(function(){
+			getDeliveryTree('targetDeliverer');
+		})
 
 	});
 
@@ -226,7 +234,10 @@ span.button.lastPage {
 				<tr height="20px">
 					<td width="45%" bgcolor="#FFFFFF">原站点： <select id="sourceStation" class="sourceStation4combobox"
 						style="width: 120px;">
+					</select>  &nbsp;&nbsp;&nbsp;原小件员： <select id="sourceDeliverer" class="sourceDeliverer4combobox"
+						style="width: 120px;">
 					</select></td>
+				
 					<td width="50" rowspan="3" align="center" bgcolor="#FFFFFF">
 						<p>
 							<a href="javascript:void(0)" class="easyui-linkbutton" id="toRight">&gt;</a>
@@ -237,6 +248,8 @@ span.button.lastPage {
 					</td>
 					<td width="45%" bgcolor="#FFFFFF">拆到目标站点： <select id="targetStation"
 						class="targetStation4combobox" style="width: 120px;">
+					</select> &nbsp;&nbsp;&nbsp; 拆到目标小件员： <select id="targetDeliverer"
+						class="targetDeliverer4combobox" style="width: 120px;">
 					</select></td>
 				</tr>
 				<tr>

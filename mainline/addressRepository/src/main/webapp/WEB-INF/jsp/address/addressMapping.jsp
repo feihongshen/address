@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mapMatchResult.js"></script>
 <script type="text/javascript">
 var ctx = '<%=request.getContextPath() %>';
-var arrsum=['insum','unsum','susum','dsum','ksum','pper','dssum'];
+var arrsum=['insum','unsum','susum','dsum','ksum','pper','dissum','undissum'];
 var usedData;
 var tableData;
 $(function(){
@@ -67,6 +67,10 @@ $(function(){
 				tableData=usedData['disList'];
 				usedTable=$("#distable");
 				break;
+			case '小件员匹配失败':
+				tableData=usedData['undisList'];
+				usedTable=$("#undistable");
+				break;
 			case '地图匹配情况':
 			    var mapAddressList=	usedData['mapAddressList'];
 			    var needMatchedWords="";
@@ -80,7 +84,15 @@ $(function(){
 			$(".tr"+title).remove();
 			if(usedTable){
 				for(var i=0;i<tableData.length;i++){
-					var tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>"
+					var distributer ;
+					var tr ;
+					if(tableData[i]['distributer']=='' || tableData[i]['distributer'] == null){
+						 tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+
+							"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td>";
+					}else{
+						 tr="<tr class='tr"+title+"'> <td align='center' bgcolor='#FFFFFF'>"+(1+i)+"</td> <td align='left' bgcolor='#FFFFFF'>"+tableData[i]['key']+
+						"</td> <td align='center' bgcolor='#FFFFFF'>"+tableData[i]['val']+"</td><td align='center' bgcolor='#FFFFFF'>"+tableData[i]['distributer']+"</td>";
+					}
 					usedTable.append(tr);
 				}
 			}
@@ -155,8 +167,23 @@ $(function(){
       </table>
     </div>
     <div title="小件员匹配成功" style="padding:10px">
-      <h2 align="right">小件员匹配成功<span class="dssum">0</span>条</h2>
+      <h2 align="right">小件员匹配成功<span class="dissum">0</span>条</h2>
       <table id="distable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
+        <thead>
+          <tr>
+            <th align="center" bgcolor="#f1f1f1">序号</th>
+            <th align="center" bgcolor="#f1f1f1">地址</th>
+            <th align="center" bgcolor="#f1f1f1">站点</th>
+            <th align="center" bgcolor="#f1f1f1">小件员</th>
+          </tr>
+         
+        </thead>
+      </table>
+    </div>
+    
+    <div title="小件员匹配失败" style="padding:10px">
+      <h2 align="right">小件员匹配失败<span class="undissum">0</span>条</h2>
+      <table id="undistable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
           <tr>
             <th align="center" bgcolor="#f1f1f1">序号</th>
