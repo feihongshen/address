@@ -132,33 +132,38 @@ function getDeliveryTree(delivererName){
 		 stationId=$("#targetStation").val();
 		 stationName = 'targetStation';
 	}
-	$.ajax({
-		 type: "POST",
-			url:ctx+"/deliverer/getAddressByDeliverer",
-			data:{"delivererId":delivererId,"stationId":stationId},
-			success:function(optionData){
-				zNodes=optionData;
-				if('sourceDeliverer'==delivererName){
-					
-					zTreeObj1 = $.fn.zTree.init($("#"+stationName+"tree"), demosetting, zNodes);
-					
-					leftDivStr = "[ ";
-					for(var i=0;i<zNodes.length;i++){
-						leftDivStr+="{id:"+zNodes[i].id+",pId:"+zNodes[i].pId+",name:\""+zNodes[i].name+"\",open:"+zNodes[i].open+"},";
+	// 如果选择了空
+	if(delivererId=='0' || delivererId==''){
+		initDemoTree(stationName);
+		
+	}else{
+		$.ajax({
+			 type: "POST",
+				url:ctx+"/deliverer/getAddressByDeliverer",
+				data:{"delivererId":delivererId,"stationId":stationId},
+				success:function(optionData){
+					zNodes=optionData;
+					if('sourceDeliverer'==delivererName){
+						
+						zTreeObj1 = $.fn.zTree.init($("#"+stationName+"tree"), demosetting, zNodes);
+						
+						leftDivStr = "[ ";
+						for(var i=0;i<zNodes.length;i++){
+							leftDivStr+="{id:"+zNodes[i].id+",pId:"+zNodes[i].pId+",name:\""+zNodes[i].name+"\",open:"+zNodes[i].open+"},";
+						}
+						leftDivStr = leftDivStr.substring(0,leftDivStr.length-1);
+						leftDivStr+="]";
+					}else{
+						zTreeObj2 = $.fn.zTree.init($("#"+stationName+"tree"), demosetting, zNodes);
+						
+						rightDivStr = "[ ";
+						for(var i=0;i<zNodes.length;i++){
+							rightDivStr+="{id:"+zNodes[i].id+",pId:"+zNodes[i].pId+",name:\""+zNodes[i].name+"\",open:"+zNodes[i].open+"},";
+						}
+						rightDivStr = rightDivStr.substring(0,rightDivStr.length-1);
+						rightDivStr+="]";
 					}
-					leftDivStr = leftDivStr.substring(0,leftDivStr.length-1);
-					leftDivStr+="]";
-				}else{
-					zTreeObj2 = $.fn.zTree.init($("#"+stationName+"tree"), demosetting, zNodes);
-					
-					rightDivStr = "[ ";
-					for(var i=0;i<zNodes.length;i++){
-						rightDivStr+="{id:"+zNodes[i].id+",pId:"+zNodes[i].pId+",name:\""+zNodes[i].name+"\",open:"+zNodes[i].open+"},";
-					}
-					rightDivStr = rightDivStr.substring(0,rightDivStr.length-1);
-					rightDivStr+="]";
 				}
-			}
-		});
-	
+			});
+	}
 }
