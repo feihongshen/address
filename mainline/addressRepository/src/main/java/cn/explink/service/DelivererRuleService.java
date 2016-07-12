@@ -16,9 +16,11 @@ import cn.explink.dao.AddressDao;
 import cn.explink.dao.AddressPermissionDao;
 import cn.explink.dao.DelivererDao;
 import cn.explink.dao.DelivererRuleDao;
+import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
+import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
@@ -26,6 +28,7 @@ import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.DelivererStationRuleVo;
 import cn.explink.ws.vo.DelivererRuleVo;
 import cn.explink.ws.vo.OrderVo;
 
@@ -45,6 +48,9 @@ public class DelivererRuleService extends RuleService {
 
     @Autowired
     private DelivererRuleDao delivererRuleDao;
+
+    @Autowired
+    private DeliveryStationDao deliveryStationDao;
 
     /**
      * 批量创建配送员规则
@@ -73,6 +79,7 @@ public class DelivererRuleService extends RuleService {
         RuleExpression ruleExpression = this.parseRule(rule);
         Address address = this.addressDao.get(addressId);
         Deliverer deliverer = this.delivererDao.getDeliverer(customerId, delivererId);
+
         // 判断是否与已有规则冲突
         Set<DelivererRule> filterdRules = this.filter(customerId, address.getDelivererRules());
         DelivererRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
@@ -90,8 +97,51 @@ public class DelivererRuleService extends RuleService {
         delivererRule.setAddress(address);
         delivererRule.setDeliverer(deliverer);
         delivererRule.setCreationTime(new Date());
+
         if (StringUtil.isEmpty(rule)) {
             delivererRule.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+        } else {
+            delivererRule.setRuleType(DelivererRuleTypeEnum.customization.getValue());
+            delivererRule.setRule(rule);
+            delivererRule.setRuleExpression(JsonUtil.translateToJson(ruleExpression));
+        }
+        this.delivererRuleDao.save(delivererRule);
+        return delivererRule;
+    }
+
+    public DelivererRule createDelivererRule(Long customerId, Long addressId, Long delivererId, String rule,
+            Long stationId) {
+        DelivererRuleService.logger.info(
+                "createDelivererRule for customer: {}, addressId: {}, delivererId: {}, rule: {}", new Object[] {
+                        customerId, addressId, delivererId, rule });
+        // 解析规则
+        RuleExpression ruleExpression = this.parseRule(rule);
+        Address address = this.addressDao.get(addressId);
+        Deliverer deliverer = this.delivererDao.getDelivererById(delivererId);
+        DeliveryStation deliveryStation = this.deliveryStationDao.getDeliveryStationById(stationId);
+
+        // 判断是否与已有规则冲突
+        Set<DelivererRule> filterdRules = this.filter(customerId, address.getDelivererRules());
+        DelivererRule confilctingRule = this.findConflictingRule(ruleExpression, filterdRules);
+        if (confilctingRule != null) {
+            String message = null;
+            if (DelivererRuleTypeEnum.fallback.getValue() == confilctingRule.getRuleType().intValue()) {
+                message = "已有默认规则";
+            } else {
+                message = "与已有规则冲突, " + confilctingRule.getRule();
+            }
+            throw new ExplinkRuntimeException(message);
+        }
+
+        DelivererRule delivererRule = new DelivererRule();
+        delivererRule.setAddress(address);
+        delivererRule.setDeliverer(deliverer);
+        delivererRule.setDeliveryStation(deliveryStation);
+        delivererRule.setCreationTime(new Date());
+        if (StringUtil.isEmpty(rule)) {
+            delivererRule.setRuleType(DelivererRuleTypeEnum.fallback.getValue());
+            delivererRule.setRule("");
+            delivererRule.setRuleExpression("");
         } else {
             delivererRule.setRuleType(DelivererRuleTypeEnum.customization.getValue());
             delivererRule.setRule(rule);
@@ -286,4 +336,51 @@ public class DelivererRuleService extends RuleService {
 
     }
 
+    public List<DelivererStationRuleVo> getAddressByDeliverer(Long customerId, Long stationId, Long delivererId) {
+        if ((delivererId == null) || (stationId == null)) {
+            return null;
+        }
+
+        List<DelivererStationRuleVo> ruleList = this.delivererRuleDao.getDelivererRule2(customerId, stationId,
+                delivererId);
+
+        return ruleList;
+    }
+
+    public DelivererStationRuleVo saveDelivererRule(DelivererStationRuleVo vo, Long customerId) {
+
+        try {
+            if (("new".equals(vo.getType())) || "edit".equals(vo.getType())) {
+                DelivererRule dr = this.createDelivererRule(customerId, Long.parseLong(vo.getAddressId() + ""),
+                        Long.parseLong(vo.getDelivererId() + ""), vo.getRule(), Long.parseLong(vo.getStationId() + ""));
+                vo.setRuleId(Integer.parseInt(dr.getId() + ""));
+            }
+
+            if ("del".equals(vo.getType())) {
+                this.delete(Long.parseLong(vo.getRuleId() + ""));
+            }
+        } catch (Exception ex) {
+            DelivererRuleService.logger.error("保存小件员规则报错,错误内容:" + ex.toString(), ex);
+            throw new ExplinkRuntimeException("保存小件员规则报错,错误内容:" + ex.toString());
+
+        }
+        return vo;
+
+    }
+
+    /**
+     * 方法概要
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param delivererId
+     * @param stationId
+     * @param addressId
+     * @return
+     * @since 1.0
+     */
+    public Boolean checkDelivererRule(Long customerId, Long delivererId, Long stationId, Long addressId, Long ruleId) {
+        return false;
+    }
 }

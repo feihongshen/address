@@ -40,6 +40,7 @@ import cn.explink.gis.GeoCoder;
 import cn.explink.gis.GeoPoint;
 import cn.explink.gis.GeoUtility;
 import cn.explink.modle.ComboBox;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.util.SynInsertBizLogThread;
 import cn.explink.ws.service.AddressSyncServiceImpl;
 import cn.explink.ws.vo.DeliveryStationVo;
@@ -298,9 +299,9 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
         for (Address a : list) {
             if (a.getPath() != null) {
                 String[] ids = a.getPath().split("-");
-                for (int i = 0; i < ids.length; i++) {
-                    if (StringUtils.isNotBlank(ids[i])) {
-                        addIds.add(Long.parseLong(ids[i]));
+                for (String id2 : ids) {
+                    if (StringUtils.isNotBlank(id2)) {
+                        addIds.add(Long.parseLong(id2));
                     }
                 }
             }
@@ -314,9 +315,9 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
             List<String> row = new ArrayList<String>();
             if (a.getPath() != null) {
                 String[] ids = a.getPath().split("-");
-                for (int i = 0; i < ids.length; i++) {
-                    if (StringUtils.isNotBlank(ids[i])) {
-                        row.add(addMap.get(Long.parseLong(ids[i])));
+                for (String id2 : ids) {
+                    if (StringUtils.isNotBlank(id2)) {
+                        row.add(addMap.get(Long.parseLong(id2)));
                     }
                 }
                 row.add(a.getName());
@@ -346,4 +347,7 @@ public class DeliveryStationService extends CommonServiceImpl<DeliveryStation, L
         return this.deliveryStationDao.listAllVendor(customerId);
     }
 
+    public List<ZTreeNode> listAllToTreeNode(Long customerId, Integer page, Integer pageSize) {
+        return this.deliveryStationDao.listAllToTreeNode(customerId, page, pageSize);
+    }
 }

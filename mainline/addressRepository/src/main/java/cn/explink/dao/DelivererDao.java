@@ -18,6 +18,13 @@ public class DelivererDao extends BasicHibernateDaoSupport<Deliverer, Long> {
         super(Deliverer.class);
     }
 
+    public Deliverer getDelivererById(Long id) {
+        String hql = "from Deliverer where id = :id";
+        Query query = this.getSession().createQuery(hql);
+        query.setLong("id", id);
+        return (Deliverer) query.uniqueResult();
+    }
+
     public Deliverer getDeliverer(Long customerId, Long externalId) {
         String hql = "from Deliverer where externalId = :externalId and customer.id = :customerId";
         Query query = this.getSession().createQuery(hql);

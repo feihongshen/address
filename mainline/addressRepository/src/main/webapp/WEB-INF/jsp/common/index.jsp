@@ -82,6 +82,7 @@ $(function(){
 				<ul>
 					<li><a href="#" onclick="addTab('拆合站维护','stationAdressRelation/stationAdressRelation')">拆合站维护</a></li>
 					<li><a href="#" onclick="addTab('站点关联维护','deliveryStationRule/deliveryStationRule')">站点关联维护</a></li>
+					<li><a href="#" onclick="addTab('小件员关联维护','delivererStationRule/delivererStationRule')">小件员关联维护</a></li>
 				</ul></li>
 			<li><span>匹配测试</span>
 				<ul>

@@ -4,12 +4,14 @@ package cn.explink.dao;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.tree.ZTreeNode;
+import cn.explink.web.vo.DelivererStationRuleVo;
 
 @Repository
 public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Long> {
@@ -40,6 +42,19 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
         // // query.setLong("customerId", customerId);
         // query.setLong("addressId", addressId);
         // return query.list();
+    }
+
+    public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId, Long delivererId, Long stationId) {
+        Query query = this
+                .getSession()
+                .createQuery(
+                        "select dr from DelivererRule dr where dr.deliverer.status=1 and dr.address.id =:aId and dr.deliverer.customer.id=:customerId  and dr.deliverer.id=:dId and dr.deliverystation.id=:sId");
+        query.setLong("customerId", customerId);
+        query.setLong("aId", addressId);
+        query.setLong("sId", stationId);
+        query.setLong("dId", delivererId);
+        return query.list();
+
     }
 
     /**
@@ -108,6 +123,30 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
         query.setLong("customerId", customerId);
         query.setLong("stationId", Long.parseLong(stationId));
         query.setLong("delivererId", Long.parseLong(delivererId));
+        return query.list();
+    }
+
+    /**
+     * 方法概要
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param stationId
+     * @param delivererId
+     * @return
+     * @since 1.0
+     */
+    public List<DelivererStationRuleVo> getDelivererRule2(Long customerId, Long stationId, Long delivererId) {
+        Query query = this
+                .getSession()
+                .createSQLQuery(
+                        "select dr.id ruleId,dr.rule rule,dr.delivery_Station_Id stationId,dr.address_Id addressId,"
+                                + "dr.DELIVERER_ID delivererId" + " from Deliverer_Rules dr where  dr.DELIVERER_ID ="
+                                + delivererId + "  " + "and dr.delivery_Station_Id=" + stationId)
+
+                .setResultTransformer(Transformers.aliasToBean(DelivererStationRuleVo.class));
+
         return query.list();
     }
 }
