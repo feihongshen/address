@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/address/mapMatchResult.js"></script>
 <script type="text/javascript">
 var ctx = '<%=request.getContextPath() %>';
-var arrsum=['insum','unsum','susum','dsum','ksum','pper','dissum','undissum'];
+var arrsum=['insum','unsum','susum','dsum','ksum','pper','dper','dissum','undissum'];
 var usedData;
 var tableData;
 $(function(){
@@ -111,7 +111,7 @@ $(function(){
       <table width="100%" border="0" cellpadding="5" cellspacing="0">
         <tr>
           <td><a href="javascript:void(0)" class="easyui-linkbutton" id="mapping" iconCls="icon-ok" >匹配</a></td>
-          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span id="unsumCount">0</span>,成功匹配<span class="susum">0</span>,匹配多站<span class="dsum">0</span>,匹配率:<span class="pper">0</span>%</td>
+          <td>本次匹配地址共<span class="insum">0条</span>,未匹配<span id="unsumCount">0</span>,成功匹配<span class="susum">0</span>,匹配多站<span class="dsum">0</span>,匹配站点成功率:<span class="pper">0</span>,匹配小件员成功率:<span class="dper">0</span>%</td>
         </tr>
       </table>
     </div>

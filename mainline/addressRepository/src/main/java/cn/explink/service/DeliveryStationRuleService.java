@@ -25,8 +25,6 @@ import cn.explink.dao.DeliveryStationRuleDao;
 import cn.explink.dao.VendorsAgingDao;
 import cn.explink.domain.Address;
 import cn.explink.domain.Customer;
-import cn.explink.domain.Deliverer;
-import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.DeliveryStationRule;
 import cn.explink.domain.Vendor;
@@ -290,79 +288,163 @@ public class DeliveryStationRuleService extends RuleService {
     public void changeStationRelation(Long sourceStationId, Long targetStationId, Long sourceDelivererId,
             Long targetDelivererId, String sourceAddressId, String targetAddressId) {
         // v1.02 add by vince.zhou 原逻辑不变，增加小件员逻辑
-        if ((null == sourceDelivererId) && (null == targetDelivererId)) {
+        if ((0 == sourceDelivererId) && (0 == targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
         }
         // 如果没有原小件员，只有目的小件员
-        else if ((null == sourceDelivererId) && (null != targetDelivererId)) {
+        else if ((0 == sourceDelivererId) && (0 != targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-            // 将新的地址绑定到目标小件员
-            String[] ids = sourceAddressId.split(",");
-            List<Long> idList = new ArrayList<Long>();
-            for (String id : ids) {
-                Long longid = Long.valueOf(id);
-                idList.add(longid);
-            }
-            List<Address> addressList = this.addressDao.getAddressByIdList(idList);
-            Deliverer deliverer = this.delivererDao.get(targetDelivererId);
-            DeliveryStation deliveryStation = this.deliveryStationDao.get(targetStationId);
-            // 循环所有list，保存一条小件员规则
-            for (Address address : addressList) {
-                DelivererRule delivererRule = new DelivererRule();
-                delivererRule.setAddress(address);
-                delivererRule.setDeliverer(deliverer);
-                delivererRule.setDeliveryStation(deliveryStation);
-                delivererRule.setCreationTime(new Date());
-                delivererRule.setRule("");
-                delivererRule.setRuleType(1);
-                delivererRule.setRuleExpression("");
-                this.delivererRuleDao.save(delivererRule);
-            }
+            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId的记录
+            this.deleteDeliveryRelation(targetStationId, sourceAddressId);
+
+            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
+            this.updateDeliveryRelation(targetStationId, targetAddressId);
+            // // 找出源关键词id与目的关键词id中的差异list
+            // List<Long> idList = new ArrayList<Long>();
+            // String[] sourceids = sourceAddressId.split(",");
+            //
+            // List<Long> sourceidsList = new ArrayList<Long>();
+            // for (String id : sourceids) {
+            // Long longid = Long.valueOf(id);
+            // sourceidsList.add(longid);
+            // }
+            // String[] targetids = targetAddressId.split(",");
+            //
+            // for (String id : targetids) {
+            // Long longid = Long.valueOf(id);
+            // if (!sourceidsList.contains(longid)) {
+            // idList.add(longid);
+            // }
+            // }
+            //
+            // // 循环差异list,判断在delivery_rule中是否存在stationId=targetStationId的记录，如果不存在，新增stationId=targetStationId；
+            // if (CollectionUtils.isNotEmpty(idList)) {
+            // for (Long id : idList) {
+            //
+            // }
+            // }
+            // List<Address> addressList = this.addressDao.getAddressByIdList(idList);
+            // Deliverer deliverer = this.delivererDao.get(targetDelivererId);
+            // DeliveryStation deliveryStation = this.deliveryStationDao.get(targetStationId);
+            // // 循环所有list，保存一条小件员规则
+            // for (Address address : addressList) {
+            // // 如果是第四级关键词以下
+            // if (address.getAddressLevel() > 3) {
+            // DelivererRule delivererRule = new DelivererRule();
+            // delivererRule.setAddress(address);
+            // delivererRule.setDeliverer(deliverer);
+            // delivererRule.setDeliveryStation(deliveryStation);
+            // delivererRule.setCreationTime(new Date());
+            // delivererRule.setRule("");
+            // delivererRule.setRuleType(1);
+            // delivererRule.setRuleExpression("");
+            // this.delivererRuleDao.save(delivererRule);
+            // }
+            // }
 
         }
         // 原小件员不为空，没有目的小件员
-        else if ((null != sourceDelivererId) && (null == targetDelivererId)) {
+        else if ((0 != sourceDelivererId) && (0 == targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-            String[] ids = sourceAddressId.split(",");
-            List<Long> idList = new ArrayList<Long>();
-            for (String id : ids) {
-                Long longid = Long.valueOf(id);
-                idList.add(longid);
-            }
-            List<Address> addressList = this.addressDao.getAddressByIdList(idList);
-            for (Address address : addressList) {
-                DelivererRule delivererRule = this.delivererRuleDao.getDelivererRuleList(sourceDelivererId,
-                        sourceStationId, address.getId());
-                this.delivererRuleDao.delete(delivererRule);
-            }
+
+            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId的记录
+            this.deleteDeliveryRelation(sourceStationId, targetAddressId);
+
+            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
+            this.updateDeliveryRelation(sourceStationId, sourceAddressId);
+
+            // String[] ids = sourceAddressId.split(",");
+            // List<Long> idList = new ArrayList<Long>();
+            // for (String id : ids) {
+            // Long longid = Long.valueOf(id);
+            // idList.add(longid);
+            // }
+            // List<Address> addressList = this.addressDao.getAddressByIdList(idList);
+            // for (Address address : addressList) {
+            // DelivererRule delivererRule = this.delivererRuleDao.getDelivererRuleList(sourceDelivererId,
+            // sourceStationId, address.getId());
+            // if (null != delivererRule) {
+            // this.delivererRuleDao.delete(delivererRule);
+            // }
+            // }
         }
         // 都不为空
-        else if ((null != sourceDelivererId) && (null != targetDelivererId)) {
+        else if ((0 != sourceDelivererId) && (0 != targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-            String[] ids = sourceAddressId.split(",");
-            List<Long> idList = new ArrayList<Long>();
-            Deliverer targetDeliverer = this.delivererDao.get(targetDelivererId);
-            DeliveryStation targetDeliveryStation = this.deliveryStationDao.get(targetStationId);
-            for (String id : ids) {
-                Long longid = Long.valueOf(id);
-                idList.add(longid);
-            }
-            List<Address> addressList = this.addressDao.getAddressByIdList(idList);
-            for (Address address : addressList) {
-                DelivererRule delivererRule = this.delivererRuleDao.getDelivererRuleList(sourceDelivererId,
-                        sourceStationId, address.getId());
-                this.delivererRuleDao.delete(delivererRule);
-                // 添加新的
-                DelivererRule targetDelivererRule = new DelivererRule();
-                delivererRule.setAddress(address);
-                delivererRule.setDeliverer(targetDeliverer);
-                delivererRule.setDeliveryStation(targetDeliveryStation);
-                delivererRule.setCreationTime(new Date());
-                delivererRule.setRule("");
-                delivererRule.setRuleType(1);
-                delivererRule.setRuleExpression("");
-                this.delivererRuleDao.save(targetDelivererRule);
-            }
+            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId的记录
+            this.deleteDeliveryRelation(sourceStationId, targetAddressId);
+
+            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
+            this.updateDeliveryRelation(sourceStationId, sourceAddressId);
+
+            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId的记录
+            this.deleteDeliveryRelation(targetStationId, sourceAddressId);
+
+            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
+            this.updateDeliveryRelation(targetStationId, targetAddressId);
+            // String[] ids = sourceAddressId.split(",");
+            // List<Long> idList = new ArrayList<Long>();
+            // Deliverer targetDeliverer = this.delivererDao.get(targetDelivererId);
+            // DeliveryStation targetDeliveryStation = this.deliveryStationDao.get(targetStationId);
+            // for (String id : ids) {
+            // Long longid = Long.valueOf(id);
+            // idList.add(longid);
+            // }
+            // List<Address> addressList = this.addressDao.getAddressByIdList(idList);
+            // for (Address address : addressList) {
+            // DelivererRule delivererRule = this.delivererRuleDao.getDelivererRuleList(sourceDelivererId,
+            // sourceStationId, address.getId());
+            // if (null != delivererRule) {
+            // this.delivererRuleDao.delete(delivererRule);
+            // // 添加新的
+            // DelivererRule targetDelivererRule = new DelivererRule();
+            // delivererRule.setAddress(address);
+            // delivererRule.setDeliverer(targetDeliverer);
+            // delivererRule.setDeliveryStation(targetDeliveryStation);
+            // delivererRule.setCreationTime(new Date());
+            // delivererRule.setRule("");
+            // delivererRule.setRuleType(1);
+            // delivererRule.setRuleExpression("");
+            // this.delivererRuleDao.save(targetDelivererRule);
+            // }
+            // }
+        }
+    }
+
+    /**
+     * 更新指定指点、指定站点的小件员关系
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param targetStationId
+     * @param targetAddressId
+     * @since 1.0
+     */
+    private void updateDeliveryRelation(Long stationId, String addressId) {
+        if (StringUtils.isNotBlank(addressId)) {
+            String sql = "update deliverer_rules set DELIVERY_STATION_ID = '" + stationId + "' where ADDRESS_ID in ("
+                    + addressId + ")";
+            Query sourceQuery = this.getSession().createSQLQuery(sql);
+            sourceQuery.executeUpdate();
+        }
+
+    }
+
+    /**
+     * 删除指定指点、指定站点的小件员关系
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param stationId
+     * @param addressId
+     * @since 1.0
+     */
+    private void deleteDeliveryRelation(Long stationId, String addressId) {
+        if (StringUtils.isNotBlank(addressId)) {
+            String sql = "delete from deliverer_rules where DELIVERY_STATION_ID = '" + stationId
+                    + "' and ADDRESS_ID in (" + addressId + ")";
+            Query sourceQuery = this.getSession().createSQLQuery(sql);
+            sourceQuery.executeUpdate();
         }
     }
 

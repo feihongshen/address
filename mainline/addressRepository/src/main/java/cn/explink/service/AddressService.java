@@ -514,11 +514,13 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             result.add(singleResult);
         }
         int pper = (int) (((suList.size() + dList.size() + 0.0) / orderList.size()) * 100);
+        int dper = (int) (((disList.size() + 0.0) / orderList.size()) * 100);
         attributes.put("susum", suList.size());
         attributes.put("ksum", kList.size());
         attributes.put("unsum", unList.size());
         attributes.put("dsum", dList.size());
         attributes.put("pper", pper);
+        attributes.put("dper", dper);
         attributes.put("dissum", disList.size());
         attributes.put("undissum", undisList.size());
         attributes.put("dList", dList);
