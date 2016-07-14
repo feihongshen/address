@@ -58,7 +58,14 @@ public class DelivererService {
     }
 
     public Deliverer updateDeliverer(DelivererVo delivererVo) {
+        Customer customer = this.customerDao.get(delivererVo.getCustomerId());
+        if (customer == null) {
+            throw new RuntimeException("customer is not exist");
+        }
         Deliverer deliverer = this.delivererDao.getDeliverer(delivererVo.getCustomerId(), delivererVo.getExternalId());
+        if (deliverer == null) {
+            return this.createDeliverer(delivererVo);
+        }
         deliverer.setName(delivererVo.getName());
         deliverer.setStatus(DelivererStausEnmu.valid.getValue());
         deliverer.setUserCode(delivererVo.getUserCode());
