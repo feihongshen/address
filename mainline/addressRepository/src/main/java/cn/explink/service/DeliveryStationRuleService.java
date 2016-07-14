@@ -294,11 +294,13 @@ public class DeliveryStationRuleService extends RuleService {
         // 如果没有原小件员，只有目的小件员
         else if ((0 == sourceDelivererId) && (0 != targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId的记录
-            this.deleteDeliveryRelation(targetStationId, sourceAddressId);
 
-            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
-            this.updateDeliveryRelation(targetStationId, targetAddressId);
+            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，小件员更新成目的小件员
+            this.updateDeliveryRelation(targetStationId, targetAddressId, targetDelivererId);
+
+            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId 小件员=目的小件员的记录
+            this.deleteDeliveryRelation(targetStationId, sourceAddressId, targetDelivererId);
+
             // // 找出源关键词id与目的关键词id中的差异list
             // List<Long> idList = new ArrayList<Long>();
             // String[] sourceids = sourceAddressId.split(",");
@@ -347,11 +349,11 @@ public class DeliveryStationRuleService extends RuleService {
         else if ((0 != sourceDelivererId) && (0 == targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
 
-            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId的记录
-            this.deleteDeliveryRelation(sourceStationId, targetAddressId);
+            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，deliverer_id = sourceDelivererId.
+            this.updateDeliveryRelation(sourceStationId, sourceAddressId, sourceDelivererId);
 
-            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
-            this.updateDeliveryRelation(sourceStationId, sourceAddressId);
+            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId,deliverer_id = sourceDelivererId.的记录
+            this.deleteDeliveryRelation(sourceStationId, targetAddressId, sourceDelivererId);
 
             // String[] ids = sourceAddressId.split(",");
             // List<Long> idList = new ArrayList<Long>();
@@ -371,17 +373,18 @@ public class DeliveryStationRuleService extends RuleService {
         // 都不为空
         else if ((0 != sourceDelivererId) && (0 != targetDelivererId)) {
             this.changeStationRelation(sourceStationId, targetStationId, sourceAddressId, targetAddressId);
-            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId的记录
-            this.deleteDeliveryRelation(sourceStationId, targetAddressId);
+            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，deliverer_id = sourceDelivererId.
+            this.updateDeliveryRelation(sourceStationId, sourceAddressId, sourceDelivererId);
 
-            // 对源关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
-            this.updateDeliveryRelation(sourceStationId, sourceAddressId);
+            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，deliverer_id=targetDelivererId
+            this.updateDeliveryRelation(targetStationId, targetAddressId, targetDelivererId);
 
-            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId的记录
-            this.deleteDeliveryRelation(targetStationId, sourceAddressId);
+            // 删除目的关键词id中，存在于delivery_rule中并且stationId=sourceStationId,deliverer_id = sourceDelivererId.的记录
+            this.deleteDeliveryRelation(sourceStationId, targetAddressId, sourceDelivererId);
 
-            // 对目的关键词id中，首先更新delivery_rule这些关键词的stationId=targetStationId，
-            this.updateDeliveryRelation(targetStationId, targetAddressId);
+            // 删除源关键词id中，存在于delivery_rule中并且stationId=targetStationId,deliverer_id=targetDelivererId的记录
+            this.deleteDeliveryRelation(targetStationId, sourceAddressId, targetDelivererId);
+
             // String[] ids = sourceAddressId.split(",");
             // List<Long> idList = new ArrayList<Long>();
             // Deliverer targetDeliverer = this.delivererDao.get(targetDelivererId);
@@ -420,10 +423,10 @@ public class DeliveryStationRuleService extends RuleService {
      * @param targetAddressId
      * @since 1.0
      */
-    private void updateDeliveryRelation(Long stationId, String addressId) {
+    private void updateDeliveryRelation(Long stationId, String addressId, Long delivererId) {
         if (StringUtils.isNotBlank(addressId)) {
-            String sql = "update deliverer_rules set DELIVERY_STATION_ID = '" + stationId + "' where ADDRESS_ID in ("
-                    + addressId + ")";
+            String sql = "update deliverer_rules set DELIVERY_STATION_ID = '" + stationId + "', deliverer_id = '"
+                    + delivererId + "'  where ADDRESS_ID in (" + addressId + ")";
             Query sourceQuery = this.getSession().createSQLQuery(sql);
             sourceQuery.executeUpdate();
         }
@@ -431,7 +434,7 @@ public class DeliveryStationRuleService extends RuleService {
     }
 
     /**
-     * 删除指定指点、指定站点的小件员关系
+     * 删除指定指点、指定小件员的小件员关系
      * <p>
      * 方法详细描述
      * </p>
@@ -439,10 +442,10 @@ public class DeliveryStationRuleService extends RuleService {
      * @param addressId
      * @since 1.0
      */
-    private void deleteDeliveryRelation(Long stationId, String addressId) {
+    private void deleteDeliveryRelation(Long stationId, String addressId, Long delivererId) {
         if (StringUtils.isNotBlank(addressId)) {
             String sql = "delete from deliverer_rules where DELIVERY_STATION_ID = '" + stationId
-                    + "' and ADDRESS_ID in (" + addressId + ")";
+                    + "' and deliverer_id  = " + delivererId + " and ADDRESS_ID in (" + addressId + ")";
             Query sourceQuery = this.getSession().createSQLQuery(sql);
             sourceQuery.executeUpdate();
         }
