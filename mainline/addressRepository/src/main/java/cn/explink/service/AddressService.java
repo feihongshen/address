@@ -597,13 +597,19 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
     }
 
     private void matchDeliver(SingleAddressMappingResult result, List<Address> addrList, Order order, OrderVo orderVo) {
-        List<DelivererRule> delivererRuleList = this.delivererRuleService.search(addrList, orderVo);
         Set<Deliverer> delSet = new HashSet<Deliverer>();
         Set<Long> delIdSet = new HashSet<Long>();
-        for (DelivererRule rule : delivererRuleList) {
-            Deliverer deliverer = rule.getDeliverer();
-            delSet.add(deliverer);
-            delIdSet.add(deliverer.getId());
+        // 如果站点匹配多个，则不匹配小件员
+        if ((result.getDeliveryStationList().size() == 1)) {
+            DeliveryStation station = result.getDeliveryStationList().get(0);
+            List<DelivererRule> delivererRuleList = this.delivererRuleService.search(addrList, orderVo, station);
+            for (DelivererRule rule : delivererRuleList) {
+                Deliverer deliverer = rule.getDeliverer();
+                delSet.add(deliverer);
+                delIdSet.add(deliverer.getId());
+            }
+        } else {
+
         }
         result.setDelivererList(new ArrayList<Deliverer>(delSet));
         order.setDelivererIds(AddressUtil.getInPara(delIdSet));
@@ -799,7 +805,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             // v1.02 增加小件员名称显示
             for (ZTreeNode node : address) {
                 // 根据address_id，stationId，customerId查找小件员表，
-                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRule(customerId,
+                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRuleList(customerId,
                         Long.valueOf(stationId), Long.valueOf(node.getId()));
                 // 如果不为空,拼接address名称到站点后面,--分隔
                 if (CollectionUtils.isNotEmpty(delivererRules)) {
@@ -807,7 +813,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                     for (DelivererRule rule : delivererRules) {
                         deliverer.append(rule.getDeliverer().getName() + "|");
                     }
-                    node.setName(node.getName() + "----" + deliverer.substring(0, deliverer.length() - 1).toString());
+                    node.setName(node.getName() + "--" + deliverer.substring(0, deliverer.length() - 1).toString());
                 }
             }
 
@@ -1079,7 +1085,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             // v1.02 增加小件员名称显示
             for (ZTreeNode node : address) {
                 // 根据address_id，stationId，customerId查找小件员表，
-                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRule(customerId,
+                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRuleList(customerId,
                         Long.valueOf(stationId), Long.valueOf(node.getId()));
                 // 如果不为空,拼接address名称到站点后面,--分隔
                 if (CollectionUtils.isNotEmpty(delivererRules)) {
@@ -1087,7 +1093,7 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
                     for (DelivererRule rule : delivererRules) {
                         deliverer.append(rule.getDeliverer().getName() + "|");
                     }
-                    node.setName(node.getName() + "----" + deliverer.substring(0, deliverer.length() - 1).toString());
+                    node.setName(node.getName() + "--" + deliverer.substring(0, deliverer.length() - 1).toString());
                 }
             }
 

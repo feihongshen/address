@@ -9,7 +9,7 @@ public class DelivererVo {
 
     private Long customerId;
 
-    private String userCode;// 小件员登录名
+    private String userCode = "";// 小件员登录名
 
     private Long externalStationId;// 所属dmp站点id
 
