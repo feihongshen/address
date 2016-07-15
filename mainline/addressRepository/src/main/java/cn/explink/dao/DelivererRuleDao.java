@@ -68,7 +68,7 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
      * @return
      * @since 1.0
      */
-    public DelivererRule getDelivererRuleList(Long sourceDelivererId, Long stationId, Long addressId) {
+    public DelivererRule getDelivererRule(Long sourceDelivererId, Long stationId, Long addressId) {
         Query query = this
                 .getSession()
                 .createQuery(
@@ -102,7 +102,7 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
      * @return
      * @since 1.0
      */
-    public List<DelivererRule> getDelivererRule(Long customerId, Long stationId, Long addressId) {
+    public List<DelivererRule> getDelivererRuleList(Long customerId, Long stationId, Long addressId) {
         Query query = this
                 .getSession()
                 .createQuery(
@@ -147,6 +147,29 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
 
                 .setResultTransformer(Transformers.aliasToBean(DelivererStationRuleVo.class));
 
+        return query.list();
+    }
+
+    /**
+     * 根据客户编码+站点id+小件员id获取小件员派送规则
+     * <p>
+     * 方法详细描述
+     * </p>
+     * @param customerId
+     * @param deliveryStationId
+     * @param id
+     * @return
+     * @since 1.0
+     */
+    public List<DelivererRule> getDelivererRuleListByDeliverer(Long customerId, Long deliveryStationId, Long delivererId) {
+        Query query = this
+                .getSession()
+                .createQuery(
+                        "select dr from DelivererRule dr where dr.deliverer.status=1 and dr.deliverer.id =:dId and dr.deliverer.customer.id=:customerId "
+                                + "and dr.deliveryStation.id=:sId ");
+        query.setLong("customerId", customerId);
+        query.setLong("dId", delivererId);
+        query.setLong("sId", deliveryStationId);
         return query.list();
     }
 }

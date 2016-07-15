@@ -1,3 +1,4 @@
+
 package cn.explink.ws.service;
 
 import java.util.HashMap;
@@ -27,84 +28,86 @@ import cn.explink.ws.vo.ResultCodeEnum;
 @WebService(endpointInterface = "cn.explink.ws.service.AddressQueryService")
 public class AddressQueryServiceImpl extends BaseWebserviceImpl implements AddressQueryService {
 
-	private static Logger logger = LoggerFactory.getLogger(AddressQueryServiceImpl.class);
-	 
-	private DeliveryStationRuleService deliverStationRuleService;
-	
-	@Override
-	public AddressQueryResult getAddress(ApplicationVo applicationVo, Long addressId, Long deliveryStationId) {
-		logger.info("getAddressByParent for parentAddressId : {}", addressId);
-		AddressQueryResult result = new AddressQueryResult();
-		ClientApplication clientApplication = null;
-		try {
-			clientApplication = validateApplication(applicationVo);
-		} catch (Exception e) {
-			result.setResultCode(ResultCodeEnum.failure);
-			result.setMessage(e.getMessage());
-			return result;
-		}
-		AddressService addressService = ApplicationContextUtil.getBean("addressService");
-		DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
-//		DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
-		try {
-			List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId,deliveryStationId);
-			fillStation(addressList,clientApplication.getCustomerId());
-			List<AddressVo> addressVoList = AddressUtil.cloneToAddressVoList(addressList);
-			result.setAddressVoList(addressVoList);
-			
-			List<DelivererRule> delivererRuleList = delivererRuleService.getDelivererRuleList(clientApplication.getCustomerId(), addressId);
+    private static Logger logger = LoggerFactory.getLogger(AddressQueryServiceImpl.class);
 
-			List<DelivererRuleVo> delivererRuleVoList = AddressUtil.cloneToDelivererRuleList(delivererRuleList);
-			result.setDelivererRuleVoList(delivererRuleVoList);
-			result.setResultCode(ResultCodeEnum.success);
-		} catch (Exception e) {
-			logger.error("mappingAddress failed for customerId = {}", clientApplication.getCustomerId(), e);
-			result.setResultCode(ResultCodeEnum.failure);
-			result.setMessage(e.getMessage());
-		}
-		return result;
-	}
+    private DeliveryStationRuleService deliverStationRuleService;
 
-	private void fillStation(List<Address> addressList,Long customerId) {
-		StringBuffer ids=new StringBuffer();
-		if(deliverStationRuleService==null){
-			deliverStationRuleService = ApplicationContextUtil.getBean("deliveryStationRuleService");
-		}
-		if(addressList!=null&&!addressList.isEmpty()){
-			for (Address a : addressList) {
-				ids.append(a.getId()+",");
-			}
-		}
-		if(ids.length()>1){
-			String inIds=ids.toString().substring(0,ids.length()-1);
-			List<BeanVo> dlist=deliverStationRuleService.getStationAddressTree(customerId,inIds);
-			Map<String,String> view=new HashMap<String,String>();
-			if(null!=dlist&&dlist.size()>0){
-				for (BeanVo b : dlist) {
-					String key=b.getKey();
-					if(view.get(key)!=null){
-						view.put(key, b.getVal()+" | "+view.get(key));
-					}else{
-						view.put(key,  b.getVal());
-					}
-				}
-			}
-			if(view.size()>0)
-			for (Address a : addressList) {
-				if(null!=view.get(a.getId()+"")){
-					a.setName(a.getName()+" -- "+view.get(a.getId()+""));
-				}
-			}
-		}
-	}
+    @Override
+    public AddressQueryResult getAddress(ApplicationVo applicationVo, Long addressId, Long deliveryStationId) {
+        logger.info("getAddressByParent for parentAddressId : {}", addressId);
+        AddressQueryResult result = new AddressQueryResult();
+        ClientApplication clientApplication = null;
+        try {
+            clientApplication = this.validateApplication(applicationVo);
+        } catch (Exception e) {
+            result.setResultCode(ResultCodeEnum.failure);
+            result.setMessage(e.getMessage());
+            return result;
+        }
+        AddressService addressService = ApplicationContextUtil.getBean("addressService");
+        DelivererRuleService delivererRuleService = ApplicationContextUtil.getBean("delivererRuleService");
+        // DelivererService delivererService = ApplicationContextUtil.getBean("delivererService");
+        try {
+            List<Address> addressList = addressService.getChildAddress(clientApplication.getCustomerId(), addressId,
+                    deliveryStationId);
+            this.fillStation(addressList, clientApplication.getCustomerId());
+            List<AddressVo> addressVoList = AddressUtil.cloneToAddressVoList(addressList);
+            result.setAddressVoList(addressVoList);
 
-	public DeliveryStationRuleService getDeliverStationRuleService() {
-		return deliverStationRuleService;
-	}
+            List<DelivererRule> delivererRuleList = delivererRuleService.getDelivererRuleList(
+                    clientApplication.getCustomerId(), addressId);
 
-	public void setDeliverStationRuleService(
-			DeliveryStationRuleService deliverStationRuleService) {
-		this.deliverStationRuleService = deliverStationRuleService;
-	}
+            List<DelivererRuleVo> delivererRuleVoList = AddressUtil.cloneToDelivererRuleList(delivererRuleList);
+            result.setDelivererRuleVoList(delivererRuleVoList);
+            result.setResultCode(ResultCodeEnum.success);
+        } catch (Exception e) {
+            logger.error("mappingAddress failed for customerId = {}", clientApplication.getCustomerId(), e);
+            result.setResultCode(ResultCodeEnum.failure);
+            result.setMessage(e.getMessage());
+        }
+        return result;
+    }
+
+    private void fillStation(List<Address> addressList, Long customerId) {
+        StringBuffer ids = new StringBuffer();
+        if (this.deliverStationRuleService == null) {
+            this.deliverStationRuleService = ApplicationContextUtil.getBean("deliveryStationRuleService");
+        }
+        if ((addressList != null) && !addressList.isEmpty()) {
+            for (Address a : addressList) {
+                ids.append(a.getId() + ",");
+            }
+        }
+        if (ids.length() > 1) {
+            String inIds = ids.toString().substring(0, ids.length() - 1);
+            List<BeanVo> dlist = this.deliverStationRuleService.getStationAddressTree(customerId, inIds);
+            Map<String, String> view = new HashMap<String, String>();
+            if ((null != dlist) && (dlist.size() > 0)) {
+                for (BeanVo b : dlist) {
+                    String key = b.getKey();
+                    if (view.get(key) != null) {
+                        view.put(key, b.getVal() + " | " + view.get(key));
+                    } else {
+                        view.put(key, b.getVal());
+                    }
+                }
+            }
+            if (view.size() > 0) {
+                for (Address a : addressList) {
+                    if (null != view.get(a.getId() + "")) {
+                        a.setName(a.getName() + " -- " + view.get(a.getId() + ""));
+                    }
+                }
+            }
+        }
+    }
+
+    public DeliveryStationRuleService getDeliverStationRuleService() {
+        return this.deliverStationRuleService;
+    }
+
+    public void setDeliverStationRuleService(DeliveryStationRuleService deliverStationRuleService) {
+        this.deliverStationRuleService = deliverStationRuleService;
+    }
 
 }

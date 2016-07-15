@@ -164,20 +164,6 @@ public class DelivererRuleService extends RuleService {
         return filteredRules;
     }
 
-    public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {
-        if (addressId == null) {
-            return null;
-        }
-        List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRuleList(customerId, addressId);
-        List<DelivererRule> resultList = new ArrayList<DelivererRule>();
-        for (DelivererRule rule : ruleList) {
-            if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
-                resultList.add(rule);
-            }
-        }
-        return resultList;
-    }
-
     /**
      * 查找冲突的规则
      * @param ruleExpression
@@ -194,6 +180,20 @@ public class DelivererRuleService extends RuleService {
             }
         }
         return null;
+    }
+
+    public List<DelivererRule> getDelivererRuleList(Long customerId, Long addressId) {
+        if (addressId == null) {
+            return null;
+        }
+        List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRuleList(customerId, addressId);
+        List<DelivererRule> resultList = new ArrayList<DelivererRule>();
+        for (DelivererRule rule : ruleList) {
+            if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
+                resultList.add(rule);
+            }
+        }
+        return resultList;
     }
 
     /**
@@ -226,7 +226,7 @@ public class DelivererRuleService extends RuleService {
      * @param orderVo
      * @return
      */
-    public List<DelivererRule> search(List<Address> addressList, OrderVo orderVo) {
+    public List<DelivererRule> search(List<Address> addressList, OrderVo orderVo, DeliveryStation station) {
         if (addressList == null) {
             return null;
         }
@@ -244,7 +244,8 @@ public class DelivererRuleService extends RuleService {
                 addressLine = addressLine.substring(index + address.getName().length());
             }
             // 根据客户id+关键词id获取对应的小件员规则
-            List<DelivererRule> list = this.getDelivererRuleList(orderVo.getCustomerId(), address.getId());
+            List<DelivererRule> list = this.getDelivererRuleList(orderVo.getCustomerId(), station.getId(),
+                    address.getId());
             for (DelivererRule rule : list) {
                 if (DeliveryStationRuleTypeEnum.fallback.getValue() == rule.getRuleType().intValue()) {
                     defaultRuleList.add(rule);
@@ -306,11 +307,11 @@ public class DelivererRuleService extends RuleService {
      * @return
      * @since 1.0
      */
-    public List<DelivererRule> getDelivererRule(Long customerId, Long stationId, Long addressId) {
+    public List<DelivererRule> getDelivererRuleList(Long customerId, Long stationId, Long addressId) {
         if (addressId == null) {
             return null;
         }
-        List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRule(customerId, stationId, addressId);
+        List<DelivererRule> ruleList = this.delivererRuleDao.getDelivererRuleList(customerId, stationId, addressId);
         List<DelivererRule> resultList = new ArrayList<DelivererRule>();
         for (DelivererRule rule : ruleList) {
             if (customerId.equals(rule.getDeliverer().getCustomer().getId())) {
