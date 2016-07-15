@@ -2,9 +2,10 @@ var inital = false;
 var stationList = [];
 var vendorList = [];
 var addressList = [];
-var deliverer = []
+var deliverer = [];
 var resultOp = [];
 var checkOp = {};
+var oldNodes = [];
 var setting = {
 
 	data : {
@@ -27,10 +28,16 @@ $(document).ready(
 		function() {
 			getAll();
 
-			// 折叠
-			$("#collapseAllBtn").bind("click", {
-				type : "collapseAll"
-			}, expandNode);
+			$("#confirmAllBtn").click(
+					function() {
+
+						var key = $("#searchA").val();
+						var target = $.fn.zTree.getZTreeObj("tree");
+						$.fn.zTree.init($("#tree"), setting, oldNodes);
+
+						$.fn.zTree.init($("#tree"), setting, target
+								.getNodesByParamFuzzy("name", key));
+					});
 			// 刷新
 			$("#refreshAllBtn").click(function() {
 				getAll();
@@ -81,6 +88,7 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	$("#delivererList").html("<option selected value=''>请选择</option>");
 	$("#stationRule tbody").html("");
 	addressList = [];
+	deliverer = [];
 	getAddressList(treeNode.id);
 	getDelivererByStation(treeNode.id, treeNode.name);
 
@@ -94,6 +102,8 @@ function myClick(event, treeId, treeNode, clickFlag) {
 							+ "</option>");
 
 		}
+	} else {
+		$("#stationRule>tbody").html("");
 	}
 
 	if (treeNode.level == 1) {
@@ -113,26 +123,19 @@ function getAll() {
 		success : function(optionData) {
 			var t = $("#tree");
 			zTree = $.fn.zTree.init(t, setting, optionData);
+
+			oldNodes = zTree.getNodes();
+
 		}
 	});
 }
-function addRule() {
-	$(
-			"<tr status='add'><td><select style='width:80%' name='stationId'><option value=''></option>"
-					+ generateSelector(stationList)
-					+ "</select></td>"
-					+ "<td><input type='text' name='rules' size='30'/></td>"
-					+ "<td><a href='#' delRow=''>删除</a></td></tr>")
-			.insertBefore($("#stationRuleOpe"));
-}
-function addAge() {
-	$(
-			"<tr status='add'><td><select style='width:80%'><option value=''></option>"
-					+ generateSelector(vendorList) + "</select></td>"
-					+ "<td><input type='text' name='age' size='20'/></td>"
-					+ "<td><a href='#' delAgeRow=''>删除</a></td></tr>")
-			.insertBefore($("#ageOpe"));
-}
+
+/**
+ * 生成select options
+ * 
+ * @param list
+ * @returns {String}
+ */
 function generateSelector(list) {
 	var str = "";
 	for (var i = 0; i < list.length; i++) {
@@ -142,6 +145,13 @@ function generateSelector(list) {
 	return str;
 }
 
+/**
+ * 生成select options , 如果id有值使用selected
+ * 
+ * @param list
+ * @param id
+ * @returns {String}
+ */
 function generateSelectorSelect(list, id) {
 	var str = "";
 	for (var i = 0; i < list.length; i++) {
@@ -153,6 +163,11 @@ function generateSelectorSelect(list, id) {
 	return str;
 }
 
+/**
+ * 通过站点id获取关键词
+ * 
+ * @param stationId
+ */
 function getAddressList(stationId) {
 	$.ajax({
 		type : "POST",
@@ -174,6 +189,12 @@ function getAddressList(stationId) {
 	});
 }
 
+/**
+ * 通过站点获取小件员列表
+ * 
+ * @param stationId
+ * @param stationName
+ */
 function getDelivererByStation(stationId, stationName) {
 	$.ajax({
 		type : "POST",
@@ -192,27 +213,10 @@ function getDelivererByStation(stationId, stationName) {
 		}
 	});
 }
-function getAddressAges(addressId) {
-	$.ajax({
-		type : "POST",
-		url : ctx + "/deliveryStationRule/getAges",
-		data : {
-			addressId : addressId
-		},
-		async : false,
-		success : function(resp) {
-			$("#vendorAge>tbody").find("tr:not([id])").remove();
-			if (resp.length > 0) {
-				for (var i = 0; i < resp.length; i++) {
-					var item = resp[i];
-					$(appendAgeTr(item)).insertBefore($("#ageOpe"));
-				}
-			}
-		}
-	});
-};
 
 /**
+ * 追加编辑行
+ * 
  * @param item
  * @param stationId
  * @param stationName
@@ -247,16 +251,15 @@ function appendTr(item, stationId, stationName) {
 									$("<td style='width:20%'></td>")
 											.html("关键词"))
 							.append($("<td style='width:20%'></td>").html("规则"))
-							.append($("<td style='width:50%'></td>").html("操作")));
-	var operRow = $("<tr></tr>").append($("<td></td>")).append($("<td></td>"))
-			.append(
-					$("<td></td>").append(
-							$("<a></a>").attr(
-									"href",
-									"javascript:addAddrRow('" + item.id + "','"
-											+ stationId + "')").attr(
-									"addAddrRow", "").html("新增")));
-	childTable.append(operRow);
+							.append(
+									$("<td style='width:50%'></td>").append(
+											$("<a></a>").attr(
+													"href",
+													"javascript:addAddrRow('"
+															+ item.id + "','"
+															+ stationId + "')")
+													.attr("addAddrRow", "")
+													.html("新增"))));
 
 	if (!$.isEmptyObject(delivererAddress)) {
 		if (delivererAddress.length > 0) {
@@ -422,27 +425,6 @@ function addAddrRow(delivererid, stationId) {
 
 }
 
-function checkDelivererRuleExists(stationId, delivererId, addressId) {
-
-	var ret = false;
-	$.ajax({
-		type : "POST",
-		url : ctx + "/delivererStationRule/checkDelivererRule",
-		data : {
-			stationId : stationId,
-			delivererId : delivererId,
-			addressId : addressId
-		},
-		async : false,
-		success : function(resp) {
-			if (resp.success) {
-				ret = true;
-			}
-		}
-	});
-	return ret;
-}
-
 function submitRules(result, tr) {
 	var rlist = result;
 	var ret = {};
@@ -465,6 +447,29 @@ function submitRules(result, tr) {
 		}
 	});
 	return ret;
+}
+
+function searchByKeyword(valName, treeName) {
+	if (event.keyCode != 13) {
+		return; // 回车键的键值为13
+	}
+	event.stopPropagation();
+	var key = $("#" + valName).val();
+	var searchType = $("#searchType").val();
+	var target = $.fn.zTree.getZTreeObj(treeName);
+	$.fn.zTree.init($("#" + treeName), setting, oldNodes);
+
+	$.fn.zTree.init($("#" + treeName), setting, target.getNodesByParamFuzzy(
+			"name", key));
+
+}
+function toggle(target, node) {
+	target.expandNode(node, true, false, false);
+	target.showNode(node);
+	var parentNode = node.getParentNode();
+	if (parentNode) {
+		toggle(target, parentNode);
+	}
 }
 
 function checkNumber(ss) {
