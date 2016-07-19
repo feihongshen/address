@@ -131,7 +131,7 @@ function expandNode(e) {
 	}
 }
 //回车前台模糊搜索
-function searchByEnter(valName,treeName){
+function searchByEnter(event,valName,treeName){
 	if (event.keyCode!=13) return;  //回车键的键值为13
 	event.stopPropagation();
 	
