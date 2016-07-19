@@ -115,7 +115,7 @@ $(function(){
         </tr>
       </table>
     </div>
-    <div title="未匹配" style="padding:10px">
+    <div title="站点未匹配" style="padding:10px">
       <h2 align="right">未匹配共<span class="unsum">0</span>条</h2>
       <table id="untable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
@@ -127,7 +127,7 @@ $(function(){
         </thead>
       </table>
     </div>
-    <div title="匹配成功" style="padding:10px">
+    <div title="站点匹配成功" style="padding:10px">
       <h2 align="right">匹配成功共<span class="susum">0</span>条</h2>
       <table id="sutable" width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
         <thead>
@@ -195,9 +195,9 @@ $(function(){
         </thead>
       </table>
     </div>
-    <div title="地图匹配情况" style="padding:10px">
-	    <div id="mapMatchedResult" style="width: 100%; height: 600px; float: right;"></div>
-    </div>
+<!--     <div title="地图匹配情况" style="padding:10px"> -->
+<!-- 	    <div id="mapMatchedResult" style="width: 100%; height: 600px; float: right;"></div> -->
+<!--     </div> -->
   </div>
 </body>
 </html>
