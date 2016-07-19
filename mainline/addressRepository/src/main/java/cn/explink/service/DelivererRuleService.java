@@ -361,8 +361,8 @@ public class DelivererRuleService extends RuleService {
                 this.delete(Long.parseLong(vo.getRuleId() + ""));
             }
         } catch (Exception ex) {
-            DelivererRuleService.logger.error("保存小件员规则报错,错误内容:" + ex.toString(), ex);
-            throw new ExplinkRuntimeException("保存小件员规则报错,错误内容:" + ex.toString());
+            DelivererRuleService.logger.error("保存小件员规则报错,错误内容:" + ex.getMessage(), ex);
+            throw new ExplinkRuntimeException("保存小件员规则报错,错误内容:" + ex.getMessage());
 
         }
         return vo;
