@@ -125,6 +125,10 @@ public class DelivererService {
         return this.delivererDao.getByNameAndCustomerId(delivererName, customerId);
     }
 
+    public Deliverer getByCodeAndCustomerId(String userCode, Long customerId, Long stationId) {
+        return this.delivererDao.getByCodeAndCustomerId(userCode, customerId, stationId);
+    }
+
     public List<Deliverer> listAll(Long customerId) {
         return this.delivererDao.listAll(customerId);
     }

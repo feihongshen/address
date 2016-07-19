@@ -41,6 +41,15 @@ public class DelivererDao extends BasicHibernateDaoSupport<Deliverer, Long> {
         return (Deliverer) query.uniqueResult();
     }
 
+    public Deliverer getByCodeAndCustomerId(String userCode, Long customerId, Long deliveryStationId) {
+        String hql = "from Deliverer where userCode = :userCode and customer.id = :customerId and deliveryStationId=:deliveryStationId";
+        Query query = this.getSession().createQuery(hql);
+        query.setString("userCode", userCode);
+        query.setLong("customerId", customerId);
+        query.setLong("deliveryStationId", deliveryStationId);
+        return (Deliverer) query.uniqueResult();
+    }
+
     public List<Deliverer> listAll(Long customerId) {
         if (customerId == null) {
             return new ArrayList<Deliverer>();

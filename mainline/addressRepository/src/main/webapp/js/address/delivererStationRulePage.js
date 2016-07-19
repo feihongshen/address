@@ -248,11 +248,11 @@ function appendTr(item, stationId, stationName) {
 			.append(
 					$("<tr></tr>")
 							.append(
-									$("<td style='width:20%'></td>")
+									$("<td style='width:30%'></td>")
 											.html("关键词"))
-							.append($("<td style='width:20%'></td>").html("规则"))
+							.append($("<td style='width:30%'></td>").html("规则"))
 							.append(
-									$("<td style='width:200px'></td>").append(
+									$("<td style='width:30%'></td>").append(
 											$("<a></a>").attr(
 													"href",
 													"javascript:addAddrRow('"
