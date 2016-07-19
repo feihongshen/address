@@ -171,7 +171,7 @@ function generateSelectorSelect(list, id) {
 function getAddressList(stationId) {
 	$.ajax({
 		type : "POST",
-		url : ctx + "/address/getAdressByStation",
+		url : ctx + "/address/getAdressByStation2",
 		data : {
 			stationId : stationId
 		},
@@ -252,7 +252,7 @@ function appendTr(item, stationId, stationName) {
 											.html("关键词"))
 							.append($("<td style='width:20%'></td>").html("规则"))
 							.append(
-									$("<td style='width:50%'></td>").append(
+									$("<td style='width:200px'></td>").append(
 											$("<a></a>").attr(
 													"href",
 													"javascript:addAddrRow('"

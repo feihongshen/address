@@ -208,6 +208,13 @@ public class AddressController extends BaseController {
         return this.addressService.getAdressByStation(customerId, stationId);
     }
 
+    @RequestMapping("/getAdressByStation2")
+    public @ResponseBody
+    List<ZTreeNode> getAdressByStation2(String stationId) {
+        Long customerId = this.getCustomerId();
+        return this.addressService.getAdressByStation(customerId, stationId, false);
+    }
+
     /**
      * @param model
      * @param parentId

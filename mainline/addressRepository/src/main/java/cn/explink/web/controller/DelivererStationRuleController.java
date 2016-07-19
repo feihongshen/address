@@ -77,7 +77,7 @@ public class DelivererStationRuleController extends BaseController {
 
         } catch (Exception ex) {
             aj.setSuccess(false);
-            aj.setMsg("保存错误,错误内容:" + ex.getMessage());
+            aj.setMsg(ex.getMessage());
         }
         return aj;
     }

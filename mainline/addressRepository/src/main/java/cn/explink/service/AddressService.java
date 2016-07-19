@@ -780,6 +780,10 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
     }
 
     public List<ZTreeNode> getAdressByStation(Long customerId, String stationId) {
+        return this.getAdressByStation(customerId, stationId, true);
+    }
+
+    public List<ZTreeNode> getAdressByStation(Long customerId, String stationId, boolean isShowDeliverer) {
         // 首先根据客户编码、站点id联表站点表、客户id查找对应的关键词信息。
         List<ZTreeNode> address = this.deliverStationRuleService.getAdressByStation(customerId, stationId);
         // 根据address的全路径path属性，获取它所有的父级关键词
@@ -802,18 +806,19 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             // 根据拼好的所有addressId获取对应的name
             address.clear();
             address = this.addressDao.getZTreeNodeByIdListAndCustomerId(aIds.toString(), customerId);
-            // v1.02 增加小件员名称显示
-            for (ZTreeNode node : address) {
-                // 根据address_id，stationId，customerId查找小件员表，
-                List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRuleList(customerId,
-                        Long.valueOf(stationId), Long.valueOf(node.getId()));
-                // 如果不为空,拼接address名称到站点后面,--分隔
-                if (CollectionUtils.isNotEmpty(delivererRules)) {
-                    StringBuffer deliverer = new StringBuffer();
-                    for (DelivererRule rule : delivererRules) {
-                        deliverer.append(rule.getDeliverer().getName() + "|");
+            if (isShowDeliverer) {
+                for (ZTreeNode node : address) {
+                    // 根据address_id，stationId，customerId查找小件员表，
+                    List<DelivererRule> delivererRules = this.delivererRuleService.getDelivererRuleList(customerId,
+                            Long.valueOf(stationId), Long.valueOf(node.getId()));
+                    // 如果不为空,拼接address名称到站点后面,--分隔
+                    if (CollectionUtils.isNotEmpty(delivererRules)) {
+                        StringBuffer deliverer = new StringBuffer();
+                        for (DelivererRule rule : delivererRules) {
+                            deliverer.append(rule.getDeliverer().getName() + "|");
+                        }
+                        node.setName(node.getName() + "--" + deliverer.substring(0, deliverer.length() - 1).toString());
                     }
-                    node.setName(node.getName() + "--" + deliverer.substring(0, deliverer.length() - 1).toString());
                 }
             }
 
@@ -1104,4 +1109,5 @@ public class AddressService extends CommonServiceImpl<Address, Long> {
             return null;
         }
     }
+
 }
