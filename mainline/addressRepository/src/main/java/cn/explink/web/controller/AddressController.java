@@ -208,13 +208,6 @@ public class AddressController extends BaseController {
         return this.addressService.getAdressByStation(customerId, stationId);
     }
 
-    @RequestMapping("/getAdressByStation2")
-    public @ResponseBody
-    List<ZTreeNode> getAdressByStation2(String stationId) {
-        Long customerId = this.getCustomerId();
-        return this.addressService.getAdressByStation(customerId, stationId, false);
-    }
-
     /**
      * @param model
      * @param parentId
@@ -245,7 +238,7 @@ public class AddressController extends BaseController {
         headerNameList.add("地址2");
         headerNameList.add("地址3");
         headerNameList.add("站点");
-        headerNameList.add("小件员ID");
+        headerNameList.add("配送员");
         XSSFWorkbook wb = this.addressImportService.createAddressTemplate(headerNameList);
         String fileName = "地址导入模板.xlsx";
         this.setDownloadFileName(response, fileName);
@@ -845,7 +838,7 @@ public class AddressController extends BaseController {
 
         if ((delivererList != null) && !delivererList.isEmpty()) {
             for (Deliverer d : delivererList) {
-                delivererMap.put(customerId + "-" + d.getName(), d);
+                delivererMap.put(customerId + "-" + d.getDeliveryStationId() + "-" + d.getUserCode(), d);
             }
         }
         // 构造该客户的绑定地址
