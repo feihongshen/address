@@ -47,11 +47,11 @@ $(function(){
 				return;
 			}
 			switch (title) {
-			case '未匹配':
+			case '站点未匹配':
 				tableData=usedData['unList'];
 				usedTable=$("#untable");
 				break;
-			case '匹配成功':
+			case '站点匹配成功':
 				tableData=usedData['suList'];
 				usedTable=$("#sutable");
 				break;
