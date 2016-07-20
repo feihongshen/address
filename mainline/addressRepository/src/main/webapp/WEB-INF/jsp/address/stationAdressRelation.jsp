@@ -134,11 +134,14 @@ span.button.lastPage {
 			//初始化站点信息前，先清空站点，模糊查询文本框和地址树信息
 			$("#targetStation").empty();
 			$("#sourceStation").empty();
+			$("#sourceDeliverer").empty();
+			$("#targetDeliverer").empty();
 			$("#sourceStrVal").val("");
 			$("#targetStrVal").val("");
 			$("#sourceStationtree").empty();
 			$("#targetStationtree").empty();
 
+			
 			initStations();
 
 			$('.easyui-layout').layout('collapse', 'north');
