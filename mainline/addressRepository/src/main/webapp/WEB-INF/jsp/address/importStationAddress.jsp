@@ -95,8 +95,7 @@
 				<span>边框颜色:</span> <input type=text id="station_add_panel_top_linecolor" style="width: 50px;" />
 				<span>填充颜色:</span> <input type=text id="station_add_panel_top_fillcolor" style="width: 50px;" />
 				
-				<span style="position: absolute; right: 5px;"> <a href="javascript:void(0)"
-					class="easyui-linkbutton" id="station_add_panel_btn_reset" iconCls="icon-add">绘制/重绘</a> <a
+				<span style="position: absolute; right: 5px;"> <a
 					href="javascript:void(0)" class="easyui-linkbutton" id="station_add_panel_btn_edit"
 					iconCls="icon-edit">编辑</a> <a href="javascript:void(0)" class="easyui-linkbutton"
 					id="station_add_panel_btn_save" iconCls="icon-save">保存</a> <a href="javascript:void(0)"

@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>管理员管理</title>
+<title>阡陌地址库</title>
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/easyui/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css"
@@ -14,6 +14,18 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	//显示当前登录用户信息
+	$.ajax({
+		type : "POST",
+		url : "<%=request.getContextPath()%>/user/getLogginedCustomer",
+		success : function(resp) {
+	         $("#logginedCustomer").text(resp);
+		}
+	});
+});
+</script>
 <style type="text/css">
 #fm {
 	margin: 0;
@@ -48,8 +60,9 @@
 		<table width="100%" border=0 cellspacing="0" cellpadding="0">
 			<tr>
 				<td><strong>地址库管理平台</strong></td>
-				<td align="right" style="font-size: 12px"><a href="javascript:changePass();">修改密码</a>
-					&nbsp;<a href="<%=request.getContextPath()%>/resources/j_spring_security_logout">退出</a></td>
+				<td align="right" style="font-size: 12px"><strong>用户：</strong><strong id="logginedCustomer"></strong>&nbsp;
+					<a href="javascript:changePass();">修改密码</a> &nbsp;<a
+					href="<%=request.getContextPath()%>/resources/j_spring_security_logout">退出</a></td>
 			</tr>
 		</table>
 	</div>
@@ -63,12 +76,13 @@
 				<ul>
 					<li><a href="#" onclick="addTab('关键词批量导入','address/addressImportPage')">关键词批量导入</a></li>
 					<li><a href="#" onclick="addTab('关键词树状维护','address/addressEditPage')">关键词树状维护</a></li>
-<!-- 					<li><a href="#" onclick="addTab('拆分结果维护','keyword/keywordMaintain')">拆分结果维护</a></li> -->
+					<li><a href="#" onclick="addTab('拆分结果维护','keyword/keywordMaintain')">拆分结果维护</a></li>
 				</ul></li>
 			<li><span>关联设置</span>
 				<ul>
 					<li><a href="#" onclick="addTab('拆合站维护','stationAdressRelation/stationAdressRelation')">拆合站维护</a></li>
 					<li><a href="#" onclick="addTab('站点关联维护','deliveryStationRule/deliveryStationRule')">站点关联维护</a></li>
+					<li><a href="#" onclick="addTab('小件员关联维护','delivererStationRule/delivererStationRule')">小件员关联维护</a></li>
 				</ul></li>
 			<li><span>匹配测试</span>
 				<ul>
@@ -76,9 +90,9 @@
 					<li><a href="#" onclick="addTab('匹配情况分析','address/keywordMapping')">匹配情况分析</a></li>
 				</ul></li>
 			<li><span>系统监控</span>
-			<ul>
-				<li><a href="#" onclick="addTab('系统日志','bizLogController/findLog')">系统日志</a></li>
-			</ul></li>
+				<ul>
+					<li><a href="#" onclick="addTab('系统日志','bizLogController/findLog')">系统日志</a></li>
+				</ul></li>
 
 		</ul>
 	</div>
@@ -363,7 +377,6 @@
 		}
 		$('#adminTabs').width($(window).width() - 165);
 		$('#adminTabs').height($(window).height() - 62);
-		
 	</script>
 </body>
 </html>

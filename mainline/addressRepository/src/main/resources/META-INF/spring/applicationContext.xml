@@ -15,7 +15,14 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://cxf.apache.org/jaxws
 		http://cxf.apache.org/schemas/jaxws.xsd">
-	<context:property-placeholder location="classpath:META-INF/spring/*.properties" />
+		
+	<bean id="propertyPlaceHolder" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations" value="file:/apps/conf/javaconf/${sysname}/address/address.properties" />
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="fileEncoding" value="UTF-8" />
+    </bean>
+    <context:property-placeholder ignore-resource-not-found="true" local-override="true" properties-ref="propertyPlaceHolder"  location="classpath:address.properties" />
+
 	<context:component-scan base-package="cn.explink">
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
@@ -27,7 +34,10 @@
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+	<bean id="resourceBundleUtil" class="cn.explink.util.ResourceBundleUtil" scope="singleton" >
+			<property name="luceneIndexPath" value="${luceneIndexPath}" />
+			 <property name="luceneDictPath" value="${luceneDictPath}" />
+		</bean>
 	<bean id="luceneInitializer" class="cn.explink.lucene.LuceneInitializer" scope="singleton"
 		init-method="initLucene" />
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

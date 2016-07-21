@@ -34,12 +34,10 @@ var resultRow = {
 						return '';
 					}
 					var href = '';
-					//href += "[<a href='javascript:editStation()'>绘制区域</a>]";
+					href += "[<a href='javascript:editStation()'>绘制区域</a>]";
 					href += "[<a href='" + ctx
 							+ "/station/downloadStationAddress?id=" + rec.id
 							+ "'>导出关键字地址</a>]";
-					// href += "[<a href='javascript:importAddress(" + rec.id+
-					// ")'>导入关键字地址</a>]";
 					return href;
 				}
 			}]],

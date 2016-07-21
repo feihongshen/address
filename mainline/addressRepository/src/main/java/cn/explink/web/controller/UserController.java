@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.explink.domain.Customer;
 import cn.explink.modle.AjaxJson;
 import cn.explink.service.UserService;
 
 @RequestMapping("/user")
 @Controller
-public class UserController {
+public class UserController extends BaseController {
 
 	@Autowired
 	private UserService userService;
@@ -31,5 +32,12 @@ public class UserController {
 			aj.setMsg(e.getMessage());
 		}
 		return aj;
+	}
+
+	@RequestMapping("/getLogginedCustomer")
+	@ResponseBody
+	public String getLogginedCustomer() {
+		Customer customer = this.getLogginedUser().getCustomer();
+		return customer.getName();
 	}
 }

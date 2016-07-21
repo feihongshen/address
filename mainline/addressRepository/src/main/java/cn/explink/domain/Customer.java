@@ -1,3 +1,4 @@
+
 package cn.explink.domain;
 
 import java.util.HashSet;
@@ -17,60 +18,60 @@ import javax.persistence.Table;
 @Table(name = "CUSTOMERS")
 public class Customer {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "NAME", length = 50, nullable = false)
-	private String name;
+    @Column(name = "NAME", length = 50, nullable = false)
+    private String name;
 
-	@Column(name = "DESCRIPTION", length = 200)
-	private String description;
+    @Column(name = "DESCRIPTION", length = 200)
+    private String description;
 
-	@Column(name = "STATUS", nullable = false)
-	private Integer status;
+    @Column(name = "STATUS", nullable = false)
+    private Integer status;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
-	private Set<DeliveryStation> deliveryStations = new HashSet<DeliveryStation>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+    private Set<DeliveryStation> deliveryStations = new HashSet<DeliveryStation>();
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Set<DeliveryStation> getDeliveryStations() {
-		return deliveryStations;
-	}
+    public Set<DeliveryStation> getDeliveryStations() {
+        return this.deliveryStations;
+    }
 
-	public void setDeliveryStations(Set<DeliveryStation> deliveryStations) {
-		this.deliveryStations = deliveryStations;
-	}
+    public void setDeliveryStations(Set<DeliveryStation> deliveryStations) {
+        this.deliveryStations = deliveryStations;
+    }
 
 }

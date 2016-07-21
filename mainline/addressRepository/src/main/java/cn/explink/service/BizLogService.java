@@ -91,8 +91,8 @@ public class BizLogService {
 	 * @throws
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> findInfo(int operationType, String beginTime, String endTime, String operationIP, int page, int pageNumber) {
-		Map<String, Object> map = this.bizLogDAO.findInfo(operationType, beginTime, endTime, operationIP, page, pageNumber);
+	public Map<String, Object> findInfo(int operationType, String beginTime, String endTime, String operationIP, int page, int pageNumber, Long customerId) {
+		Map<String, Object> map = this.bizLogDAO.findInfo(operationType, beginTime, endTime, operationIP, page, pageNumber, customerId);
 		//拼接日志内容
 		List<BizLog> list = (List<BizLog>) map.get("list");
 		for (BizLog temp : list) {

@@ -134,11 +134,14 @@ span.button.lastPage {
 			//初始化站点信息前，先清空站点，模糊查询文本框和地址树信息
 			$("#targetStation").empty();
 			$("#sourceStation").empty();
+			$("#sourceDeliverer").empty();
+			$("#targetDeliverer").empty();
 			$("#sourceStrVal").val("");
 			$("#targetStrVal").val("");
 			$("#sourceStationtree").empty();
 			$("#targetStationtree").empty();
 
+			
 			initStations();
 
 			$('.easyui-layout').layout('collapse', 'north');
@@ -155,6 +158,14 @@ span.button.lastPage {
 		
 		$(".targetStation4combobox").change(function() {
 			initDemoTree('targetStation');
+		})
+		
+		
+		$(".sourceDeliverer4combobox").change(function(){
+			getDeliveryTree('sourceDeliverer');
+		})
+		$(".targetDeliverer4combobox").change(function(){
+			getDeliveryTree('targetDeliverer');
 		})
 
 	});
@@ -226,7 +237,10 @@ span.button.lastPage {
 				<tr height="20px">
 					<td width="45%" bgcolor="#FFFFFF">原站点： <select id="sourceStation" class="sourceStation4combobox"
 						style="width: 120px;">
+					</select>  &nbsp;&nbsp;&nbsp;原小件员： <select id="sourceDeliverer" class="sourceDeliverer4combobox"
+						style="width: 120px;">
 					</select></td>
+				
 					<td width="50" rowspan="3" align="center" bgcolor="#FFFFFF">
 						<p>
 							<a href="javascript:void(0)" class="easyui-linkbutton" id="toRight">&gt;</a>
@@ -237,14 +251,16 @@ span.button.lastPage {
 					</td>
 					<td width="45%" bgcolor="#FFFFFF">拆到目标站点： <select id="targetStation"
 						class="targetStation4combobox" style="width: 120px;">
+					</select> &nbsp;&nbsp;&nbsp; 拆到目标小件员： <select id="targetDeliverer"
+						class="targetDeliverer4combobox" style="width: 120px;">
 					</select></td>
 				</tr>
 				<tr>
 					<td bgcolor="#FFFFFF">模糊搜索: <input name="textfield5" id="sourceStrVal" type="text"
-						id="textfield5" size="15" onkeydown="searchByEnter('sourceStrVal','sourceStationtree')" />
+						id="textfield5" size="15" onkeydown="searchByEnter(event,'sourceStrVal','sourceStationtree')" />
 					</td>
 					<td bgcolor="#FFFFFF">模糊搜索: <input name="textfield5" type="text" id="targetStrVal"
-						size="15" onkeydown="searchByEnter('targetStrVal','targetStationtree')" />
+						size="15" onkeydown="searchByEnter(event,'targetStrVal','targetStationtree')" />
 					</td>
 				</tr>
 				<tr height="90%" style="overflow-y: scroll">

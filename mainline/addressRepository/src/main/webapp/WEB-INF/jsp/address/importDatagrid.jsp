@@ -133,7 +133,7 @@ var hasIniUI=false;
 								sortable : true
 							}, {
 								field : 'delivererName',
-								title : '配送员',
+								title : '小件员',
 								sortable : true
 							}, {
 								field : 'status',

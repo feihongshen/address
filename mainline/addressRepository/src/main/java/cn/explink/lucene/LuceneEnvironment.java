@@ -1,3 +1,4 @@
+
 package cn.explink.lucene;
 
 import java.io.File;
@@ -13,81 +14,87 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import cn.explink.util.ApplicationContextUtil;
 import cn.explink.util.ResourceBundleUtil;
 
 public class LuceneEnvironment {
 
-	private static int initWriterCount = 0;
-	private static int initSearchCount = 0;
-	private static LuceneEnvironment instance = new LuceneEnvironment();
+    private static int initWriterCount = 0;
 
-	public static final int DEFAULT_MAX_RESULT_COUNT = 1000;
+    private static int initSearchCount = 0;
 
-	private File dictDirectory;
+    private static LuceneEnvironment instance = new LuceneEnvironment();
 
-	private FSDirectory indexDirectory;
+    public static final int DEFAULT_MAX_RESULT_COUNT = 1000;
 
-	private IndexWriter indexWriter;
+    private File dictDirectory;
 
-	private Analyzer analyzer = new IKAnalyzer(false);
+    private FSDirectory indexDirectory;
 
-	private IndexSearcher indexSearch;
+    private IndexWriter indexWriter;
 
-	private LuceneEnvironment() {
-		this.dictDirectory = new File(ResourceBundleUtil.LUCENE_DICT_PATH);
-	}
+    private Analyzer analyzer = new IKAnalyzer(false);
 
-	public static LuceneEnvironment getInstance() {
-		return LuceneEnvironment.instance;
-	}
+    private IndexSearcher indexSearch;
 
-	public File getDictDirectory() {
-		return this.dictDirectory;
-	}
+    ResourceBundleUtil resourceBundleUtil;
 
-	public FSDirectory getIndexDirectory() throws IOException {
-		if (this.indexDirectory == null) {
-			this.indexDirectory = FSDirectory.open(new File(ResourceBundleUtil.LUCENE_INDEX_PATH));
-		}
-		return this.indexDirectory;
-	}
+    private LuceneEnvironment() {
+        this.resourceBundleUtil = ApplicationContextUtil.getBean("resourceBundleUtil");
+        this.dictDirectory = new File(this.resourceBundleUtil.getLuceneDictPath());
+    }
 
-	public IndexWriter getIndexWriter() throws IOException {
-		if (this.indexWriter == null) {
-			FSDirectory fsDirectory = this.getIndexDirectory();
-			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
-			this.indexWriter = new IndexWriter(fsDirectory, config);
-			LuceneEnvironment.initWriterCount++;
-		}
-		return this.indexWriter;
-	}
+    public static LuceneEnvironment getInstance() {
+        return LuceneEnvironment.instance;
+    }
 
-	public IndexSearcher getIndexSearch() throws IOException {
-		if (this.indexSearch == null) {
-			this.indexSearch = new IndexSearcher(DirectoryReader.open(this.getIndexDirectory()));
-			LuceneEnvironment.initSearchCount++;
-		}
-		return this.indexSearch;
-	}
+    public File getDictDirectory() {
+        return this.dictDirectory;
+    }
 
-	public QueryParser getQueryParser() {
-		// if (queryParser == null) {
-		// queryParser = new QueryParser(Version.LUCENE_47, "name", analyzer);
-		// }
-		// return queryParser;
-		// Note that QueryParser is not thread-safe.
-		return new QueryParser(Version.LUCENE_47, "name", this.analyzer);
-	}
+    public FSDirectory getIndexDirectory() throws IOException {
+        if (this.indexDirectory == null) {
+            this.indexDirectory = FSDirectory.open(new File(this.resourceBundleUtil.getLuceneIndexPath()));
+        }
+        return this.indexDirectory;
+    }
 
-	/**
-	 * 重置查询方法
-	 */
-	public void resetSearcher() {
-		try {
-			this.indexSearch = new IndexSearcher(DirectoryReader.open(this.getIndexDirectory()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public IndexWriter getIndexWriter() throws IOException {
+        if (this.indexWriter == null) {
+            FSDirectory fsDirectory = this.getIndexDirectory();
+            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
+            this.indexWriter = new IndexWriter(fsDirectory, config);
+            LuceneEnvironment.initWriterCount++;
+        }
+        return this.indexWriter;
+    }
+
+    public IndexSearcher getIndexSearch() throws IOException {
+        if (this.indexSearch == null) {
+            this.indexSearch = new IndexSearcher(DirectoryReader.open(this.getIndexDirectory()));
+            LuceneEnvironment.initSearchCount++;
+        }
+        return this.indexSearch;
+    }
+
+    public QueryParser getQueryParser() {
+        // if (queryParser == null) {
+        // queryParser = new QueryParser(Version.LUCENE_47, "name", analyzer);
+        // }
+        // return queryParser;
+        // Note that QueryParser is not thread-safe.
+        return new QueryParser(Version.LUCENE_47, "name", this.analyzer);
+    }
+
+    /**
+     * 重置查询方法
+     */
+    public void resetSearcher() {
+        try {
+            this.indexSearch = new IndexSearcher(DirectoryReader.open(this.getIndexDirectory()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
