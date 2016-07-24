@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import cn.explink.dao.support.BasicHibernateDaoSupport;
 import cn.explink.dao.support.DataInfo;
 import cn.explink.domain.Address;
+import cn.explink.domain.Deliverer;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.Vendor;
 import cn.explink.domain.enums.DeliveryStationStausEnmu;
@@ -42,7 +43,12 @@ public class DeliveryStationDao extends BasicHibernateDaoSupport<DeliveryStation
         query.setLong("id", id);
         return query.list();
     }
-
+    public List<Deliverer> getDeliverer(Long id) {
+        String hql = "from Deliverer a where a.deliveryStationId=:id )";
+        Query query = this.getSession().createQuery(hql);
+        query.setLong("id", id);
+        return query.list();
+    }
     @SuppressWarnings("unchecked")
     public List<Address> getAddressByIds(Set<Long> addIds) {
         if (addIds.isEmpty()) {

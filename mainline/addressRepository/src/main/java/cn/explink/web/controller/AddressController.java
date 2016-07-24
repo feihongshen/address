@@ -245,7 +245,7 @@ public class AddressController extends BaseController {
         headerNameList.add("地址2");
         headerNameList.add("地址3");
         headerNameList.add("站点");
-        headerNameList.add("小件员");
+        headerNameList.add("小件员ID");
         XSSFWorkbook wb = this.addressImportService.createAddressTemplate(headerNameList);
         String fileName = "地址导入模板.xlsx";
         this.setDownloadFileName(response, fileName);
