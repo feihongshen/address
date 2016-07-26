@@ -38,6 +38,9 @@ var resultRow = {
 					href += "[<a href='" + ctx
 							+ "/station/downloadStationAddress?id=" + rec.id
 							+ "'>导出关键字地址</a>]";
+					href += "[<a href='" + ctx
+					+ "/station/downloadStationDeliverer?id=" + rec.id
+					+ "'>导出小件员关键词</a>]";
 					return href;
 				}
 			}]],

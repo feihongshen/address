@@ -49,7 +49,7 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 		}
 		String[] array1 = rule.split("\\|");
 		if (array1.length != 2) {
-			throw new ExplinkRuntimeException("invalid rule: " + rule);
+			throw new ExplinkRuntimeException("非法规则: " + rule);
 		}
 
 		RuleExpression ruleExpression = new RuleExpression();
@@ -74,7 +74,7 @@ public class RuleService extends CommonServiceImpl<DeliveryStationRule, Long> {
 
 			String[] array3 = number.split("-");
 			if (array3.length > 2) {
-				throw new ExplinkRuntimeException("invalid rule: " + rule);
+				throw new ExplinkRuntimeException("非法规则: " + rule);
 			}
 			numberExpression.setMinNumber(Integer.parseInt(array3[0]));
 			if (array3.length == 2) {

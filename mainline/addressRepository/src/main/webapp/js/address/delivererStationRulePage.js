@@ -27,7 +27,7 @@ var nodeName;
 $(document).ready(
 		function() {
 			getAll();
-
+			$.messager.defaults = { ok: "确定", cancel: "否" }; 
 			$("#confirmAllBtn").click(
 					function() {
 
