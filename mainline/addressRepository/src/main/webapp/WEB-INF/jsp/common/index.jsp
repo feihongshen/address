@@ -97,7 +97,7 @@ $(function(){
 		</ul>
 	</div>
 	<div data-options="region:'south',border:false"
-		style="height: 30px; background: #A9FACD; padding: 10px;">Copyright ? 2014-2015 Explink.cn
+		style="height: 30px; background: #A9FACD; padding: 10px;">Copyright ? 2014-2016 Pjbest.com
 		All Rights Reserved.</div>
 	<div data-options="region:'center'" id="mainDiv">
 		<div class="easyui-tabs" id="adminTabs">
