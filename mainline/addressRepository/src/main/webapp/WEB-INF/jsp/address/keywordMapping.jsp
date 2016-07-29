@@ -72,11 +72,11 @@ $(function(){
 				zTreeObj1 = $.fn.zTree.init($("#resultTree"), setting, zNodes);
 			}
 		});
-		initMap("mapMatchedResult",needMatchedWords);
+		//initMap("mapMatchedResult",needMatchedWords);
 	});
 	
 	
-	initMap("mapMatchedResult",needMatchedWords);
+	//initMap("mapMatchedResult",needMatchedWords);
 });
 
 function setFontCss(treeId, treeNode) {
@@ -122,7 +122,7 @@ function setKeywords(){
 			</div>
 		</td>
 	</div>
-	<div id="mapMatchedResult" style="width: 50%; height: 600px; float: right;"></div>
+<!-- 	<div id="mapMatchedResult" style="width: 50%; height: 600px; float: right;"></div> -->
 
 </body>
 </html>
