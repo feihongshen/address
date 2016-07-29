@@ -22,6 +22,7 @@
 		<intercept-url pattern="/station4dmp/**" access="permitAll" />
 		<intercept-url pattern="/stationAdressRelation/**" access="permitAll" /> 
 		<intercept-url pattern="/deliveryStationRule/**" access="permitAll" />
+		<intercept-url pattern="/delivererStationRule/**" access="permitAll" />
 		
 		<intercept-url pattern="/**" access="isAuthenticated()" />
 		<custom-filter before="FORM_LOGIN_FILTER" ref="loginFilter" />
