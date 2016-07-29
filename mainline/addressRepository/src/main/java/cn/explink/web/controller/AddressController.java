@@ -50,6 +50,7 @@ import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.User;
 import cn.explink.domain.enums.AddressImportDetailStatsEnum;
 import cn.explink.domain.enums.LogTypeEnum;
+import cn.explink.domain.enums.SearchTypeEnum;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.gis.GeoCoder;
 import cn.explink.gis.GeoPoint;
@@ -528,7 +529,29 @@ public class AddressController extends BaseController {
         this.addressService.appendStation(customerId, result.getzTreeNodeList());
         return result;
     }
-
+    
+	/**
+	 * @param searchType
+	 * @param needMatched
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	@RequestMapping("/searchByKeywordOrStation")
+	public @ResponseBody KeywordMatchedResult searchByKeywordOrStation(int searchType, String needMatched) throws IOException, ParseException {
+		KeywordMatchedResult result = new KeywordMatchedResult();
+		Long customerId = this.getCustomerId();
+		if (StringUtil.isEmpty(needMatched)) {
+			return null;
+		}
+		if (searchType == SearchTypeEnum.keyword.getValue()) {
+			result = this.luceneService.getKeyWordMatchResult(needMatched, customerId);
+		} else {
+			result = this.luceneService.fuzzySearchByStationName(needMatched, customerId);
+		}
+		this.addressService.appendStation(customerId, result.getzTreeNodeList());
+		return result;
+	}
     @RequestMapping("/getPointByAddress")
     public @ResponseBody
     List<AddressPosition> getPointByAddress(String needMatched, HttpServletRequest request, HttpServletResponse response)

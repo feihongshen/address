@@ -7,6 +7,7 @@
 <script type="text/javascript" src="${ctx}/js/address/mutitleTree.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/stationAdressRelation.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/exportAddress.js"></script>
+<script type="text/javascript" src="${ctx}/js/address/maskUtil.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/fuzzySearch.js"></script>
 <style type="text/css">
 .ul {
@@ -197,7 +198,9 @@ span.button.lastPage {
 						href="javascript:" class="easyui-linkbutton" id="importAddress">导入关键字</a></td>
 				</tr>
 				<tr>
+			
 					<td><input style="width: 150px" id="searchA" onkeydown="searchByKeyword('searchA','tree');">
+						<input type="hidden" id="searchType" value="1">
 							<a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> <a
 							href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a></td>
 				</tr>

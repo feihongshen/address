@@ -77,7 +77,7 @@ div#rMenu ul li {
 		<div data-options="region:'west',split:true" title="条件搜索" style="width: 500px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="10">
 				<tr>
-					<td align="left"><select id="searchType"><option value="1" >关键词</option><option value="2" >站点</option></select></td>
+					<td align="left"><select id="searchType" style="display:none"><option value="1" selected >关键词</option><option value="2" >站点</option></select></td>
 					<td align="left"><input style="width: 180px" id="searchA"
 						onkeydown="searchByKeyword('searchA','tree');" /></td>
 					<td align="left" width="160px;"><a href="javascript:void(0)" id="collapseAllBtn"
