@@ -199,7 +199,7 @@ span.button.lastPage {
 				</tr>
 				<tr>
 			
-					<td><input style="width: 150px" id="searchA" onkeydown="searchByKeyword('searchA','tree');">
+					<td><input style="width: 150px" id="searchA" onkeydown="searchByKeyword(event,'searchA','tree');">
 						<input type="hidden" id="searchType" value="1">
 							<a href="javascript:void(0)" id="collapseAllBtn" class="easyui-linkbutton">折叠</a> <a
 							href="javascript:void(0)" id="refreshAllBtn" class="easyui-linkbutton">刷新</a></td>

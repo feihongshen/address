@@ -79,7 +79,7 @@ div#rMenu ul li {
 				<tr>
 					<td align="left"><select id="searchType" style="display:none"><option value="1" selected >关键词</option><option value="2" >站点</option></select></td>
 					<td align="left"><input style="width: 180px" id="searchA"
-						onkeydown="searchByKeyword('searchA','tree');" /></td>
+						onkeydown="searchByKeyword(event,'searchA','tree');" /></td>
 					<td align="left" width="160px;"><a href="javascript:void(0)" id="collapseAllBtn"
 						class="easyui-linkbutton">折叠</a> <a href="javascript:void(0)" id="refreshAllBtn"
 						class="easyui-linkbutton">刷新</a></td>

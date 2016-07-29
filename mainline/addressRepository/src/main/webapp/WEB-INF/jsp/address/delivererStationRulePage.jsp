@@ -79,7 +79,7 @@ span.button.lastPage {
 			<table width="100%" border="0" cellspacing="0" cellpadding="10">
 				<tr>
 					<td align="left">	 <input style="width: 180px" id="searchA"
-						onkeydown="searchByKeyword('searchA','tree');" /></td>
+						onkeydown="searchByKeyword(event,'searchA','tree');" /></td>
 					<td align="left" width="160px;"><a href="javascript:void(0)" id="confirmAllBtn"
 						class="easyui-linkbutton">确定</a> <a href="javascript:void(0)" id="refreshAllBtn"
 						class="easyui-linkbutton">刷新</a></td>

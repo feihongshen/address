@@ -1,5 +1,5 @@
 var matchedNodes;
-function searchByKeyword(valName, treeName) {
+function searchByKeyword(event,valName, treeName) {
 	if (event.keyCode != 13) {
 		return; // 回车键的键值为13
 	}
