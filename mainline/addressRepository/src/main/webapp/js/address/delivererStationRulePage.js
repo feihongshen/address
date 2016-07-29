@@ -27,6 +27,10 @@ var nodeName;
 $(document).ready(
 		function() {
 			getAll();
+			$("#searchA").keydown(function() {
+				$("#confirmAllBtn").click();
+			});
+		 
 			$.messager.defaults = { ok: "确定", cancel: "否" }; 
 			$("#confirmAllBtn").click(
 					function() {
