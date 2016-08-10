@@ -3,6 +3,7 @@ package cn.explink.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.tree.ZTreeNode;
 import cn.explink.util.JsonUtil;
 import cn.explink.util.StringUtil;
+import cn.explink.web.vo.DelivererRuleShowVo;
 import cn.explink.web.vo.DelivererStationRuleVo;
 import cn.explink.ws.vo.DelivererRuleVo;
 import cn.explink.ws.vo.OrderVo;
@@ -384,4 +386,34 @@ public class DelivererRuleService extends RuleService {
     public Boolean checkDelivererRule(Long customerId, Long delivererId, Long stationId, Long addressId, Long ruleId) {
         return false;
     }
+
+	public  HashMap<Long,DelivererRuleShowVo> getRuleInfoByStation(Long customerId,
+			Long stationId) {
+		 List<DelivererRule> drList= this.delivererRuleDao.getDelivererRule(customerId, stationId);
+		 
+		 HashMap<Long,DelivererRuleShowVo> map=new HashMap<Long,DelivererRuleShowVo>();
+		 if(drList!=null&&drList.size()>0){
+			 for(DelivererRule dr:drList){
+				 DelivererRuleShowVo showVo=new DelivererRuleShowVo();
+				 if(map.containsKey(dr.getDeliverer().getId())){
+					 showVo=map.get(dr.getDeliverer().getId());
+				 }else{
+					 showVo.setDelivererId(dr.getDeliverer().getId());
+					 showVo.setDelivererName(dr.getDeliverer().getName());
+					 showVo.setDelivererStationId(dr.getDeliveryStation().getId());
+					 showVo.setDelivererStationRuleVo(new ArrayList<DelivererStationRuleVo>());
+					 map.put(dr.getDeliverer().getId(), showVo);
+				 }
+				 DelivererStationRuleVo vo= new DelivererStationRuleVo();
+				 vo.setAddressId(Integer.parseInt(dr.getAddress().getId()+""));
+				 vo.setDelivererId(Integer.parseInt(dr.getDeliverer().getId()+""));
+				 vo.setRule(dr.getRule());
+				 vo.setRuleId(Integer.parseInt(dr.getId()+""));
+				 vo.setType(dr.getRuleType()+"");
+				 showVo.getDelivererStationRuleVo().add(vo);
+			 }
+		 }
+		 
+		 return map;
+	}
 }

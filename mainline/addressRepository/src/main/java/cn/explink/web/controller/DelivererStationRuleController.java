@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.explink.modle.AjaxJson;
 import cn.explink.service.DelivererRuleService;
+import cn.explink.web.vo.DelivererRuleShowVo;
 import cn.explink.web.vo.DelivererStationRuleVo;
 
 /**
@@ -60,6 +61,17 @@ public class DelivererStationRuleController extends BaseController {
         return ls;
     }
 
+    
+    @RequestMapping("/getRuleInfoByStation")
+    @ResponseBody
+    public HashMap<Long,DelivererRuleShowVo> getRuleInfoByStation(Long stationId) {
+
+    	HashMap<Long,DelivererRuleShowVo> ls = this.delivererRuleService.getRuleInfoByStation(this.getCustomerId(),
+                stationId);
+
+        return ls;
+    }
+    
     @RequestMapping("/saveDelivererRule")
     @ResponseBody
     public AjaxJson saveDelivererRule(String jsonStr) {

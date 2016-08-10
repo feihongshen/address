@@ -57,23 +57,32 @@ $(document).ready(
 					}
 				}
 			});
-			$("#delivererList").change(
-					function() {
-						$("#stationRule tbody").html("");
-						if (!$.isEmptyObject(deliverer)) {
-							for (var i = 0; i < deliverer.length; i++) {
-								var item = deliverer[i];
-								if ((item.id == $(this).val())
-										|| ($(this).val() == '')) {
-									$("#stationRule>tbody").append(
-											appendTr(item, nodeid, nodeName));
+		 
+			
+			
+			$("#delivererids").combobox({
 
-								}
+				onChange: function (n,o) {
+					var delivererid=$("#delivererids").combobox('getValue');
+					if(delivererid=='-1'){
+						$("#stationRule>tbody>tr").each(function(){
+								$(this).show();	 
+						});
+					}
+					else{
+						$("#stationRule>tbody>tr").each(function(){
+							if($(this).attr("dsrid")==nodeid+'-'+delivererid){
+								$(this).show();	 
+							}else{
+								$(this).hide();	
 							}
+							
+						});
 						}
-
-					});
-
+				}
+				});
+ 
+		 
 		});
 
 function myBeforeClick(treeId, treeNode, clickFlag) {
@@ -96,19 +105,35 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	getAddressList(treeNode.id);
 	getDelivererByStation(treeNode.id, treeNode.name);
 
-	if (!$.isEmptyObject(deliverer)) {
-		for (var i = 0; i < deliverer.length; i++) {
-			var item = deliverer[i];
-			$("#stationRule>tbody").append(
-					appendTr(item, treeNode.id, treeNode.name));
-			$("#delivererList").append(
-					"<option value='" + item.id + "'>" + item.text
-							+ "</option>");
+	var ruleShowVo = [];
+	$.ajax({
+		type : "POST",
+		url : ctx + "/delivererStationRule/getRuleInfoByStation",
+		data : {
+			stationId : treeNode.id
+		},
+		async : false,
+		success : function(resp) {
+			ruleShowVo = resp;
+			if (!$.isEmptyObject(deliverer)) {
+				for (var i = 0; i < deliverer.length; i++) {
+					var item = deliverer[i];
+					$("#stationRule>tbody").append(
+							appendTr2(item, treeNode.id, treeNode.name,ruleShowVo[item.id].delivererStationRuleVo));
+					$("#delivererList").append(
+							"<option value='" + item.id + "'>" + item.text
+									+ "</option>");
 
+				}
+			} else {
+				$("#stationRule>tbody").html("");
+			}
 		}
-	} else {
-		$("#stationRule>tbody").html("");
-	}
+	});
+	
+	
+	
+ 
 
 	if (treeNode.level == 1) {
 		$('#addRule').attr('disabled', true);
@@ -210,13 +235,111 @@ function getDelivererByStation(stationId, stationName) {
 		success : function(resp) {
 			if (resp.length > 0) {
 				deliverer = resp;
-
+				
+				
+				$("#delivererids").empty();
+ 
+				if(resp.length>0){
+					var data=[];
+					data.push({label:'全部',value:'-1'});
+					for(var i = 0;i<resp.length;i++){
+						data.push({label:resp[i].text,value:resp[i].id});
+					}
+					$('#delivererids').combobox('loadData', data);
+				} 
+				
 			} else {
 
 			}
 		}
 	});
 }
+
+/**
+ * 追加编辑行
+ * 
+ * @param item
+ * @param stationId
+ * @param stationName
+ * @returns
+ */
+function appendTr2(item, stationId, stationName,listDlivers) {
+	var tr = $("<tr  style='width:80%'></tr>").attr("status", "show").attr(
+			"dsrId", stationId + "-" + item.id);
+
+	var delivererAddress =listDlivers;
+ 
+	tr.append($("<td style='width:15%'></td>").html(stationName)).append(
+			$("<td style='width:15%'></td>").html(item.text));
+	var tableTd = $("<td style='width:60%'></td>");
+	var childTable = $(
+			"<table  style='width:80%'  class='table table-bordered'></table>")
+			.attr("id", "tb_" + item.id + "_" + stationId)
+			.append(
+					$("<tr></tr>")
+							.append(
+									$("<td style='width:30%'></td>")
+											.html("关键词"))
+							.append($("<td style='width:30%'></td>").html("规则"))
+							.append(
+									$("<td style='width:30%'></td>").append(
+											$("<a></a>").attr(
+													"href",
+													"javascript:addAddrRow('"
+															+ item.id + "','"
+															+ stationId + "')")
+													.attr("addAddrRow", "")
+													.html("新增"))));
+
+	if (!$.isEmptyObject(delivererAddress)) {
+		if (delivererAddress.length > 0) {
+			for (var i = 0; i < delivererAddress.length; i++) {
+				var itemAddr = delivererAddress[i];
+				var select = generateSelectorSelect(addressList,
+						itemAddr.addressId);
+				var childRow = $("<tr></tr>").attr("ruleId", itemAddr.ruleId)
+						.attr("addrId", itemAddr.addressId).attr("rule",
+								itemAddr.rule);
+				childRow.append($("<td></td>").html(
+						"<select disabled>" + select + "</select>"));
+				childRow.append($("<td></td>").html(
+						"<input value='" + itemAddr.rule + "'  disabled/>"));
+
+				var confirm = $("<a class='easyui-linkbutton'>确认</a>").attr(
+						"href", 'javascript:void(0)').attr("confirmRow", '');
+				var cancel = $("<a class='easyui-linkbutton'>取消</a>").attr(
+						"href", 'javascript:void(0)').attr("cancelRow", '');
+				var del = $("<a class='easyui-linkbutton'>删除</a>").attr("href",
+						'javascript:void(0)').attr("delRow", '');
+				childRow.append($("<td></td>").append(confirm).append("&nbsp;")
+						.append(cancel).append("&nbsp;").append(del));
+				childTable.append(childRow);
+				confirm.click(function() {
+					var trf = $(this).parent().parent();
+					confirmFn(trf, item.id, stationId);
+
+				}).hide();
+				cancel.click(function() {
+					var trf = $(this).parent().parent();
+					cancelFn(trf);
+				}).hide();
+
+				del.click(function() {
+					var trf = $(this).parent().parent();
+					delFn(trf);
+				});
+
+			}
+		}
+
+	}
+
+	tableTd.append(childTable);
+	tr.append(tableTd);
+	return tr;
+};
+
+
 
 /**
  * 追加编辑行

@@ -95,10 +95,13 @@ span.button.lastPage {
 				style="padding-left: -1px; margin-bottom: 10px; min-height: 180px; width: auto">
 				<input type="hidden" id="addressId" /> <input type="hidden" id="level" />
 				选择小件员:
-				<select id="delivererList">
+				<select id="delivererList" style="display:none;">
 					<option selected="selected" value=""></option>
 				</select>
-					
+				<input type="hidden"
+								id="level" name="level" value="" /> <select class="easyui-combobox" style="width: 100px;"
+								id="delivererids" name="delivererids" data-options="valueField:'value', textField:'label'">
+							</select>	
 						 
 				<table id="stationRule" class="table table-bordered">
 					<thead>
