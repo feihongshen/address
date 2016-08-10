@@ -1,6 +1,8 @@
 $(function(){
 	init();
 });
+
+
 $("#datagrid_logInfo").datagrid({
 	url : "",
 	loadMsg : '数据加载中...',
