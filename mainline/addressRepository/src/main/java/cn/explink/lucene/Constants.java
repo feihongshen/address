@@ -1,7 +1,7 @@
-package cn.explink.lucene;
 
+package cn.explink.lucene;
 
 public class Constants {
 
-	public static final int DEFAULT_DICT_SIZE = 10000;
+    public static final int DEFAULT_DICT_SIZE = 50000;
 }

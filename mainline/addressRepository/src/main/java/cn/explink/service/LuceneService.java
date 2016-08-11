@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +88,9 @@ public class LuceneService {
                         this.initIndex();
                     } catch (IOException e) {
                         LuceneService.LOGGER.error(e.getMessage());
+                    } catch (SQLException e1) {
+
+                        LuceneService.LOGGER.error(e1.getMessage());
                     }
                 } else {
                     // 分词词典目录已经存在
@@ -112,7 +116,8 @@ public class LuceneService {
             BufferedReader br = null;
             List<String> words = new ArrayList<String>(Constants.DEFAULT_DICT_SIZE);
             try {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(dictDirectory, dictString))));
+                br = new BufferedReader(
+                        new InputStreamReader(new FileInputStream(new File(dictDirectory, dictString))));
                 String line = null;
                 while ((line = br.readLine()) != null) {
                     words.add(line);
@@ -138,14 +143,15 @@ public class LuceneService {
      * @param indexWriter
      * @param dictDirectory
      * @throws IOException
+     * @throws SQLException
      */
-    private void initIndex() throws IOException {
+    private void initIndex() throws IOException, SQLException {
         long beginTime = System.currentTimeMillis();
         int start = 0, end = 0, pageSize = Constants.DEFAULT_DICT_SIZE;
         while (true) {
             start = end;
             end = start + pageSize;
-            List<Address> addressList = this.addressDao.getBaseAddress(start, end);
+            List<Address> addressList = this.addressDao.getBaseAddress(start, pageSize);
             if ((addressList != null) && (addressList.size() > 0)) {
                 this.refreshDictAndIndex(addressList, null);
             }
@@ -162,6 +168,7 @@ public class LuceneService {
      * 刷新词典和索引
      * @param addressList
      * @throws IOException
+     * @throws SQLException
      */
     private void refreshDictAndIndex(List<Address> addressList, List<Alias> aliasList) throws IOException {
         File dictDirectory = LuceneEnvironment.getInstance().getDictDirectory();
@@ -243,21 +250,26 @@ public class LuceneService {
     private void refreshIndex(List<Address> addressList, List<Alias> aliasList) throws IOException {
         IndexWriter indexWriter = LuceneEnvironment.getInstance().getIndexWriter();
         Query query = null;
+        List<Long> addressIdLst = new ArrayList<Long>();
         if (addressList != null) {
             for (Address address : addressList) {
                 query = new TermQuery(new Term("addressId", String.valueOf(address.getId())));
                 indexWriter.deleteDocuments(query);
                 indexWriter.addDocument(this.createDocument(address));
-                this.addressDao.updateAddressIndex(address.getId());
-                LuceneService.LOGGER.info("已经为关键词[{}]成功创建索引！", address.getName());
+                // this.addressDao.updateAddressIndex(address.getId());
+                addressIdLst.add(address.getId());
+                // LuceneService.LOGGER.info("已经为关键词[{}]成功创建索引！", address.getName());
             }
+
+            // 批量修改
+            this.addressDao.batchUpdateAddressIndex(addressIdLst);
         }
         if (aliasList != null) {
             for (Alias alias : aliasList) {
                 query = new TermQuery(new Term("aliasId", String.valueOf(alias.getId())));
                 indexWriter.deleteDocuments(query);
                 indexWriter.addDocument(this.createDocument(alias));
-                LuceneService.LOGGER.info("已经为别名[{}]成功创建索引！", alias.getName());
+                // LuceneService.LOGGER.info("已经为别名[{}]成功创建索引！", alias.getName());
             }
         }
         indexWriter.commit();
@@ -284,6 +296,7 @@ public class LuceneService {
      * @param addressIdList
      * @param aliasIdList
      * @throws IOException
+     * @throws SQLException
      */
     public void updateIndex(List<Long> addressIdList, List<Long> aliasIdList) throws IOException {
         List<Address> addressList = this.addressDao.getAddressByIdList(addressIdList);
@@ -352,8 +365,8 @@ public class LuceneService {
         return path.split("-");
     }
 
-    public KeywordMatchedResult getKeyWordMatchResult(String addressLine, Long customerId) throws IOException,
-            ParseException {
+    public KeywordMatchedResult getKeyWordMatchResult(String addressLine, Long customerId)
+            throws IOException, ParseException {
         KeywordMatchedResult result = new KeywordMatchedResult();
         List<Address> matchAddrList = this.getLuceneMatchAddrList(addressLine, customerId);
         if ((matchAddrList == null) || matchAddrList.isEmpty()) {
@@ -415,8 +428,8 @@ public class LuceneService {
         return addrIdSet;
     }
 
-    private List<Address> getLuceneMatchAddrList(String addressLine, Long customerId) throws ParseException,
-            IOException {
+    private List<Address> getLuceneMatchAddrList(String addressLine, Long customerId)
+            throws ParseException, IOException {
         List<Long> addressIdList = new ArrayList<Long>();
         List<Document> docList = this.getLuceneMatchDocList(addressLine);
 

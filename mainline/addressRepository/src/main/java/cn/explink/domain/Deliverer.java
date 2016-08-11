@@ -1,3 +1,4 @@
+
 package cn.explink.domain;
 
 import java.util.Date;
@@ -16,105 +17,127 @@ import javax.persistence.Table;
 @Table(name = "DELIVERERS")
 public class Deliverer {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "NAME", length = 50, nullable = false)
-	private String name;
+    @Column(name = "NAME", length = 50, nullable = false)
+    private String name;
 
-	@Column(name = "STATUS", nullable = false)
-	private Integer status;
+    @Column(name = "STATUS", nullable = false)
+    private Integer status;
 
-	@Column(name = "EXTERNAL_ID", nullable = false)
-	private Long externalId;
+    @Column(name = "EXTERNAL_ID", nullable = false)
+    private Long externalId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CUSTOMER_ID")
-	private Customer customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
 
-	@Column(name = "CREATION_TIME")
-	private Date creationTime;
+    @Column(name = "CREATION_TIME")
+    private Date creationTime;
 
-	public Deliverer() {
-		super();
-	}
+    @Column(name = "DELIVERY_STATION_ID")
+    private Long deliveryStationId;
 
-	public Deliverer(Long id, String name, Long externalId) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.externalId = externalId;
-	}
+    @Column(name = "user_code")
+    private String userCode;
 
-	public Long getId() {
-		return this.id;
-	}
+    public String getUserCode() {
+        return this.userCode;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public Long getDeliveryStationId() {
+        return this.deliveryStationId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setDeliveryStationId(Long deliveryStationId) {
+        this.deliveryStationId = deliveryStationId;
+    }
 
-	public Integer getStatus() {
-		return this.status;
-	}
+    public Deliverer() {
+        super();
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public Deliverer(Long id, String name, Long externalId) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.externalId = externalId;
+    }
 
-	public Long getExternalId() {
-		return this.externalId;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setExternalId(Long externalId) {
-		this.externalId = externalId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Customer getCustomer() {
-		return this.customer;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Date getCreationTime() {
-		return this.creationTime;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		if (this == o) {
-			return true;
-		}
-		if (this.getClass() != o.getClass()) {
-			return false;
-		}
-		Deliverer oDel = (Deliverer) o;
-		return this.getId().equals(oDel.getId());
-	}
+    public Long getExternalId() {
+        return this.externalId;
+    }
 
-	@Override
-	public int hashCode() {
-		if (this.getId() == null) {
-			return super.hashCode();
-		}
-		return this.getId().hashCode();
-	}
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
+
+    public Customer getCustomer() {
+        return this.customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Date getCreationTime() {
+        return this.creationTime;
+    }
+
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (this == o) {
+            return true;
+        }
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+        Deliverer oDel = (Deliverer) o;
+        return this.getId().equals(oDel.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.getId() == null) {
+            return super.hashCode();
+        }
+        return this.getId().hashCode();
+    }
 }
