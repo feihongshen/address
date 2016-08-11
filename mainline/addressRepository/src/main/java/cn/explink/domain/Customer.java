@@ -1,6 +1,7 @@
 
 package cn.explink.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CUSTOMERS")
-public class Customer {
+public class Customer implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4755677547589523907L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
