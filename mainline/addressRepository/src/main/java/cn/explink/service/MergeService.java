@@ -381,9 +381,9 @@ public class MergeService {
             // CREATION_TIME datetime
             entry.setCreationTime(rs.getTimestamp(7));
             // DELIVERY_STATION_ID int
-            entry.setDeliveryStationId(0L);
+            Long deliveryStationId = 0L;
             if (customerId == 39L) {
-                entry.setDeliveryStationId(rs.getLong(8));
+                deliveryStationId = rs.getLong(8);
             }
 
             // this.saveOrUpdate(entry);
@@ -391,7 +391,7 @@ public class MergeService {
                     "INSERT INTO `deliverer_rules` (`RULE`, `RULE_EXPRESSION`, `RULE_TYPE`, `ADDRESS_ID`, `DELIVERER_ID`, `CREATION_TIME`, `DELIVERY_STATION_ID`) VALUES ("
                             + entry.getRule() + ", " + entry.getRuleExpression() + ", " + entry.getRuleType() + ", '"
                             + rs.getLong(5) + "', " + rs.getLong(6) + ", '" + sf.format(entry.getCreationTime()) + "', "
-                            + entry.getDeliveryStationId() + ")");
+                            + deliveryStationId + ")");
 
         }
         this.batchInsertUpdateSql(this.getConUrl(), sqlLst);
