@@ -106,20 +106,21 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	getDelivererByStation(treeNode.id, treeNode.name);
 
 	var ruleShowVo = [];
+	var date1=new Date();
 	$.ajax({
 		type : "POST",
 		url : ctx + "/delivererStationRule/getRuleInfoByStation",
 		data : {
 			stationId : treeNode.id
 		},
-		async : false,
+		async : true,
 		success : function(resp) {
 			ruleShowVo = resp;
 			if (!$.isEmptyObject(deliverer)) {
 				for (var i = 0; i < deliverer.length; i++) {
 					var item = deliverer[i];
 					$("#stationRule>tbody").append(
-							appendTr2(item, treeNode.id, treeNode.name,ruleShowVo[item.id].delivererStationRuleVo));
+							appendTr2(item, treeNode.id, treeNode.name,ruleShowVo[item.id]==null?null:ruleShowVo[item.id].delivererStationRuleVo));
 					$("#delivererList").append(
 							"<option value='" + item.id + "'>" + item.text
 									+ "</option>");
@@ -128,6 +129,9 @@ function myClick(event, treeId, treeNode, clickFlag) {
 			} else {
 				$("#stationRule>tbody").html("");
 			}
+
+			var date3=(new Date()).getTime()-date1.getTime() ;
+			console.log(date3);
 		}
 	});
 	
@@ -264,178 +268,47 @@ function getDelivererByStation(stationId, stationName) {
  * @returns
  */
 function appendTr2(item, stationId, stationName,listDlivers) {
-	var tr = $("<tr  style='width:80%'></tr>").attr("status", "show").attr(
-			"dsrId", stationId + "-" + item.id);
+	var tr = "<tr  style='width:80%' status='show' dsrId='"+stationId + "-" + item.id+"'><td style='width:15%'>"+stationName+"</td><td style='width:15%'>"+item.text;
 
 	var delivererAddress =listDlivers;
  
-	tr.append($("<td style='width:15%'></td>").html(stationName)).append(
-			$("<td style='width:15%'></td>").html(item.text));
-	var tableTd = $("<td style='width:60%'></td>");
-	var childTable = $(
-			"<table  style='width:80%'  class='table table-bordered'></table>")
-			.attr("id", "tb_" + item.id + "_" + stationId)
-			.append(
-					$("<tr></tr>")
-							.append(
-									$("<td style='width:30%'></td>")
-											.html("关键词"))
-							.append($("<td style='width:30%'></td>").html("规则"))
-							.append(
-									$("<td style='width:30%'></td>").append(
-											$("<a></a>").attr(
-													"href",
-													"javascript:addAddrRow('"
-															+ item.id + "','"
-															+ stationId + "')")
-													.attr("addAddrRow", "")
-													.html("新增"))));
+	//tr.append($("<td style='width:15%'>"+stationName+"</td><td style='width:15%'>"+item.text+"</td>"));
+	var tableTd = "<td style='width:60%'>";
+	var childTable = 
+			"<table  style='width:80%' id='tb_" + item.id + "_" + stationId+"'  class='table table-bordered'>" +
+					"<tr><td style='width:30%'>关键词</td><td style='width:30%'>规则</td><td style='width:30%' ><a addAddrRow href='javascript:addAddrRow(\""+item.id+"\",\""+stationId+"\")'>新增</a></td></tr>" +
+					"";
 
+	 
 	if (!$.isEmptyObject(delivererAddress)) {
 		if (delivererAddress.length > 0) {
 			for (var i = 0; i < delivererAddress.length; i++) {
 				var itemAddr = delivererAddress[i];
 				var select = generateSelectorSelect(addressList,
 						itemAddr.addressId);
-				var childRow = $("<tr></tr>").attr("ruleId", itemAddr.ruleId)
-						.attr("addrId", itemAddr.addressId).attr("rule",
-								itemAddr.rule);
-				childRow.append($("<td></td>").html(
-						"<select disabled>" + select + "</select>"));
-				childRow.append($("<td></td>").html(
-						"<input value='" + itemAddr.rule + "'  disabled/>"));
-
-				var confirm = $("<a class='easyui-linkbutton'>确认</a>").attr(
-						"href", 'javascript:void(0)').attr("confirmRow", '');
-				var cancel = $("<a class='easyui-linkbutton'>取消</a>").attr(
-						"href", 'javascript:void(0)').attr("cancelRow", '');
-				var del = $("<a class='easyui-linkbutton'>删除</a>").attr("href",
-						'javascript:void(0)').attr("delRow", '');
-				childRow.append($("<td></td>").append(confirm).append("&nbsp;")
-						.append(cancel).append("&nbsp;").append(del));
-				childTable.append(childRow);
-				confirm.click(function() {
-					var trf = $(this).parent().parent();
-					confirmFn(trf, item.id, stationId);
-
-				}).hide();
-				cancel.click(function() {
-					var trf = $(this).parent().parent();
-					cancelFn(trf);
-				}).hide();
-
-				del.click(function() {
-					var trf = $(this).parent().parent();
-					delFn(trf);
-				});
-
+				var childRow =  "<tr ruleId='"+itemAddr.ruleId+"' addrId='"+itemAddr.addressId+"' rule='"+itemAddr.rule+"'><td><select disabled>" + select + "</select></td><td><input value='" + itemAddr.rule + "'  disabled/></td>" +
+						"<td>"+
+						"&nbsp;<a class='easyui-linkbutton delRow' delRow href='javascript:void(0)' onclick='delFn1(this)'>删除</a>&nbsp;</td></tr>";
+				
+				childTable+=childRow;
+				//childTable.append(childRow);
 			}
 		}
 
 	}
-
-	tableTd.append(childTable);
-	tr.append(tableTd);
+	childTable+="</table>";
+	tableTd+=childTable;
+	tableTd+="</td>";
+	tr+=tableTd;
+	tr+="</tr>";
 	return tr;
 };
 
+ 
 
-
-/**
- * 追加编辑行
- * 
- * @param item
- * @param stationId
- * @param stationName
- * @returns
- */
-function appendTr(item, stationId, stationName) {
-	var tr = $("<tr  style='width:80%'></tr>").attr("status", "show").attr(
-			"dsrId", stationId + "-" + item.id);
-
-	var delivererAddress = [];
-	$.ajax({
-		type : "POST",
-		url : ctx + "/delivererStationRule/getAddressByDeliverer",
-		data : {
-			stationId : stationId,
-			delivererId : item.id
-		},
-		async : false,
-		success : function(resp) {
-			delivererAddress = resp;
-		}
-	});
-	tr.append($("<td style='width:15%'></td>").html(stationName)).append(
-			$("<td style='width:15%'></td>").html(item.text));
-	var tableTd = $("<td style='width:60%'></td>");
-	var childTable = $(
-			"<table  style='width:80%'  class='table table-bordered'></table>")
-			.attr("id", "tb_" + item.id + "_" + stationId)
-			.append(
-					$("<tr></tr>")
-							.append(
-									$("<td style='width:30%'></td>")
-											.html("关键词"))
-							.append($("<td style='width:30%'></td>").html("规则"))
-							.append(
-									$("<td style='width:30%'></td>").append(
-											$("<a></a>").attr(
-													"href",
-													"javascript:addAddrRow('"
-															+ item.id + "','"
-															+ stationId + "')")
-													.attr("addAddrRow", "")
-													.html("新增"))));
-
-	if (!$.isEmptyObject(delivererAddress)) {
-		if (delivererAddress.length > 0) {
-			for (var i = 0; i < delivererAddress.length; i++) {
-				var itemAddr = delivererAddress[i];
-				var select = generateSelectorSelect(addressList,
-						itemAddr.addressId);
-				var childRow = $("<tr></tr>").attr("ruleId", itemAddr.ruleId)
-						.attr("addrId", itemAddr.addressId).attr("rule",
-								itemAddr.rule);
-				childRow.append($("<td></td>").html(
-						"<select disabled>" + select + "</select>"));
-				childRow.append($("<td></td>").html(
-						"<input value='" + itemAddr.rule + "'  disabled/>"));
-
-				var confirm = $("<a class='easyui-linkbutton'>确认</a>").attr(
-						"href", 'javascript:void(0)').attr("confirmRow", '');
-				var cancel = $("<a class='easyui-linkbutton'>取消</a>").attr(
-						"href", 'javascript:void(0)').attr("cancelRow", '');
-				var del = $("<a class='easyui-linkbutton'>删除</a>").attr("href",
-						'javascript:void(0)').attr("delRow", '');
-				childRow.append($("<td></td>").append(confirm).append("&nbsp;")
-						.append(cancel).append("&nbsp;").append(del));
-				childTable.append(childRow);
-				confirm.click(function() {
-					var trf = $(this).parent().parent();
-					confirmFn(trf, item.id, stationId);
-
-				}).hide();
-				cancel.click(function() {
-					var trf = $(this).parent().parent();
-					cancelFn(trf);
-				}).hide();
-
-				del.click(function() {
-					var trf = $(this).parent().parent();
-					delFn(trf);
-				});
-
-			}
-		}
-
-	}
-
-	tableTd.append(childTable);
-	tr.append(tableTd);
-	return tr;
-};
-
+function delFn1(obj) {
+	delFn($(obj).parent().parent());
+}
 function delFn(trf) {
 
 	$.messager.confirm('确认删除', '您确认想要删除小件员规则吗?', function(r) {
@@ -458,6 +331,9 @@ function delFn(trf) {
 	});
 }
 
+function cancelFn1(obj) {
+	cancelFn($(obj).parent().parent());
+}
 function cancelFn(trf) {
 	if (trf.attr("ruleId") == '0') {
 		trf.remove();
@@ -472,6 +348,11 @@ function cancelFn(trf) {
 
 	}
 }
+
+function confirmFn1(obj, deliverId, stationId) {
+	confirmFn1($(obj).parent().parent(), deliverId, stationId);
+}
+
 function confirmFn(trf, deliverId, stationId) {
 	if (trf.find("select").val() == '') {
 		$.messager.alert('提示', '请选择关键词');
