@@ -5,6 +5,12 @@ var addressList = [];
 var deliverer = [];
 var resultOp = [];
 var checkOp = {};
+var ruleShowVo = [];
+var pageData = {};
+pageData.pageNo=1;
+pageData.deliverers=[];
+pageData.deliverers=[];
+
 var oldNodes = [];
 var setting = {
 
@@ -90,6 +96,17 @@ function myBeforeClick(treeId, treeNode, clickFlag) {
 	return (treeNode.click != false);
 }
 
+var i=0;
+function test(item,treeNodeid, treeNodeName,ruleShow){
+	 
+	if(i< deliverer.length){
+		$("#stationRule>tbody").append(
+				appendTr2(item, treeNodeid, treeNodeName,ruleShow));
+		++i;
+		setTimeout(test(deliverer[i],treeNodeid, treeNodeName,ruleShowVo[deliverer[i].id]==null?null:ruleShowVo[deliverer[i].id].delivererStationRuleVo),200); 
+	}
+}
+
 function myClick(event, treeId, treeNode, clickFlag) {
 	$("#tips").html(treeNode.name);
 	nodeid = treeNode.id;
@@ -98,14 +115,14 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	$("#addressId").val(treeNode.id);
 	$("#level").val(treeNode.level);
 	$("#aliasUl").html("");
-	$("#delivererList").html("<option selected value=''>请选择</option>");
+	$('#delivererids').combobox('clear');
 	$("#stationRule tbody").html("");
 	addressList = [];
 	deliverer = [];
 	getAddressList(treeNode.id);
 	getDelivererByStation(treeNode.id, treeNode.name);
 
-	var ruleShowVo = [];
+	
 	var date1=new Date();
 	$.ajax({
 		type : "POST",
@@ -116,20 +133,17 @@ function myClick(event, treeId, treeNode, clickFlag) {
 		async : true,
 		success : function(resp) {
 			ruleShowVo = resp;
+			$("#stationRule>tbody").html("");
+			i=0;
+			setTimeout(test(deliverer[0],treeNode.id, treeNode.name,ruleShowVo[deliverer[0].id]==null?null:ruleShowVo[deliverer[0].id].delivererStationRuleVo),200); 
+		/*	
 			if (!$.isEmptyObject(deliverer)) {
 				for (var i = 0; i < deliverer.length; i++) {
 					var item = deliverer[i];
 					$("#stationRule>tbody").append(
 							appendTr2(item, treeNode.id, treeNode.name,ruleShowVo[item.id]==null?null:ruleShowVo[item.id].delivererStationRuleVo));
-					$("#delivererList").append(
-							"<option value='" + item.id + "'>" + item.text
-									+ "</option>");
-
 				}
-			} else {
-				$("#stationRule>tbody").html("");
-			}
-
+			} */
 			var date3=(new Date()).getTime()-date1.getTime() ;
 			console.log(date3);
 		}
@@ -237,24 +251,18 @@ function getDelivererByStation(stationId, stationName) {
 		},
 		async : false,
 		success : function(resp) {
+			var data=[];
+			data.push({label:'全部',value:'-1'});
 			if (resp.length > 0) {
 				deliverer = resp;
-				
-				
-				$("#delivererids").empty();
- 
 				if(resp.length>0){
-					var data=[];
-					data.push({label:'全部',value:'-1'});
 					for(var i = 0;i<resp.length;i++){
 						data.push({label:resp[i].text,value:resp[i].id});
 					}
-					$('#delivererids').combobox('loadData', data);
-				} 
-				
-			} else {
 
-			}
+				} 
+			} 
+			$('#delivererids').combobox('loadData', data);
 		}
 	});
 }
