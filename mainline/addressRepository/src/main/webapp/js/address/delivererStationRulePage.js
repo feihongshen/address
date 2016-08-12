@@ -96,16 +96,7 @@ function myBeforeClick(treeId, treeNode, clickFlag) {
 	return (treeNode.click != false);
 }
 
-var i=0;
-function test(item,treeNodeid, treeNodeName,ruleShow){
-	 
-	if(i< deliverer.length){
-		$("#stationRule>tbody").append(
-				appendTr2(item, treeNodeid, treeNodeName,ruleShow));
-		++i;
-		setTimeout(test(deliverer[i],treeNodeid, treeNodeName,ruleShowVo[deliverer[i].id]==null?null:ruleShowVo[deliverer[i].id].delivererStationRuleVo),200); 
-	}
-}
+ 
 
 function myClick(event, treeId, treeNode, clickFlag) {
 	$("#tips").html(treeNode.name);
@@ -134,16 +125,16 @@ function myClick(event, treeId, treeNode, clickFlag) {
 		success : function(resp) {
 			ruleShowVo = resp;
 			$("#stationRule>tbody").html("");
-			i=0;
-			setTimeout(test(deliverer[0],treeNode.id, treeNode.name,ruleShowVo[deliverer[0].id]==null?null:ruleShowVo[deliverer[0].id].delivererStationRuleVo),200); 
-		/*	
+			//i=0;
+			//setTimeout(test(deliverer[0],treeNode.id, treeNode.name,ruleShowVo[deliverer[0].id]==null?null:ruleShowVo[deliverer[0].id].delivererStationRuleVo),200); 
+	 
 			if (!$.isEmptyObject(deliverer)) {
 				for (var i = 0; i < deliverer.length; i++) {
 					var item = deliverer[i];
 					$("#stationRule>tbody").append(
-							appendTr2(item, treeNode.id, treeNode.name,ruleShowVo[item.id]==null?null:ruleShowVo[item.id].delivererStationRuleVo));
+							appendTr2(item, treeNode.id, treeNode.name));
 				}
-			} */
+			} 
 			var date3=(new Date()).getTime()-date1.getTime() ;
 			console.log(date3);
 		}
