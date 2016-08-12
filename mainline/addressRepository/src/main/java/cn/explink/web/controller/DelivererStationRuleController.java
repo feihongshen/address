@@ -62,6 +62,30 @@ public class DelivererStationRuleController extends BaseController {
     }
 
     
+	/**
+	 *
+	 * @Title: list
+	 * @description 根据参数，查询日志信息方法
+	 * @author 刘武强
+	 * @date  2015年11月25日下午5:05:10
+	 * @param  @param model
+	 * @param  @param operationType
+	 * @param  @param beginTime
+	 * @param  @param endTime
+	 * @param  @param operationIP
+	 * @param  @param page
+	 * @param  @param pageNum
+	 * @param  @return
+	 * @return  Map<String,Object>
+	 * @throws
+	 */
+	@RequestMapping("/list")
+	@ResponseBody
+	public Map<String, Object> list(Long stationId, Long delivererId, int pageNum, int pageSize) {
+		Map<String, Object> map =  this.delivererRuleService.findInfo(stationId,delivererId, pageNum, pageSize, this.getCustomerId());
+		return map;
+	}
+    
     @RequestMapping("/getRuleInfoByStation")
     @ResponseBody
     public HashMap<Long,DelivererRuleShowVo> getRuleInfoByStation(Long stationId) {

@@ -25,8 +25,18 @@ public class DelivererStationRuleVo {
     private Integer stationId;
 
     private String type;
+    
+    private String addressName;
 
-    /**
+    public String getAddressName() {
+		return addressName;
+	}
+
+	public void setAddressName(String addressName) {
+		this.addressName = addressName;
+	}
+
+	/**
      * @return the type
      */
     public String getType() {

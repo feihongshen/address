@@ -6,6 +6,7 @@
 <%@include file="/WEB-INF/jsp/common/lib.jsp"%>
 <script type="text/javascript" src="${ctx}/js/address/delivererStationRulePage.js"></script>
 <script type="text/javascript" src="${ctx}/js/address/maskUtil.js"></script>
+	<script type="text/javascript" src="${ctx}/js/tools.js"></script>
 <style type="text/css">
 .table {
 	border-collapse: collapse;
@@ -75,39 +76,36 @@ span.button.lastPage {
 </head>
 <body>
 	<div class="easyui-layout" style="height: 540px;">
+	 
 		<div data-options="region:'west',split:true" title="条件搜索" style="width: 500px;">
+		
 			<table width="100%" border="0" cellspacing="0" cellpadding="10">
 				<tr>
-					<td align="left">	 <input style="width: 180px" id="searchA"
-						onkeydown="searchByKeyword(event,'searchA','tree');" /></td>
-					<td align="left" width="160px;"><a href="javascript:void(0)" id="confirmAllBtn"
-						class="easyui-linkbutton">确定</a> <a href="javascript:void(0)" id="refreshAllBtn"
-						class="easyui-linkbutton">刷新</a></td>
-				</tr>
-				<tr>
+					<td align="left">选择站点:
+					<select class="easyui-combobox" style="width: 100px;"
+								id="stationId" name="stationId" data-options="valueField:'value', textField:'label'">
+							</select></td>
+						</tr>
+						<tr><td>
+						小件员列表 	<input  type='hidden'  name='delivererId'/>
+		<input   type='hidden' name='stationId'/>
+						</td>	</tr>
+							 
+				<tr >
 					<td colspan=4><div id="promtInfo"></div>
 						<ul id="tree" class="ztree" style="width: auto; height: auto; overflow: auto;"></ul></td>
 				</tr>
 			</table>
 		</div>
+	
 		<div data-options="region:'center'" style="border: 0px;">
-			<div class="easyui-panel" title="关联站点-" id="relStation"
-				style="padding-left: -1px; margin-bottom: 10px; min-height: 180px; width: auto">
-				<input type="hidden" id="addressId" /> <input type="hidden" id="level" />
-				选择小件员:
-				<select id="delivererList" style="display:none;">
-					<option selected="selected" value=""></option>
-				</select>
-				<input type="hidden"
-								id="level" name="level" value="" /> <select class="easyui-combobox" style="width: 100px;"
-								id="delivererids" name="delivererids" data-options="valueField:'value', textField:'label'">
-							</select>	
-						 
-				<table id="stationRule" class="table table-bordered">
+			<div class="easyui-panel" title="维护小件员-" id="relStation"
+				style="padding-left: -1px; margin-bottom: 10px; min-height: 510px; width: auto">
+				<table id="stationRule" class="table table-bordered" toolbar="#tb" style="height:100%">
 					<thead>
 						<tr>
-							<th width="200px">站点</th>
-							<th width="200px">小件员</th>
+							<th width="200px">关键词</th>
+							<th width="200px">规则</th>
 							<th width="600px">操作</th>
 						</tr>
 					</thead>
@@ -119,5 +117,24 @@ span.button.lastPage {
 	
 		</div>
 	</div>
+	
+	<div id="tb">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:addFn()">新增</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="javascript:delFn('')">删除</a> 
+	</div>
+	
+	
+	<div id="win" class="easyui-window" title="Login" style="width:300px;height:180px;">
+	 
+		<p>关键词:<select class="easyui-combobox" style="width: 100px;"
+								id="addressId" name="addressId" data-options="valueField:'value', textField:'label'">
+							</select></p>
+		<p>规则: <input type="text" name="rule"></p>
+		<div style="padding:5px;text-align:center;">
+			<a href="javascript:confirmFn('')" class="easyui-linkbutton" icon="icon-ok">确定</a>
+			<a href="javascript:$('#win').window('close');" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+		</div>
+	 
+</div>
 </body>
 </html>

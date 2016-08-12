@@ -36,6 +36,16 @@ public class DelivererController extends BaseController {
         return this.delivererService.getDelivererComBoxByStation(stationId, customerId);
     }
 
+    
+    
+
+    @RequestMapping("/getDelivererByStation2")
+    @ResponseBody
+    public List<ZTreeNode> getDelivererByStation2(String stationId) {
+        Long customerId = this.getCustomerId();
+        return this.delivererService.getDelivererZTreeNodeByStation(stationId, customerId);
+    }
+    
     @RequestMapping("/getAddressByDeliverer")
     @ResponseBody
     public List<ZTreeNode> getAddressByDeliverer(String stationId, String delivererId) {
@@ -45,4 +55,9 @@ public class DelivererController extends BaseController {
         }
         return this.addressService.getAdressByDeliverer(customerId, stationId, delivererId);
     }
+    
+    
+    
+ 
+    
 }

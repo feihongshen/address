@@ -19,6 +19,7 @@ import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.enums.DelivererStausEnmu;
 import cn.explink.modle.ComboBox;
+import cn.explink.tree.ZTreeNode;
 import cn.explink.ws.vo.DelivererVo;
 
 @Service
@@ -145,5 +146,11 @@ public class DelivererService {
     public List<ComboBox> getDelivererComBoxByStation(String stationId, Long customerId) {
         return this.delivererDao.getDelivererComBoxByStation(Long.valueOf(stationId), customerId);
     }
+
+	public List<ZTreeNode> getDelivererZTreeNodeByStation(String stationId,
+			Long customerId) {
+		 return this.delivererDao.getDelivererZTreeNodeByStation(Long.valueOf(stationId), customerId);
+    }
+	
 
 }
