@@ -81,6 +81,7 @@
 			<tx:method name="find*" propagation="REQUIRED" />
 			<tx:method name="txNew*" propagation="REQUIRES_NEW" />
 			<tx:method name="import*" propagation="REQUIRED" />
+			
 			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
