@@ -105,8 +105,10 @@ $(document).ready(
 			
 			 
 			 $("#stationId").combobox({
-					onChange: function (n,o) {
+					onSelect: function (n,o) {
 						var stationId=$("#stationId").combobox('getValue');
+						if(stationId==''||stationId==null)
+							return ;
 						 $("input[name='stationId']").val(stationId);
 						$.ajax({
 							type : "POST",
@@ -162,7 +164,7 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	delivererId = treeNode.id;
 	delivererName = treeNode.name;
 	$("input[name='delivererId']").val(delivererId);
-	$('#relStation').panel('setTitle', '关联站点【' + treeNode.name + "】");
+	$('#relStation').panel('setTitle', '维护小件员【' + treeNode.name + "】的关键词");
 	$("#aliasUl").html("");
 	 $("input[name='rule']").val("");
 	 $('#addressId').combobox('clear');

@@ -118,13 +118,13 @@ span.button.lastPage {
 		</div>
 	</div>
 	
-	<div id="tb">
+	<div id="tb" >
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:addFn()">新增</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="javascript:delFn('')">删除</a> 
 	</div>
 	
 	
-	<div id="win" class="easyui-window" title="Login" style="width:300px;height:180px;">
+	<div id="win" data-options="iconCls:'icon-save',resizable:true,modal:true" class="easyui-window" title="新增小件员负责地址" style="width:300px;height:180px;">
 	 
 		<p>关键词:<select class="easyui-combobox" style="width: 100px;"
 								id="addressId" name="addressId" data-options="valueField:'value', textField:'label'">
