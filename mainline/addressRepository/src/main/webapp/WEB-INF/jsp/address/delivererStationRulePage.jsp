@@ -84,12 +84,11 @@ span.button.lastPage {
 					<td align="left">选择站点:
 					<select class="easyui-combobox" style="width: 100px;"
 								id="stationId" name="stationId" data-options="valueField:'value', textField:'label'">
-							</select></td>
+							</select>
+							|当前选中站点:<label id='stationName'></label><input   type='hidden' name='hd_stationId'/>
+							</td>
 						</tr>
-						<tr>
-								<td align="left">当前选中站点:<label id='stationName'></label>
-							<input   type='hidden' name='hd_stationId'/></td>
-						</tr>
+						
 						<tr><td>
 						小件员列表 :<input  type='hidden'  name='delivererId'/>
 		
