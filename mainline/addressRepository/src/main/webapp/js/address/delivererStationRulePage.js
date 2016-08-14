@@ -31,7 +31,10 @@ var setting = {
  
 $(document).ready(
 		
+		
+		
 		function() {
+			 
 			$('#win').window('close');
 			$("#stationRule").datagrid({
 				url : "",
@@ -96,7 +99,11 @@ $(document).ready(
 							for(var i = 0;i<resp.length;i++){
 								data.push({label:resp[i].name,value:resp[i].id});
 							}
+							 
 							$('#stationId').combobox('loadData', data);
+							
+							 
+							
 						} 
 					
 					}
@@ -105,11 +112,14 @@ $(document).ready(
 			
 			 
 			 $("#stationId").combobox({
+				 	filter:function(q,row){
+						var opts=$(this).combobox("options");
+						return row[opts.textField].indexOf(q)>-1;
+					},
 					onSelect: function (n,o) {
-						var stationId=$("#stationId").combobox('getValue');
-						if(stationId==''||stationId==null)
-							return ;
-						 $("input[name='stationId']").val(stationId);
+						var stationId=n.value;
+						$("#stationName").html("【"+n.label+"】");
+						 $("input[name='hd_stationId']").val(stationId);
 						$.ajax({
 							type : "POST",
 							url : ctx + "/deliverer/getDelivererByStation2",
@@ -170,8 +180,8 @@ function myClick(event, treeId, treeNode, clickFlag) {
 	 $('#addressId').combobox('clear');
 	init();
 	 $("#addressId").combobox({
-			onChange: function (n,o) {
-				 
+			onSelect: function (n,o) {
+				 $("#hd_addressId").val(n.value);
 	 
 			}
 	});
@@ -314,10 +324,10 @@ function delFn( ) {
 
 function confirmFn() {
 
-	var addressId=$("#addressId").combobox('getValue');
+	var addressId=$("#hd_addressId").val();
 	var delivererId=$("input[name='delivererId']").val();
-	var stationId=$("input[name='stationId']").val();
-	if (addressId== '') {
+	var stationId=$("input[name='hd_stationId']").val();
+	if (addressId== ''||addressId==null) {
 		$.messager.alert('提示', '请选择关键词');
 		return;
 	}
@@ -351,6 +361,10 @@ function confirmFn() {
 	}
 
 }
+function closeFn(){
+	
+	$('#win').window('close');
+}
 
 /**
  * @param delivererid
@@ -363,6 +377,7 @@ function addFn() {
 	var param=	getQueryParams();
 	 $("input[name='rule']").val("");
 	 $('#addressId').combobox('clear');
+	 $('#hd_addressId').val('');
 	$('#win').window('open');
 }
 
@@ -431,7 +446,7 @@ function checkNumber(ss) {
 
 function getQueryParams() {
 	return {
-		stationId : $("input[name='stationId']").val(),
+		stationId : $("input[name='hd_stationId']").val(),
 		delivererId : $("input[name='delivererId']").val()
 	};
 }

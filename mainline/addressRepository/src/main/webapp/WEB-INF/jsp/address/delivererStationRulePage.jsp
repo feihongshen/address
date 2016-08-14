@@ -86,9 +86,13 @@ span.button.lastPage {
 								id="stationId" name="stationId" data-options="valueField:'value', textField:'label'">
 							</select></td>
 						</tr>
+						<tr>
+								<td align="left">当前选中站点:<label id='stationName'></label>
+							<input   type='hidden' name='hd_stationId'/></td>
+						</tr>
 						<tr><td>
-						小件员列表 	<input  type='hidden'  name='delivererId'/>
-		<input   type='hidden' name='stationId'/>
+						小件员列表 :<input  type='hidden'  name='delivererId'/>
+		
 						</td>	</tr>
 							 
 				<tr >
@@ -124,15 +128,17 @@ span.button.lastPage {
 	</div>
 	
 	
-	<div id="win" data-options="iconCls:'icon-save',resizable:true,modal:true" class="easyui-window" title="新增小件员负责地址" style="width:300px;height:180px;">
+	<div id="win" data-options="iconCls:'icon-save',resizable:false,modal:true" class="easyui-window" title="新增小件员负责地址" style="width:300px;height:180px;">
 	 
 		<p>关键词:<select class="easyui-combobox" style="width: 100px;"
 								id="addressId" name="addressId" data-options="valueField:'value', textField:'label'">
-							</select></p>
+							</select>
+							<input type='hidden' id='hd_addressId'  />
+							</p>
 		<p>规则: <input type="text" name="rule"></p>
 		<div style="padding:5px;text-align:center;">
 			<a href="javascript:confirmFn('')" class="easyui-linkbutton" icon="icon-ok">确定</a>
-			<a href="javascript:$('#win').window('close');" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+			<a href="javascript:closeFn()" class="easyui-linkbutton" icon="icon-cancel">取消</a>
 		</div>
 	 
 </div>
