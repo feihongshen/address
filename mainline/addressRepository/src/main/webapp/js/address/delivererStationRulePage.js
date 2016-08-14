@@ -35,7 +35,7 @@ $(document).ready(
 		
 		function() {
 			 
-			$('#win').window('close');
+			$('#win').dialog('close');
 			$("#stationRule").datagrid({
 				url : "",
 				loadMsg : '数据加载中...',
@@ -354,7 +354,7 @@ function confirmFn() {
 	if (resp.success) {
 		 
 		$.messager.alert('保存成功', resp.msg);
-		$('#win').window('close');
+		$('#win').dialog('close');
 		init();
 	} else {
 		$.messager.alert('保存失败', resp.msg);
@@ -363,7 +363,7 @@ function confirmFn() {
 }
 function closeFn(){
 	
-	$('#win').window('close');
+	$('#win').dialog('close');
 }
 
 /**
@@ -378,7 +378,7 @@ function addFn() {
 	 $("input[name='rule']").val("");
 	 $('#addressId').combobox('clear');
 	 $('#hd_addressId').val('');
-	$('#win').window('open');
+	$('#win').dialog('open');
 }
 
 function submitRules(result, tr) {

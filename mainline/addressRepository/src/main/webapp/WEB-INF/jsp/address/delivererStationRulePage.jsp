@@ -128,7 +128,7 @@ span.button.lastPage {
 	</div>
 	
 	
-	<div id="win" data-options="iconCls:'icon-save',resizable:false,modal:true" class="easyui-window" title="新增小件员负责地址" style="width:300px;height:180px;">
+	<div id="win" data-options="iconCls:'icon-save',resizable:false,modal:true,minimizable:false,maximizable:false,collapsible:false" class="easyui-window" title="新增小件员负责地址" style="width:300px;height:180px;">
 	 
 		<p>关键词:<select class="easyui-combobox" style="width: 100px;"
 								id="addressId" name="addressId" data-options="valueField:'value', textField:'label'">
