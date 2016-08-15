@@ -49,6 +49,8 @@ public class CommonController extends BaseController {
     public AjaxJson mergeUpdate(Long customerId) {
 
         AjaxJson aj = new AjaxJson();
+        aj.setSuccess(true);
+        aj.setInfo("处理成功");
         try {
             // 1、清除customerId相关数据
             this.mergeService.txNewdelData(customerId);
@@ -78,14 +80,15 @@ public class CommonController extends BaseController {
 
             aj.setInfo(e.getMessage());
             this.mergeService.txNewdelData(customerId);
+            e.printStackTrace();
         } catch (Exception e) {
             aj.setInfo(e.getMessage());
+            e.printStackTrace();
             this.mergeService.txNewdelData(customerId);
         }
 
         finally {
-            aj.setSuccess(true);
-            aj.setInfo("处理成功");
+
             return aj;
         }
     }

@@ -1,7 +1,7 @@
 #沈阳                   
-20|501|jdbc:mysql://localhost:3306/addressRepository_cqhy20160722?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+20|501|jdbc:mysql://10.199.247.161:3306/address_shenyang?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
 #上海
-13|862|jdbc:mysql://localhost:3306/addressRepositoryG20160722?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+13|862|jdbc:mysql://localhost:3306/addressRepositoryG20160722_sh?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #苏州
 28|882|jdbc:mysql://localhost:3306/addressRepositoryB20160722_xz_hn_sz?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #云南
@@ -27,7 +27,7 @@
 #江西
 12|1364|jdbc:mysql://localhost:3306/addressmatchfjfy20160722?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #广州通路
-6|2135|jdbc:mysql://localhost:3306/addressRepository20160722_gz?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+6|2135|jdbc:mysql://10.199.247.161:3306/address_guangzhou?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
 #吉林
 14|630|jdbc:mysql://localhost:3306/addressRepository20160722_jl_hlj?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #北京
@@ -35,9 +35,9 @@
 #福建
 9|1260|jdbc:mysql://localhost:3306/addressmatchfjfy20160722?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #重庆
-5|2466|jdbc:mysql://localhost:3306/addresscqhy?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+5|2466|jdbc:mysql://10.199.247.161:3306/address_chongqing?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
 #青海
-18|3311|jdbc:mysql://localhost:3306/addressRepository20160722_qh_gs?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+18|3311|jdbc:mysql://10.199.247.161:3306/address_chongqing?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
 #天津
 44|21|jdbc:mysql://localhost:3306/addresstj20160720?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #河南
@@ -55,6 +55,6 @@
 #甘肃
 19|3198|jdbc:mysql://localhost:3306/addressRepository20160722_qh_gs?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
 #海南（6和广州id冲突）
-8|2436|jdbc:mysql://localhost:3306/addresshainan20160722?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+8|2436|jdbc:mysql://10.199.247.161:3306/address_hainan?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
 #武汉
-39|1855|jdbc:mysql://localhost:3306/addresswh20160720?user=root&password=123456&useUnicode=true&characterEncoding=UTF8
+39|1855|jdbc:mysql://10.199.247.161:3306/address_wuhan?user=test&password=1234&useUnicode=true&characterEncoding=UTF8
