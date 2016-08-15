@@ -313,7 +313,7 @@ public class MergeService {
             Deliverer entry = new Deliverer();
             // ID int
             // NAME varchar
-            entry.setName(rs.getString(2));
+            entry.setName(this.removeIllegalChar(rs.getString(2)));
             // EXTERNAL_ID int
             entry.setExternalId(rs.getLong(3));
             // CUSTOMER_ID int
@@ -353,6 +353,11 @@ public class MergeService {
         this.batchInsertOldId(newIdLst, sqlLst, TABLE_DELIVERY, OLD_TYPE_ID, customer.getId());
         this.txNewDelivererRules(conn, customer.getId());
         System.out.println("====doExcDeliverers:end");
+    }
+
+    private String removeIllegalChar(String string) {
+        // TODO Auto-generated method stub
+        return StringUtils.replace(string, "'", "");
     }
 
     private void txNewDelivererRules(Connection conn, Long customerId) throws SQLException {
@@ -705,10 +710,16 @@ public class MergeService {
 
     private void batchInsertOldId(List<Long> newLst, List<String> sqlLst, String table, int oldTypeId, Long customerId)
             throws SQLException {
+        if (CollectionUtils.isEmpty(sqlLst)) {
+            return;
+        }
         List<String> tmpLst = new ArrayList<String>();
         idMap.clear();
         for (int i = 0; i < newLst.size(); i++) {
             String[] tmp = StringUtils.split(sqlLst.get(i), id_split);
+            if (tmp.length == 1) {
+                System.out.println(sqlLst.get(i));
+            }
             tmpLst.add(tmp[0] + id_split
                     + "INSERT INTO `old_id` (`type`, `tab`, `old_id`, `customer_id`, `new_id`) VALUES ('" + oldTypeId
                     + "', '" + table + "', '" + tmp[0] + "', '" + customerId + "', '" + newLst.get(i) + "')");
@@ -869,11 +880,6 @@ public class MergeService {
                         "DELETE address_station_relation FROM address_station_relation LEFT JOIN address  ON address_station_relation.address_id=address.id where address.parent_id="
                                 + provinceId + " or address.path like '%" + provinceId + "%'")
                 .executeUpdate();
-        // 1、删除address
-        this.customerDao.getHSession()
-                .createSQLQuery(
-                        "delete from address where parent_id=" + provinceId + " or path like '%" + provinceId + "%'")
-                .executeUpdate();
 
         // 3、删除address_permissions
         this.customerDao.getHSession()
@@ -917,6 +923,11 @@ public class MergeService {
                 .executeUpdate();
         // vendors
         this.customerDao.getHSession().createSQLQuery("delete from vendors where customer_id=" + customerId)
+                .executeUpdate();
+        // 1、删除address
+        this.customerDao.getHSession()
+                .createSQLQuery(
+                        "delete from address where parent_id=" + provinceId + " or path like '%" + provinceId + "%'")
                 .executeUpdate();
 
     }
