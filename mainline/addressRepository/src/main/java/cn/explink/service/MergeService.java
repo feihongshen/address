@@ -927,7 +927,7 @@ public class MergeService {
         // 1、删除address
         this.customerDao.getHSession()
                 .createSQLQuery(
-                        "delete from address where parent_id=" + provinceId + " or path like '%" + provinceId + "%'")
+                        "delete from address where parent_id=" + provinceId + " or path like '%-" + provinceId + "-%'")
                 .executeUpdate();
 
     }

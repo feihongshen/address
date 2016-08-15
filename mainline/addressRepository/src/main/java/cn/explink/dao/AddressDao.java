@@ -532,7 +532,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
         if (this.localConn == null) {
             this.localConn = DriverManager.getConnection(this.getConUrl());
         }
-        if (this.localConn.isClosed() || (this.localConn.getNetworkTimeout() > 0)) {
+        if (this.localConn.isClosed()) {
             this.localConn = DriverManager.getConnection(this.getConUrl());
         }
 
