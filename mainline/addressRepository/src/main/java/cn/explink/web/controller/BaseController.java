@@ -1,3 +1,4 @@
+
 package cn.explink.web.controller;
 
 import java.io.UnsupportedEncodingException;
@@ -17,59 +18,59 @@ import cn.explink.web.ExplinkUserDetail;
 
 public class BaseController {
 
-	@Autowired
-	private SecurityContextHolderStrategy securityContextHolderStrategy;
+    @Autowired
+    private SecurityContextHolderStrategy securityContextHolderStrategy;
 
-	@InitBinder
-	public void initBinder(ServletRequestDataBinder binder) {
-		binder.registerCustomEditor(Date.class, new DateConvertEditor());
-	}
+    @InitBinder
+    public void initBinder(ServletRequestDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new DateConvertEditor());
+    }
 
-	protected User getLogginedUser() {
-		Authentication auth = this.getSecurityContextHolderStrategy().getContext().getAuthentication();
-		ExplinkUserDetail userDetail = (ExplinkUserDetail) auth.getPrincipal();
-		User user = userDetail.getUser();
-		return user;
-	}
+    protected User getLogginedUser() {
+        Authentication auth = this.getSecurityContextHolderStrategy().getContext().getAuthentication();
+        ExplinkUserDetail userDetail = (ExplinkUserDetail) auth.getPrincipal();
+        User user = userDetail.getUser();
+        return user;
+    }
 
-	protected Long getCustomerId() {
-		return this.getLogginedUser().getCustomer().getId();
-	}
+    protected Long getCustomerId() {
+        return this.getLogginedUser().getCustomer() == null ? null : this.getLogginedUser().getCustomer().getId();
+    }
 
-	/**
-	 * 设置导出文件名
-	 *
-	 * @param response
-	 * @param fileName
-	 */
-	protected void setDownloadFileName(HttpServletResponse response, String fileName) {
-		response.setContentType("application/x-msdownload");
-		try {
-			response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "iso-8859-1"));
-		} catch (UnsupportedEncodingException e) {
-		}
-	}
+    /**
+     * 设置导出文件名
+     * @param response
+     * @param fileName
+     */
+    protected void setDownloadFileName(HttpServletResponse response, String fileName) {
+        response.setContentType("application/x-msdownload");
+        try {
+            response.setHeader("Content-Disposition",
+                    "attachment;filename=" + new String(fileName.getBytes(), "iso-8859-1"));
+        } catch (UnsupportedEncodingException e) {
+        }
+    }
 
-	public SecurityContextHolderStrategy getSecurityContextHolderStrategy() {
-		return this.securityContextHolderStrategy;
-	}
+    public SecurityContextHolderStrategy getSecurityContextHolderStrategy() {
+        return this.securityContextHolderStrategy;
+    }
 
-	public void setSecurityContextHolderStrategy(SecurityContextHolderStrategy securityContextHolderStrategy) {
-		this.securityContextHolderStrategy = securityContextHolderStrategy;
-	}
+    public void setSecurityContextHolderStrategy(SecurityContextHolderStrategy securityContextHolderStrategy) {
+        this.securityContextHolderStrategy = securityContextHolderStrategy;
+    }
 
-	protected String getUserIp(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
-		}
-		return ip;
-	}
+    protected String getUserIp(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if ((ip == null) || (ip.length() == 0) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
 
 }

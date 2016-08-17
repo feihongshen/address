@@ -1,3 +1,4 @@
+
 package cn.explink.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +16,30 @@ import cn.explink.service.UserService;
 @Controller
 public class UserController extends BaseController {
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@RequestMapping("/resetPsd")
-	@ResponseBody
-	public AjaxJson login(Model model, @RequestParam(value = "oldpass", required = true) String oldpass, @RequestParam(value = "password", required = true) String password,
-			@RequestParam(value = "cfmpass", required = true) String cfmpass) {
-		AjaxJson aj = new AjaxJson();
-		try {
-			this.userService.resetPsd(oldpass, password);
-			aj.setSuccess(true);
-			aj.setMsg("密码修改成功！");
-		} catch (Exception e) {
-			aj.setSuccess(false);
-			aj.setMsg(e.getMessage());
-		}
-		return aj;
-	}
+    @RequestMapping("/resetPsd")
+    @ResponseBody
+    public AjaxJson login(Model model, @RequestParam(value = "oldpass", required = true) String oldpass,
+            @RequestParam(value = "password", required = true) String password,
+            @RequestParam(value = "cfmpass", required = true) String cfmpass) {
+        AjaxJson aj = new AjaxJson();
+        try {
+            this.userService.resetPsd(oldpass, password);
+            aj.setSuccess(true);
+            aj.setMsg("密码修改成功！");
+        } catch (Exception e) {
+            aj.setSuccess(false);
+            aj.setMsg(e.getMessage());
+        }
+        return aj;
+    }
 
-	@RequestMapping("/getLogginedCustomer")
-	@ResponseBody
-	public String getLogginedCustomer() {
-		Customer customer = this.getLogginedUser().getCustomer();
-		return customer.getName();
-	}
+    @RequestMapping("/getLogginedCustomer")
+    @ResponseBody
+    public String getLogginedCustomer() {
+        Customer customer = this.getLogginedUser().getCustomer();
+        return customer == null ? null : customer.getName();
+    }
 }
