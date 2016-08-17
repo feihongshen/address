@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,15 @@ public class CommonController extends BaseController {
         AjaxJson aj = new AjaxJson();
         aj.setSuccess(true);
         aj.setInfo("处理成功");
+        User user = this.getLogginedUser();
+        if ((user == null) || !StringUtils.equals("merge", user.getName())) {
+            aj.setSuccess(true);
+            aj.setInfo("没有权限");
+            return aj;
+        }
+
         try {
+
             // 1、清除customerId相关数据
             this.mergeService.txNewdelData(customerId);
             // 2、根据customerId得到数据库连接符,省Id
@@ -61,19 +70,12 @@ public class CommonController extends BaseController {
             Connection conn = DriverManager.getConnection(url);
             // 3、合并customer相关数据
             this.mergeService.doExcCustomer(conn, customer);
-            // 5、合并delivery_stations相关数据
+            // 4、合并delivery_stations相关数据
             this.mergeService.txNewDeliveryStations(conn, customer);
-            // 4、合并address相关数据
-            // try {
+            // 5、合并address相关数据
             this.mergeService.doExcAddress(conn, customer);
-            // } catch (Exception e) {
-            // System.out.println(e);
-            // }
-
             // 6、合并deliverers相关数据
             this.mergeService.doExcDeliverers(conn, customer);
-            // 7、合并完成校验数据
-            // this.validate(conn, customer);
             conn.close();
 
         } catch (SQLException e) {

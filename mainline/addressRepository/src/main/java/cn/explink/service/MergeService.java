@@ -26,6 +26,8 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -96,26 +98,30 @@ public class MergeService {
 
     private Connection localConn;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MergeService.class);
+
     public void doExc(Long customerId) throws SQLException {
 
+        Customer customer = this.getCustomer(customerId);
+        LOGGER.info("======start:" + customer.getName());
         // 1、清除customerId相关数据
         this.txNewdelData(customerId);
         // 2、根据customerId得到数据库连接符,省Id
-        Customer customer = this.getCustomer(customerId);
         String url = this.getUrlMap().get(customerId);
         // 一个Connection代表一个数据库连接
         Connection conn = DriverManager.getConnection(url);
         // 3、合并customer相关数据
         this.doExcCustomer(conn, customer);
-        // 5、合并delivery_stations相关数据
+        // 4、合并delivery_stations相关数据
         this.txNewDeliveryStations(conn, customer);
-        // 4、合并address相关数据
+        // 5、合并address相关数据
         this.doExcAddress(conn, customer);
         // 6、合并deliverers相关数据
         this.doExcDeliverers(conn, customer);
         // 7、合并完成校验数据
         // this.validate(conn, customer);
         conn.close();
+        LOGGER.info("======end:" + customer.getName());
     }
 
     private String getConUrl() {
@@ -346,12 +352,11 @@ public class MergeService {
                     + customer.getStatus() + ", " + tmpDate + ", " + entry.getDeliveryStationId() + ", "
                     + entry.getUserCode() + ")");
 
-            // 合并deliverer_rules
-            // this.txNewDelivererRules(conn, entry, rs.getLong(1));
         }
         List<Long> newIdLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
         this.batchInsertOldId(newIdLst, sqlLst, TABLE_DELIVERY, OLD_TYPE_ID, customer.getId());
         this.txNewDelivererRules(conn, customer.getId());
+        LOGGER.info("====doExcDeliverers:end");
         System.out.println("====doExcDeliverers:end");
     }
 
@@ -416,6 +421,7 @@ public class MergeService {
                             + TABLE_DELIVERY_STATIONS + "' and type=1 and o.customer_id=" + customerId);
 
         }
+        LOGGER.info("====txNewDelivererRules:end");
         System.out.println("====txNewDelivererRules:end");
     }
 
@@ -450,6 +456,7 @@ public class MergeService {
             this.saveOrUpdate(entry);
             this.saveOldId(entry.getId(), rs.getLong(1), TABLE_DELIVERY_STATIONS, OLD_TYPE_ID, customer.getId());
         }
+        LOGGER.info("====txNewDeliveryStations:end");
         System.out.println("====txNewDeliveryStations:end");
     }
 
@@ -459,7 +466,6 @@ public class MergeService {
         this.txNewInsertAddress(conn, customer);
         // 更新path
         this.txNewUpdatePathAddress(conn, customer);
-
         // 合并权限
         this.mergeAddressPermissions(customer.getId(), conn);
         // 合并别名
@@ -500,6 +506,7 @@ public class MergeService {
         // 更新id
         this.updateSql(this.getConUrl(), "update alias p,old_id o set p.address_id=o.new_id where o.customer_id="
                 + customer.getId() + " and tab='address' and p.address_id=o.old_id  and type=1");
+        LOGGER.info("====mergeAlias:end");
         System.out.println("====mergeAlias:end");
     }
 
@@ -520,15 +527,7 @@ public class MergeService {
                 continue;
             }
 
-            // 1、根据新id查找旧id
-            // Long oldId = this.getOldId(address.getId(), TABLE_ADDRESS, OLD_TYPE_ID, customer.getId());
             Long newParentId = idMap.get(address.getParentId());
-            // sql = "select count(*) from address where parent_id=" + oldId + " or path like '%-" + oldId + "-%'";
-            // if (Integer.parseInt(this.customerDao.getHSession().createSQLQuery(sql).uniqueResult() + "") <= 0) {
-            // continue;
-            // }
-            // 2、批量更新旧id关联的数据
-            // this.updatePath(oldId, address.getId());
 
             // 更新parentId
             // 更新path
@@ -540,11 +539,11 @@ public class MergeService {
             }
             sqlLst.add("update address set parent_id=" + newParentId + ",path='" + tmpPath.toString() + "' where id="
                     + address.getId());
-            // System.out.println(++i + "/" + list.size());
 
         }
 
         this.batchInsertUpdateSql(this.getConUrl(), sqlLst);
+        LOGGER.info("===txNewUpdatePathAddress:end");
         System.out.println("===txNewUpdatePathAddress:end");
 
     }
@@ -591,6 +590,7 @@ public class MergeService {
                 "update delivery_station_rules p,old_id o set p.DELIVERY_STATION_ID=o.new_id where p.DELIVERY_STATION_ID=o.old_id and tab='"
                         + TABLE_DELIVERY_STATIONS + "' and type=1 and o.customer_id=" + customerId);
 
+        LOGGER.info("====mergeDeliveryStationRules:end");
         System.out.println("====mergeDeliveryStationRules:end");
     }
 
@@ -623,6 +623,7 @@ public class MergeService {
         this.updateSql(this.getConUrl(),
                 "update address_permissions p,old_id o set p.address_id=o.new_id where p.address_id=o.old_id and tab='address' and type=1 and o.customer_id="
                         + customerId);
+        LOGGER.info("====txNewMergeAddressPermissions:end");
         System.out.println("====txNewMergeAddressPermissions:end");
     }
 
@@ -696,15 +697,10 @@ public class MergeService {
             // 保存旧id
             // this.saveOldId(entry.getId(), oid, TABLE_ADDRESS, OLD_TYPE_ID, customer.getId());
         }
-        // for (String x : sqlLst) {
-        // if (x.contains("1-2135-2162-2167-2343141-2347618")) {
-        //
-        // System.out.println(x);
-        // }
-        // }
+
         List<Long> newLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
         this.batchInsertOldId(newLst, sqlLst, TABLE_ADDRESS, OLD_TYPE_ID, customer.getId());
-
+        LOGGER.info("===txNewInsertAddress:end");
         System.out.println("===txNewInsertAddress:end");
     }
 
@@ -717,9 +713,6 @@ public class MergeService {
         idMap.clear();
         for (int i = 0; i < newLst.size(); i++) {
             String[] tmp = StringUtils.split(sqlLst.get(i), id_split);
-            if (tmp.length == 1) {
-                System.out.println(sqlLst.get(i));
-            }
             tmpLst.add(tmp[0] + id_split
                     + "INSERT INTO `old_id` (`type`, `tab`, `old_id`, `customer_id`, `new_id`) VALUES ('" + oldTypeId
                     + "', '" + table + "', '" + tmp[0] + "', '" + customerId + "', '" + newLst.get(i) + "')");
@@ -742,17 +735,17 @@ public class MergeService {
 
     public void doExcCustomer(Connection conn, Customer customer) throws SQLException {
 
-        // system_config
+        // 合并system_config
         this.txNewMergeSystemConfig(conn, customer);
-        // users
+        // 合并users
         this.txNewMergeUsers(conn, customer);
-        // vendors
+        // 合并vendors
         this.txNewMergeVendors(conn, customer);
-        // vendors_aging
+        // 合并vendors_aging
         this.txNewMergeVendorsAging(conn, customer);
-        // keyword_suffix
+        // 合并keyword_suffix
         this.txNewMergeKeywordSuffix(conn, customer);
-        // client_applications
+        // 合并client_applications
         this.txNewMergeClientApplications(conn, customer);
 
     }
@@ -874,57 +867,57 @@ public class MergeService {
 
         idMap.clear();
 
-        // 2、删除address_station_relation
+        // 删除address_station_relation
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "DELETE address_station_relation FROM address_station_relation LEFT JOIN address  ON address_station_relation.address_id=address.id where address.parent_id="
                                 + provinceId + " or address.path like '%" + provinceId + "%'")
                 .executeUpdate();
 
-        // 3、删除address_permissions
+        // 删除address_permissions
         this.customerDao.getHSession()
                 .createSQLQuery("delete from address_permissions where address_id<>1 and customer_id=" + customerId)
                 .executeUpdate();
-        // 4、删除alias
+        // 删除alias
         this.customerDao.getHSession().createSQLQuery("delete from alias where customer_id=" + customerId)
                 .executeUpdate();
-        // client_applications
+        // 删除client_applications
         this.customerDao.getHSession().createSQLQuery("delete from client_applications where customer_id=" + customerId)
                 .executeUpdate();
-        // deliverer_rules
+        // 删除deliverer_rules
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete deliverer_rules from deliverer_rules inner join deliverers on deliverer_rules.DELIVERER_ID=deliverers.id  where deliverers.customer_id="
                                 + customerId)
                 .executeUpdate();
-        // deliverers
+        // 删除deliverers
         this.customerDao.getHSession().createSQLQuery("delete from deliverers where customer_id=" + customerId)
                 .executeUpdate();
-        // delivery_station_rules
+        // 删除delivery_station_rules
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete delivery_station_rules from delivery_station_rules inner join delivery_stations on delivery_station_rules.DELIVERY_STATION_ID=delivery_stations.id  where delivery_stations.customer_id="
                                 + customerId)
                 .executeUpdate();
-        // delivery_stations
+        // 删除delivery_stations
         this.customerDao.getHSession().createSQLQuery("delete from delivery_stations where customer_id=" + customerId)
                 .executeUpdate();
-        // keyword_suffix
+        // 删除keyword_suffix
         this.customerDao.getHSession().createSQLQuery("delete from keyword_suffix where customer_id=" + customerId)
                 .executeUpdate();
-        // old_id
+        // 删除old_id
         this.customerDao.getHSession().createSQLQuery("delete from old_id where customer_id=" + customerId)
                 .executeUpdate();
-        // system_config
+        // 删除system_config
         this.customerDao.getHSession().createSQLQuery("delete from system_config where customer_id=" + customerId)
                 .executeUpdate();
-        // users
+        // 删除users
         this.customerDao.getHSession().createSQLQuery("delete from users where customer_id=" + customerId)
                 .executeUpdate();
-        // vendors
+        // 删除vendors
         this.customerDao.getHSession().createSQLQuery("delete from vendors where customer_id=" + customerId)
                 .executeUpdate();
-        // 1、删除address
+        // 删除address
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete from address where parent_id=" + provinceId + " or path like '%-" + provinceId + "-%'")
@@ -1019,30 +1012,11 @@ public class MergeService {
         if (CollectionUtils.isEmpty(sqlLst)) {
             return null;
         }
-        // Connection conn = DriverManager.getConnection(
-        // "jdbc:mysql://localhost:3306/address?user=root&password=123456&useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true");
         Connection conn = this.getLocalConn();
-
-        // String sql = " INSERT INTO vendors_aging(`CUSTOMER_ID`, `ADDRESS_ID`, `VENDORS_ID`, `AGING`) VALUES (1, 1, 1,
-        // '1')";
-        // PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         Statement stmt = conn.createStatement();
         conn.setAutoCommit(false);
         List<Long> ids = new ArrayList<Long>();
-        // long begin = System.currentTimeMillis();
-        // for (int i = 1; i <= 100; i++) {
-        // stmt.addBatch(sql);
-        // if ((i % 100) == 0) {
-        // stmt.executeBatch();
-        //
-        // conn.commit();
-        // ResultSet rs = stmt.getGeneratedKeys();
-        // while (rs.next()) {
-        // System.out.print(rs.getLong(1) + "-");
-        // }
-        // }
-        //
-        // }
+
         for (int i = 0; i < sqlLst.size(); i++) {
 
             String[] tmp = StringUtils.split(sqlLst.get(i), id_split);

@@ -41,7 +41,7 @@ public class Deliverer {
     private String userCode;
 
     @Column(name = "delivery_station_id")
-    private Long deliveryStationId;// ÚäÄ°µØÖ·¿âÕ¾µãid
+    private Long deliveryStationId;
 
     public Deliverer() {
         super();
