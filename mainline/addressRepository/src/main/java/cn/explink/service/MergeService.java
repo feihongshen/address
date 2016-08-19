@@ -78,6 +78,9 @@ public class MergeService {
     @Value("${commit.size}")
     private int commit_size = 20000;
 
+    @Value("${dbPath}")
+    private String dbPath;
+
     private static Map<Long, Long> provinceMap = new HashMap<Long, Long>();
 
     private static Map<Long, String> urlMap = new HashMap<Long, String>();
@@ -154,7 +157,8 @@ public class MergeService {
 
     public Map<Long, String> getUrlMap() {
         if (MapUtils.isEmpty(urlMap) || MapUtils.isEmpty(provinceMap)) {
-            loadUrlMap(ValidateDto.class.getResource("db.txt").getPath());
+            // loadUrlMap(ValidateDto.class.getResource("db.txt").getPath());
+            loadUrlMap(this.dbPath);
         }
         return urlMap;
 
@@ -1077,11 +1081,17 @@ public class MergeService {
         // Statement stmt = conn.createStatement();
         // stmt.executeUpdate(sql);
 
+        System.out.println(StringUtils.split("adfdaf^^adfdfd", "^^^^^^^^^^^^^"));
+
         try {
-            PreparedStatement stmt = conn.prepareStatement("update address set INDEXED=1 where id=?");
+            PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO `vendors_aging` (`CUSTOMER_ID`, `ADDRESS_ID`, `VENDORS_ID`, `AGING`, `create_time`) VALUES (?, ?, ?, ?, NULL)");
             conn.setAutoCommit(false);
-            for (int i = 0; i < 1; i++) {
-                stmt.setLong(1, 4567882);
+            for (int i = 0; i < 100; i++) {
+                stmt.setLong(1, i);
+                stmt.setLong(2, i);
+                stmt.setLong(3, i);
+                stmt.setString(4, "\'");
                 stmt.addBatch();
                 if ((i % Constants.DEFAULT_DICT_SIZE) == 0) {
                     stmt.executeBatch();

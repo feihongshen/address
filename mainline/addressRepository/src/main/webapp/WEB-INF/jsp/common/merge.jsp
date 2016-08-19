@@ -19,7 +19,6 @@ function _submit(){
 	var txt=$("#customerId").find("option:selected").text();
 	$("#_check_submit").hide();
 	$("#customerId").hide();
-	$("#resetDB").hide();
 	$("#msg").html( txt+"正在处理......");
 	$("#compare").html("");
 	$.ajax({
@@ -29,7 +28,6 @@ function _submit(){
 		success : function(resp) {
 			$("#customerId").show();
 			$("#_check_submit").show();
-			$("#resetDB").show();
 			$("#msg").html(txt+resp.info);
 			validate();
 		}
@@ -37,19 +35,7 @@ function _submit(){
 	
 	
 }
-function _resetdb(){
-	//显示当前登录用户信息
-	$.ajax({
-		type : "POST",
-		url : "<%=request.getContextPath()%>/common/resetdb",
-		data:{},
-		success : function(resp) {
-	         alert(resp.msg);
-		}
-	});
-	
-	
-}
+
 
 function validate(){
 	var customerId=$("#customerId").val();
@@ -60,19 +46,19 @@ function validate(){
 		data:{customerId:customerId},
 		success : function(resp) {
 			
-			txt=txt+"address:					"+resp.obj.countOldAddress+"->"+resp.obj.countNewAddress+"<br/>";
-			txt=txt+"address_station_relation:	"+resp.obj.countOldAddressStationRelation+"->"+resp.obj.countNewAddressStationRelation+"<br/>";
-			txt=txt+"address_permissions:		"+resp.obj.countOldAddressPermissions+"->"+resp.obj.countNewAddressPermissions+"<br/>";
-			txt=txt+"alias:						"+resp.obj.countOldAlias+"->"+resp.obj.countNewAlias+"<br/>";
-			txt=txt+"client_applications:		"+resp.obj.countOldClientApplications+"->"+resp.obj.countNewClientApplications+"<br/>";
-			txt=txt+"deliverer_rules:			"+resp.obj.countOldDelivererRules+"->"+resp.obj.countNewDelivererRules+"<br/>";
-			txt=txt+"deliverers:				"+resp.obj.countOldDeliverer+"->"+resp.obj.countNewDeliverer+"<br/>";
-			txt=txt+"delivery_station_rules:	"+resp.obj.countOldDeliveryStationRules+"->"+resp.obj.countNewDeliveryStationRules+"<br/>";
-			txt=txt+"delivery_stations:			"+resp.obj.countOldDeliveryStations+"->"+resp.obj.countNewDeliveryStations+"<br/>";
-			txt=txt+"keyword_suffix:			"+resp.obj.countOldKeywordSuffix+"->"+resp.obj.countNewKeywordSuffix+"<br/>";
-			txt=txt+"system_config:				"+resp.obj.countOldSystemConfig+"->"+resp.obj.countNewSystemConfig+"<br/>";
-			txt=txt+"users:						"+resp.obj.countOldUsers+"->"+resp.obj.countNewUsers+"<br/>";
-			txt=txt+"vendors:					"+resp.obj.countOldVendors+"->"+resp.obj.countNewVendors+"<br/>";
+			txt=txt+"address(所有的关键词存放位置):					(源)"+resp.obj.countOldAddress+"->(新)"+resp.obj.countNewAddress+"<br/>";
+			//txt=txt+"address_station_relation:	"+resp.obj.countOldAddressStationRelation+"->"+resp.obj.countNewAddressStationRelation+"<br/>";
+			txt=txt+"address_permissions(地址权限表):		(源)"+resp.obj.countOldAddressPermissions+"->(新)"+resp.obj.countNewAddressPermissions+"<br/>";
+			txt=txt+"alias(别名表):						(源)"+resp.obj.countOldAlias+"->(新)"+resp.obj.countNewAlias+"<br/>";
+			txt=txt+"client_applications(应用客户表):		(源)"+resp.obj.countOldClientApplications+"->(新)"+resp.obj.countNewClientApplications+"<br/>";
+			txt=txt+"deliverer_rules(小件员规则表):			(源)"+resp.obj.countOldDelivererRules+"->(新)"+resp.obj.countNewDelivererRules+"<br/>";
+			txt=txt+"deliverers(小件员信息表):				(源)"+resp.obj.countOldDeliverer+"->(新)"+resp.obj.countNewDeliverer+"<br/>";
+			txt=txt+"delivery_station_rules(配送站点规则表):	(源)"+resp.obj.countOldDeliveryStationRules+"->(新)"+resp.obj.countNewDeliveryStationRules+"<br/>";
+			txt=txt+"delivery_stations(配送站点):			(源)"+resp.obj.countOldDeliveryStations+"->(新)"+resp.obj.countNewDeliveryStations+"<br/>";
+			txt=txt+"keyword_suffix(关键词后缀表):			(源)"+resp.obj.countOldKeywordSuffix+"->(新)"+resp.obj.countNewKeywordSuffix+"<br/>";
+			txt=txt+"system_config(系统配置表):				(源)"+resp.obj.countOldSystemConfig+"->(新)"+resp.obj.countNewSystemConfig+"<br/>";
+			txt=txt+"users(用户表):						(源)"+resp.obj.countOldUsers+"->(新)"+resp.obj.countNewUsers+"<br/>";
+			txt=txt+"vendors(供应商):					(源)"+resp.obj.countOldVendors+"->(新)"+resp.obj.countNewVendors+"<br/>";
 			
 	         $("#compare").html(txt);
 		}
@@ -150,7 +136,6 @@ function validate(){
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据库名称:<input name="name"  id="name" /><br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据库密码:<input name="password" id="password" /><br/>-->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input  type="button" value="提交" id="_check_submit"   onclick="javascript:_submit();"/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input  type="button" value="重置db" id="resetDB"   onclick="javascript:_resetdb();"/> 
 	</form>
 	<div id="msg" style="font-family: 微软雅黑;color: red"></div>
 	<div id="compare">对比结果</div>

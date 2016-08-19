@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50538
 File Encoding         : 65001
 
-Date: 2016-08-11 15:37:07
+Date: 2016-08-17 14:31:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -534,7 +534,8 @@ CREATE TABLE `old_id` (
   `old_id` int(12) DEFAULT NULL,
   `customer_id` int(12) DEFAULT NULL,
   `new_id` int(12) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `zhuhe` (`type`,`tab`,`old_id`,`customer_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -589,6 +590,7 @@ CREATE TABLE `qtz_cron_triggers` (
 -- ----------------------------
 -- Records of qtz_cron_triggers
 -- ----------------------------
+INSERT INTO `qtz_cron_triggers` VALUES ('updateIndexTimer', 'DEFAULT', '0 */10 * * * ?', 'Asia/Shanghai');
 
 -- ----------------------------
 -- Table structure for qtz_fired_triggers
@@ -646,6 +648,7 @@ CREATE TABLE `qtz_job_details` (
 -- ----------------------------
 -- Records of qtz_job_details
 -- ----------------------------
+INSERT INTO `qtz_job_details` VALUES ('updateIndexTask', 'DEFAULT', null, 'cn.explink.util.BeanInvokingJobDetailFactoryBean$BeanInvokingJob', '0', '0', '0', '1', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C77080000001000000003740009617267756D656E74737074000A7461726765744265616E7400147363686564756C65645461736B5365727669636574000C7461726765744D6574686F6474001770726F63657373557064617465496E6465785461736B737800);
 
 -- ----------------------------
 -- Table structure for qtz_job_listeners
@@ -760,6 +763,7 @@ CREATE TABLE `qtz_triggers` (
 -- ----------------------------
 -- Records of qtz_triggers
 -- ----------------------------
+INSERT INTO `qtz_triggers` VALUES ('updateIndexTimer', 'DEFAULT', 'updateIndexTask', 'DEFAULT', '0', null, '1471401600000', '1471401000000', '5', 'WAITING', 'CRON', '1471400076000', '0', null, '0', '');
 
 -- ----------------------------
 -- Table structure for qtz_trigger_listeners
