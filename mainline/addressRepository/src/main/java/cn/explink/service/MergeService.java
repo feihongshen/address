@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,7 +48,6 @@ import cn.explink.domain.OldId;
 import cn.explink.domain.SystemConfig;
 import cn.explink.domain.User;
 import cn.explink.domain.Vendor;
-import cn.explink.lucene.Constants;
 
 @Service
 public class MergeService {
@@ -166,7 +164,8 @@ public class MergeService {
 
     private Map<Long, Long> getProvinceMap() {
         if (MapUtils.isEmpty(urlMap) || MapUtils.isEmpty(provinceMap)) {
-            loadUrlMap(ValidateDto.class.getResource("db.txt").getPath());
+            // loadUrlMap(ValidateDto.class.getResource("db.txt").getPath());
+            loadUrlMap(this.dbPath);
         }
         return provinceMap;
 
@@ -939,6 +938,7 @@ public class MergeService {
     public static void loadUrlMap(String fileName) {
         File file = new File(fileName);
         BufferedReader reader = null;
+        System.out.println("fileName:" + fileName);
         provinceMap.clear();
         urlMap.clear();
         try {
@@ -1074,37 +1074,39 @@ public class MergeService {
 
     public static void main(String[] args) throws SQLException {
         Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/address?user=root&password=123456&useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true");
+                "jdbc:mysql://10.199.247.161:3306/address_shenyang?user=test&password=1234&useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true");
         //
         // String sql = " INSERT INTO `delivery_station_rules` (`RULE`, `RULE_EXPRESSION`, `RULE_TYPE`, `ADDRESS_ID`,
         // `DELIVERY_STATION_ID`, `CREATION_TIME`) VALUES (null, '', '1', '2373864', '9', '2016-03-25 17:04:11')";
         // Statement stmt = conn.createStatement();
         // stmt.executeUpdate(sql);
-
-        System.out.println(StringUtils.split("adfdaf^^adfdfd", "^^^^^^^^^^^^^"));
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO `vendors_aging` (`CUSTOMER_ID`, `ADDRESS_ID`, `VENDORS_ID`, `AGING`, `create_time`) VALUES (?, ?, ?, ?, NULL)");
-            conn.setAutoCommit(false);
-            for (int i = 0; i < 100; i++) {
-                stmt.setLong(1, i);
-                stmt.setLong(2, i);
-                stmt.setLong(3, i);
-                stmt.setString(4, "\'");
-                stmt.addBatch();
-                if ((i % Constants.DEFAULT_DICT_SIZE) == 0) {
-                    stmt.executeBatch();
-                    conn.commit();
-                }
-            }
-            stmt.executeBatch();
-            conn.commit();
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        } finally {
-        }
+        String aa = "/dd/aa";
+        System.out.println(aa);
+        // System.out.println(StringUtils.split("adfdaf^^adfdfd", "^^^^^^^^^^^^^"));
+        //
+        // try {
+        // PreparedStatement stmt = conn.prepareStatement(
+        // "INSERT INTO `vendors_aging` (`CUSTOMER_ID`, `ADDRESS_ID`, `VENDORS_ID`, `AGING`, `create_time`) VALUES (?,
+        // ?, ?, ?, NULL)");
+        // conn.setAutoCommit(false);
+        // for (int i = 0; i < 100; i++) {
+        // stmt.setLong(1, i);
+        // stmt.setLong(2, i);
+        // stmt.setLong(3, i);
+        // stmt.setString(4, "\'");
+        // stmt.addBatch();
+        // if ((i % Constants.DEFAULT_DICT_SIZE) == 0) {
+        // stmt.executeBatch();
+        // conn.commit();
+        // }
+        // }
+        // stmt.executeBatch();
+        // conn.commit();
+        // } catch (SQLException e) {
+        //
+        // e.printStackTrace();
+        // } finally {
+        // }
 
     }
 
