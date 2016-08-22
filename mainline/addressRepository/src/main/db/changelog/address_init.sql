@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50538
 File Encoding         : 65001
 
-Date: 2016-08-17 14:31:21
+Date: 2016-08-22 15:55:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -339,49 +339,42 @@ CREATE TABLE `customers` (
   `NAME` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '客户名称',
   `STATUS` int(2) DEFAULT NULL COMMENT '状态标识（是否启用）',
   `DESCRIPTION` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '描述',
-  `ip` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `port` varchar(10) COLLATE utf8_bin DEFAULT NULL,
-  `dbname` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `dbpass` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `provinceId` int(12) NOT NULL DEFAULT '0',
-  `dbuser` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `flag` int(1) DEFAULT '0',
-  PRIMARY KEY (`ID`,`provinceId`)
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='客户信息表';
 
 -- ----------------------------
 -- Records of customers
 -- ----------------------------
-INSERT INTO `customers` VALUES ('2', '贵州\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('4', '广西\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('5', '重庆\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('6', '广州', '0', '', null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('7', '宁夏\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('8', '海南\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('9', '福建\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('10', '安徽\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('12', '江西\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('13', '上海\r\n', '0', '', null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('14', '吉林\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('15', '黑龙江\r\n', '0', '11', null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('18', '青海\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('19', '甘肃\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('20', ' 沈阳', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('26', '西藏\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('27', '湖南\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('28', '苏州\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('31', '四川\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('32', '新疆\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('33', '云南\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('37', '山西\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('38', '浙江\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('39', '武汉\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('41', '河南\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('42', '山东\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('43', '河北\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('44', '天津\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('45', '北京\r\n', '0', null, null, null, null, null, '0', null, '0');
-INSERT INTO `customers` VALUES ('47', '西安\r\n', '0', null, null, null, null, null, '0', null, '0');
+INSERT INTO `customers` VALUES ('2', '贵州\r\n品信', '0', null);
+INSERT INTO `customers` VALUES ('4', '广西\r\n品信', '0', null);
+INSERT INTO `customers` VALUES ('5', '重庆华宇', '0', null);
+INSERT INTO `customers` VALUES ('6', '广州通路', '0', '');
+INSERT INTO `customers` VALUES ('7', '宁夏\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('8', '海南\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('9', '福建飞远', '0', null);
+INSERT INTO `customers` VALUES ('10', '安徽\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('12', '江西\r\n飞远', '0', null);
+INSERT INTO `customers` VALUES ('13', '上海\r\n品俊', '0', '');
+INSERT INTO `customers` VALUES ('14', '吉林\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('15', '黑龙江\r\n品俊', '0', '');
+INSERT INTO `customers` VALUES ('18', '青海\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('19', '甘肃\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('20', '沈阳品俊', '0', null);
+INSERT INTO `customers` VALUES ('26', '西藏\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('27', '湖南\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('28', '江苏品俊', '0', null);
+INSERT INTO `customers` VALUES ('31', '四川\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('32', '新疆\r\n品信', '0', null);
+INSERT INTO `customers` VALUES ('33', '云南\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('37', '山西\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('38', '浙江\r\n飞远', '0', null);
+INSERT INTO `customers` VALUES ('39', '武汉\r\n飞远', '0', null);
+INSERT INTO `customers` VALUES ('41', '河南\r\n豫铁', '0', null);
+INSERT INTO `customers` VALUES ('42', '山东\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('43', '河北\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('44', '天津\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('45', '北京\r\n品俊', '0', null);
+INSERT INTO `customers` VALUES ('47', '陕西城联', '0', null);
 
 -- ----------------------------
 -- Table structure for databasechangelog
@@ -947,7 +940,7 @@ CREATE TABLE `vendors` (
 -- ----------------------------
 -- Table structure for vendors_aging
 -- ----------------------------
-DROP TABLE IF EXISTS `vendors_aging`;
+DROP TABLE IF EXISTS `vendors_aging`;30
 CREATE TABLE `vendors_aging` (
   `ID` int(12) NOT NULL AUTO_INCREMENT,
   `CUSTOMER_ID` int(12) NOT NULL COMMENT '客户ID',

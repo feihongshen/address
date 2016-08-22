@@ -60,7 +60,7 @@ public class CommonController extends BaseController {
         }
 
         try {
-
+            long start = System.currentTimeMillis();
             // 1、清除customerId相关数据
             this.mergeService.txNewdelData(customerId);
             // 2、根据customerId得到数据库连接符,省Id
@@ -77,7 +77,9 @@ public class CommonController extends BaseController {
             // 6、合并deliverers相关数据
             this.mergeService.doExcDeliverers(conn, customer);
             conn.close();
-
+            long end = System.currentTimeMillis();
+            aj.setInfo(
+                    aj.getInfo() + "-开始时间:" + MergeService.sf.format(start) + "-结束时间:" + MergeService.sf.format(end));
         } catch (SQLException e) {
 
             aj.setInfo(e.getMessage());

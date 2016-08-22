@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,13 +35,14 @@ import org.springframework.stereotype.Service;
 import cn.explink.dao.AddressDao;
 import cn.explink.dao.CustomerDao;
 import cn.explink.dao.DeliveryStationDao;
+import cn.explink.db.merge.AdressDto;
+import cn.explink.db.merge.DeliverersDto;
 import cn.explink.db.merge.ValidateDto;
 import cn.explink.domain.Address;
 import cn.explink.domain.AddressPermission;
 import cn.explink.domain.Alias;
 import cn.explink.domain.ClientApplication;
 import cn.explink.domain.Customer;
-import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.KeywordSuffix;
@@ -91,7 +93,7 @@ public class MergeService {
 
     private static final int OLD_TYPE_ID = 1;
 
-    private static final SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static final String id_split = "^^^^^^^^^";
 
@@ -318,11 +320,13 @@ public class MergeService {
         String sql = "select * from deliverers where CUSTOMER_ID=" + this.getOldCustomerId(customer.getId());
         ResultSet rs = stmt.executeQuery(sql);
         List<String> sqlLst = new ArrayList<String>();
+        List<DeliverersDto> dtoLst = new ArrayList<DeliverersDto>();
         while (rs.next()) {
-            Deliverer entry = new Deliverer();
+            DeliverersDto entry = new DeliverersDto();
             // ID int
             // NAME varchar
-            entry.setName(this.removeIllegalChar(rs.getString(2)));
+            // entry.setName(this.removeIllegalChar(rs.getString(2)));
+            entry.setName(rs.getString(2));
             // EXTERNAL_ID int
             entry.setExternalId(rs.getLong(3));
             // CUSTOMER_ID int
@@ -331,8 +335,9 @@ public class MergeService {
             entry.setStatus(rs.getInt(5));
             // CREATION_TIME datetime
             entry.setCreationTime(rs.getTimestamp(6));
+            entry.setCreatTime(rs.getTimestamp(6));
             entry.setDeliveryStationId(0L);
-            entry.setUserCode("''");
+            // entry.setUserCode("''");
             // 武汉2个字段
             // DELIVERY_STATION_ID int
             if (customer.getId().intValue() == 39) {
@@ -340,7 +345,7 @@ public class MergeService {
                         customer.getId());
                 entry.setDeliveryStationId(this.deliveryStationDao.get(newDeliveryStationId).getId());
                 // user_code varchar
-                entry.setUserCode(StringUtils.isEmpty(rs.getString(8)) ? "''" : "'" + rs.getString(8) + "'");
+                entry.setUserCode(rs.getString(8));
             }
             String tmpDate = null;
             if (entry.getCreationTime() != null) {
@@ -354,9 +359,11 @@ public class MergeService {
                     + entry.getName() + "'," + entry.getExternalId() + ", " + customer.getId() + ", "
                     + customer.getStatus() + ", " + tmpDate + ", " + entry.getDeliveryStationId() + ", "
                     + entry.getUserCode() + ")");
+            dtoLst.add(entry);
 
         }
-        List<Long> newIdLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
+        // List<Long> newIdLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
+        List<Long> newIdLst = this.batchInsertDeliverers(this.getConUrl(), dtoLst);
         this.batchInsertOldId(newIdLst, sqlLst, TABLE_DELIVERY, OLD_TYPE_ID, customer.getId());
         this.txNewDelivererRules(conn, customer.getId());
         LOGGER.info("====doExcDeliverers:end");
@@ -485,7 +492,8 @@ public class MergeService {
                 + provinceId + " or address.path like '%-" + provinceId + "-%') and CUSTOMER_ID="
                 + this.getOldCustomerId(customer.getId());
         ResultSet rs = stmt.executeQuery(sql);
-        List<String> sqlLst = new ArrayList<String>();
+        // List<String> sqlLst = new ArrayList<String>();
+        List<Alias> sqlLst = new ArrayList<Alias>();
         while (rs.next()) {
             Alias entry = new Alias();
             // ID int
@@ -498,14 +506,16 @@ public class MergeService {
             // OLD_NAME varchar
             entry.setOldName(rs.getString(5));
 
-            sqlLst.add(entry.getAddressId() + id_split
-                    + "INSERT INTO `alias` (`ADDRESS_ID`, `CUSTOMER_ID`, `NAME`, `OLD_NAME`) VALUES ("
-                    + entry.getAddressId() + ", '" + customer.getId() + "', '" + entry.getName() + "', '"
-                    + entry.getOldName() + "')");
+            // sqlLst.add(entry.getAddressId() + id_split
+            // + "INSERT INTO `alias` (`ADDRESS_ID`, `CUSTOMER_ID`, `NAME`, `OLD_NAME`) VALUES ("
+            // + entry.getAddressId() + ", '" + customer.getId() + "', '" + entry.getName() + "', '"
+            // + entry.getOldName() + "')");
+            sqlLst.add(entry);
         }
 
         // 新增
-        this.batchInsertSql(this.getConUrl(), sqlLst, false);
+        // this.batchInsertSql(this.getConUrl(), sqlLst, false);
+        this.batchInsertAlias(this.getConUrl(), sqlLst);
         // 更新id
         this.updateSql(this.getConUrl(), "update alias p,old_id o set p.address_id=o.new_id where o.customer_id="
                 + customer.getId() + " and tab='address' and p.address_id=o.old_id  and type=1");
@@ -661,15 +671,17 @@ public class MergeService {
                 + "-%' order by path asc";
         ResultSet rs = stmt.executeQuery(sql);
         List<String> sqlLst = new ArrayList<String>();
+        List<AdressDto> addressDtoLst = new ArrayList<AdressDto>();
         while (rs.next()) {
 
-            Address entry = new Address();
+            AdressDto entry = new AdressDto();
             // ID int 12
             Long oid = rs.getLong(1);
+            entry.setOldAddressId(oid);
             // NAME varchar 50
             entry.setName(rs.getString(2));
             // OLD_NAME varchar 50
-            entry.setOldName(StringUtils.isEmpty(rs.getString(3)) ? "''" : "'" + rs.getString(3) + "'");
+            entry.setOldName(rs.getString(3));
             // STATUS int 2
             entry.setStatus(rs.getInt(4));
             // ADDRESS_TYPE_ID int 2
@@ -685,6 +697,7 @@ public class MergeService {
             // INDEXED int 1
             entry.setIndexed(false);
             // CREATION_TIME datetime 0
+            entry.setCreateTime(rs.getTimestamp(10));
 
             // entry.setCreationTime(.getDate(10));
             String tmpSql = rs.getLong(1) + id_split
@@ -695,14 +708,17 @@ public class MergeService {
                     + sf.format(rs.getTimestamp(10)) + "')";
 
             sqlLst.add(StringUtils.replace(tmpSql, "\\'", "'"));
+            addressDtoLst.add(entry);
 
             // this.saveOrUpdate(entry);
             // 保存旧id
             // this.saveOldId(entry.getId(), oid, TABLE_ADDRESS, OLD_TYPE_ID, customer.getId());
         }
 
-        List<Long> newLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
+        // List<Long> newLst = this.batchInsertSql(this.getConUrl(), sqlLst, true);
+        List<Long> newLst = this.batchInsertAddress(this.getConUrl(), addressDtoLst);
         this.batchInsertOldId(newLst, sqlLst, TABLE_ADDRESS, OLD_TYPE_ID, customer.getId());
+        // this.batchInsertOldId(newLst, sqlLst);
         LOGGER.info("===txNewInsertAddress:end");
         System.out.println("===txNewInsertAddress:end");
     }
@@ -722,6 +738,42 @@ public class MergeService {
             idMap.put(Long.parseLong(tmp[0]), newLst.get(i));
         }
         this.batchInsertSql(this.getConUrl(), tmpLst, false);
+
+    }
+
+    private void batchInsertOldId(List<Long> newLst, List<OldId> sqlLst) throws SQLException {
+        if (CollectionUtils.isEmpty(sqlLst)) {
+            return;
+        }
+
+        Connection conn = this.getLocalConn();
+        PreparedStatement stmt = conn.prepareStatement(
+                "INSERT INTO `old_id` (`type`, `tab`, `old_id`, `customer_id`, `new_id`) VALUES (?,?,?,?,?)");
+        conn.setAutoCommit(false);
+        idMap.clear();
+        for (int i = 0; i < newLst.size(); i++) {
+
+            // ID
+            // type
+            stmt.setInt(1, sqlLst.get(i).getType());
+            // tab
+            stmt.setString(2, sqlLst.get(i).getTable());
+            // old_id
+            stmt.setLong(3, sqlLst.get(i).getOldId());
+            // customer_id
+            stmt.setLong(4, sqlLst.get(i).getCustomerId());
+            // new_id
+            stmt.setLong(5, newLst.get(i));
+            stmt.addBatch();
+            if ((i % this.commit_size) == 0) {
+                stmt.executeBatch();
+                conn.commit();
+            }
+            idMap.put(sqlLst.get(i).getOldId(), newLst.get(i));
+        }
+        // 剩余未提交再做一次提交
+        stmt.executeBatch();
+        conn.commit();
 
     }
 
@@ -938,7 +990,6 @@ public class MergeService {
     public static void loadUrlMap(String fileName) {
         File file = new File(fileName);
         BufferedReader reader = null;
-        System.out.println("fileName:" + fileName);
         provinceMap.clear();
         urlMap.clear();
         try {
@@ -1008,6 +1059,160 @@ public class MergeService {
         conn.commit();
 
         // conn.close();
+
+    }
+
+    private List<Long> batchInsertDeliverers(String url, List<DeliverersDto> sqlLst) throws SQLException {
+
+        if (CollectionUtils.isEmpty(sqlLst)) {
+            return null;
+        }
+        Connection conn = this.getLocalConn();
+        PreparedStatement stmt = conn.prepareStatement(
+                "INSERT INTO `deliverers` (`NAME`, `EXTERNAL_ID`, `CUSTOMER_ID`, `STATUS`, `CREATION_TIME`, `DELIVERY_STATION_ID`, `user_code`) VALUES (?,?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS);
+        conn.setAutoCommit(false);
+        List<Long> ids = new ArrayList<Long>();
+
+        for (int i = 0; i < sqlLst.size(); i++) {
+            // ID int
+            // NAME varchar
+            // entry.setName(this.removeIllegalChar(rs.getString(2)));
+            stmt.setString(1, sqlLst.get(i).getName());
+            // EXTERNAL_ID int
+            // entry.setExternalId(rs.getLong(3));
+            stmt.setLong(2, sqlLst.get(i).getExternalId());
+            // CUSTOMER_ID int
+            // entry.setCustomer(customer);
+            stmt.setLong(3, sqlLst.get(i).getCustomer().getId());
+
+            // STATUS int
+            // entry.setStatus(rs.getInt(5));
+            stmt.setInt(4, sqlLst.get(i).getStatus());
+            // CREATION_TIME datetime
+            // entry.setCreationTime(rs.getTimestamp(6));
+            stmt.setTimestamp(5, sqlLst.get(i).getCreatTime());
+            // entry.setDeliveryStationId(0L);
+            stmt.setLong(6, sqlLst.get(i).getDeliveryStationId());
+            // entry.setUserCode("''");
+            stmt.setString(7, StringUtils.isEmpty(sqlLst.get(i).getUserCode()) ? "" : sqlLst.get(i).getUserCode());
+            // 武汉2个字段
+
+            stmt.addBatch();
+            if ((i % this.commit_size) == 0) {
+                stmt.executeBatch();
+                conn.commit();
+                ResultSet rs = stmt.getGeneratedKeys();
+                while (rs.next()) {
+                    ids.add(rs.getLong(1));
+                }
+
+            }
+        }
+        // 剩余未提交再做一次提交
+        stmt.executeBatch();
+        conn.commit();
+        ResultSet rs = stmt.getGeneratedKeys();
+        while (rs.next()) {
+            ids.add(rs.getLong(1));
+        }
+        // conn.close();
+
+        return ids;
+
+    }
+
+    private void batchInsertAlias(String url, List<Alias> sqlLst) throws SQLException {
+
+        if (CollectionUtils.isEmpty(sqlLst)) {
+            return;
+        }
+        Connection conn = this.getLocalConn();
+        PreparedStatement stmt = conn.prepareStatement(
+                "INSERT INTO `alias` (`ADDRESS_ID`, `CUSTOMER_ID`, `NAME`, `OLD_NAME`) VALUES (?,?,?,?)");
+        conn.setAutoCommit(false);
+
+        for (int i = 0; i < sqlLst.size(); i++) {
+            // ID
+            // ADDRESS_ID
+            stmt.setLong(1, sqlLst.get(i).getAddressId());
+            // CUSTOMER_ID
+            stmt.setLong(2, sqlLst.get(i).getCustomerId());
+            // NAME
+            stmt.setString(3, sqlLst.get(i).getName());
+            // OLD_NAME
+            stmt.setString(4, sqlLst.get(i).getOldName());
+
+            stmt.addBatch();
+            if ((i % this.commit_size) == 0) {
+                stmt.executeBatch();
+                conn.commit();
+
+            }
+        }
+        // 剩余未提交再做一次提交
+        stmt.executeBatch();
+        conn.commit();
+
+        // conn.close();
+
+    }
+
+    private List<Long> batchInsertAddress(String url, List<AdressDto> sqlLst) throws SQLException {
+
+        if (CollectionUtils.isEmpty(sqlLst)) {
+            return null;
+        }
+        Connection conn = this.getLocalConn();
+        PreparedStatement stmt = conn.prepareStatement(
+                "INSERT INTO `address` (`NAME`, `OLD_NAME`, `STATUS`, `ADDRESS_TYPE_ID`, `ADDRESS_LEVEL`, `PARENT_ID`, `PATH`, `INDEXED`, `CREATION_TIME`) VALUES (?,?,?,?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS);
+        conn.setAutoCommit(false);
+        List<Long> ids = new ArrayList<Long>();
+
+        for (int i = 0; i < sqlLst.size(); i++) {
+            // ID int
+            // NAME varchar
+            stmt.setString(1, sqlLst.get(i).getName());
+            // OLD_NAME varchar
+
+            stmt.setString(2, sqlLst.get(i).getOldName());
+            // STATUS int
+            stmt.setInt(3, sqlLst.get(i).getStatus());
+            // ADDRESS_TYPE_ID int
+            stmt.setInt(4, sqlLst.get(i).getAddressTypeId());
+            // ADDRESS_LEVEL int
+            stmt.setInt(5, sqlLst.get(i).getAddressLevel());
+            // PARENT_ID int
+            stmt.setLong(6, sqlLst.get(i).getParentId());
+            // PATH varchar
+            stmt.setString(7, sqlLst.get(i).getPath());
+            // INDEXED int
+            stmt.setInt(8, 0);
+            // CREATION_TIME datetime
+            stmt.setTimestamp(9, sqlLst.get(i).getCreateTime());
+
+            stmt.addBatch();
+            if ((i % this.commit_size) == 0) {
+                stmt.executeBatch();
+                conn.commit();
+                ResultSet rs = stmt.getGeneratedKeys();
+                while (rs.next()) {
+                    ids.add(rs.getLong(1));
+                }
+
+            }
+        }
+        // 剩余未提交再做一次提交
+        stmt.executeBatch();
+        conn.commit();
+        ResultSet rs = stmt.getGeneratedKeys();
+        while (rs.next()) {
+            ids.add(rs.getLong(1));
+        }
+        // conn.close();
+
+        return ids;
 
     }
 
