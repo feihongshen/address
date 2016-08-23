@@ -1,7 +1,9 @@
 
 package cn.explink.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
@@ -195,4 +197,32 @@ public class DelivererRuleDao extends BasicHibernateDaoSupport<DelivererRule, Lo
         query.setLong("sId", deliveryStationId);
         return query.list();
     }
+
+ 
+
+	public Map<String, Object> findInfo(Long stationId, Long delivererId,
+			int page, int pageNumber, Long customerId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuffer sql = new StringBuffer();
+		StringBuffer countsql = new StringBuffer();
+	 
+		sql.append("select dr.id ruleId,dr.rule rule,dr.delivery_Station_Id stationId,dr.address_Id addressId, adr.name addressName ,"
+                                + "dr.DELIVERER_ID delivererId" + " from Deliverer_Rules dr inner join  address adr on dr.address_id=adr.id  where  dr.DELIVERER_ID ="
+                                + delivererId + "  " + "and dr.delivery_Station_Id=" + stationId  
+                                +" order by dr.id desc" );
+		countsql.append("select count(id)   from Deliverer_Rules dr where  dr.DELIVERER_ID ="
+                                + delivererId + "  " + "and dr.delivery_Station_Id=" + stationId );
+ 
+		 
+		 
+		Query query = this.getSession().createSQLQuery(sql.toString()).setResultTransformer(Transformers.aliasToBean(DelivererStationRuleVo.class));
+		Query countQuery = this.getSession().createSQLQuery(countsql.toString());
+		int count = Integer.parseInt(countQuery.uniqueResult().toString());
+		query.setFirstResult((pageNumber - 1) * page);
+		query.setMaxResults(page);
+
+		map.put("list", query.list());
+		map.put("count", count);
+		return map;
+	}
 }

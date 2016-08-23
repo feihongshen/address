@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,13 @@ import cn.explink.dao.DelivererDao;
 import cn.explink.dao.DelivererRuleDao;
 import cn.explink.dao.DeliveryStationDao;
 import cn.explink.domain.Address;
+import cn.explink.domain.BizLog;
 import cn.explink.domain.Deliverer;
 import cn.explink.domain.DelivererRule;
 import cn.explink.domain.DeliveryStation;
 import cn.explink.domain.enums.DelivererRuleTypeEnum;
 import cn.explink.domain.enums.DeliveryStationRuleTypeEnum;
+import cn.explink.domain.enums.LogTypeEnum;
 import cn.explink.domain.fields.RuleExpression;
 import cn.explink.exception.ExplinkRuntimeException;
 import cn.explink.tree.ZTreeNode;
@@ -415,5 +419,20 @@ public class DelivererRuleService extends RuleService {
 		 }
 		 
 		 return map;
+	}
+
+	public Map<String, Object> findInfo(Long stationId, Long delivererId,
+			int pageNum, int pageSize, Long customerId) {
+		 
+			Map<String, Object> map = this.delivererRuleDao.findInfo(stationId, delivererId, pageSize, pageNum, customerId);
+			//拼接日志内容
+			List<DelivererStationRuleVo> list = (List<DelivererStationRuleVo>) map.get("list");
+			
+		 
+			
+			return map;
+	 
+
+		 
 	}
 }

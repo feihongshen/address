@@ -2,14 +2,18 @@
 package cn.explink.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import cn.explink.dao.support.BasicHibernateDaoSupport;
+import cn.explink.dao.support.DataInfo;
 import cn.explink.domain.Deliverer;
 import cn.explink.modle.ComboBox;
+import cn.explink.tree.ZTreeNode;
 
 @Repository
 public class DelivererDao extends BasicHibernateDaoSupport<Deliverer, Long> {
@@ -89,6 +93,20 @@ public class DelivererDao extends BasicHibernateDaoSupport<Deliverer, Long> {
 
 		query.setLong("stationId", stationId);
 		return query.list();
+	}
+
+	public List<ZTreeNode> getDelivererZTreeNodeByStation(Long stationId,
+			Long customerId) {
+		
+		   String hql = 
+	                "select new cn.explink.tree.ZTreeNode( a.name,a.id,customer.id ,1,'',false) from Deliverer a  where  status=1 and customer.id = :customerId and a.deliveryStationId=:stationId";
+		   Query query = this.getSession().createQuery(hql);
+			query.setLong("customerId", customerId);
+			query.setLong("stationId", stationId);
+			
+	        return query.list();
+		
+	 
 	}
 
 }
