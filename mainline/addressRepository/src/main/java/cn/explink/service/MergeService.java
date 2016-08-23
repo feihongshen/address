@@ -876,6 +876,7 @@ public class MergeService {
         while (rs.next()) {
             User entry = new User();
             // ID int
+            // entry.setId(rs.getLong(1) == 6 ? 8 : rs.getLong(1));
             // NAME varchar
             entry.setName(rs.getString(2));
             // PASSWORD varchar
@@ -886,6 +887,9 @@ public class MergeService {
             entry.setCustomer(customer);
             // this.customerDao.getHSession().saveOrUpdate(entry);
             this.saveOrUpdate(entry);
+            this.customerDao.getHSession()
+                    .createSQLQuery("update users set id=customer_id where customer_id=" + customer.getId())
+                    .executeUpdate();
         }
     }
 
