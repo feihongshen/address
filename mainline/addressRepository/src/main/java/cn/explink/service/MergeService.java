@@ -343,7 +343,7 @@ public class MergeService {
             if (customer.getId().intValue() == 39) {
                 Long newDeliveryStationId = this.getNewId(rs.getLong(7), TABLE_DELIVERY_STATIONS, OLD_TYPE_ID,
                         customer.getId());
-                entry.setDeliveryStationId(this.deliveryStationDao.get(newDeliveryStationId).getId());
+                entry.setDeliveryStationId(newDeliveryStationId);
                 // user_code varchar
                 entry.setUserCode(rs.getString(8));
             }
@@ -1097,7 +1097,7 @@ public class MergeService {
             // entry.setCreationTime(rs.getTimestamp(6));
             stmt.setTimestamp(5, sqlLst.get(i).getCreatTime());
             // entry.setDeliveryStationId(0L);
-            stmt.setLong(6, sqlLst.get(i).getDeliveryStationId());
+            stmt.setLong(6, sqlLst.get(i).getDeliveryStationId() == null ? 0L : sqlLst.get(i).getDeliveryStationId());
             // entry.setUserCode("''");
             stmt.setString(7, StringUtils.isEmpty(sqlLst.get(i).getUserCode()) ? "" : sqlLst.get(i).getUserCode());
             // 武汉2个字段
