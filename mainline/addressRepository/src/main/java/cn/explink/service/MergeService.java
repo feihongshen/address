@@ -564,8 +564,10 @@ public class MergeService {
     public void mergeDeliveryStationRule(Long customerId, Connection conn) throws SQLException {
         Long provinceId = this.getProvinceMap().get(customerId);
         Statement stmt = conn.createStatement();
-        String sql = "select delivery_station_rules.* from delivery_station_rules inner join address on delivery_station_rules.address_id=address.id  where (address.parent_id=? or path like '%-?-%')";
+        String sql = "select delivery_station_rules.* from delivery_station_rules inner join address on delivery_station_rules.address_id=address.id inner join DELIVERY_STATIONS d on delivery_station_rules.DELIVERY_STATION_ID=d.id  where (address.parent_id=? or path like '%-?-%') and d.customer_id="
+                + this.getOldCustomerId(customerId);
         ResultSet rs = stmt.executeQuery(StringUtils.replace(sql, "?", provinceId + ""));
+
         List<String> sqlLst = new ArrayList<String>();
         while (rs.next()) {
             // ID int
@@ -930,7 +932,7 @@ public class MergeService {
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "DELETE address_station_relation FROM address_station_relation LEFT JOIN address  ON address_station_relation.address_id=address.id where address.parent_id="
-                                + provinceId + " or address.path like '%" + provinceId + "%'")
+                                + provinceId + " or address.path like '%-" + provinceId + "-%'")
                 .executeUpdate();
 
         // 删除address_permissions
