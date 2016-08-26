@@ -938,55 +938,69 @@ public class MergeService {
                         "DELETE address_station_relation FROM address_station_relation LEFT JOIN address  ON address_station_relation.address_id=address.id where address.parent_id="
                                 + provinceId + " or address.path like '%-" + provinceId + "-%'")
                 .executeUpdate();
+        LOGGER.info("删除address_station_relation");
 
         // 删除address_permissions
         this.customerDao.getHSession()
                 .createSQLQuery("delete from address_permissions where address_id<>1 and customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除address_permissions");
         // 删除alias
         this.customerDao.getHSession().createSQLQuery("delete from alias where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除alias");
         // 删除client_applications
         this.customerDao.getHSession().createSQLQuery("delete from client_applications where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除client_applications");
         // 删除deliverer_rules
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete deliverer_rules from deliverer_rules inner join deliverers on deliverer_rules.DELIVERER_ID=deliverers.id  where deliverers.customer_id="
                                 + customerId)
                 .executeUpdate();
+        LOGGER.info("删除deliverer_rules");
         // 删除deliverers
         this.customerDao.getHSession().createSQLQuery("delete from deliverers where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除deliverers");
         // 删除delivery_station_rules
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete delivery_station_rules from delivery_station_rules inner join delivery_stations on delivery_station_rules.DELIVERY_STATION_ID=delivery_stations.id  where delivery_stations.customer_id="
                                 + customerId)
                 .executeUpdate();
+        LOGGER.info("删除delivery_station_rules");
         // 删除delivery_stations
         this.customerDao.getHSession().createSQLQuery("delete from delivery_stations where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除delivery_stations");
         // 删除keyword_suffix
         this.customerDao.getHSession().createSQLQuery("delete from keyword_suffix where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除keyword_suffix");
         // 删除old_id
         this.customerDao.getHSession().createSQLQuery("delete from old_id where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除old_id");
         // 删除system_config
         this.customerDao.getHSession().createSQLQuery("delete from system_config where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除system_config");
         // 删除users
         this.customerDao.getHSession().createSQLQuery("delete from users where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除users");
         // 删除vendors
         this.customerDao.getHSession().createSQLQuery("delete from vendors where customer_id=" + customerId)
                 .executeUpdate();
+        LOGGER.info("删除vendors");
         // 删除address
         this.customerDao.getHSession()
                 .createSQLQuery(
                         "delete from address where parent_id=" + provinceId + " or path like '%-" + provinceId + "-%'")
                 .executeUpdate();
+        LOGGER.info("删除address");
 
     }
 
