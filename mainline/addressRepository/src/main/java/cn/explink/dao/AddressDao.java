@@ -529,13 +529,7 @@ public class AddressDao extends BasicHibernateDaoSupport<Address, Long> {
     }
 
     private Connection getLocalConn() throws SQLException {
-        if (this.localConn == null) {
-            this.localConn = DriverManager.getConnection(this.getConUrl());
-        }
-        if (this.localConn.isClosed()) {
-            this.localConn = DriverManager.getConnection(this.getConUrl());
-        }
 
-        return this.localConn;
+        return DriverManager.getConnection(this.getConUrl());
     }
 }

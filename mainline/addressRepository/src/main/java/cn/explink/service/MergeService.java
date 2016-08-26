@@ -1282,14 +1282,14 @@ public class MergeService {
     }
 
     private Connection getLocalConn() throws SQLException {
-        if (this.localConn == null) {
-            this.localConn = DriverManager.getConnection(this.getConUrl());
-        }
-        if (this.localConn.isClosed()) {
-            this.localConn = DriverManager.getConnection(this.getConUrl());
-        }
+        // if (this.localConn == null) {
+        // this.localConn = DriverManager.getConnection(this.getConUrl());
+        // }
+        // if (this.localConn.isClosed()) {
+        // this.localConn = DriverManager.getConnection(this.getConUrl());
+        // }
 
-        return this.localConn;
+        return DriverManager.getConnection(this.getConUrl());
     }
 
     private void updateSql(String url, String sql) throws SQLException {
