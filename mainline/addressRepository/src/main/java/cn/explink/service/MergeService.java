@@ -825,6 +825,10 @@ public class MergeService {
 
             // this.customerDao.getHSession().saveOrUpdate(entry);
             this.saveOrUpdate(entry);
+            this.customerDao.getHSession()
+                    .createSQLQuery(
+                            "UPDATE client_applications set id=CUSTOMER_ID where CUSTOMER_ID=" + customer.getId())
+                    .executeUpdate();
         }
     }
 
