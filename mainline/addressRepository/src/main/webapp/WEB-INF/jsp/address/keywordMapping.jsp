@@ -72,11 +72,11 @@ $(function(){
 				zTreeObj1 = $.fn.zTree.init($("#resultTree"), setting, zNodes);
 			}
 		});
-		//initMap("mapMatchedResult",needMatchedWords);
+		initMap("mapMatchedResult",needMatchedWords);
 	});
 	
 	
-	//initMap("mapMatchedResult",needMatchedWords);
+	initMap("mapMatchedResult",needMatchedWords);
 });
 
 function setFontCss(treeId, treeNode) {
