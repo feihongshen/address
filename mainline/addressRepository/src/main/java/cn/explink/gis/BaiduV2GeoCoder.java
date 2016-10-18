@@ -5,9 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import cn.explink.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import cn.explink.util.StringUtil;
 
 /**
  * 通过百度webAPIv2.0版本实现的IGeoCoder接口
@@ -55,9 +55,9 @@ public class BaiduV2GeoCoder implements IGeoCoder {
     @Override
     public GeoPoint GetLocationDetails(String address) {
         GeoPoint coderResult = this.GetLocation(address);
-        if ((coderResult == null) || (coderResult.getConfidence() <= 30)) {
-            return this.Search(address);
-        }
+        //        if ((coderResult == null) || (coderResult.getConfidence() <= 30)) {
+        //            return this.Search(address);
+        //        }
         return coderResult;
     }
 
