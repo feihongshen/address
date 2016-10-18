@@ -58,6 +58,11 @@ public class BaiduV2GeoCoder implements IGeoCoder {
         //        if ((coderResult == null) || (coderResult.getConfidence() <= 30)) {
         //            return this.Search(address);
         //        }
+
+        if (coderResult == null) {
+            return this.Search(address);
+        }
+
         return coderResult;
     }
 
