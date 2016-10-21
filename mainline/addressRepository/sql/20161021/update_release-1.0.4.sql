@@ -1,3 +1,2 @@
 ﻿--打开江苏的地图开关
-
-INSERT INTO `system_config` (`NAME`, `VALUE`, `DESCRIPTION`, `EDITABLE`, `CUSTOMER_ID`) VALUES ( 'isOpenGisSearch', '1', '电子地图', '1', '28');
+update system_config set value=1 where customer_id=28 and name='isOpenGisSearch';
