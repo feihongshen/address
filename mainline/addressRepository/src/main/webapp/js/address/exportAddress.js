@@ -28,7 +28,38 @@
 		$('#dlgImport').dialog('open');
 		$("#resultTable").html("");
 	});
-	
+	var wait=30
+	function time(o) {  
+		
+        if (wait == 0) {  
+              $("#startExport").show();
+        	$("#time").html("");
+            wait = 30;  
+        } else {  
+            wait--;  
+            $("#startExport").hide();
+        	$("#time").html(wait+"秒");
+            setTimeout(function() {  
+                time(o)  
+            },  
+            1000)  
+        }  
+    }  
+	$("#startExport").bind("click",function(){
+		var ids = [];
+		$("#stationShow").find("input[name='stationIds']").each(function(){
+			var obj = $(this);
+			if(obj.attr("checked")=="checked"){
+				ids.push(obj.val());
+			}
+		});
+		if(ids.length<=10 && ids.length>0){
+			time(this);
+		}    
+		
+		
+		 
+	});
 	$("#stationShow").find("input[name='stationIds']").live("click",function(){
 		var ids = [];
 		$("#stationShow").find("input[name='stationIds']").each(function(){
@@ -40,7 +71,11 @@
 		if(ids.length==0){
 			$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点！')");
 		}else{
-			$("#startExport").attr("href", ctx+"/station/downloadStationAddresses?ids="+ids.join(","));
+			if(ids.length<=10){
+				$("#startExport").attr("href", ctx+"/station/downloadStationAddresses?ids="+ids.join(","));
+			}else{
+				$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点数不能超过10个！')");
+			}
 		}
 	});
 	$("#startKwImport").click(function(){

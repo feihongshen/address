@@ -214,7 +214,7 @@ span.button.lastPage {
 				style="width: 500px; height: 320px;">
 				<div id="stationShow" style="overflow: auto; height: 240px;"></div>
 				<div style="margin: auto; text-align: center;">
-					<a href="" class="easyui-linkbutton" id="startExport">导出</a>
+					<a href="" class="easyui-linkbutton" id="startExport">导出</a><span id="time"></span>
 				</div>
 			</div>
 			<div id="dlgImport" class="easyui-dialog" title="导入关键字"
