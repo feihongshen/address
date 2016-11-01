@@ -11,7 +11,7 @@
 				async:false,
 				success : function(list) {
 					$("#stationShow").html("");
-					$("#startExport").attr("href", "javascript:$.messager.alert('提示', '请选择站点!')");
+					$("#startExport").attr("href", "javascript:void(0);");
 					if(list&&list.length>0){
 						var ul=$("<ul></ul>").addClass("ul");
 						for(var i = 0;i<list.length;i++){
@@ -32,12 +32,13 @@
 	function time(o) {  
 		
         if (wait == 0) {  
-              $("#startExport").show();
+//              $("#startExport").show();
         	$("#time").html("");
             wait = 30;  
         } else {  
             wait--;  
-            $("#startExport").hide();
+            $("#startExport").attr("href","javascript:void(0);");
+//            $("#startExport").hide();
         	$("#time").html(wait+"秒");
             setTimeout(function() {  
                 time(o)  
@@ -45,6 +46,26 @@
             1000)  
         }  
     }  
+	
+	$("#startExport").mousedown(function(e){
+		
+		var ids = [];
+		$("#stationShow").find("input[name='stationIds']").each(function(){
+			var obj = $(this);
+			if(obj.attr("checked")=="checked"){
+				ids.push(obj.val());
+			}
+		});
+		
+		if(ids.length==0 || ids.length>10){
+			if(e.which==1) {
+				// 1 = 鼠标左键 left; 2 = 鼠标中键; 3 = 鼠标右键
+			     return false;//阻止链接跳转
+			} 
+		}   
+		
+		  
+		 })
 	$("#startExport").bind("click",function(){
 		var ids = [];
 		$("#stationShow").find("input[name='stationIds']").each(function(){
@@ -53,9 +74,15 @@
 				ids.push(obj.val());
 			}
 		});
-		if(ids.length<=10 && ids.length>0){
+		if(ids.length<=10 && ids.length>0&&wait==30){
 			time(this);
-		}    
+		}
+		if(ids.length>10){
+			$.messager.alert('提示', '请选择站点数不能超过10个！');
+		}
+		if(ids.length==0){
+			$.messager.alert('提示', '请选择站点！');
+		}
 		
 		
 		 
@@ -69,12 +96,14 @@
 			}
 		});
 		if(ids.length==0){
-			$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点！')");
+			//$.messager.alert('提示', '请选择站点！');
 		}else{
 			if(ids.length<=10){
 				$("#startExport").attr("href", ctx+"/station/downloadStationAddresses?ids="+ids.join(","));
 			}else{
-				$("#startExport").attr("href","javascript:$.messager.alert('提示', '请选择站点数不能超过10个！')");
+				
+					//$.messager.alert('提示', '请选择站点数不能超过10个！');
+				
 			}
 		}
 	});
