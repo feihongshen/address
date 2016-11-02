@@ -32,13 +32,13 @@
 	function time(o) {  
 		
         if (wait == 0) {  
-//              $("#startExport").show();
+              $("#startExport").show();
         	$("#time").html("");
             wait = 30;  
         } else {  
             wait--;  
-            $("#startExport").attr("href","javascript:void(0);");
-//            $("#startExport").hide();
+//            $("#startExport").attr("href","javascript:void(0);");
+            $("#startExport").hide();
         	$("#time").html(wait+"秒");
             setTimeout(function() {  
                 time(o)  
@@ -79,9 +79,11 @@
 		}
 		if(ids.length>10){
 			$.messager.alert('提示', '请选择站点数不能超过10个！');
+			$("#startExport").attr("href","javascript:void(0);");
 		}
 		if(ids.length==0){
 			$.messager.alert('提示', '请选择站点！');
+			$("#startExport").attr("href","javascript:void(0);");
 		}
 		
 		
