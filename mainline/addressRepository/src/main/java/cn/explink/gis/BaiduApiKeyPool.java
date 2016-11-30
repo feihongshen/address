@@ -22,12 +22,18 @@ public class BaiduApiKeyPool {
 		
 		//LOGGER.info(System.currentTimeMillis()+":百度地图key:"+Arrays.toString(CommonKeyWordSuffix.baidu_map_key.toArray()));
 		String key = cn.explink.Constants.baidu_map_key.get(this.getLoopKey());
+		//if (key != null) {//是否需要trim():由初始化统一trim()
+		//	key = key.trim();
+		//}
 		LOGGER.info("百度地图key(当前返回):"+key);
 		return key;
 	}
 	
-	
-
+	/**
+	 * 返回index
+	 * 当 cn.explink.Constants.baidu_map_key为isempty时会报错。
+	 * @return
+	 */
 	private int getLoopKey() {
 		nextInt++;
 		if (nextInt < 0 || nextInt >= cn.explink.Constants.baidu_map_key.size()) {

@@ -55,9 +55,9 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 		String key = null;
 		for (int i = 0; i < keys.length; i++) {
 			key = keys[i];
-			
-			if(key!=null && key.trim().length()>0){
-				cn.explink.Constants.baidu_map_key.add(key.trim());
+
+			if (key != null && key.trim().length() > 0) {
+				cn.explink.Constants.baidu_map_key.add(key.trim());//必须trim()
 			}
 		}
 		if (cn.explink.Constants.baidu_map_key == null || cn.explink.Constants.baidu_map_key.isEmpty()) {
