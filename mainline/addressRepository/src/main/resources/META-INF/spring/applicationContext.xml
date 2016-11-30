@@ -47,6 +47,9 @@
 			</list>
 		</property>
 	</bean>
+	<!-- 初始化常量配置 -->
+	<bean id="initConstants" class="cn.explink.init.InstantiationTracingBeanPostProcessor" />
+	
 	<!-- web service -->
 	<jaxws:endpoint id="addressSyncService" implementor="cn.explink.ws.service.AddressSyncServiceImpl"
 		address="/AddressSyncService" />
