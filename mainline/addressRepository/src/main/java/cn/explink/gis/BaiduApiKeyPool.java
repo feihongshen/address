@@ -34,12 +34,11 @@ public class BaiduApiKeyPool {
 	 * 当 cn.explink.Constants.baidu_map_key为isempty时会报错。
 	 * @return
 	 */
-	private int getLoopKey() {
+	private synchronized int getLoopKey() {
 		nextInt++;
 		if (nextInt < 0 || nextInt >= cn.explink.Constants.baidu_map_key.size()) {
 			nextInt = 0;
 		}
-		
 		return nextInt;
 	}
 	
