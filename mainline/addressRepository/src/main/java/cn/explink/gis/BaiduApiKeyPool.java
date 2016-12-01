@@ -14,30 +14,57 @@ import org.slf4j.LoggerFactory;
  */
 public class BaiduApiKeyPool {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BaiduApiKeyPool.class);
-	//private static final String[] apiKeys = new String[] { "pz8gGVf2lcvlbQmg3e5QgOVi", "liVsUEXGw2g8SbGYdK4IYnKG" };
 	private static int nextInt = 0;
+//	private static final String[] apiKeys = new String[] { "pz8gGVf2lcvlbQmg3e5QgOVi", "liVsUEXGw2g8SbGYdK4IYnKG" };
 
-	public String getRandomKey() {
+//	public String getRandomKey() {
 //		Random random = new Random();
 //		int nextInt = random.nextInt(BaiduApiKeyPool.apiKeys.length);
 //		return BaiduApiKeyPool.apiKeys[nextInt];
+//	}
+	
+	/**
+	 * 轮循方式获取百度地图key
+	 * @return string 百度地图key
+	 */
+	public String getRandomKey() {
 		String key = null;
 		//LOGGER.info(System.currentTimeMillis()+":百度地图key:"+Arrays.toString(CommonKeyWordSuffix.baidu_map_key.toArray()));
 		try {
-			key = cn.explink.Constants.baidu_map_key.get(this.getLoopKey());
+			key = cn.explink.Constants.baidu_map_key.get(BaiduApiKeyPool.getKey());
 		} catch (Exception e) {
+			LOGGER.info("BaiduApiKeyPool.getRandomKey() error:改用随机获取百度地图key.", e.getMessage());
+		}
+		
+		if (key == null || key.trim().isEmpty()) {
+			key = this.getApiKey();
+		}
+		
+		if (key != null) {//是否需要trim():由初始化统一trim()
+			key = key.trim();
+		}
+		
+		LOGGER.info("百度地图key(当前返回):"+key);
+		
+		return key;
+	}
+	
+	/**
+	 * 随机获取百度地图key
+	 * @return
+	 */
+	private String getApiKey() {
+		String key = null;
+		try {
 			if (cn.explink.Constants.baidu_map_key == null || cn.explink.Constants.baidu_map_key.isEmpty()) {
 				LOGGER.error("BaiduApiKeyPool.getRandomKey error: 百度地图key为null");
+			} else {
+				Random random = new Random();
+				key = cn.explink.Constants.baidu_map_key.get(random.nextInt(cn.explink.Constants.baidu_map_key.size()));
 			}
-			//防止异常导至业务无法进行
+		} catch (Exception e) {
 			LOGGER.info("BaiduApiKeyPool.getRandomKey() error:", e.getMessage());
-			Random random = new Random();
-			key = cn.explink.Constants.baidu_map_key.get(random.nextInt(cn.explink.Constants.baidu_map_key.size()));
 		}
-		//if (key != null) {//是否需要trim():由初始化统一trim()
-		//	key = key.trim();
-		//}
-		LOGGER.info("百度地图key(当前返回):"+key);
 		return key;
 	}
 	
@@ -46,7 +73,7 @@ public class BaiduApiKeyPool {
 	 * 当 cn.explink.Constants.baidu_map_key为isempty时会报错。
 	 * @return
 	 */
-	private synchronized int getLoopKey() {
+	private static synchronized int getKey() {
 		nextInt++;
 		if (nextInt < 0 || nextInt >= cn.explink.Constants.baidu_map_key.size()) {
 			nextInt = 0;
