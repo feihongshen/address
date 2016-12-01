@@ -1,5 +1,7 @@
 package cn.explink.gis;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +21,16 @@ public class BaiduApiKeyPool {
 //		Random random = new Random();
 //		int nextInt = random.nextInt(BaiduApiKeyPool.apiKeys.length);
 //		return BaiduApiKeyPool.apiKeys[nextInt];
-		
+		String key = null;
 		//LOGGER.info(System.currentTimeMillis()+":百度地图key:"+Arrays.toString(CommonKeyWordSuffix.baidu_map_key.toArray()));
-		String key = cn.explink.Constants.baidu_map_key.get(this.getLoopKey());
+		try {
+			key = cn.explink.Constants.baidu_map_key.get(this.getLoopKey());
+		} catch (Exception e) {
+			//防止异常导至业务无法进行
+			LOGGER.info("BaiduApiKeyPool.getRandomKey() error:", e.getMessage());
+			Random random = new Random();
+			key = cn.explink.Constants.baidu_map_key.get(random.nextInt(cn.explink.Constants.baidu_map_key.size()));
+		}
 		//if (key != null) {//是否需要trim():由初始化统一trim()
 		//	key = key.trim();
 		//}
@@ -43,11 +52,17 @@ public class BaiduApiKeyPool {
 	}
 	
 	public static void main(String [] args){
+		//6C4PXqYKl3KvbOIi4zkyQTXUMj28pSLb,z2RoCbclxOBdAoxhEWi8aNd0V4Dxn6jA, xFcTZ0R0EdUc3wuCGKfZMhrdEy8PFKSW
+		cn.explink.Constants.baidu_map_key.add("6C4PXqYKl3KvbOIi4zkyQTXUMj28pSLb");
+		cn.explink.Constants.baidu_map_key.add("z2RoCbclxOBdAoxhEWi8aNd0V4Dxn6jA");
+		cn.explink.Constants.baidu_map_key.add("xFcTZ0R0EdUc3wuCGKfZMhrdEy8PFKSW");
 		BaiduApiKeyPool pool = new BaiduApiKeyPool();
 		int t = 0;
-		for (int i = 0; i < 100; i++) {
+		long l= System.currentTimeMillis();
+		for (int i = 0; i < 20; i++) {
 			t++;
 			System.out.println("第"+t+"次:"+pool.getRandomKey());
 		}
+		System.out.println(System.currentTimeMillis()-l);
 	}
 }
