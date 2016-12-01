@@ -47,10 +47,11 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 		if (cn.explink.Constants.baidu_map_key == null) {
 			cn.explink.Constants.baidu_map_key = new ArrayList<String>(7);
 		}
-		if (baidu_map_key == null) {
-			LOGGER.error("初始化百度地图key失败,百度地图key为null");
-			return;
+		if (baidu_map_key == null || baidu_map_key.trim().isEmpty()) {
+			LOGGER.warn("初始化百度地图key失败,百度地图key为null,使用历史所使用的两个key配置pz8gGVf2lcvlbQmg3e5QgOVi,liVsUEXGw2g8SbGYdK4IYnKG");
+			baidu_map_key="pz8gGVf2lcvlbQmg3e5QgOVi,liVsUEXGw2g8SbGYdK4IYnKG";//若配置为null时，给出历史所使用的两个key配置
 		}
+		
 		String[] keys = baidu_map_key.split(",");
 		String key = null;
 		for (int i = 0; i < keys.length; i++) {

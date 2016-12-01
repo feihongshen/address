@@ -26,6 +26,9 @@ public class BaiduApiKeyPool {
 		try {
 			key = cn.explink.Constants.baidu_map_key.get(this.getLoopKey());
 		} catch (Exception e) {
+			if (cn.explink.Constants.baidu_map_key == null || cn.explink.Constants.baidu_map_key.isEmpty()) {
+				LOGGER.error("BaiduApiKeyPool.getRandomKey error: 百度地图key为null");
+			}
 			//防止异常导至业务无法进行
 			LOGGER.info("BaiduApiKeyPool.getRandomKey() error:", e.getMessage());
 			Random random = new Random();
